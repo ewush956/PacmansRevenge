@@ -36,7 +36,7 @@ const UINT32 sprite1[32] = {
 0xC606060E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite2[32] = {
@@ -71,7 +71,7 @@ const UINT32 sprite2[32] = {
 0x00F00F00,
 0x00F00F00,
 0x000FF000,
-0x000FF000,
+0x000FF000
 };
 
 const UINT32 sprite3[32] = {
@@ -106,7 +106,7 @@ const UINT32 sprite3[32] = {
 0x1D55557F,
 0x1EAAAAB8,
 0x1D555578,
-0x1EAAAAB8,
+0x1EAAAAB8
 };
 
 const UINT32 sprite4[32] = {
@@ -141,7 +141,7 @@ const UINT32 sprite4[32] = {
 0xC707070E,
 0xCF0F0F1C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite5[32] = {
@@ -176,7 +176,7 @@ const UINT32 sprite5[32] = {
 0x00F00F00,
 0x00F00F00,
 0x000FF000,
-0x000FF000,
+0x000FF000
 };
 
 const UINT32 sprite6[32] = {
@@ -211,7 +211,7 @@ const UINT32 sprite6[32] = {
 0x1C000038,
 0x1C000038,
 0xFFFFFFFF,
-0xFFFFFFFF,
+0xFFFFFFFF
 };
 
 const UINT32 sprite7[32] = {
@@ -246,7 +246,7 @@ const UINT32 sprite7[32] = {
 0xCE0E0E0E,
 0xEF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite8[32] = {
@@ -281,7 +281,7 @@ const UINT32 sprite8[32] = {
 0xC606060E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite9[32] = {
@@ -316,7 +316,7 @@ const UINT32 sprite9[32] = {
 0xCF0F0F0C,
 0xCF0F0F0C,
 0x30F0F0F0,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite10[32] = {
@@ -351,7 +351,7 @@ const UINT32 sprite10[32] = {
 0x00F00F00,
 0x00F00F00,
 0x000FF000,
-0x000FF000,
+0x000FF000
 };
 
 const UINT32 sprite11[32] = {
@@ -386,7 +386,7 @@ const UINT32 sprite11[32] = {
 0x00F00F00,
 0x00F00F00,
 0x000FF000,
-0x000FF000,
+0x000FF000
 };
 
 const UINT32 sprite12[32] = {
@@ -421,7 +421,7 @@ const UINT32 sprite12[32] = {
 0x00F00600,
 0x00F00600,
 0x000FFC00,
-0x0007F800,
+0x0007F800
 };
 
 const UINT32 sprite13[32] = {
@@ -456,7 +456,7 @@ const UINT32 sprite13[32] = {
 0x00F00F00,
 0x00F00F00,
 0x000FF000,
-0x000FF000,
+0x000FF000
 };
 
 const UINT32 sprite14[32] = {
@@ -491,7 +491,7 @@ const UINT32 sprite14[32] = {
 0xCF0F0F0E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite15[32] = {
@@ -526,7 +526,7 @@ const UINT32 sprite15[32] = {
 0xC606060E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite16[32] = {
@@ -561,7 +561,7 @@ const UINT32 sprite16[32] = {
 0xC6060604,
 0xCF0F0F0C,
 0x30F0F0F0,
-0x20606060,
+0x20606060
 };
 
 const UINT32 sprite17[32] = {
@@ -596,7 +596,7 @@ const UINT32 sprite17[32] = {
 0xCF0F0F0E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite18[32] = {
@@ -631,7 +631,7 @@ const UINT32 sprite18[32] = {
 0x00F00F00,
 0x00F00F00,
 0x000FF000,
-0x000FF000,
+0x000FF000
 };
 
 const UINT32 sprite19[32] = {
@@ -666,7 +666,7 @@ const UINT32 sprite19[32] = {
 0x00F00600,
 0x00F00600,
 0x000FFC00,
-0x0007F800,
+0x0007F800
 };
 
 const UINT32 sprite20[32] = {
@@ -701,7 +701,7 @@ const UINT32 sprite20[32] = {
 0xFD55557F,
 0x1EAAAAB8,
 0x1D555578,
-0x1EAAAAB8,
+0x1EAAAAB8
 };
 
 const UINT32 sprite21[32] = {
@@ -736,7 +736,7 @@ const UINT32 sprite21[32] = {
 0xCE0E0E0E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite22[32] = {
@@ -771,7 +771,7 @@ const UINT32 sprite22[32] = {
 0xC7070704,
 0x4F0F0F0C,
 0x30F0F0F0,
-0x10E0E0E0,
+0x10E0E0E0
 };
 
 const UINT32 sprite23[32] = {
@@ -806,7 +806,7 @@ const UINT32 sprite23[32] = {
 0x1F555578,
 0x1EAAAAF8,
 0x1F555578,
-0x1EAAAAF8,
+0x1EAAAAF8
 };
 
 const UINT32 sprite24[32] = {
@@ -841,7 +841,7 @@ const UINT32 sprite24[32] = {
 0xC606060E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite25[32] = {
@@ -876,7 +876,7 @@ const UINT32 sprite25[32] = {
 0xCE0E0E1E,
 0xEF0F0F1C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite26[32] = {
@@ -911,7 +911,7 @@ const UINT32 sprite26[32] = {
 0xC7070706,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite27[32] = {
@@ -946,7 +946,7 @@ const UINT32 sprite27[32] = {
 0xC606060E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite28[32] = {
@@ -981,7 +981,7 @@ const UINT32 sprite28[32] = {
 0xCF0F0F0E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite29[32] = {
@@ -1016,7 +1016,7 @@ const UINT32 sprite29[32] = {
 0xC707070E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 const UINT32 sprite30[32] = {
@@ -1051,7 +1051,7 @@ const UINT32 sprite30[32] = {
 0xFFFFFFFF,
 0x00000000,
 0x00000000,
-0x00000000,
+0x00000000
 };
 
 const UINT32 sprite31[32] = {
@@ -1086,7 +1086,7 @@ const UINT32 sprite31[32] = {
 0xC606060E,
 0xCF0F0F0C,
 0x79F9F9F8,
-0x30F0F0F0,
+0x30F0F0F0
 };
 
 int main() {
