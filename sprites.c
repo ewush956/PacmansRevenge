@@ -1,3 +1,9 @@
+
+#include <stdio.h>
+#include <stdint.h>
+typedef unsigned int UINT32;
+void print_binary(UINT32 number);
+
 const UINT32 sprite1[32] = {
 0x001FF800,
 0x007FFE00,
@@ -1083,3 +1089,18 @@ const UINT32 sprite31[32] = {
 0x30F0F0F0,
 };
 
+int main() {
+  int i;
+  for (int i = 0; i < 32; i++) {
+    print_binary(sprite13[i]);
+  }
+  return 0;
+}
+void print_binary(UINT32 number) {
+    for (int i = 31; i >= 0; i--) {
+        // Check each bit and print.
+        UINT32 mask = 1 << i;
+        printf("%c", (number & mask) ? '1' : '0');
+    }
+    printf("\n");
+}
