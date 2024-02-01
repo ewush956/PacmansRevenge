@@ -1,4 +1,5 @@
 #include <osbind.h>
+#include test.h
 
 #define SCREEN_WIDTH   640
 #define SCREEN_HEIGHT  400
@@ -7,6 +8,7 @@
 typedef unsigned long ULONG32;
 
 void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32* bitmap, unsigned int height);
+void plot_screen(ULONG32* base, const ULONG32* bitmap);
 
 const ULONG32 spriteMap[SPRITE_HEIGHT] = {
     0x003FFC00,
@@ -51,17 +53,12 @@ int main()
 
     x = 20;
     y = 20;
-    plot_bitmap_32(base, x, y, spriteMap, SPRITE_HEIGHT);
-    /*
-    for (y = 0; y < SCREEN_HEIGHT; y += SPRITE_HEIGHT)
-        for (x = 0; x < SCREEN_WIDTH; x += sizeof ULONG32)
-            plot_bitmap_32(base, x, y, spriteMap, SPRITE_HEIGHT);
-    */
+    /*plot_bitmap_32(base, x, y, spriteMap, SPRITE_HEIGHT); */
+    plot_screen(base, game_map);
     return 0;
 }
 
-void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32* bitmap, unsigned int height)
-{
+void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32* bitmap, unsigned int height) {
     int row;
     ULONG32* location = base + (y * 40) + (x >> 5);
 
@@ -71,6 +68,20 @@ void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32* bitmap, unsigned
             *location |= bitmap[row];     /* danger (no bounds checking!) */
             location += 20;
         
+        }
+    }
+}
+
+void plot_screen(ULONG32* base, const ULONG32* bitmap) {
+    int row, col;
+    ULONG32* location;
+
+    for (row = 0; row < SCREEN_HEIGHT; row++) {
+        location = base + (row * 20); // 20 ULONG32s per row for 640 pixels
+
+        for (col = 0; col < 20; col++) { // 20 ULONG32s per row
+            *location = bitmap[row * 20 + col]; // Directly copying each 32-bit segment
+            location++;
         }
     }
 }
