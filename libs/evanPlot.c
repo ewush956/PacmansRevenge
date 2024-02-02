@@ -1,9 +1,9 @@
 #include <osbind.h>
-#include test.h
 
-#define SCREEN_WIDTH   640
-#define SCREEN_HEIGHT  400
+#define SCREEN_WIDTH  640
+#define SCREEN_HEIGHT 400
 #define SPRITE_HEIGHT 32
+#define SPRITE_WIDTH 32
 
 typedef unsigned long ULONG32;
 
@@ -49,29 +49,37 @@ const ULONG32 spriteMap[SPRITE_HEIGHT] = {
 int main()
 {
     ULONG32 *base = Physbase();
-    int x, y;
+    int x, y, i, j;
 
-    x = 20;
-    y = 20;
-    /*plot_bitmap_32(base, x, y, spriteMap, SPRITE_HEIGHT); */
-    plot_screen(base, game_map);
+
+    x = 100;
+    y = 100;
+
+    for (i = 0; j < 400; i++) {
+        for (i = 0; i < 640; i++) {
+            plot_bitmap_32(base, i, j, spriteMap, SPRITE_HEIGHT);
+        }
+    }
+
     return 0;
 }
 
 void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32* bitmap, unsigned int height) {
     int row;
-    ULONG32* location = base + (y * 40) + (x >> 5);
+    ULONG32* location = base + (y * 20) + (x >> 5);
 
     if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT) {
         for (row = 0; row < height; row++) {
         
-            *location |= bitmap[row];     /* danger (no bounds checking!) */
+            *location |= bitmap[row] >> (x % SPRITE_WIDTH);     
+            *(location + 1) |= bitmap[row] << SPRITE_WIDTH - (x % SPRITE_WIDTH);
             location += 20;
         
         }
     }
 }
-
+/*do 8 x 16 !!!*/
+/*
 void plot_screen(ULONG32* base, const ULONG32* bitmap) {
     int row, col;
     ULONG32* location;
@@ -85,3 +93,4 @@ void plot_screen(ULONG32* base, const ULONG32* bitmap) {
         }
     }
 }
+*/
