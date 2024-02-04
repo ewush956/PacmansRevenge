@@ -23,11 +23,11 @@
 ; takes about half the number of clock cycles as the code in clear.s, and
 ; so runs in about 1/100th of a second (at 8MHz) instead of 1/50th
 
-		xdef		_clear_screen
+		xdef		_clear_screen_q
 
 base		equ		64		; offset from SP, not A6
 
-_clear_screen:	movem.l		d0-7/a0-6,-(sp)
+_clear_screen_q:	movem.l		d0-7/a0-6,-(sp)
 		lea		zeros,a0
 		movem.l		(a0)+,d1-7/a1-6
 		movea.l		base(sp),a0
@@ -40,6 +40,21 @@ fill_loop:	movem.l		d1-7/a1-6,-(a0)
 		rts
 
 zeros:		ds.l		13
+; -----------------------
+		xdef		_clear_screen
+
+base		equ		8
+
+_clear_screen:	link		a6,#0
+		movem.l		d0-1/a0,-(sp)
+		movea.l		base(a6),a0
+		move.w		#7999,d0
+		clr.l		d1
+fill_loop:	move.l		d1,(a0)+        ; strangely, faster than clr
+		dbra		d0,fill_loop
+		movem.l		(sp)+,d0-1/a0
+		unlk		a6
+		rts
 ; ----------- from 2655
 
 	xdef	_read_char
