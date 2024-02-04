@@ -1,18 +1,18 @@
-			xdef		_plot_something_2
+;			xdef		_plot_something_2
 
 ; [TO DO] delete this example function
 
-y			equ		14
-x			equ		12
-base			equ		8
+;y			equ		14
+;x			equ		12
+;base			equ		8
 
-_plot_something_2:	link		a6,#0
-			movea.l		base(a6),a0
-			move.w		x(a6),d0
-			move.w		y(a6),d1
+;_plot_something_2:	link		a6,#0
+;			movea.l		base(a6),a0
+;			move.w		x(a6),d0
+;			move.w		y(a6),d1
 		;	...		...
-			unlk		a6
-			rts
+;			unlk		a6
+;			rts
 
 ; recall: cc68x assumes d0-2/a0-2 are *not* preserved across subroutine calls!
 
@@ -40,3 +40,13 @@ fill_loop:	movem.l		d1-7/a1-6,-(a0)
 		rts
 
 zeros:		ds.l		13
+; ----------- from 2655
+
+	xdef	_read_char
+
+_read_char:	movem.l	d1-d2/a0-a2,-(sp)
+		move.w	#1,-(sp)
+		trap	#1
+		addq.l	#2,sp
+		movem.l	(sp)+,d1-d2/a0-a2
+		rts

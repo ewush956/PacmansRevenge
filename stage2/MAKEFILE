@@ -9,3 +9,6 @@ raster.o: raster.c raster.h
 
 rast_asm.o: rast_asm.s
 	gen -D -L2 rast_asm.s
+
+clean:
+	rm -f *.o 
