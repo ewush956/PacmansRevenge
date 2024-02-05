@@ -11,9 +11,10 @@
 #define LETTER_WIDTH 8
 
 void plot_bitmap_32(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
+void plot_bitmap_64(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
 void plot_letter(UINT8* base, int x, int y, const UINT8 bitmap[], unsigned int letter);
 void plot_screen(UINT32* base, const UINT32* bitmap);
 void clear_screen(); 
 void clear_screen_c(UINT32* base);
-
+void plot_screen(UINT32* base, const UINT32* bitmap);
 #endif
