@@ -86,7 +86,7 @@ void plot_screen(UINT32* base, const UINT32* bitmap) {
  * Clears the screen by clearing each pixel in the frame buffer.
  *
  * @param base Pointer to the base adress of the frame buffer
- */
+ 
 void clear_screen_c(UINT32* base) {
 
     const UINT32 zero = 0;
@@ -103,3 +103,4 @@ void clear_screen_c(UINT32* base) {
             location += LONGS_PER_ROW;     
         }
 }
+*/

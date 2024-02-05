@@ -58,7 +58,7 @@ int main()
 	void *base8 = Physbase();
 	int x, y, i, j, index;
 
-	clear_screen_c(base32);
+	clear_screen_q(base32);
 
 	display_all_sprites(base32);
 	next_test(base32);
@@ -90,36 +90,36 @@ int main()
 			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
 			for (j = 0; j < 999; j++) {
 			}
-			clear_screen_c(base32);
+			clear_screen_q(base32);
 		}
 		for (i = 3; i >= 0; i--) {
 			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
 			for (j = 0; j < 999; j++) {
 			}
-			clear_screen_c(base32);
+			clear_screen_q(base32);
 
 		}
 	}
 	Cnecin();
-	clear_screen_c(base32);
+	clear_screen_q(base32);
 	while (!Cconis()) {
 		for (i = 4; i < 8; i++) {
 			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
 			for (j = 0; j < 899; j++) {
 			}
-			clear_screen_c(base32);
+			clear_screen_q(base32);
 		}
 
 		for (i = 7; i >= 4; i--) {
 			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
 			for (j = 0; j < 899; j++) {
 			}
-			clear_screen_c(base32);
+			clear_screen_q(base32);
 
 		}
 	}
 	Cnecin();
-	clear_screen_c(base32);
+	clear_screen_q(base32);
 
 
 	/*testing speed and buffer limmits (commented because it's pretty slow)*/
@@ -134,7 +134,7 @@ void next_test(UINT32* base) {
 
 	}
 	Cnecin();
-	clear_screen_c(base);
+	clear_screen_q(base);
 }
 void display_all_ascii(UINT8* base, int x0, int y0) {
 
