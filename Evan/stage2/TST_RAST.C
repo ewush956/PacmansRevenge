@@ -14,7 +14,7 @@ const UINT32* sprites[] = {
 	ghost_2_up, ghost_2_down, ghost_2_left, ghost_2_right,
 	ghost_3_up, ghost_3_down, ghost_3_left, ghost_3_right,
 	ghost_4_up, ghost_4_down, ghost_4_left, ghost_4_right,
-	wall_left_down_right, wall_up_down, wall_left_right, wall_down_right,
+	wall1_all, wall2_all, wall1_horz, wall1_vert,
 	tombstone, ghost_run, ghost_freeze
 };
 
@@ -126,6 +126,23 @@ int main()
 	}
 	Cnecin();
 	clear_screen_q(base32);
+	next_test(base32);
+
+	plot_bitmap_32(base32, 0, 0, wall2_RD, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 32, 0, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 64, 0, wall2_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 0, wall1_LD, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 32, wall2_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 64, wall1_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 96, wall2_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 128, wall1_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 160, wall2_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 192, wall1_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 224, wall2_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 256, wall1_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96, 288, wall2_vert, SPRITE_HEIGHT);
+
+	next_test(base32);
 
 
 	/*testing speed and buffer limmits (commented because it's pretty slow)*/
