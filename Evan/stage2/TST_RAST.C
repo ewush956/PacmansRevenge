@@ -1,4 +1,5 @@
 #include <osbind.h>
+#include <linea.h>
 #include "raster.h"
 #include "TYPES.H"
 #include "font.h"
@@ -56,7 +57,7 @@ int main()
 {
 	void *base32 = Physbase();
 	void *base8 = Physbase();
-	int x, y, i, j, index;
+	int x, y, i, j, index, countx, county;
 
 	clear_screen_q(base32);
 
@@ -87,14 +88,16 @@ int main()
 	while(!Cconis()){
 
 		for (i = 0; i < 4; i++) {
+			Vsync();
 			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
-			for (j = 0; j < 999; j++) {
+			for (j = 0; j < 9999; j++) {
 			}
 			clear_screen_q(base32);
 		}
 		for (i = 3; i >= 0; i--) {
+			Vsync();
 			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
-			for (j = 0; j < 999; j++) {
+			for (j = 0; j < 9999; j++) {
 			}
 			clear_screen_q(base32);
 
@@ -102,20 +105,23 @@ int main()
 	}
 	Cnecin();
 	clear_screen_q(base32);
+	countx = 0;
 	while (!Cconis()) {
 		for (i = 4; i < 8; i++) {
-			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
-			for (j = 0; j < 899; j++) {
+			plot_bitmap_32(base32, 100 + countx, 200, sprites[i], SPRITE_HEIGHT);
+			for (j = 0; j < 5999; j++) {
 			}
+			Vsync();
 			clear_screen_q(base32);
+			countx += 2;
 		}
-
 		for (i = 7; i >= 4; i--) {
-			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
-			for (j = 0; j < 899; j++) {
+			plot_bitmap_32(base32, 100 + countx, 200, sprites[i], SPRITE_HEIGHT);
+			for (j = 0; j < 5999; j++) {
 			}
+			Vsync();
 			clear_screen_q(base32);
-
+			countx += 2;
 		}
 	}
 	Cnecin();

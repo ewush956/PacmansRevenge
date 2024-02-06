@@ -42,6 +42,8 @@ extern const UINT32 tombstone[];
 extern const UINT32 ghost_run[];
 extern const UINT32 ghost_freeze[];
 
+extern const UINT32 null_sprite_32[];
+
 extern const UINT32 test64[];
 
 #endif 
