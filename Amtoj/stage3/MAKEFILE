@@ -1,12 +1,12 @@
 
-tst_rast: tst_rast.o raster.o font.o bitmaps.o rast_asm.o
-	cc68x -g tst_rast.o raster.o font.o bitmaps.o rast_asm.o -o tst_rast
+tst_struct: tst_strc.o structs.o font.o bitmaps.o rast_asm.o
+	cc68x -g tst_strc.o structs.o font.o bitmaps.o rast_asm.o -o tst_struct
 
-tst_rast.o: tst_rast.c raster.h font.h bitmaps.h model.h input.h
-	cc68x -g -c tst_rast.c
+tst_strc.o: tst_strc.c struct.h font.h bitmaps.h model.h
+	cc68x -g -c tst_strc.c
 
-raster.o: raster.c raster.h model.h input.h
-	cc68x -g -c raster.c
+structs.o: structs.c struct.h 
+	cc68x -g -c structs.c
 
 font.o: font.c font.h
 	cc68x -g -c font.c
@@ -17,14 +17,14 @@ bitmaps.o: bitmaps.c bitmaps.h
 rast_asm.o: rast_asm.s
 	gen -D -L2 rast_asm.s
 	
-#tst_rast: tst_rast.o raster.o font.o bitmaps.o
-#	cc68x -g tst_rast.o raster.o font.o bitmaps.o -o tst_rast
+#tst_rast: tst_strc.o structs.o font.o bitmaps.o
+#	cc68x -g tst_strc.o structs.o font.o bitmaps.o -o tst_rast
 #
-#tst_rast.o: tst_rast.c raster.h font.h bitmaps.h
-#	cc68x -g -c tst_rast.c
+#tst_strc.o: tst_strc.c struct.h font.h bitmaps.h
+#	cc68x -g -c tst_strc.c
 #
-#raster.o: raster.c raster.h
-#	cc68x -g -c raster.c
+#structs.o: structs.c struct.h
+#	cc68x -g -c structs.c
 #
 #font.o: font.c font.h
 #	cc68x -g -c font.c
@@ -37,14 +37,14 @@ rast_asm.o: rast_asm.s
 	
 
 # original makefile
-#tst_rast: tst_rast.o raster.o rast_asm.o
-#	cc68x -g tst_rast.o raster.o rast_asm.o -o tst_rast
+#tst_rast: tst_strc.o structs.o rast_asm.o
+#	cc68x -g tst_strc.o structs.o rast_asm.o -o tst_rast
 
-#tst_rast.o: tst_rast.c raster.h
-#	cc68x -g -c tst_rast.c
+#tst_strc.o: tst_strc.c struct.h
+#	cc68x -g -c tst_strc.c
 
-#raster.o: raster.c raster.h
-#	cc68x -g -c raster.c
+#structs.o: structs.c struct.h
+#	cc68x -g -c structs.c
 
 #rast_asm.o: rast_asm.s
 #	gen -D -L2 rast_asm.s

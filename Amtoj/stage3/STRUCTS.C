@@ -1,4 +1,4 @@
-#include "raster.h"
+#include "struct.h"
 #include "TYPES.H"
 
 /**

@@ -3,8 +3,6 @@
 
 #include "types.h"
 
- /* move_ghost(int x, int y, Object *ref_to_object) */
- 
  
 typedef struct 
 {

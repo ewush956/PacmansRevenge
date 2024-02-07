@@ -1,8 +1,8 @@
 #include <osbind.h>
 #include <stdio.h> /* for printf remove later */
-
 #include <linea.h>
-#include "raster.h"
+
+#include "struct.h"
 #include "TYPES.H"
 #include "font.h"
 #include "bitmaps.h"

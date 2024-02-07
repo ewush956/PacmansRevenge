@@ -19,13 +19,15 @@
 #define WORDS_PER_ROW 40
 #define BYTES_PER_ROW 80
 
+/* has old prototypes in it can use them for testing so leave them until submission */
+
 void plot_bitmap_32(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
 void plot_bitmap_64(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
 void plot_letter(UINT8* base, int x, int y, const UINT8 bitmap[], unsigned int letter);
 void plot_screen(UINT32* base, const UINT32* bitmap);
 void clear_screen_q(UINT32* base); 
-/*
-void clear_screen_c(UINT32* base);
-*/
 void plot_screen(UINT32* base, const UINT32* bitmap);
+
+
+
 #endif
