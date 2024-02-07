@@ -190,7 +190,8 @@ int main()
 		/*char input[2];*/
 		/*Cconrs(input[0]);  /* 2 is the input channel to read from */
 		
-		input = Cconin();
+		/*input = Cconin();*/
+		 input = Cauxin();
 
 		switch(input)
 		{
