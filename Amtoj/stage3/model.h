@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+
  
 typedef struct 
 {
@@ -20,6 +21,30 @@ typedef struct
 
 }Ghost;
 
+
+
+typedef struct
+{
+	
+	int x,y;		/*position of pellets*/
+	bool eaten;		/* no bools in c? */
+	
+	/*Sprite struct ?? */
+	
+}Pellet;
+
+
+/*
+typedef struct
+{
+	
+	bool isEmpty;
+	
+
+	
+} Cell;
+
+*/
 
 
 /*  (leave them for now prob wont need) 
