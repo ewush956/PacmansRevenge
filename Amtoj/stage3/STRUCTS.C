@@ -1,4 +1,4 @@
-#include "raster.h"
+#include "struct.h"
 #include "TYPES.H"
 
 /**
@@ -12,21 +12,16 @@
  */
 void plot_bitmap_32(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height) {
     int row;
-    int dx = x;
-    int dy = y;
     UINT32* location = base + (y * LONGS_PER_ROW) + (x >> 5);
 
-   /* if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && y >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT) ) { */
+    if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && y >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT) ) {
         for (row = 0; row < height; row++) {
-            if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && dy >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT) ) {
-                *location |= bitmap[row] >> (x % SPRITE_WIDTH);
-                *(location + 1) |= bitmap[row] << (SPRITE_WIDTH - (x % SPRITE_WIDTH));
-            }
-            location += LONGS_PER_ROW;
-            dy++; /*For bounds checking*/
-            /* dx++; Can't get dx working :(*/
+        
+            *location |= bitmap[row] >> (x % SPRITE_WIDTH);     
+            *(location + 1) |= bitmap[row] << (SPRITE_WIDTH - (x % SPRITE_WIDTH));
+            location += LONGS_PER_ROW;        
         }
-    /*}*/
+    }
 }
 /**
  * Plots a bitmap at the specified x, y position on the screen.
@@ -46,6 +41,7 @@ void plot_bitmap_64(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned 
         
             *location |= bitmap[row] >> (x % SPRITE_WIDTH);     
             *(location + 1) |= bitmap[row] << (SPRITE_WIDTH - (x % SPRITE_WIDTH));
+
 
             *(location + 1) |= bitmap[row + 1] >> (x % SPRITE_WIDTH);
             *(location + 2) |= bitmap[row + 1] << (SPRITE_WIDTH - (x % SPRITE_WIDTH));
@@ -86,3 +82,25 @@ void plot_letter(UINT8* base, int x, int y, const UINT8 bitmap[], unsigned int l
 void plot_screen(UINT32* base, const UINT32* bitmap) {
     return;
 }
+/**
+ * Clears the screen by clearing each pixel in the frame buffer.
+ *
+ * @param base Pointer to the base adress of the frame buffer
+ 
+void clear_screen_c(UINT32* base) {
+
+    const UINT32 zero = 0;
+    int row, col;
+    UINT32* location = base;
+
+        for (row = 0; row < SCREEN_WIDTH; row++) {
+
+            for (col = 0; col < LONGS_PER_ROW; col++) {
+        
+                *location = zero;     
+                *(location + col) = zero;  
+            } 
+            location += LONGS_PER_ROW;     
+        }
+}
+*/

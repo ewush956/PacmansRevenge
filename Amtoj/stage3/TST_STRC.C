@@ -1,9 +1,14 @@
 #include <osbind.h>
+#include <stdio.h> /* for printf remove later */
 #include <linea.h>
-#include "raster.h"
+
+#include "struct.h"
 #include "TYPES.H"
 #include "font.h"
 #include "bitmaps.h"
+
+#include "model.h"
+#include "input.h"
 
 #define LETTERS_PER_BLOCK 6
 
@@ -14,7 +19,7 @@ const UINT32* sprites[] = {
 	ghost_2_up, ghost_2_down, ghost_2_left, ghost_2_right,
 	ghost_3_up, ghost_3_down, ghost_3_left, ghost_3_right,
 	ghost_4_up, ghost_4_down, ghost_4_left, ghost_4_right,
-	wall1_all, wall2_all, wall1_horz, wall1_vert,
+	wall_left_down_right, wall_up_down, wall_left_right, wall_down_right,
 	tombstone, ghost_run, ghost_freeze
 };
 
@@ -44,6 +49,8 @@ int arbitrary_numbers_640[] = {
 	210, 240, 39, 255, 492, 515, 174, 377, 255, 37
 };
 
+
+
 void next_test(UINT32* base);
 void display_all_ascii(UINT8* base, int x0, int y0);
 void test_arbitrary_letter(UINT8* base);
@@ -53,11 +60,21 @@ void speed_test(UINT32* base, UINT32 sprite[], unsigned int height);
 void display_all_sprites(UINT32* base);
 void test_boundaries(UINT32* base);
 void test_arbitrary_32(UINT32* base);
+
+/* for object testing */
+void move_ghost_position (Ghost *ghost, int new_x, int new_y);
+void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
+void move_pacman_position (Pacman *pacman, int new_x, int new_y);
+
+
 int main()
 {
+	
+	/*
+
 	void *base32 = Physbase();
 	void *base8 = Physbase();
-	int x, y, i, j, index, countx, county, offset_x, offset_y;
+	int x, y, i, j, index, countx, county;
 
 	clear_screen_q(base32);
 
@@ -83,10 +100,9 @@ int main()
 	test_boundaries(base32);
 	next_test(base32);
 
-	/*Code below animates our beloved angry boi <3*/
 
-	
-
+/*Code below animates our beloved angry boi <3 :) */
+/*
 	while(!Cconis()){
 
 		for (i = 0; i < 4; i++) {
@@ -128,59 +144,86 @@ int main()
 	}
 	Cnecin();
 	clear_screen_q(base32);
-	next_test(base32);
-
-
-	offset_x = 16;
-	offset_y = 8;
-	plot_bitmap_32(base32, offset_x + 0, 0 + offset_y, wall2_RD, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 32, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 64, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 96, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 128, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 160, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 192, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 224, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 256, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 288, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 320, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 352, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 384, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 416, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 448, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 480, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 512, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 544, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 576, 0 + offset_y, wall1_LD, SPRITE_HEIGHT);
-
-	plot_bitmap_32(base32, 32 + offset_x, 32 + offset_y, ghost_4_down, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 32 + offset_x, 64 + offset_y, ghost_4_down, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 64 + offset_x, 32 + offset_y, ghost_4_right, SPRITE_HEIGHT);
-
-	plot_bitmap_32(base32, 64 + offset_x, 64 + offset_y, wall2_RD, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96 + offset_x, 64 + offset_y, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 64 + offset_x, 96 + offset_y, wall1_vert, SPRITE_HEIGHT);
-
-
-	plot_bitmap_32(base32, 0 + offset_x, 32 + offset_y, wall1_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 64 + offset_y, wall2_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 96 + offset_y, wall1_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 128 + offset_y, wall2_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 160 + offset_y, wall2_LU, SPRITE_HEIGHT);
-	/*plot_bitmap_32(base32, 0 + offset_x, 192 + offset_y, wall2_vert, SPRITE_HEIGHT);*/
-	plot_bitmap_32(base32, 0 + offset_x, 224 + offset_y, wall1_LD, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 256 + offset_y, wall2_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 288 + offset_y, wall1_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 320 + offset_y, wall2_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 352 + offset_y, wall2_UR, SPRITE_HEIGHT);
-
-
-	next_test(base32);
 
 
 	/*testing speed and buffer limmits (commented because it's pretty slow)*/
 	/* speed_test(base32, ghost_4_down, SPRITE_HEIGHT); */
+
+
+
+/* - - - - - - - - - - - - - - - - - - -  - - - - -  - - - - - - - - - - - -  -- - */
+/* - - - - - - - - - - - - - - - - - - -  - - - - -  - - - - - - - - - - - -  -- -*/
+/* - - - - -  for testing the individual objects (ghosts or pac or both) - - - - */
+
+/**/
+	char input;
+	Ghost crying_ghost = {100,100,0,0};
+	Pacman pacman_obj = {0,0,0,0};
 	
+	printf("Initial position: (%d, %d)\n", crying_ghost.x, crying_ghost.y);
+	
+	move_ghost_position(&crying_ghost,-5,0);
+	move_ghost_position(&crying_ghost,1,0);
+	move_ghost_position(&crying_ghost,600,600); 		/* out of bounds test */
+	increase_ghost_velocity(&crying_ghost,10,10);
+	
+	printf("New position: (%d, %d)\n", crying_ghost.x, crying_ghost.y);
+	printf("New speed: (%d, %d)\n", crying_ghost.delta_x, crying_ghost.delta_y);	
+	printf("pacman position old : (%d, %d)\n", pacman_obj.x, pacman_obj.y);
+
+	
+	/* use plot font to test (...?) */ 
+	
+	/* im trying to take keyboard input here and each time  w a s or d is pressed 
+		i want to increment the position by 1 (we cna chnage this to whatever pixel amount)
+		NOT taking input but works with hard-coded funtion calls */
+		
+		/*
+		input = Cconin();
+		printf("%c\n",input);
+		*/
+		
+
+	while(!Cconis())
+	{
+		
+		/*char input[2];*/
+		/*Cconrs(input[0]);  /* 2 is the input channel to read from */
+		
+		input = Cconin();
+
+		switch(input)
+		{
+			case 'w': move_pacman_position(&pacman_obj, 0,1);
+				break;
+				
+			case 'a':
+				move_pacman_position(&pacman_obj, -1,0);
+				printf("a pressed");
+				break;
+				
+			case 's':
+				move_pacman_position(&pacman_obj, 0,-1);
+				printf("s pressed");
+				break;
+				
+			case 'd':
+				move_pacman_position(&pacman_obj, 1,0);
+				printf("d pressed");
+				break;
+				
+			default:
+				printf("Invalid input\n");
+				break;
+				
+		}
+		
+	}
+	/*Cnecin();*/
+	
+	printf("pacman position new : (%d, %d)\n", pacman_obj.x, pacman_obj.y);
+
+
 	return 0;
 }
 /*waits for input then calls clear_screen();*/
@@ -259,4 +302,66 @@ void test_arbitrary_letter(UINT8* base) {
 	for(i = 0; i < 95; i++) {
 		plot_letter(base, arbitrary_numbers_640[i], arbitrary_numbers_400[i], font, i);
 	}
+}
+
+
+
+
+/* 
+*	This is for checking if the ghost struct in 'model.h' is working correcctly 
+*    
+*	-Used ints for moving backwards by adding negatives 
+*
+*
+*
+*/
+void move_ghost_position (Ghost *ghost, int new_x, int new_y)
+{
+		
+	/* for now assume that the map will be 640x400 (chnage later once we figure out proper dimesn for map)*/
+	
+	if (!(ghost->x + new_x > SCREEN_WIDTH || ghost->x  + new_x < 0 ||
+		ghost->y + new_y > SCREEN_HEIGHT || ghost->y + new_y < 0))
+	{
+			ghost-> x += new_x;
+			ghost->y += new_y;
+	}
+	
+	
+} 
+
+/* the end game conditon would call this..? 
+*
+* increase both vert and horizontal speed to capture pacman and end game
+*  leave in x-y parameters now but later we can just use a constant 
+*
+*/
+
+void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
+{
+	
+	ghost->delta_x = horizontal_velocity;
+	ghost->delta_y = vertical_velocity;
+		
+}
+
+
+/* Same as move_ghost_position () as this does the same thing but with pacman object
+*
+*
+*
+*/
+void move_pacman_position (Pacman *pacman, int new_x, int new_y) 
+{
+	
+	
+	if (!(pacman->x + new_x > SCREEN_WIDTH || pacman->x  + new_x < 0 ||
+		pacman->y + new_y > SCREEN_HEIGHT || pacman->y + new_y < 0))
+	{
+			pacman-> x += new_x;
+			pacman->y += new_y;
+	}
+	
+	
+	
 }
