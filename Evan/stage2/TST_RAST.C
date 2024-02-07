@@ -57,7 +57,7 @@ int main()
 {
 	void *base32 = Physbase();
 	void *base8 = Physbase();
-	int x, y, i, j, index, countx, county;
+	int x, y, i, j, index, countx, county, offset_x, offset_y;
 
 	clear_screen_q(base32);
 
@@ -84,6 +84,8 @@ int main()
 	next_test(base32);
 
 	/*Code below animates our beloved angry boi <3*/
+
+	
 
 	while(!Cconis()){
 
@@ -128,19 +130,50 @@ int main()
 	clear_screen_q(base32);
 	next_test(base32);
 
-	plot_bitmap_32(base32, 0, 0, wall2_RD, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 32, 0, wall1_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 64, 0, wall2_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 0, wall1_LD, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 32, wall2_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 64, wall1_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 96, wall2_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 128, wall1_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 160, wall2_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 192, wall1_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 224, wall2_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 256, wall1_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96, 288, wall2_vert, SPRITE_HEIGHT);
+
+	offset_x = 16;
+	offset_y = 8;
+	plot_bitmap_32(base32, offset_x + 0, 0 + offset_y, wall2_RD, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 32, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 64, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 96, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 128, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 160, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 192, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 224, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 256, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 288, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 320, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 352, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 384, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 416, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 448, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 480, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 512, 0 + offset_y, wall2_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 544, 0 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, offset_x + 576, 0 + offset_y, wall1_LD, SPRITE_HEIGHT);
+
+	plot_bitmap_32(base32, 32 + offset_x, 32 + offset_y, ghost_4_down, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 32 + offset_x, 64 + offset_y, ghost_4_down, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 64 + offset_x, 32 + offset_y, ghost_4_right, SPRITE_HEIGHT);
+
+	plot_bitmap_32(base32, 64 + offset_x, 64 + offset_y, wall2_RD, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 96 + offset_x, 64 + offset_y, wall1_horz, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 64 + offset_x, 96 + offset_y, wall1_vert, SPRITE_HEIGHT);
+
+
+	plot_bitmap_32(base32, 0 + offset_x, 32 + offset_y, wall1_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 0 + offset_x, 64 + offset_y, wall2_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 0 + offset_x, 96 + offset_y, wall1_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 0 + offset_x, 128 + offset_y, wall2_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 0 + offset_x, 160 + offset_y, wall2_LU, SPRITE_HEIGHT);
+	/*plot_bitmap_32(base32, 0 + offset_x, 192 + offset_y, wall2_vert, SPRITE_HEIGHT);*/
+	plot_bitmap_32(base32, 0 + offset_x, 224 + offset_y, wall1_LD, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 0 + offset_x, 256 + offset_y, wall2_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 0 + offset_x, 288 + offset_y, wall1_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 0 + offset_x, 320 + offset_y, wall2_vert, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 0 + offset_x, 352 + offset_y, wall2_UR, SPRITE_HEIGHT);
+
 
 	next_test(base32);
 
