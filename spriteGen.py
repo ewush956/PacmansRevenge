@@ -20,21 +20,20 @@ def png_to_hex_bitmap(file_path):
 
 def process_folder_to_c_file(folder_path, output_file):
     with open(output_file, 'w') as file:
-        sprite_count = 1
 
         for filename in os.listdir(folder_path):
             if filename.endswith(".png"):
+                base_name = os.path.splitext(filename)[0]  # Extract the base name without extension
+
                 file_path = os.path.join(folder_path, filename)
                 hex_bitmap = png_to_hex_bitmap(file_path)
 
-                file.write(f"const UINT32 sprite{sprite_count}[32] = {{\n")
+                file.write(f"const UINT32 {base_name}[32] = {{\n")
                 for line in hex_bitmap:
-                    file.write(f"0x{line},\n")
+                    file.write(f"\t0x{line},\n")
                 file.write("};\n\n")
-                
-                sprite_count += 1
 
 # Example usage
-folder_path = 'sprites'  # Replace with your folder path
-output_file = 'sprites.c'  # The output C file
+folder_path = 'walls'  # Replace with your folder path
+output_file = 'wallz.c'  # The output C file
 process_folder_to_c_file(folder_path, output_file)
