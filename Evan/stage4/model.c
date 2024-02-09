@@ -38,6 +38,7 @@ const UINT32* evil_pacman_sprites[4][4] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4},
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
 };
+
 Pacman pacman = {
     0,0,        /*Initial position, won't actually be 0,0*/
     0,0,        /*Initial Displacement*/
@@ -49,22 +50,28 @@ Pacman pacman = {
 Ghost crying_ghost = {
     0,0,
     0,0,
-    {ghost_4_up, ghost_4_down, ghost_4_left, ghost_4_right},
+    0,
+    UP,
     FALSE,
-    {
-    {1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 1,},
-    {1, 0, 1, 0, 1, 0, 1},
-    },
-    {
-    {1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 1,},
-    {1, 0, 1, 0, 1, 0, 1},
-    },
-
-
 };
-
-moustache_ghost
-cyclops_ghost
-awkward_ghost
+Ghost moustache_ghost = {
+    0,0,
+    0,0,
+    0,
+    UP,
+    FALSE
+};
+Ghost cyclops_ghost = {
+    0,0,
+    0,0,
+    0,
+    UP,
+    FALSE
+};
+Ghost awkward_ghost = {
+    0,0,
+    0,0,
+    0,
+    UP,
+    FALSE
+};

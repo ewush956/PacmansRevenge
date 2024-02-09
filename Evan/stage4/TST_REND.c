@@ -1,6 +1,8 @@
 #include <osbind.h>
 #include <linea.h>
 #include "raster.h"
+#include "model.h"
+#include "renderer.h"
 #include "TYPES.H"
 #include "font.h"
 #include "bitmaps.h"
@@ -63,124 +65,11 @@ int main()
 
 	display_all_sprites(base32);
 	next_test(base32);
-
-	display_all_ascii(base8, 220, 150);
-	next_test(base32);
-
-	plot_bitmap_64(base32, 200+32, 80, test64, HITBOX_HEIGHT);
-	plot_bitmap_32(base32, 200, 80, tombstone, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 200, 80+32, tombstone, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 200+32, 80+64, tombstone, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 200+64, 80+64, tombstone, SPRITE_HEIGHT);
-	next_test(base32);
-
-	test_arbitrary_32(base32);
-	next_test(base32);
-
-	test_arbitrary_letter(base8);
-	next_test(base32);
-
-	test_boundaries(base32);
-	next_test(base32);
-
-	/*Code below animates our beloved angry boi <3*/
-
-	
-
-	while(!Cconis()){
-
-		for (i = 0; i < 4; i++) {
-			Vsync();
-			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
-			for (j = 0; j < 9999; j++) {
-			}
-			clear_screen_q(base32);
-		}
-		for (i = 3; i >= 0; i--) {
-			Vsync();
-			plot_bitmap_32(base32, 200, 200, sprites[i], SPRITE_HEIGHT);
-			for (j = 0; j < 9999; j++) {
-			}
-			clear_screen_q(base32);
-		}
-	}
-	Cnecin();
-	clear_screen_q(base32);
-	countx = 0;
-	while (!Cconis()) {
-		for (i = 4; i < 8; i++) {
-			plot_bitmap_32(base32, 100 + countx, 200, sprites[i], SPRITE_HEIGHT);
-			for (j = 0; j < 5999; j++) {
-			}
-			Vsync();
-			clear_screen_q(base32);
-			countx += 2;
-		}
-		for (i = 7; i >= 4; i--) {
-			plot_bitmap_32(base32, 100 + countx, 200, sprites[i], SPRITE_HEIGHT);
-			for (j = 0; j < 5999; j++) {
-			}
-			Vsync();
-			clear_screen_q(base32);
-			countx += 2;
-		}
-	}
-	Cnecin();
-	clear_screen_q(base32);
-	next_test(base32);
+    plot_map(base32, wall_map);
 
 
-	offset_x = 16;
-	offset_y = 8;
-	plot_bitmap_32(base32, offset_x + 0, 0 + offset_y, wall_DR, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 32, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 64, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 96, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 128, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 160, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 192, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 224, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 256, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 288, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 320, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 352, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 384, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 416, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 448, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 480, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 512, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 544, 0 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, offset_x + 576, 0 + offset_y, wall_LD, SPRITE_HEIGHT);
+	/*18 x 11 !!!!!!!!!!!!!!!!*/
 
-	plot_bitmap_32(base32, 32 + offset_x, 32 + offset_y, ghost_4_down, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 32 + offset_x, 64 + offset_y, ghost_4_down, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 64 + offset_x, 32 + offset_y, ghost_4_right, SPRITE_HEIGHT);
-
-	plot_bitmap_32(base32, 64 + offset_x, 64 + offset_y, wall_DR, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 96 + offset_x, 64 + offset_y, wall_horz, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 64 + offset_x, 96 + offset_y, wall_vert, SPRITE_HEIGHT);
-
-
-	plot_bitmap_32(base32, 0 + offset_x, 32 + offset_y, wall_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 64 + offset_y, wall_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 96 + offset_y, wall_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 128 + offset_y, wall_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 160 + offset_y, wall_UL, SPRITE_HEIGHT);
-	/*plot_bitmap_32(base32, 0 + offset_x, 192 + offset_y, wall2_vert, SPRITE_HEIGHT);*/
-	plot_bitmap_32(base32, 0 + offset_x, 224 + offset_y, wall_LD, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 256 + offset_y, wall_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 288 + offset_y, wall_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 320 + offset_y, wall_vert, SPRITE_HEIGHT);
-	plot_bitmap_32(base32, 0 + offset_x, 352 + offset_y, wall_UR, SPRITE_HEIGHT);
-
-	/*18 x 11 !!!!!!!!!!!!!!!!/
-
-
-	next_test(base32);
-
-
-	/*testing speed and buffer limmits (commented because it's pretty slow)*/
-	/* speed_test(base32, ghost_4_down, SPRITE_HEIGHT); */
 	
 	return 0;
 }

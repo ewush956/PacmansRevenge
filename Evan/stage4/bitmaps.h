@@ -33,36 +33,34 @@ extern const UINT32 ghost_4_down[];
 extern const UINT32 ghost_4_left[];
 extern const UINT32 ghost_4_right[];
 
-extern const UINT32 wall_left_down_right[];
-extern const UINT32 wall_up_down[];
-extern const UINT32 wall_left_right[];
-extern const UINT32 wall_down_right[];
+extern const UINT32 cyclops_ghost_L[];
+extern const UINT32 cyclops_ghost_R[];
+extern const UINT32 cyclops_ghost_U[];
+extern const UINT32 cyclops_ghost_D[];
 
 extern const UINT32 tombstone[];
 extern const UINT32 ghost_run[];
 extern const UINT32 ghost_freeze[];
 
-extern const UINT32 wall1_all[];
-extern const UINT32 wall2_all[];
+extern const UINT32 wall_ULD[];
+extern const UINT32 wall_all[];
+extern const UINT32 wall_vert[];
+extern const UINT32 wall_UL[];
+extern const UINT32 wall_UR[];
+extern const UINT32 wall_LDR[];
+extern const UINT32 wall_ULR[];
+extern const UINT32 wall_UDR[];
+extern const UINT32 wall_LD[];
+extern const UINT32 wall_DR[];
+extern const UINT32 wall_horz[];
+extern const UINT32 wall_single[];
 
-extern const UINT32 wall1_vert[];
-extern const UINT32 wall2_vert[];
-
-extern const UINT32 wall1_horz[];
-extern const UINT32 wall2_horz[];
-
-extern const UINT32 wall1_URD[];
-extern const UINT32 wall1_LD[];
-extern const UINT32 wall1_LUR[];
-extern const UINT32 wall2_RDL[];
-extern const UINT32 wall2_RD[];
-extern const UINT32 wall2_DLU[];
-extern const UINT32 wall2_LU[];
-extern const UINT32 wall2_UR[];
-extern const UINT32 wall2_UR[];
+extern const UINT32 wall_horz_end_L[];
 
 extern const UINT32 null_sprite_32[];
 
 extern const UINT32 test64[];
+
+extern const UINT32* wall_map[][20];
 
 #endif 
