@@ -173,6 +173,8 @@ int main()
 	plot_bitmap_32(base32, 0 + offset_x, 320 + offset_y, wall2_vert, SPRITE_HEIGHT);
 	plot_bitmap_32(base32, 0 + offset_x, 352 + offset_y, wall2_UR, SPRITE_HEIGHT);
 
+	/*18 x 11 !!!!!!!!!!!!!!!!/
+
 
 	next_test(base32);
 

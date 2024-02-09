@@ -35,20 +35,12 @@ typedef struct
 
 }Ghost;
 
-extern const UINT8 map[][25];	/* I don't know how many*/
+void move_pacman(Pacman* pac_ptr);
+void move_ghost(Ghost* ghost_ptr);
+bool check_collision(int x, int y);
 
-extern Pacman pacman;
- 
-extern Ghost crying_ghost;
-extern Ghost moustache_ghost;
-extern Ghost cyclops_ghost;
-extern Ghost awkward_ghost;
+void clock_tick_handle();		/* calls move pacman calls all synch event handlers */
+		
 
-extern const UINT32 default_pac_sprites[][4];
-extern const UINT32 evil_pac_sprites[][4];
-extern const UINT32 crying_ghost_sprites[][4];
-extern const UINT32 moustache_ghost_sprites[][4];
-extern const UINT32 cyclops_ghost_sprites[][4];
-extern const UINT32 awkward_ghost_sprites[][4];
 
 #endif
