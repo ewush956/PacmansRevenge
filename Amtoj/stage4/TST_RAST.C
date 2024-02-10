@@ -156,43 +156,56 @@ int main()
 	offset_x = 16;
 	offset_y = 16;
 
-	for (i = 0; i < 12; i++)
+	for (i = 0; i < MAP_TILE_HEIGHT; i++)
 	{
-		for (j = 0; j < 19; j++)
+		for (j = 0; j < MAP_TILE_LENGTH; j++)
 		{
-			if (tile_map[i][j] == 1)
+			if (offset_x < MAP_PIXEL_LENGTH && offset_y < MAP_PIXEL_HEIGHT)
 			{
-				plot_bitmap_32(base32, offset_x, offset_y, wall1_horz, SPRITE_HEIGHT);
-				offset_x += 32;
+				if (tile_map[i][j] == 1 )
+				{
+					plot_bitmap_32(base32, offset_x, offset_y, wall1_horz, SPRITE_HEIGHT);
+					offset_x += 32;
 
-			}
-			else if( tile_map[i][j] == 2)
-			{
-				plot_bitmap_32(base32, offset_x, offset_y, wall1_vert, SPRITE_HEIGHT);
-				offset_x += 32;
+				}
+				else if( tile_map[i][j] == 2)
+				{
+					plot_bitmap_32(base32, offset_x, offset_y, wall1_vert, SPRITE_HEIGHT);
+					offset_x += 32;
 
-			}
-			else if (tile_map[i][j] == 3)
-			{
-				plot_bitmap_32(base32, offset_x, offset_y, wall1_LD, SPRITE_HEIGHT);
-				offset_x += 32;
+				}
+				else if (tile_map[i][j] == 3)
+				{
+					plot_bitmap_32(base32, offset_x, offset_y, wall1_LD, SPRITE_HEIGHT);
+					offset_x += 32;
 
+				}
+				else if (tile_map[i][j] == 4)
+				{
+					plot_bitmap_32(base32, offset_x, offset_y, wall2_RD, SPRITE_HEIGHT);
+					offset_x += 32;
+				}
+				else if (tile_map[i][j] == 5)
+				{
+					plot_bitmap_32(base32, offset_x, offset_y, wall2_LU, SPRITE_HEIGHT);
+					offset_x += 32;
+				}
+				else if (tile_map[i][j] == 6)
+				{
+					plot_bitmap_32(base32, offset_x, offset_y, wall2_UR, SPRITE_HEIGHT);
+					offset_x += 32;
+				}
+				else
+					offset_x += 32;
+				
 			}
-			else if (tile_map[i][j] == 4)
-			{
-				plot_bitmap_32(base32, offset_x, offset_y, wall_down_right, SPRITE_HEIGHT);
-				offset_x += 32;
 
-			}
-			else
-			{
-				offset_x += 32;
-			}
-
+			/*offset_x += 32;*/
+			
 
 		}
 		offset_x = 16;
-		offset_y += 32	;
+		offset_y += 32;
 	
 	}
 

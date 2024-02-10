@@ -8,6 +8,17 @@
 #define DOWN 2
 #define LEFT 3
 #define RIGHT 4
+
+#define MAP_TILE_LENGTH 18        /* 1 tile = 32 pixels*/ 
+#define MAP_TILE_HEIGHT 11         
+
+#define MAP_PIXEL_LENGTH 576	/* 18 horiz walls x 32 pixels = 576 */
+#define MAP_PIXEL_HEIGHT 352    /* 11 vert walls x 32 pixels = 352   */
+
+/* use the tile defs for this */
+extern const UINT16 tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+
+
 /*
 #define WALL 1;
 #define PATH 0;
@@ -36,11 +47,16 @@ typedef struct
 }Ghost;
 
 
-extern const UINT16 tile_map[11][18];
 
 void move_pacman(Pacman* pac_ptr);
 void move_ghost(Ghost* ghost_ptr);
 /* bool check_collision(int x, int y); */
+
+/* get pacmans current posisiton -> then in the check colision function check whether that 
+ [i][j] value has a 1 2 3 4 5 or 6 (OR) if its true then there is a collsion otherise continue
+ -Start pacman at a defined location within the bounds of the tile array and make sure he cannot
+ go out of bounds */
+
 
 void clock_tick_handle();		/* calls move pacman calls all synch event handlers */
 		
