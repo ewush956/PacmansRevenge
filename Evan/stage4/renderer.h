@@ -8,4 +8,3 @@
 
 void clock_tick_handle();
 void plot_map(UINT32* base, UINT32* map[][20]);
-
