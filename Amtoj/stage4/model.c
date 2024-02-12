@@ -2,6 +2,7 @@
 #include "model.h"
 #include "bitmaps.h"
 #include "events.h"
+#include <stdio.h>
 
 #define MAX_MAP_LENGTH 18          /* 18 horiz walls x 32 pixels = 576 */
 #define MAX_MAP_HEIGHT 11         /* 11 vert walls x 32 pixels = 352   */
@@ -29,7 +30,7 @@ const UINT32* sprites[] = {
 6 is UR (up -> right)
 */
 const UINT16 tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
-
+/*0                               18*/
 {4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3},
 {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
 {2,0,4,1,1,1,0,1,0,1,0,1,1,1,1,3,0,2},
@@ -104,26 +105,31 @@ moustache_ghost
 cyclops_ghost
 awkward_ghost
 */
-void move_pacman_position (Pacman *pacman, char input) 
+void move_pacman_position(Pacman *pacman, char input) 
 {
+    bool collision; 
 	UINT16 new_x_position, new_y_position; 
+    pacman -> delta_y = 0;
+    pacman -> delta_x = 0;              /* make this better? how to reset it everytime?*/
 
 	switch(input)
 	{
-		case 'w': pacman -> delta_y = 1; 			/* UP*/
+		case 'w': pacman -> delta_y = -1; 			/* UP*/
 			break;
 				
 		case 'a': pacman -> delta_x = -1;			/*Left*/
 			break;
 				
-		case 's': pacman -> delta_y = -1;			/*Down*/
+		case 's': pacman -> delta_y = 1;			/*Down*/
 			break;
 				
 		case 'd': pacman -> delta_x = 1;			/* Right*/
 			break;
 
 		default:
-			/*printf("Invalid input\n");*/
+			printf("Invalid input\n");
+            pacman-> delta_x = 0;
+            pacman -> delta_y = 0;
 			break;
 	}
 		
@@ -139,11 +145,18 @@ void move_pacman_position (Pacman *pacman, char input)
 
 		}
     */
-
-    handle_collsion(pacman, new_x_position, new_y_position);
     
-    if (pacman->has_collided == 0)  /*false (i.e. he has NOT collided)*/
+
+    /*pacman->has_collided == FALSE) */
+
+    collision = check_collision(&pacman, new_x_position, new_y_position);
+
+   /*
+    printf("%d\n",tile_map[4][5]);*/
+
+    if (collision == 0)
     {
+        printf("MOVING HIM");
         pacman->x = new_x_position;
 		pacman->y = new_y_position;
        
@@ -200,3 +213,34 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 	
 	
 } 
+bool check_collision (Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position)
+{
+    bool collision = 0; 
+
+
+    if (tile_map[pacman_y_position][pacman_x_position] == 1 || 
+        tile_map[pacman_y_position][pacman_x_position] == 2 ||
+        tile_map[pacman_y_position][pacman_x_position] == 3 ||
+        tile_map[pacman_y_position][pacman_x_position] == 4 ||
+        tile_map[pacman_y_position][pacman_x_position] == 5 ||
+        tile_map[pacman_y_position][pacman_x_position] == 6)
+        {
+            
+            /*pacman-> has_collided = TRUE;*/
+            printf(" collision \n");
+            printf("This value is for collision is: %d",tile_map[pacman_y_position][pacman_x_position]);
+            collision = 1;
+
+        }
+
+        else{
+
+            printf(" YOURE GOOD: %d\n",tile_map[pacman_y_position][pacman_x_position]);
+        }
+        /*
+            pacman->has_collided = FALSE;
+            */
+
+        return collision; 
+
+}

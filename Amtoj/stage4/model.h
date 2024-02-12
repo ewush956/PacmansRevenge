@@ -59,7 +59,7 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman_position (Pacman *pacman, char input);
 
-/* bool check_collision(int x, int y); */
+bool check_collision(Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position); 
 
 /* get pacmans current posisiton -> then in the check colision function check whether that 
  [i][j] value has a 1 2 3 4 5 or 6 using (OR) if its true then there is a collsion otherise continue

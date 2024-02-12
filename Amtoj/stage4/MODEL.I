@@ -7,7 +7,7 @@ typedef unsigned char UINT8;
 typedef unsigned int  UINT16;
 typedef unsigned long UINT32;
 
-typedef signed char bool;
+typedef int bool;
 # 1 "model.c" 2
 # 1 "./model.h" 1
 # 1 "./types.h" 1
@@ -89,7 +89,7 @@ typedef struct
 
 	int current_frame;
 	UINT8 direction;
-	bool is_evil;
+	UINT8 is_evil;
 	UINT8 has_collided;
 
 }Pacman;
@@ -108,23 +108,123 @@ typedef struct
 void move_ghost_position (Ghost *ghost, int new_x, int new_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman_position (Pacman *pacman, char input);
+
+bool check_collision(Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position);
 # 70 "./model.h"
 void clock_tick_handle();
 # 2 "model.c" 2
 # 1 "./bitmaps.h" 1
 # 3 "model.c" 2
 # 1 "./events.h" 1
-# 1 "./types.h" 1
-# 1 "./events.h" 2
+# 1 "./TYPES.H" 1
+# 4 "./events.h" 2
 # 1 "./model.h" 1
-# 2 "./events.h" 2
+# 5 "./events.h" 2
 
 
 void clock_tick_handle();
 
 void handle_collision(Pacman* pacman, UINT16 x_position, UINT16 y_position);
 # 4 "model.c" 2
-# 31 "model.c"
+# 1 "C:/c68/include/stdio.h" 1
+# 1 "C:/c68/include/compiler.h" 1
+# 11 "C:/c68/include/stdio.h" 2
+# 20 "C:/c68/include/stdio.h"
+typedef unsigned long  size_t;
+# 69 "C:/c68/include/stdio.h"
+typedef	struct
+	{
+	long		_cnt;
+	unsigned char	*_ptr;
+	unsigned char	*_base;
+	unsigned int	_flag;
+	int		_file;
+	long		_bsiz;
+	unsigned char	_ch;
+	}
+	FILE;
+
+
+typedef unsigned long fpos_t;
+# 92 "C:/c68/include/stdio.h"
+extern	FILE	_iob[];
+# 108 "C:/c68/include/stdio.h"
+ char *	ctermid	(char *) ;
+
+
+
+
+ int	remove	(const char *) ;
+ int	rename	(const char *, const char *) ;
+ char *	tmpnam	(char *) ;
+ FILE *	tmpfile	(void) ;
+
+ int	fclose	(FILE *) ;
+ int	fflush	(FILE *) ;
+
+ FILE *	fopen	(const char *, const char *) ;
+ FILE *	freopen	(const char *, const char *, FILE *) ;
+
+ void	setbuf	(FILE *, char *) ;
+ int	setvbuf	(FILE *, char *, int, size_t) ;
+# 132 "C:/c68/include/stdio.h"
+ int  fscanf  (FILE *, const char *, ...) ;
+ int  scanf   (const char *, ...) ;
+ int  sscanf  (const char *, const char *, ...) ;
+
+
+ int	fprintf	(FILE *, const char *, ...) ;
+ int	printf	(const char *, ...) ;
+ int	sprintf	(char *, const char *, ...) ;
+
+ int 	vfprintf (FILE *, const char *, char * ) ;
+ int 	vprintf	 (const char *, char * ) ;
+ int 	vsprintf (char *, const char *, char * ) ;
+
+ int	vscanf  (const char *, char * ) ;
+ int	vfscanf (FILE *, const char *, char * ) ;
+ int	vsscanf	(const char *, const char *, char * ) ;
+
+
+ int	fgetc	(FILE *) ;
+ char	*fgets	(char *, int, FILE *) ;
+ char	*gets	(char *) ;
+ int	fputc	(int c, FILE *) ;
+ int	fputs	(const char *, FILE *) ;
+ int	puts	(const char *) ;
+
+ size_t	fread	(void *, size_t, size_t, FILE *) ;
+ size_t	fwrite	(const void *, size_t, size_t, FILE *) ;
+
+ int	fgetpos	(FILE *, fpos_t *) ;
+ int	fsetpos	(FILE *, fpos_t *) ;
+
+ int	fseek	(FILE *, long, int) ;
+ long	ftell	(FILE *) ;
+ void	rewind	(FILE *) ;
+
+ void	perror	(const char *) ;
+
+
+ FILE	*fdopen	(int, const char *) ;
+
+
+ FILE *	fopenp	(const char *, const char *) ;
+ int 	fungetc	(int, FILE *) ;
+ int	pclose	(FILE *) ;
+ FILE *	popen	(const char *, const char *) ;
+ void	setlinebuf	(FILE *) ;
+
+ void	_binmode	(int) ;
+ long 	getl	(FILE *) ;
+ long 	putl	(long, FILE *) ;
+ short 	getw	(FILE *) ;
+ short 	putw	(short, FILE *) ;
+ void	_getbuf	(FILE *fp) ;
+# 192 "C:/c68/include/stdio.h"
+ int	_filbuf	(FILE *) ;
+# 5 "model.c" 2
+# 32 "model.c"
 const UINT16 tile_map[11 ][18 ] = {
 
 {4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3},
@@ -164,53 +264,53 @@ const UINT32* evil_pacman_sprites[4][4] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4},
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
 };
-
-
-Pacman pacman = {
-    0,0,
-    0,0,
-    0,
-    1 ,
-    0 
-};
-# 105 "model.c"
-void move_pacman_position (Pacman *pacman, char input)
+# 108 "model.c"
+void move_pacman_position(Pacman *pacman, char input)
 {
+    bool collision;
 	UINT16 new_x_position, new_y_position;
+    pacman -> delta_y = 0;
+    pacman -> delta_x = 0;
 
 	switch(input)
 	{
-		case 'w': pacman -> delta_y = 1;
+		case 'w': pacman -> delta_y = -1;
 			break;
 
 		case 'a': pacman -> delta_x = -1;
 			break;
 
-		case 's': pacman -> delta_y = -1;
+		case 's': pacman -> delta_y = 1;
 			break;
 
 		case 'd': pacman -> delta_x = 1;
 			break;
 
 		default:
-
+			printf("Invalid input\n");
+            pacman-> delta_x = 0;
+            pacman -> delta_y = 0;
 			break;
 	}
 
 	new_x_position = pacman->x + pacman->delta_x;
 	new_y_position = pacman->y + pacman->delta_y;
-# 141 "model.c"
-    handle_collsion(pacman, new_x_position, new_y_position);
+# 152 "model.c"
+    collision = check_collision(&pacman, new_x_position, new_y_position);
 
-    if (pacman->has_collided == 0)
+
+
+
+    if (collision == 0)
     {
+        printf("MOVING HIM");
         pacman->x = new_x_position;
 		pacman->y = new_y_position;
 
     }
-# 161 "model.c"
+# 176 "model.c"
 }
-# 170 "model.c"
+# 185 "model.c"
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
 
@@ -218,7 +318,7 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 	ghost->delta_y = vertical_velocity;
 
 }
-# 187 "model.c"
+# 202 "model.c"
 void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 {
 
@@ -231,5 +331,36 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 			ghost->y += new_y;
 	}
 
+
+}
+bool check_collision (Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position)
+{
+    bool collision = 0;
+
+
+    if (tile_map[pacman_y_position][pacman_x_position] == 1 ||
+        tile_map[pacman_y_position][pacman_x_position] == 2 ||
+        tile_map[pacman_y_position][pacman_x_position] == 3 ||
+        tile_map[pacman_y_position][pacman_x_position] == 4 ||
+        tile_map[pacman_y_position][pacman_x_position] == 5 ||
+        tile_map[pacman_y_position][pacman_x_position] == 6)
+        {
+
+
+            printf(" collision \n");
+            printf("This value is for collision is: %d",tile_map[pacman_y_position][pacman_x_position]);
+            collision = 1;
+
+        }
+
+        else{
+
+            printf(" YOURE GOOD: %d\n",tile_map[pacman_y_position][pacman_x_position]);
+        }
+
+
+
+
+        return collision;
 
 }

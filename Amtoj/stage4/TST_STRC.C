@@ -73,7 +73,7 @@ int main()
 
 /**/
 	char input;
-	Pacman pacman_obj = {0,0,0,0,0,0,0,0};
+	Pacman pacman_obj = {1,1,0,0,0,0,0,0};
 	
 	
 	/*
@@ -88,6 +88,7 @@ int main()
 
 
 	printf("pacman position old : (%d, %d)\n", pacman_obj.x, pacman_obj.y);
+	
 
 	
 	/* use plot font to test (...?) */ 
@@ -110,8 +111,10 @@ int main()
 		
 		input = Cconin();
 		 /*input = Cauxin();*/
-		 move_pacman_position(&pacman_obj,input);
-		
+		 move_pacman_position(&pacman_obj,input); 
+
+		 printf("pacman position now: (%d, %d)\n", pacman_obj.y, pacman_obj.x);
+
 		/*----------------
 		switch(input)
 		{
@@ -143,7 +146,7 @@ int main()
 
 	/*Cnecin();*/
 	
-	printf("pacman position new : (%d, %d)\n", pacman_obj.x, pacman_obj.y);
+	printf("pacman position new : (%d, %d)\n", pacman_obj.y, pacman_obj.x);
 
 
 	return 0;

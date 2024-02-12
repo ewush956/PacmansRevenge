@@ -22,8 +22,8 @@
 
 # this is for data structs ---
 
-tst_struct: tst_strc.o structs.o font.o bitmaps.o events.o model.o rast_asm.o
-	cc68x -g tst_strc.o structs.o font.o bitmaps.o rast_asm.o -o tst_struct
+tst_struct: tst_strc.o structs.o font.o bitmaps.o model.o rast_asm.o
+	cc68x -g tst_strc.o structs.o font.o bitmaps.o model.o rast_asm.o -o tst_struct
 
 tst_strc.o: tst_strc.c struct.h font.h bitmaps.h model.h events.h
 	cc68x -g -c tst_strc.c
@@ -34,14 +34,14 @@ structs.o: structs.c struct.h
 events.o: events.c events.h
 	cc68x -g -c events.c
 
-model.o: model.c model.h
-	cc68x -g -c model.c
-
 font.o: font.c font.h
 	cc68x -g -c font.c
 
 bitmaps.o: bitmaps.c bitmaps.h
 	cc68x -g -c bitmaps.c
+
+model.o: model.c model.h bitmaps.h events.h
+	cc68x -g -c model.c
 
 rast_asm.o: rast_asm.s
 	gen -D -L2 rast_asm.s

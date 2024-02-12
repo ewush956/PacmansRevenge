@@ -1,7 +1,7 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include "types.h"
+#include "TYPES.H"
 #include "model.h"
 
 void clock_tick_handle();		/* calls move pacman calls all synch event handlers */
