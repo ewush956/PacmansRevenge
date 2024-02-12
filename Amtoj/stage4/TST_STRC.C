@@ -73,7 +73,7 @@ int main()
 
 /**/
 	char input;
-	Pacman pacman_obj = {1,1,0,0,0,0,0,0};
+	Pacman pacman_obj = {1,9,0,0,0,0,0,0};
 	
 	
 	/*

@@ -213,29 +213,31 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 	
 	
 } 
-bool check_collision (Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position)
+/*bool check_collision (Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position)*/
+bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
 {
+    
     bool collision = 0; 
 
-
-    if (tile_map[pacman_y_position][pacman_x_position] == 1 || 
-        tile_map[pacman_y_position][pacman_x_position] == 2 ||
-        tile_map[pacman_y_position][pacman_x_position] == 3 ||
-        tile_map[pacman_y_position][pacman_x_position] == 4 ||
-        tile_map[pacman_y_position][pacman_x_position] == 5 ||
-        tile_map[pacman_y_position][pacman_x_position] == 6)
+    /* checking if the location is occupied by a wall or corner sprite */
+    if (tile_map[object_y_position][object_x_position] == 1 || 
+        tile_map[object_y_position][object_x_position] == 2 ||
+        tile_map[object_y_position][object_x_position] == 3 ||
+        tile_map[object_y_position][object_x_position] == 4 ||
+        tile_map[object_y_position][object_x_position] == 5 ||
+        tile_map[object_y_position][object_x_position] == 6)
         {
             
             /*pacman-> has_collided = TRUE;*/
             printf(" collision \n");
-            printf("This value is for collision is: %d",tile_map[pacman_y_position][pacman_x_position]);
+            printf("This value is for collision is: %d",tile_map[object_y_position][object_x_position]);
             collision = 1;
 
         }
 
         else{
 
-            printf(" YOURE GOOD: %d\n",tile_map[pacman_y_position][pacman_x_position]);
+            printf(" YOURE GOOD: %d\n",tile_map[object_y_position][object_x_position]);
         }
         /*
             pacman->has_collided = FALSE;

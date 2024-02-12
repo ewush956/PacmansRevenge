@@ -195,9 +195,9 @@ _check_collision:
 	move.w	12(a6),d4
 	lea	_tile_map,a3
 	moveq	#36,d5
-	;line	221
+	;line	223
 	moveq	#0,d6
-	;line	221
+	;line	223
 	clr.l	d0
 	move.w	d4,d0
 	move.l	d0,a0
@@ -289,11 +289,11 @@ _check_collision:
 	cmp.w	#6,(a0)
 	bne	L14
 L15:
-	;line	230
+	;line	232
 	pea	L11
 	jsr	_printf
 	addq.l	#4,a7
-	;line	231
+	;line	233
 	clr.l	d0
 	move.w	d4,d0
 	move.l	d0,a0
@@ -310,11 +310,11 @@ L15:
 	move.w	(a0),-(a7)
 	pea	L12
 	jsr	_printf
-	;line	232
+	;line	234
 	moveq	#1,d6
 	bra	L16
 L14:
-	;line	238
+	;line	240
 	clr.l	d0
 	move.w	d4,d0
 	move.l	d0,a0
@@ -332,7 +332,7 @@ L14:
 	pea	L13
 	jsr	_printf
 L16:
-	;line	244
+	;line	246
 	move.w	d6,d0
 L17:
 	movem.l	-22(a6),d3/d4/d5/d6/a3

@@ -109,8 +109,11 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman_position (Pacman *pacman, char input);
 
-bool check_collision(Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position);
-# 70 "./model.h"
+
+
+
+bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position);
+# 73 "./model.h"
 void clock_tick_handle();
 # 2 "model.c" 2
 # 1 "./bitmaps.h" 1
@@ -333,29 +336,31 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 
 
 }
-bool check_collision (Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position)
+
+bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
 {
+
     bool collision = 0;
 
 
-    if (tile_map[pacman_y_position][pacman_x_position] == 1 ||
-        tile_map[pacman_y_position][pacman_x_position] == 2 ||
-        tile_map[pacman_y_position][pacman_x_position] == 3 ||
-        tile_map[pacman_y_position][pacman_x_position] == 4 ||
-        tile_map[pacman_y_position][pacman_x_position] == 5 ||
-        tile_map[pacman_y_position][pacman_x_position] == 6)
+    if (tile_map[object_y_position][object_x_position] == 1 ||
+        tile_map[object_y_position][object_x_position] == 2 ||
+        tile_map[object_y_position][object_x_position] == 3 ||
+        tile_map[object_y_position][object_x_position] == 4 ||
+        tile_map[object_y_position][object_x_position] == 5 ||
+        tile_map[object_y_position][object_x_position] == 6)
         {
 
 
             printf(" collision \n");
-            printf("This value is for collision is: %d",tile_map[pacman_y_position][pacman_x_position]);
+            printf("This value is for collision is: %d",tile_map[object_y_position][object_x_position]);
             collision = 1;
 
         }
 
         else{
 
-            printf(" YOURE GOOD: %d\n",tile_map[pacman_y_position][pacman_x_position]);
+            printf(" YOURE GOOD: %d\n",tile_map[object_y_position][object_x_position]);
         }
 
 
