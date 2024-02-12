@@ -43,9 +43,114 @@ _evil_pacman_sprites:
 	even
 _pacman:
 	dc.w	0,0,0,0,0
-	dc.b	1,0
+	dc.b	1,0,0,0
 	text
+	even
+_move_pacman_position:
+	link	a6,#-4
+	movem.l	d3/d4/a3,-(a7)
+	move.l	8(a6),a3
+	;line	109
+	move.b	13(a6),d0
+	sub.b	#119,d0
+	beq	L3
+	sub.b	#-22,d0
+	beq	L4
+	sub.b	#18,d0
+	beq	L5
+	sub.b	#-15,d0
+	beq	L6
+	bra	L2
+L3:
+	;line	111
+	move.w	#1,6(a3)
+	;line	112
+	bra	L1
+L4:
+	;line	114
+	move.w	#-1,4(a3)
+	;line	115
+	bra	L1
+L5:
+	;line	117
+	move.w	#-1,6(a3)
+	;line	118
+	bra	L1
+L6:
+	;line	120
+	move.w	#1,4(a3)
+L2:
+L1:
+	;line	128
+	move.w	4(a3),d0
+	add.w	(a3),d0
+	move.w	d0,d4
+	;line	129
+	move.w	2(a3),d0
+	add.w	6(a3),d0
+	move.w	d0,d3
+	;line	141
+	move.w	d3,-(a7)
+	move.w	d4,-(a7)
+	move.l	a3,-(a7)
+	jsr	_handle_collsion
+	addq.l	#8,a7
+	;line	143
+	tst.b	12(a3)
+	bne	L7
+	;line	145
+	move.w	d4,(a3)
+	;line	146
+	move.w	d3,2(a3)
+L7:
+	movem.l	-16(a6),d3/d4/a3
+	unlk	a6
+	rts
+_increase_ghost_velocity:
+	link	a6,#0
+	;line	173
+	move.l	8(a6),a0
+	move.w	14(a6),4(a0)
+	;line	174
+	move.l	8(a6),a0
+	move.w	12(a6),6(a0)
+	unlk	a6
+	rts
+_move_ghost_position:
+	link	a6,#0
+	movem.l	d3/d4/a3,-(a7)
+	move.l	8(a6),a3
+	move.w	14(a6),d3
+	move.w	12(a6),d4
+	;line	192
+	move.w	(a3),d0
+	add.w	d4,d0
+	cmp.w	#640,d0
+	bhi	L8
+	move.w	(a3),d0
+	add.w	d4,d0
+	tst.w	d0
+	bcs	L8
+	move.w	2(a3),d0
+	add.w	d3,d0
+	cmp.w	#400,d0
+	bhi	L8
+	move.w	2(a3),d0
+	add.w	d3,d0
+	tst.w	d0
+	bcs	L8
+	;line	195
+	add.w	d4,(a3)
+	;line	196
+	add.w	d3,2(a3)
+L8:
+	movem.l	(a7)+,d3/d4/a3
+	unlk	a6
+	rts
 	globl	_tile_map
+	globl	_move_ghost_position
+	globl	_increase_ghost_velocity
+	globl	_move_pacman_position
 	globl	_pacman
 	bss
 	even

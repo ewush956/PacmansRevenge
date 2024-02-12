@@ -79,9 +79,9 @@ extern const UINT32 null_sprite_32[];
 
 extern const UINT32 test64[];
 # 5 "./model.h" 2
-# 12 "./model.h"
-extern const UINT16 tile_map[11][18];
-# 20 "./model.h"
+# 19 "./model.h"
+extern const UINT16 tile_map[11 ][18 ];
+# 27 "./model.h"
 typedef struct
 {
 	UINT16 x, y;
@@ -90,6 +90,7 @@ typedef struct
 	int current_frame;
 	UINT8 direction;
 	bool is_evil;
+	UINT8 has_collided;
 
 }Pacman;
 
@@ -103,17 +104,27 @@ typedef struct
 	UINT8 is_scared;
 
 }Ghost;
-
-
-
-void move_pacman(Pacman* pac_ptr);
-void move_ghost(Ghost* ghost_ptr);
-# 52 "./model.h"
+# 58 "./model.h"
+void move_ghost_position (Ghost *ghost, int new_x, int new_y);
+void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
+void move_pacman_position (Pacman *pacman, char input);
+# 70 "./model.h"
 void clock_tick_handle();
 # 2 "model.c" 2
 # 1 "./bitmaps.h" 1
 # 3 "model.c" 2
-# 30 "model.c"
+# 1 "./events.h" 1
+# 1 "./types.h" 1
+# 1 "./events.h" 2
+# 1 "./model.h" 1
+# 2 "./events.h" 2
+
+
+void clock_tick_handle();
+
+void handle_collision(Pacman* pacman, UINT16 x_position, UINT16 y_position);
+# 4 "model.c" 2
+# 31 "model.c"
 const UINT16 tile_map[11 ][18 ] = {
 
 {4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3},
@@ -162,3 +173,63 @@ Pacman pacman = {
     1 ,
     0 
 };
+# 105 "model.c"
+void move_pacman_position (Pacman *pacman, char input)
+{
+	UINT16 new_x_position, new_y_position;
+
+	switch(input)
+	{
+		case 'w': pacman -> delta_y = 1;
+			break;
+
+		case 'a': pacman -> delta_x = -1;
+			break;
+
+		case 's': pacman -> delta_y = -1;
+			break;
+
+		case 'd': pacman -> delta_x = 1;
+			break;
+
+		default:
+
+			break;
+	}
+
+	new_x_position = pacman->x + pacman->delta_x;
+	new_y_position = pacman->y + pacman->delta_y;
+# 141 "model.c"
+    handle_collsion(pacman, new_x_position, new_y_position);
+
+    if (pacman->has_collided == 0)
+    {
+        pacman->x = new_x_position;
+		pacman->y = new_y_position;
+
+    }
+# 161 "model.c"
+}
+# 170 "model.c"
+void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
+{
+
+	ghost->delta_x = horizontal_velocity;
+	ghost->delta_y = vertical_velocity;
+
+}
+# 187 "model.c"
+void move_ghost_position (Ghost *ghost, int new_x, int new_y)
+{
+
+
+
+	if (!(ghost->x + new_x > 640  || ghost->x  + new_x < 0 ||
+		ghost->y + new_y > 400  || ghost->y + new_y < 0))
+	{
+			ghost-> x += new_x;
+			ghost->y += new_y;
+	}
+
+
+}

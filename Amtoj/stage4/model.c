@@ -1,6 +1,7 @@
 #include "TYPES.H"
 #include "model.h"
 #include "bitmaps.h"
+#include "events.h"
 
 #define MAX_MAP_LENGTH 18          /* 18 horiz walls x 32 pixels = 576 */
 #define MAX_MAP_HEIGHT 11         /* 11 vert walls x 32 pixels = 352   */
@@ -67,14 +68,16 @@ const UINT32* evil_pacman_sprites[4][4] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
 };
 
-
+/*
 Pacman pacman = {
     0,0,        /*Initial position, won't actually be 0,0*/
-    0,0,        /*Initial Displacement*/
-    0,          /*Initial state index*/
-    UP,         /*Initial direction*/
-    FALSE       /*Initial state*/
-};
+/*    0,0,        /*Initial Displacement*/
+/*    0,          /*Initial state index*/
+/*    UP,         /*Initial direction*/
+/*    FALSE       /*Initial state*/
+/*};
+*/
+
 /*
 Ghost crying_ghost = {
     0,0,
@@ -101,3 +104,99 @@ moustache_ghost
 cyclops_ghost
 awkward_ghost
 */
+void move_pacman_position (Pacman *pacman, char input) 
+{
+	UINT16 new_x_position, new_y_position; 
+
+	switch(input)
+	{
+		case 'w': pacman -> delta_y = 1; 			/* UP*/
+			break;
+				
+		case 'a': pacman -> delta_x = -1;			/*Left*/
+			break;
+				
+		case 's': pacman -> delta_y = -1;			/*Down*/
+			break;
+				
+		case 'd': pacman -> delta_x = 1;			/* Right*/
+			break;
+
+		default:
+			/*printf("Invalid input\n");*/
+			break;
+	}
+		
+	new_x_position = pacman->x + pacman->delta_x;
+	new_y_position = pacman->y + pacman->delta_y;
+    
+    /*
+	if (new_x_position < SCREEN_WIDTH && new_x_position >= 0 && 
+		new_y_position < SCREEN_HEIGHT && new_y_position >= 0)
+		{
+			pacman->x = new_x_position;
+			pacman->y = new_y_position;
+
+		}
+    */
+
+    handle_collsion(pacman, new_x_position, new_y_position);
+    
+    if (pacman->has_collided == 0)  /*false (i.e. he has NOT collided)*/
+    {
+        pacman->x = new_x_position;
+		pacman->y = new_y_position;
+       
+    }
+
+
+	/* old code
+	if (!(pacman->x + new_x > SCREEN_WIDTH || pacman->x  + new_x < 0 ||
+		pacman->y + new_y > SCREEN_HEIGHT || pacman->y + new_y < 0))
+	{
+			pacman-> x += new_x;
+			pacman->y += new_y;
+	}
+	*/
+	
+	
+}
+
+
+/* the end game conditon would call this..? 
+*
+* increase both vert and horizontal speed to capture pacman and end game
+*  leave in x-y parameters now but later we can just use a constant 
+*
+*/
+void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
+{
+	
+	ghost->delta_x = horizontal_velocity;
+	ghost->delta_y = vertical_velocity;
+		
+}
+
+
+/* 
+*	This is for checking if the ghost struct in 'model.h' is working correcctly 
+*    
+*	-Used ints for moving backwards by adding negatives 
+*
+*
+* (..hard-coded path)
+*/
+void move_ghost_position (Ghost *ghost, int new_x, int new_y)
+{
+		
+	/* for now assume that the map will be 640x400 (chnage later once we figure out proper dimesn for map)*/
+	
+	if (!(ghost->x + new_x > SCREEN_WIDTH || ghost->x  + new_x < 0 ||
+		ghost->y + new_y > SCREEN_HEIGHT || ghost->y + new_y < 0))
+	{
+			ghost-> x += new_x;
+			ghost->y += new_y;
+	}
+	
+	
+} 

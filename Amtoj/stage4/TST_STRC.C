@@ -58,11 +58,12 @@ void display_all_ascii(UINT8* base, int x0, int y0);
 void test_arbitrary_letter(UINT8* base);
 
 
-/* for object testing */
+/* for object testing 
+
 void move_ghost_position (Ghost *ghost, int new_x, int new_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman_position (Pacman *pacman, char input);
-
+*/
 
 int main()
 {
@@ -72,18 +73,20 @@ int main()
 
 /**/
 	char input;
+	Pacman pacman_obj = {0,0,0,0,0,0,0,0};
+	
+	
+	/*
 	Ghost crying_ghost = {100,100,0,0};
-	Pacman pacman_obj = {0,0,0,0};
-	
 	printf("Initial position: (%d, %d)\n", crying_ghost.x, crying_ghost.y);
-	
 	move_ghost_position(&crying_ghost,-5,0);
 	move_ghost_position(&crying_ghost,1,0);
 	move_ghost_position(&crying_ghost,600,600); 		/* out of bounds test */
-	increase_ghost_velocity(&crying_ghost,10,10);
-	
-	printf("New position: (%d, %d)\n", crying_ghost.x, crying_ghost.y);
-	printf("New speed: (%d, %d)\n", crying_ghost.delta_x, crying_ghost.delta_y);	
+	/*increase_ghost_velocity(&crying_ghost,10,10);
+	/*printf("New position: (%d, %d)\n", crying_ghost.x, crying_ghost.y);
+	printf("New speed: (%d, %d)\n", crying_ghost.delta_x, crying_ghost.delta_y);	*/
+
+
 	printf("pacman position old : (%d, %d)\n", pacman_obj.x, pacman_obj.y);
 
 	
@@ -155,6 +158,11 @@ void next_test(UINT32* base) {
 	Cnecin();
 	clear_screen_q(base);
 }
+
+
+
+
+/*----------------------------------------------------------------------------------------*/
 /* 
 *	This is for checking if the ghost struct in 'model.h' is working correcctly 
 *    
@@ -162,11 +170,11 @@ void next_test(UINT32* base) {
 *
 *
 *
-*/
+
 void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 {
 		
-	/* for now assume that the map will be 640x400 (chnage later once we figure out proper dimesn for map)*/
+	/* for now assume that the map will be 640x400 (chnage later once we figure out proper dimesn for map)
 	
 	if (!(ghost->x + new_x > SCREEN_WIDTH || ghost->x  + new_x < 0 ||
 		ghost->y + new_y > SCREEN_HEIGHT || ghost->y + new_y < 0))
@@ -183,7 +191,7 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 * increase both vert and horizontal speed to capture pacman and end game
 *  leave in x-y parameters now but later we can just use a constant 
 *
-*/
+
 
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
@@ -198,29 +206,29 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 *
 *
 *
-*/
+
 void move_pacman_position (Pacman *pacman, char input) 
 {
 	int new_x_position, new_y_position; 
 
 	switch(input)
-		{
-			case 'w': pacman -> delta_y = 1; 			/* UP*/
-				break;
+	{
+		case 'w': pacman -> delta_y = 1; 			
+			break;
 				
-			case 'a': pacman -> delta_x = -1;			/*Left*/
-				break;
+		case 'a': pacman -> delta_x = -1;			
+			break;
 				
-			case 's': pacman -> delta_y = -1;			/*Down*/
-				break;
+		case 's': pacman -> delta_y = -1;			
+			break;
 				
-			case 'd': pacman -> delta_x = 1;			/* Right*/
-				break;
+		case 'd': pacman -> delta_x = 1;			
+			break;
 
-			default:
-				printf("Invalid input\n");
-				break;
-		}
+		default:
+			printf("Invalid input\n");
+			break;
+	}
 		
 	new_x_position = pacman->x + pacman->delta_x;
 	new_y_position = pacman->y + pacman->delta_y;
@@ -242,7 +250,8 @@ void move_pacman_position (Pacman *pacman, char input)
 			pacman-> x += new_x;
 			pacman->y += new_y;
 	}
-	*/
+	
 	
 	
 }
+*/
