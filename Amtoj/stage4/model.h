@@ -30,7 +30,7 @@ typedef struct
 	int delta_x, delta_y; 		/* displacement (horzontal or vertical) */
 
 	int current_frame;		/* current sprite (state) index */
-	UINT8 direction;		/*UP, DOWN, LEFT, RIGHT*/
+	UINT16 direction;		/*UP, DOWN, LEFT, RIGHT*/
 	UINT8 is_evil;
 	UINT8 has_collided; 
 
@@ -55,7 +55,7 @@ void move_ghost(Ghost* ghost_ptr);
 */
 
 /* for object testing */
-void move_ghost_position (Ghost *ghost, int new_x, int new_y);
+void move_ghost_position (Ghost *ghost, int current_x, int current_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman_position (Pacman *pacman, char input);
 

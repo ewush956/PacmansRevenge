@@ -88,7 +88,7 @@ typedef struct
 	int delta_x, delta_y;
 
 	int current_frame;
-	UINT8 direction;
+	UINT16 direction;
 	UINT8 is_evil;
 	UINT8 has_collided;
 
@@ -105,7 +105,7 @@ typedef struct
 
 }Ghost;
 # 58 "./model.h"
-void move_ghost_position (Ghost *ghost, int new_x, int new_y);
+void move_ghost_position (Ghost *ghost, int current_x, int current_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman_position (Pacman *pacman, char input);
 
@@ -274,19 +274,24 @@ void move_pacman_position(Pacman *pacman, char input)
 	UINT16 new_x_position, new_y_position;
     pacman -> delta_y = 0;
     pacman -> delta_x = 0;
+    pacman->direction = 0;
 
 	switch(input)
 	{
 		case 'w': pacman -> delta_y = -1;
+            pacman->direction = 1;
 			break;
 
 		case 'a': pacman -> delta_x = -1;
+
 			break;
 
 		case 's': pacman -> delta_y = 1;
+
 			break;
 
 		case 'd': pacman -> delta_x = 1;
+
 			break;
 
 		default:
@@ -298,7 +303,7 @@ void move_pacman_position(Pacman *pacman, char input)
 
 	new_x_position = pacman->x + pacman->delta_x;
 	new_y_position = pacman->y + pacman->delta_y;
-# 152 "model.c"
+# 157 "model.c"
     collision = check_collision(&pacman, new_x_position, new_y_position);
 
 
@@ -311,9 +316,9 @@ void move_pacman_position(Pacman *pacman, char input)
 		pacman->y = new_y_position;
 
     }
-# 176 "model.c"
+# 181 "model.c"
 }
-# 185 "model.c"
+# 190 "model.c"
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
 
@@ -321,20 +326,10 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 	ghost->delta_y = vertical_velocity;
 
 }
-# 202 "model.c"
-void move_ghost_position (Ghost *ghost, int new_x, int new_y)
+# 211 "model.c"
+void move_ghost_position (Ghost *ghost, int current_x, int current_y)
 {
-
-
-
-	if (!(ghost->x + new_x > 640  || ghost->x  + new_x < 0 ||
-		ghost->y + new_y > 400  || ghost->y + new_y < 0))
-	{
-			ghost-> x += new_x;
-			ghost->y += new_y;
-	}
-
-
+# 230 "model.c"
 }
 
 bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
@@ -353,7 +348,8 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
 
 
             printf(" collision \n");
-            printf("This value is for collision is: %d",tile_map[object_y_position][object_x_position]);
+            printf("This value is for collision is: %d\n",tile_map[object_y_position][object_x_position]);
+
             collision = 1;
 
         }
@@ -361,6 +357,7 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
         else{
 
             printf(" YOURE GOOD: %d\n",tile_map[object_y_position][object_x_position]);
+            printf("Direction: %u\n", pacman->direction);
         }
 
 

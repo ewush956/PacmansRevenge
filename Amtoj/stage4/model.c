@@ -111,19 +111,24 @@ void move_pacman_position(Pacman *pacman, char input)
 	UINT16 new_x_position, new_y_position; 
     pacman -> delta_y = 0;
     pacman -> delta_x = 0;              /* make this better? how to reset it everytime?*/
+    pacman->direction = 0;
 
 	switch(input)
 	{
-		case 'w': pacman -> delta_y = -1; 			/* UP*/
+		case 'w': pacman -> delta_y = -1;   		/* UP*/
+            pacman->direction = 1;
 			break;
 				
 		case 'a': pacman -> delta_x = -1;			/*Left*/
+             /*pacman->direction = 2;*/
 			break;
 				
 		case 's': pacman -> delta_y = 1;			/*Down*/
+             /*pacman->direction = 3;*/
 			break;
 				
 		case 'd': pacman -> delta_x = 1;			/* Right*/
+            /*pacman->direction = 4;*/
 			break;
 
 		default:
@@ -199,19 +204,29 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 *
 * (..hard-coded path)
 */
-void move_ghost_position (Ghost *ghost, int new_x, int new_y)
+
+/* pass in the current posiition into this and update accordingly 
+/* make different instances of ghosts in test main program to call
+*/
+void move_ghost_position (Ghost *ghost, int current_x, int current_y)
 {
 		
 	/* for now assume that the map will be 640x400 (chnage later once we figure out proper dimesn for map)*/
-	
+	/*
 	if (!(ghost->x + new_x > SCREEN_WIDTH || ghost->x  + new_x < 0 ||
 		ghost->y + new_y > SCREEN_HEIGHT || ghost->y + new_y < 0))
 	{
 			ghost-> x += new_x;
 			ghost->y += new_y;
 	}
-	
-	
+
+	*/
+
+  /* check pacmans posiition adn always go opposite of it */
+  /* then check for collsion if collsion then try a different direction and repreat */
+  
+
+
 } 
 /*bool check_collision (Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position)*/
 bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
@@ -230,7 +245,8 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
             
             /*pacman-> has_collided = TRUE;*/
             printf(" collision \n");
-            printf("This value is for collision is: %d",tile_map[object_y_position][object_x_position]);
+            printf("This value is for collision is: %d\n",tile_map[object_y_position][object_x_position]);
+         /*   printf("Direction: %d\n", pacman->direction);*/
             collision = 1;
 
         }
@@ -238,6 +254,7 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
         else{
 
             printf(" YOURE GOOD: %d\n",tile_map[object_y_position][object_x_position]);
+            printf("Direction: %u\n", pacman->direction);
         }
         /*
             pacman->has_collided = FALSE;
