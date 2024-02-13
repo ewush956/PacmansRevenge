@@ -44,7 +44,7 @@ typedef struct {
 	int delta_x, delta_y; 		/* displacement (horzontal or vertical) */
 
 	int current_frame;		/* current sprite (state) index */
-	UINT8 direction;		/*UP, DOWN, LEFT, RIGHT*/
+	UINT8 direction = 0;		/*UP, DOWN, LEFT, RIGHT*/
 	bool is_evil;
 	bool has_collided; 
 
@@ -80,7 +80,7 @@ extern Ghost cyclops_ghost;
 /* for object testing */
 void move_ghost_position (Ghost *ghost, int current_x, int current_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
-void move_pacman_position (Pacman *pacman, char input);
+bool move_pacman_position (Pacman *pacman);
  
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);

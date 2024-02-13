@@ -132,7 +132,7 @@ extern Ghost cyclops_ghost;
 
 void move_ghost_position (Ghost *ghost, int current_x, int current_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
-void move_pacman_position (Pacman *pacman, char input);
+bool move_pacman_position (Pacman *pacman);
 
 void init_map_cells(Cell cell_map[][18 ]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][18 ], Cell cell_map[][18 ]);
@@ -336,7 +336,7 @@ void init_map_cells( Cell cell_map[][18 ] )
      for (i=0; i <= 11 ; i++){
         for(j=0; j <= 18 ; j ++){
 
-            printf("%u,",cell_map[i][j]);
+            printf("%d,",cell_map[i][j].open_path);
         }
         printf("\n,");
     }
@@ -359,6 +359,7 @@ void set_ghost_path(Ghost *ghost, UINT16* path_array[][18 ], Cell cell_map[][18 
     }
 }
 void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][18 ]) {
+
     UINT16 crying_ghost_path[11 ][18 ] = {
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -417,56 +418,32 @@ void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4
     set_ghost_path(ghost4, &awkward_ghost_path, cell_map);
 }
 
-void move_pacman_position(Pacman *pacman, char input)
+bool move_pacman_position(Pacman *pacman)
 {
     bool collision;
 	UINT16 new_x_position, new_y_position;
-    pacman -> delta_y = 0;
-    pacman -> delta_x = 0;
-    pacman->direction = 0;
-
-	switch(input)
-	{
-		case 'w': pacman -> delta_y = -1;
-            pacman->direction = 1;
-			break;
-
-		case 'a': pacman -> delta_x = -1;
-
-			break;
-
-		case 's': pacman -> delta_y = 1;
-
-			break;
-
-		case 'd': pacman -> delta_x = 1;
-
-			break;
-
-		default:
-			printf("Invalid input\n");
-            pacman-> delta_x = 0;
-            pacman -> delta_y = 0;
-			break;
-	}
-
+# 264 "model.c"
 	new_x_position = pacman->x + pacman->delta_x;
 	new_y_position = pacman->y + pacman->delta_y;
-# 274 "model.c"
+# 281 "model.c"
     collision = check_collision(&pacman, new_x_position, new_y_position);
 
 
-
-
-    if (collision == 0)
+    if (collision == 0 )
     {
         printf("MOVING HIM");
         pacman->x = new_x_position;
 		pacman->y = new_y_position;
-
+        pacman->current_cell = &cell_map[11 ][18 ];
+        printf("Direction: %d\n",pacman->direction);
 
     }
-# 299 "model.c"
+
+
+
+    return collision;
+
+
 }
 # 308 "model.c"
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
@@ -477,9 +454,12 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 
 }
 # 329 "model.c"
-void move_ghost_position (Ghost *ghost, int current_x, int current_y)
+void move_ghost_position (Ghost *ghost,int current_x, int current_y)
 {
-# 348 "model.c"
+# 361 "model.c"
+  return;
+
+
 }
 
 bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
@@ -489,12 +469,15 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
 
     if (cell_map[object_y_position][object_x_position].open_path == 0 ) {
         collision = 1 ;
+
         printf(" collision \n");
         printf("This value is for collision is: %d\n",tile_map[object_y_position][object_x_position]);
     }
+
     else{
         printf(" YOURE GOOD: %d\n",tile_map[object_y_position][object_x_position]);
     }
+
 
 
     return collision;

@@ -57,6 +57,8 @@ void next_test(UINT32* base);
 void display_all_ascii(UINT8* base, int x0, int y0);
 void test_arbitrary_letter(UINT8* base);
 
+void set_input(Pacman *pacman,char input);
+
 
 /* for object testing 
 
@@ -114,7 +116,13 @@ int main()
 		
 		input = Cconin();
 		 /*input = Cauxin();*/
-		 move_pacman_position(&pacman_obj,input); 
+		 set_input(&pacman_obj,input);
+		
+		 if (move_pacman_position(&pacman_obj) == FALSE)
+		 	printf("HE ISGOD TO MOVE \n");
+		else
+			printf("STOPPED\n");
+
 
 		 printf("pacman position now: (%d, %d)\n", pacman_obj.y, pacman_obj.x);
 
@@ -261,3 +269,44 @@ void move_pacman_position (Pacman *pacman, char input)
 	
 }
 */
+
+void set_input(Pacman *pacman, char input)
+{
+
+	pacman -> delta_y = 0;
+    pacman -> delta_x = 0;              /* make this better? how to reset it everytime?*/
+    pacman->direction = 0;
+
+	switch(input)
+	{
+		case 'w': 
+			pacman -> delta_y = -1;   		/* UP*/
+            pacman->direction = UP; 
+			break;
+				
+		case 'a': 
+			pacman -> delta_x = -1;			/*Left*/
+            pacman->direction = LEFT;
+			break;
+				
+		case 's': 
+			pacman -> delta_y = 1;			/*Down*/
+            pacman->direction = DOWN;
+			break;
+				
+		case 'd': 
+			pacman -> delta_x = 1;			/* Right*/
+            pacman->direction = RIGHT;
+			break;
+
+		default:
+			printf("Invalid input\n");
+            pacman-> delta_x = 0;
+            pacman -> delta_y = 0;
+			break;
+	}
+		
+
+
+
+}

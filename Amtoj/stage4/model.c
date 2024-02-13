@@ -131,9 +131,9 @@ void init_map_cells( Cell cell_map[][MAP_TILE_LENGTH] )
             cell_map[i][j].x_position = X_PIXEL_OFFSET + (j >> 5);
             cell_map[i][j].y_position = Y_PIXEL_OFFSET + (i >> 5); /* changed from <<*/
             if (tile_map[i][j] == 0) {
-                cell_map[i][j].open_path = TRUE; /*TRUE*/
+                cell_map[i][j].open_path = TRUE; 
             } else {
-                cell_map[i][j].open_path = FALSE; /*FALSE*/
+                cell_map[i][j].open_path = FALSE; 
             }
         }
     }
@@ -141,7 +141,7 @@ void init_map_cells( Cell cell_map[][MAP_TILE_LENGTH] )
      for (i=0; i <= MAP_TILE_HEIGHT; i++){
         for(j=0; j <= MAP_TILE_LENGTH; j ++){
            
-            printf("%u,",cell_map[i][j]);
+            printf("%d,",cell_map[i][j].open_path);
         }
         printf("\n,");
     }
@@ -223,30 +223,33 @@ void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4
     set_ghost_path(ghost4, &awkward_ghost_path, cell_map);
 }
 
-void move_pacman_position(Pacman *pacman, char input) 
+bool move_pacman_position(Pacman *pacman) 
 {
     bool collision; 
-	UINT16 new_x_position, new_y_position; 
+	UINT16 new_x_position, new_y_position;
+    /*
     pacman -> delta_y = 0;
-    pacman -> delta_x = 0;              /* make this better? how to reset it everytime?*/
+    pacman -> delta_x = 0;              /* make this better? how to reset it everytime?
     pacman->direction = 0;
+     */
 
+/*
 	switch(input)
 	{
-		case 'w': pacman -> delta_y = -1;   		/* UP*/
-            pacman->direction = 1; 
+		case 'w': pacman -> delta_y = -1;   		
+            pacman->direction = UP; 
 			break;
 				
-		case 'a': pacman -> delta_x = -1;			/*Left*/
-             /*pacman->direction = 2;*/
+		case 'a': pacman -> delta_x = -1;			
+             pacman->direction = LEFT;
 			break;
 				
-		case 's': pacman -> delta_y = 1;			/*Down*/
-             /*pacman->direction = 3;*/
+		case 's': pacman -> delta_y = 1;			
+             pacman->direction = DOWN;
 			break;
 				
-		case 'd': pacman -> delta_x = 1;			/* Right*/
-            /*pacman->direction = 4;*/
+		case 'd': pacman -> delta_x = 1;			
+            pacman->direction = RIGHT;
 			break;
 
 		default:
@@ -255,9 +258,12 @@ void move_pacman_position(Pacman *pacman, char input)
             pacman -> delta_y = 0;
 			break;
 	}
-		
+		*/
+
+
 	new_x_position = pacman->x + pacman->delta_x;
 	new_y_position = pacman->y + pacman->delta_y;
+
     
     /*
 	if (new_x_position < SCREEN_WIDTH && new_x_position >= 0 && 
@@ -274,19 +280,20 @@ void move_pacman_position(Pacman *pacman, char input)
 
     collision = check_collision(&pacman, new_x_position, new_y_position);
 
-   /*
-    printf("%d\n",tile_map[4][5]);*/
 
-    if (collision == 0)
+    if (collision == FALSE)
     {
         printf("MOVING HIM");
         pacman->x = new_x_position;
 		pacman->y = new_y_position;
         pacman->current_cell = &cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+        printf("Direction: %d\n",pacman->direction);
        
     }
 
 
+
+    return collision;
 	
 	
 }
@@ -319,7 +326,7 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 /* pass in the current posiition into this and update accordingly 
 /* make different instances of ghosts in test main program to call
 */
-void move_ghost_position (Ghost *ghost, int current_x, int current_y)
+void move_ghost_position (Ghost *ghost,int current_x, int current_y)
 {
 		
 	/* for now assume that the map will be 640x400 (chnage later once we figure out proper dimesn for map)*/
@@ -332,17 +339,26 @@ void move_ghost_position (Ghost *ghost, int current_x, int current_y)
 	}
 	*/
 
-/* check direction first of pac ?*/
-    if (cell_map[current_y][current_x] == TRUE)
+/* check direction first of pac ?
+
+    if (pacman->direction == UP)
     {
 
-        
+        ghost->direction = DOWN;   
 
     }
+    if (pacman->direction == DOWN)
+    {
+
+        ghost->direction = DOWN;   
+
+    }
+    */
+
 
   /* check pacmans posiition adn always go opposite of it */
   /* then check for collsion if collsion then try a different direction and repreat */
-  
+  return;
 
 
 }
@@ -350,17 +366,20 @@ void move_ghost_position (Ghost *ghost, int current_x, int current_y)
 bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
 {
 
-    bool collision  = FALSE; /*False*/
+    bool collision  = FALSE; 
 
     if (cell_map[object_y_position][object_x_position].open_path == FALSE) {
         collision = TRUE;
+
         printf(" collision \n");
         printf("This value is for collision is: %d\n",tile_map[object_y_position][object_x_position]);
     }
+    
     else{
         printf(" YOURE GOOD: %d\n",tile_map[object_y_position][object_x_position]);
     }
 
+    
 
     return collision;
 
