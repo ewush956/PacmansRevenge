@@ -1,7 +1,6 @@
 #include "TYPES.H"
 #include "model.h"
 #include "bitmaps.h"
-#include "cells.c"
 
 const UINT8 map[][25];	/* I don't know how many*/
 
@@ -23,53 +22,49 @@ const UINT32* evil_pacman_sprites[4][4] = {
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 Pacman pacman = {
-    cell_0_0->x_position, cell_0_0->y_position,        /*Initial position, won't actually be 0,0*/
+    X_PIXEL_OFFSET, Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
     0,0,        /*Initial Displacement*/
     0,          /*Initial state index*/
     UP,         /*Initial direction*/
     FALSE,       /*Initial state*/
-    &cell_0_0;    /*Initial cell*/
-
 };
 
 Ghost crying_ghost = {
-    cell_0_0->x_position, cell_0_0->y_position,
+    0,0,
     0,0,
     0,
     UP,
-    FALSE,
-    &cell_0_0;    /*Or whatever cell it starts in*/
-    
+    FALSE
+               /*Or whatever cell it starts in*/
+ 
 };
 Ghost moustache_ghost = {
-    cell_0_0->x_position, cell_0_0->y_position,
+    0,0,
     0,0,
     0,
     UP,
-    FALSE,
-    &cell_0_0;
+    FALSE
 };
 Ghost cyclops_ghost = {
-    cell_0_0->x_position, cell_0_0->y_position,
+    0,0,
     0,0,
     0,
     UP,
-    FALSE,
-    &cell_0_0;
+    FALSE
 };
 Ghost awkward_ghost = {
-    cell_0_0->x_position, cell_0_0->y_position,
+    0,0,
     0,0,
     0,
     UP,
-    FALSE,
-    &cell_0_0;
+    FALSE
 };
 
 void move_pacman_position (Pacman *pacman, UINT16 delta_x, UINT16 delta_y) 
 {
     
 	UINT16 new_x_position, new_y_position; 
+    char input = 'w';
     switch(input)
 	{
 		case 'w': pacman -> delta_y = 1; 			/* UP*/
@@ -103,7 +98,7 @@ void move_pacman_position (Pacman *pacman, UINT16 delta_x, UINT16 delta_y)
 		}
     */
 
-    check_collsion(pacman, new_x_position, new_y_position);
+    /*check_collsion(pacman, new_x_position, new_y_position); */
     
     if (pacman->has_collided == 0)  /*false (i.e. he has NOT collided)*/
     {
@@ -151,15 +146,15 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 */
 void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 {
-		
-	/* for now assume that the map will be 640x400 (chnage later once we figure out proper dimesn for map)*/
-	
 	if (!(ghost->x + new_x > SCREEN_WIDTH || ghost->x  + new_x < 0 ||
 		ghost->y + new_y > SCREEN_HEIGHT || ghost->y + new_y < 0))
 	{
 			ghost-> x += new_x;
 			ghost->y += new_y;
 	}
+}
+bool check_collision(int x, int y) {
+    return TRUE;
 } 
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]){
 
@@ -190,12 +185,12 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]){
         }
     }
 }
-void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH]) {
+void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]) {
     int i, j;
     for (i = 0; i < MAP_TILE_HEIGHT; i++) {
         for (j = 0; j < MAP_TILE_LENGTH; j++) {
-            ghost->path[i][j].x_position = cell_map[i][j]->x_position;
-            ghost->path[i][j].y_position = cell_map[i][j]->y_position;
+            ghost->path[i][j].x_position = cell_map[i][j].x_position;
+            ghost->path[i][j].y_position = cell_map[i][j].y_position;
             if (path_array[i][j] == 0) {
                 ghost->path[i][j].open_path = TRUE;
             } else {
@@ -206,7 +201,7 @@ void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH]) {
 
     }
 }
-void init_ghost_paths() {
+void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][MAP_TILE_LENGTH]) {
     UINT16 crying_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -259,8 +254,8 @@ void init_ghost_paths() {
         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
     };
-    set_ghost_path(&crying_ghost, crying_ghost_path);
-    set_ghost_path(&moustache_ghost, moustache_ghost_path);
-    set_ghost_path(&cyclops_ghost, cyclops_ghost_path);
-    set_ghost_path(&awkward_ghost, awkward_ghost_path);
+    set_ghost_path(ghost1, &crying_ghost_path, cell_map);
+    set_ghost_path(ghost2, &moustache_ghost_path, cell_map);
+    set_ghost_path(ghost3, &cyclops_ghost_path, cell_map);
+    set_ghost_path(ghost4, &awkward_ghost_path, cell_map);
 }

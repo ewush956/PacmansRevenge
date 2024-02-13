@@ -13,6 +13,9 @@ typedef signed char bool;
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 400
 
+#define X_PIXEL_OFFSET 16
+#define Y_PIXEL_OFFSET 20
+
 #define SPRITE_HEIGHT 32
 #define SPRITE_WIDTH 32
 

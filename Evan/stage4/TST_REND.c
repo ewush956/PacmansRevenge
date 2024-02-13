@@ -65,7 +65,7 @@ int main()
 
 	display_all_sprites(base32);
 	next_test(base32);
-    plot_map(base32, wall_map);
+    plot_map(base32);
 
 
 	/*18 x 11 !!!!!!!!!!!!!!!!*/
