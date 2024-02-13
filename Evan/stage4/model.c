@@ -2,18 +2,6 @@
 #include "model.h"
 #include "bitmaps.h"
 #include "cells.c"
-/*
-const UINT32* sprites[] = {
-    pac_1, pac_2, pac_3, pac_4,
-    evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4,
-    ghost_1_up, ghost_1_down, ghost_1_left, ghost_1_right,
-    ghost_2_up, ghost_2_down, ghost_2_left, ghost_2_right,
-    ghost_3_up, ghost_3_down, ghost_3_left, ghost_3_right,
-    ghost_4_up, ghost_4_down, ghost_4_left, ghost_4_right,
-    wall_left_down_right, wall_up_down, wall_left_right, wall_down_right,
-    tombstone, ghost_run, ghost_freeze
-};
-*/
 
 const UINT8 map[][25];	/* I don't know how many*/
 
@@ -32,6 +20,7 @@ const UINT32* evil_pacman_sprites[4][4] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4},
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
 };
+Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 Pacman pacman = {
     cell_0_0->x_position, cell_0_0->y_position,        /*Initial position, won't actually be 0,0*/
@@ -50,6 +39,7 @@ Ghost crying_ghost = {
     UP,
     FALSE,
     &cell_0_0;    /*Or whatever cell it starts in*/
+    
 };
 Ghost moustache_ghost = {
     cell_0_0->x_position, cell_0_0->y_position,
@@ -113,7 +103,7 @@ void move_pacman_position (Pacman *pacman, UINT16 delta_x, UINT16 delta_y)
 		}
     */
 
-    handle_collsion(pacman, new_x_position, new_y_position);
+    check_collsion(pacman, new_x_position, new_y_position);
     
     if (pacman->has_collided == 0)  /*false (i.e. he has NOT collided)*/
     {
@@ -170,6 +160,107 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 			ghost-> x += new_x;
 			ghost->y += new_y;
 	}
-	
-	
 } 
+void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]){
+
+    UINT16 tile_map[][MAP_TILE_LENGTH] = {
+
+        {4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3},
+        {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+        {2,0,4,1,1,1,0,1,0,1,0,1,1,1,1,3,0,2},
+        {2,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2,0,2},
+        {2,0,2,0,4,3,0,4,0,0,3,0,4,3,0,2,0,2},
+        {2,0,0,0,0,0,0,6,1,1,5,0,2,2,0,0,0,2},
+        {2,0,2,0,6,5,0,0,0,0,0,0,6,5,0,2,0,2},
+        {2,0,2,0,0,0,0,0,4,1,3,0,0,0,0,2,0,2},
+        {2,0,6,1,1,1,1,0,6,1,5,0,1,1,1,5,0,2},
+        {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+        {6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5}
+    };
+    int i, j;
+    for (i=0; i <= MAP_TILE_HEIGHT; i++){
+        for(j=0; j <= MAP_TILE_LENGTH; j ++){
+            cell_map[i][j].x_position = X_PIXEL_OFFSET + (j << 5);
+            cell_map[i][j].y_position = Y_PIXEL_OFFSET + (i << 5);
+            if (tile_map[i][j] == 0) {
+                cell_map[i][j].open_path = TRUE;
+            } else {
+                cell_map[i][j].open_path = FALSE;
+            }
+        }
+    }
+}
+void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH]) {
+    int i, j;
+    for (i = 0; i < MAP_TILE_HEIGHT; i++) {
+        for (j = 0; j < MAP_TILE_LENGTH; j++) {
+            ghost->path[i][j].x_position = cell_map[i][j]->x_position;
+            ghost->path[i][j].y_position = cell_map[i][j]->y_position;
+            if (path_array[i][j] == 0) {
+                ghost->path[i][j].open_path = TRUE;
+            } else {
+                ghost->path[i][j].open_path = FALSE;
+            }
+
+        }
+
+    }
+}
+void init_ghost_paths() {
+    UINT16 crying_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1},
+        {1,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,1},
+        {1,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,1},
+        {1,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,0,1},
+        {1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1},
+        {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+    UINT16 awkward_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1},
+        {1,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,1,1},
+        {1,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,1},
+        {1,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,0,1},
+        {1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1},
+        {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+    UINT16 moustache_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1},
+        {1,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,1},
+        {1,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,1},
+        {1,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,0,1},
+        {1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1},
+        {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+    UINT16 cyclops_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1},
+        {1,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,1,1},
+        {1,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,1},
+        {1,1,1,0,1,1,0,0,0,0,0,0,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1},
+        {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+    set_ghost_path(&crying_ghost, crying_ghost_path);
+    set_ghost_path(&moustache_ghost, moustache_ghost_path);
+    set_ghost_path(&cyclops_ghost, cyclops_ghost_path);
+    set_ghost_path(&awkward_ghost, awkward_ghost_path);
+}

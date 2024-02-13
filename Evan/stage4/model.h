@@ -47,6 +47,7 @@ typedef struct
 	bool is_scared;		/*chnaged from bool*/
 
 	Cell* current_cell;
+	Cell path[MAP_TILE_LENGTH][MAP_TILE_HEIGHT];
 
 }Ghost;
 
@@ -56,7 +57,7 @@ typedef struct {
 	bool open_path;
 }Cell;
 
-extern const Cell tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+extern Cell tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 extern Pacman pacman;
 extern Ghost awkward_ghost;
