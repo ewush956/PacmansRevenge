@@ -43,7 +43,7 @@ extern const UINT32 ghost_run[];
 extern const UINT32 ghost_freeze[];
 
 extern const UINT32 wall1_all[];
-extern const UINT32 wall2_all[];
+/*extern const UINT32 wall2_all[];*/
 
 extern const UINT32 wall1_vert[];
 extern const UINT32 wall2_vert[];
@@ -54,6 +54,7 @@ extern const UINT32 wall2_horz[];
 extern const UINT32 wall1_URD[];
 extern const UINT32 wall1_LD[];
 extern const UINT32 wall1_LUR[];
+
 extern const UINT32 wall2_RDL[];
 extern const UINT32 wall2_RD[];
 extern const UINT32 wall2_DLU[];

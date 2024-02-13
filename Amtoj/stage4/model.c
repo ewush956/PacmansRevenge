@@ -20,6 +20,7 @@ const UINT32* sprites[] = {
 };
 */
 
+
 /*
 0 is a open square and 
 1 is a horizontal wall
@@ -29,7 +30,10 @@ const UINT32* sprites[] = {
 5 is LU
 6 is UR (up -> right)
 */
-const UINT16 tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
+
+Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+
+UINT16 tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
 /*0                               18*/
 {4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3},
 {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
@@ -45,14 +49,48 @@ const UINT16 tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
 };
 
 
-/*const UINT8 map[][25];	/* I don't know how many*/
 
-Pacman pacman;
-Ghost crying_ghost;
-Ghost moustache_ghost;
-Ghost cyclops_ghost;
-Ghost awkward_ghost;
+/*
+Pacman pacman = {
+    X_PIXEL_OFFSET, Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
+   /* 0,0,        /*Initial Displacement
+    0,          /*Initial state index
+    UP,         /*Initial direction
+    FALSE,       /*Initial state
+};
+*/
 
+
+Ghost crying_ghost = {
+    0,0,
+    0,0,
+    0,
+    UP,
+    FALSE
+               /*Or whatever cell it starts in*/
+ 
+};
+Ghost moustache_ghost = {
+    0,0,
+    0,0,
+    0,
+    UP,
+    FALSE
+};
+Ghost cyclops_ghost = {
+    0,0,
+    0,0,
+    0,
+    UP,
+    FALSE
+};
+Ghost awkward_ghost = {
+    0,0,
+    0,0,
+    0,
+    UP,
+    FALSE
+};
 const UINT32 default_pac_sprites[][4];
 const UINT32 evil_pac_sprites[][4];
 const UINT32 crying_ghost_sprites[][4];
@@ -69,42 +107,122 @@ const UINT32* evil_pacman_sprites[4][4] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
 };
 
-/*
-Pacman pacman = {
-    0,0,        /*Initial position, won't actually be 0,0*/
-/*    0,0,        /*Initial Displacement*/
-/*    0,          /*Initial state index*/
-/*    UP,         /*Initial direction*/
-/*    FALSE       /*Initial state*/
-/*};
-*/
 
-/*
-Ghost crying_ghost = {
-    0,0,
-    0,0,
-    {ghost_4_up, ghost_4_down, ghost_4_left, ghost_4_right},
-    FALSE,
-    {
-    {1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 1,},
-    {1, 0, 1, 0, 1, 0, 1},
-    },
-    {
-    {1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 1,},
-    {1, 0, 1, 0, 1, 0, 1},
-    },
+void init_map_cells( Cell cell_map[][MAP_TILE_LENGTH] )
+{
+    /*
+    UINT16 tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
 
+        {4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3},
+        {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+        {2,0,4,1,1,1,0,1,0,1,0,1,1,1,1,3,0,2},
+        {2,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2,0,2},
+        {2,0,2,0,4,3,0,4,0,0,3,0,4,3,0,2,0,2},
+        {2,0,0,0,0,0,0,6,1,1,5,0,2,2,0,0,0,2},
+        {2,0,2,0,6,5,0,0,0,0,0,0,6,5,0,2,0,2},
+        {2,0,2,0,0,0,0,0,4,1,3,0,0,0,0,2,0,2},
+        {2,0,6,1,1,1,1,0,6,1,5,0,1,1,1,5,0,2},
+        {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+        {6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5}
+    };*/
+    int i, j;
+    for (i=0; i <= MAP_TILE_HEIGHT; i++){
+        for(j=0; j <= MAP_TILE_LENGTH; j ++){
+            cell_map[i][j].x_position = X_PIXEL_OFFSET + (j >> 5);
+            cell_map[i][j].y_position = Y_PIXEL_OFFSET + (i >> 5); /* changed from <<*/
+            if (tile_map[i][j] == 0) {
+                cell_map[i][j].open_path = TRUE; /*TRUE*/
+            } else {
+                cell_map[i][j].open_path = FALSE; /*FALSE*/
+            }
+        }
+    }
 
-};
-*/
+     for (i=0; i <= MAP_TILE_HEIGHT; i++){
+        for(j=0; j <= MAP_TILE_LENGTH; j ++){
+           
+            printf("%u,",cell_map[i][j]);
+        }
+        printf("\n,");
+    }
 
-/*
-moustache_ghost
-cyclops_ghost
-awkward_ghost
-*/
+}
+void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]) {
+    int i, j;
+    for (i = 0; i < MAP_TILE_HEIGHT; i++) {
+        for (j = 0; j < MAP_TILE_LENGTH; j++) {
+            ghost->path[i][j].x_position = cell_map[i][j].x_position;
+            ghost->path[i][j].y_position = cell_map[i][j].y_position;
+            if (path_array[i][j] == 0) {
+                ghost->path[i][j].open_path = TRUE;
+            } else {
+                ghost->path[i][j].open_path = FALSE;
+            }
+
+        }
+
+    }
+}
+void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][MAP_TILE_LENGTH]) {
+    
+    UINT16 crying_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1},
+        {1,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,1},
+        {1,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,1},
+        {1,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,0,1},
+        {1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1},
+        {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+    UINT16 awkward_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1},
+        {1,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,1,1},
+        {1,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,1},
+        {1,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,0,1},
+        {1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1},
+        {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+    UINT16 moustache_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1},
+        {1,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,1},
+        {1,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,1},
+        {1,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,0,1},
+        {1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1},
+        {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+    UINT16 cyclops_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1},
+        {1,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,1,1},
+        {1,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,1},
+        {1,1,1,0,1,1,0,0,0,0,0,0,1,1,1,1,0,1},
+        {1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1},
+        {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+    set_ghost_path(ghost1, &crying_ghost_path, cell_map);
+    set_ghost_path(ghost2, &moustache_ghost_path, cell_map);
+    set_ghost_path(ghost3, &cyclops_ghost_path, cell_map);
+    set_ghost_path(ghost4, &awkward_ghost_path, cell_map);
+}
+
 void move_pacman_position(Pacman *pacman, char input) 
 {
     bool collision; 
@@ -116,7 +234,7 @@ void move_pacman_position(Pacman *pacman, char input)
 	switch(input)
 	{
 		case 'w': pacman -> delta_y = -1;   		/* UP*/
-            pacman->direction = 1;
+            pacman->direction = 1; 
 			break;
 				
 		case 'a': pacman -> delta_x = -1;			/*Left*/
@@ -164,18 +282,11 @@ void move_pacman_position(Pacman *pacman, char input)
         printf("MOVING HIM");
         pacman->x = new_x_position;
 		pacman->y = new_y_position;
+        pacman->current_cell = &cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
        
     }
 
 
-	/* old code
-	if (!(pacman->x + new_x > SCREEN_WIDTH || pacman->x  + new_x < 0 ||
-		pacman->y + new_y > SCREEN_HEIGHT || pacman->y + new_y < 0))
-	{
-			pacman-> x += new_x;
-			pacman->y += new_y;
-	}
-	*/
 	
 	
 }
@@ -219,23 +330,52 @@ void move_ghost_position (Ghost *ghost, int current_x, int current_y)
 			ghost-> x += new_x;
 			ghost->y += new_y;
 	}
-
 	*/
+
+/* check direction first of pac ?*/
+    if (cell_map[current_y][current_x] == TRUE)
+    {
+
+        
+
+    }
 
   /* check pacmans posiition adn always go opposite of it */
   /* then check for collsion if collsion then try a different direction and repreat */
   
 
 
-} 
-/*bool check_collision (Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position)*/
+}
+
+bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
+{
+
+    bool collision  = FALSE; /*False*/
+
+    if (cell_map[object_y_position][object_x_position].open_path == FALSE) {
+        collision = TRUE;
+        printf(" collision \n");
+        printf("This value is for collision is: %d\n",tile_map[object_y_position][object_x_position]);
+    }
+    else{
+        printf(" YOURE GOOD: %d\n",tile_map[object_y_position][object_x_position]);
+    }
+
+
+    return collision;
+
+
+}
+
+
+/*
 bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
 {
     
     bool collision = 0; 
 
     /* checking if the location is occupied by a wall or corner sprite */
-    if (tile_map[object_y_position][object_x_position] == 1 || 
+    /*if (tile_map[object_y_position][object_x_position] == 1 || 
         tile_map[object_y_position][object_x_position] == 2 ||
         tile_map[object_y_position][object_x_position] == 3 ||
         tile_map[object_y_position][object_x_position] == 4 ||
@@ -243,10 +383,10 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
         tile_map[object_y_position][object_x_position] == 6)
         {
             
-            /*pacman-> has_collided = TRUE;*/
+            /*pacman-> has_collided = TRUE;
             printf(" collision \n");
             printf("This value is for collision is: %d\n",tile_map[object_y_position][object_x_position]);
-         /*   printf("Direction: %d\n", pacman->direction);*/
+         /*   printf("Direction: %d\n", pacman->direction);
             collision = 1;
 
         }
@@ -258,8 +398,9 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
         }
         /*
             pacman->has_collided = FALSE;
-            */
+            
 
         return collision; 
 
 }
+*/

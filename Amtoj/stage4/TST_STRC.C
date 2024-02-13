@@ -74,7 +74,10 @@ int main()
 /**/
 	char input;
 	Pacman pacman_obj = {1,9,0,0,0,0,0,0};
-	
+
+	init_map_cells(cell_map);
+
+	/*init_ghost_paths()*/
 	
 	/*
 	Ghost crying_ghost = {100,100,0,0};
@@ -87,7 +90,7 @@ int main()
 	printf("New speed: (%d, %d)\n", crying_ghost.delta_x, crying_ghost.delta_y);	*/
 
 
-	printf("pacman position old : (%d, %d)\n", pacman_obj.x, pacman_obj.y);
+	printf("pacman position old : (%d, %d)\n", pacman_obj.y, pacman_obj.x);
 	
 
 	
