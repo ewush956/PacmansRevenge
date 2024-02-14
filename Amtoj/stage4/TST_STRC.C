@@ -117,6 +117,8 @@ int main()
 		input = Cconin();
 		 /*input = Cauxin();*/
 
+		 printf("RAND::::%u\n",random_generator());
+
 		 set_input(&pacman_obj,input);
 		
 		 if (move_pacman_position(&pacman_obj) == FALSE)

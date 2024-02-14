@@ -79,14 +79,16 @@ extern Ghost cyclops_ghost;
 
 
 /* for object testing */
-void move_ghost_position (Ghost *ghost, Pacman *pacman ,int current_x, int current_y);
+/*void move_ghost_position (Ghost *ghost, Pacman *pacman ,int current_x, int current_y);*/
+void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][MAP_TILE_LENGTH],Cell *cell_map[][MAP_TILE_LENGTH]);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 bool move_pacman_position (Pacman *pacman);
  
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);
 void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][MAP_TILE_LENGTH]);
-bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position);
+bool check_collision (UINT16 object_x_position, UINT16 object_y_position);
+UINT32 random_generator(UINT32 state);
 
 /*bool check_collision(Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position); */
 

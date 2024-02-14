@@ -226,7 +226,7 @@ void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4
 
 bool move_pacman_position(Pacman *pacman) 
 {
-    bool can_movec = FALSE;
+    bool can_move = FALSE;
 	UINT16 new_x_position, new_y_position;
     /*
     pacman -> delta_y = 0;
@@ -242,7 +242,7 @@ bool move_pacman_position(Pacman *pacman)
 
     /*pacman->has_collided == FALSE) */
 
-    can_move = check_collision(&pacman, new_x_position, new_y_position);
+    can_move = check_collision(new_x_position, new_y_position);
 
 /* below for the events that handle this*/
     if (can_move == FALSE)
@@ -295,16 +295,16 @@ void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][MAP_TILE_LENGTH],Ce
     
     int random_direction = 0;
 
-    if(ghost_path[ghost -> y][ghost -> x + 1] == TRUE)          /* can move right*/
+    if(ghost_path[ghost -> y][ghost -> x + 1] == 0)          /* can move right*/
         random_direction |= RIGHT;
 
-    if(ghost_path[ghost -> y][ghost -> x - 1] == TRUE)          /* can move left*/
+    if(ghost_path[ghost -> y][ghost -> x - 1] == 0)          /* can move left*/
          random_direction |= LEFT;
 
-    if(ghost_path[ghost -> y - 1][ghost -> x] == TRUE)      /* can move up*/
+    if(ghost_path[ghost -> y - 1][ghost -> x] == 0)      /* can move up*/
          random_direction |= UP;
 
-    if(ghost_path[ghost -> y + 1][ghost -> x] == TRUE)
+    if(ghost_path[ghost -> y + 1][ghost -> x] == 0)
          random_direction |= DOWN;
         
  
@@ -408,3 +408,48 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
 
 }
 */
+
+/* returns a seed 
+
+a – is the multiplier
+
+c – is the increment and
+
+m – is the modulus
+
+It has the following conditions
+
+m > 0, divide by zero is impossible
+
+0 < a < m
+
+0 ≤ c < m and
+
+0 ≤ X < m
+*/
+UINT32 random_generator(UINT32 state)
+{
+
+    /*UINT32 state = 1236567;*/
+
+    
+	state ^= state << 13;
+	state ^= state >> 17;
+	state ^= state << 5;
+
+    state *= 6;
+
+    return state;
+    /*
+    UINT16 multipler, increment, m;
+    UINT16 number_to_return;
+    multipler = 11;
+    increment = 37177;
+    m = 65536;                     /*4294967296;     /* 2^32 
+
+    number_to_return = (multipler * number_to_return + increment) % m;
+
+    return number_to_return;
+    */
+
+}

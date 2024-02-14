@@ -130,15 +130,17 @@ extern Ghost cyclops_ghost;
 
 
 
-void move_ghost_position (Ghost *ghost, int current_x, int current_y);
+
+void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][18 ],Cell *cell_map[][18 ]);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 bool move_pacman_position (Pacman *pacman);
 
 void init_map_cells(Cell cell_map[][18 ]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][18 ], Cell cell_map[][18 ]);
 void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][18 ]);
-bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position);
-# 102 "./model.h"
+bool check_collision (UINT16 object_x_position, UINT16 object_y_position);
+UINT32 random_generator();
+# 104 "./model.h"
 void clock_tick_handle();
 # 2 "model.c" 2
 # 1 "./bitmaps.h" 1
@@ -372,6 +374,7 @@ void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4
         {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+
     };
     UINT16 awkward_ghost_path[11 ][18 ] = {
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -420,16 +423,16 @@ void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4
 
 bool move_pacman_position(Pacman *pacman)
 {
-    bool collision;
+    bool can_move = 0 ;
 	UINT16 new_x_position, new_y_position;
-# 236 "model.c"
+# 237 "model.c"
 	new_x_position = pacman->x + pacman->delta_x;
 	new_y_position = pacman->y + pacman->delta_y;
-# 244 "model.c"
-    collision = check_collision(&pacman, new_x_position, new_y_position);
+# 245 "model.c"
+    can_move = check_collision(new_x_position, new_y_position);
 
 
-    if (collision == 0 )
+    if (can_move == 0 )
     {
         pacman->x = new_x_position;
 		pacman->y = new_y_position;
@@ -439,8 +442,7 @@ bool move_pacman_position(Pacman *pacman)
     }
 
 
-
-    return collision;
+    return can_move;
 
 
 }
@@ -452,16 +454,29 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 	ghost->delta_y = vertical_velocity;
 
 }
-# 291 "model.c"
-void move_ghost_position (Ghost *ghost,int current_x, int current_y)
+# 290 "model.c"
+void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][18 ],Cell *cell_map[][18 ])
 {
-# 323 "model.c"
-  return;
 
 
+
+
+    int random_direction = 0;
+
+    if(ghost_path[ghost -> y][ghost -> x + 1] == 0)
+        random_direction |= ((UINT8)4) ;
+
+    if(ghost_path[ghost -> y][ghost -> x - 1] == 0)
+         random_direction |= ((UINT8)3) ;
+
+    if(ghost_path[ghost -> y - 1][ghost -> x] == 0)
+         random_direction |= ((UINT8)1) ;
+
+    if(ghost_path[ghost -> y + 1][ghost -> x] == 0)
+         random_direction |= ((UINT8)2) ;
+# 350 "model.c"
 }
-
-bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
+bool check_collision (UINT16 object_x_position, UINT16 object_y_position)
 {
 
     bool collision  = 0 ;
@@ -482,4 +497,20 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
     return collision;
 
 
+}
+# 430 "model.c"
+UINT32 random_generator()
+{
+
+    UINT32 state = 1236567;
+
+
+	state ^= state << 13;
+	state ^= state >> 17;
+	state ^= state << 5;
+
+    state *= 6;
+
+    return state;
+# 455 "model.c"
 }
