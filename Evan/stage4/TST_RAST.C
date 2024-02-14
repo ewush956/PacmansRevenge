@@ -56,6 +56,7 @@ void test_arbitrary_32(UINT32* base);
 int main()
 {
 	void *base32 = Physbase();
+	void *base16 = Physbase();
 	void *base8 = Physbase();
 	int x, y, i, j, index, countx, county, offset_x, offset_y;
 

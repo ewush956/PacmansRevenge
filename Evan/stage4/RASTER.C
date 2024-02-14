@@ -28,6 +28,20 @@ void plot_bitmap_32(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned 
         }
     /*}*/
 }
+void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height) {
+    int row;
+    int dy = y;
+    UINT16* location = base + (y * WORDS_PER_ROW) + (x >> 4); 
+
+    for (row = 0; row < height; row++) {
+        if (x >= 0 && x <= (SCREEN_WIDTH - WALL_SIZE) && dy >= 0 && y <= (SCREEN_HEIGHT - WALL_SIZE)) {
+            *location |= bitmap[row] >> (x % WALL_SIZE);
+            *(location + 1) |= bitmap[row] << (16 - (x % WALL_SIZE)); 
+        }
+        location += WORDS_PER_ROW; 
+        dy++; 
+    }
+}
 /**
  * Plots a bitmap at the specified x, y position on the screen.
  *

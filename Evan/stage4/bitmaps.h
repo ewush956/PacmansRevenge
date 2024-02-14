@@ -54,6 +54,7 @@ extern const UINT32 wall_LD[];
 extern const UINT32 wall_DR[];
 extern const UINT32 wall_horz[];
 extern const UINT32 wall_single[];
+extern const UINT16 wall_single_16[];
 
 extern const UINT32 wall_horz_end_L[];
 

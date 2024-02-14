@@ -1644,6 +1644,25 @@ const UINT32 wall_single[32] = {
 	0x00000000,
 	0x00000000,
 };
+const UINT16 wall_single_16[16] = {
+	0xFFFF,
+	0xFFFF,
+	0xEAAB,
+	0xD557,
+	0xE8EB,
+	0xD557,
+	0xEAAB,
+	0xD557,
+	0xEB2B,
+	0xD557,
+	0xEAAB,
+	0xD717,
+	0xEAAB,
+	0xD557,
+	0xFFFF,
+	0xFFFF,
+};
+
 
 const UINT32* wall_map[][20] = {
 	{wall_DR, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_horz, wall_LD},

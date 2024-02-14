@@ -9,14 +9,12 @@
 #define LEFT 3
 #define RIGHT 4
 
-#define MAP_TILE_LENGTH 18        /* 1 tile = 32 pixels*/ 
-#define MAP_TILE_HEIGHT 11   
+#define MAP_TILE_LENGTH 40        /* 1 tile = 16 pixels*/ 
+#define MAP_TILE_HEIGHT 24   
 
 #define MAP_PIXEL_LENGTH 576	/* 18 horiz walls x 32 pixels = 576 */
 #define MAP_PIXEL_HEIGHT 352    /* 11 vert walls x 32 pixels = 352   */
 
-#define X_PIXEL_OFFSET 31
-#define Y_PIXEL_OFFSET 20
 
 /* use the tile defn's for this */
 

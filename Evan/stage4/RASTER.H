@@ -19,6 +19,7 @@
 #define WORDS_PER_ROW 40
 #define BYTES_PER_ROW 80
 
+void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height);
 void plot_bitmap_32(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
 void plot_bitmap_32_quick(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
 void plot_bitmap_64(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
