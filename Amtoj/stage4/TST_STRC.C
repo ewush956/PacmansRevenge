@@ -116,6 +116,7 @@ int main()
 		
 		input = Cconin();
 		 /*input = Cauxin();*/
+
 		 set_input(&pacman_obj,input);
 		
 		 if (move_pacman_position(&pacman_obj) == FALSE)
@@ -126,33 +127,6 @@ int main()
 
 		 printf("pacman position now: (%d, %d)\n", pacman_obj.y, pacman_obj.x);
 
-		/*----------------
-		switch(input)
-		{
-			case 'w': move_pacman_position(&pacman_obj, 0,1);
-				break;
-				
-			case 'a':
-				move_pacman_position(&pacman_obj, -1,0);
-				printf("a pressed");
-				break;
-				
-			case 's':
-				move_pacman_position(&pacman_obj, 0,-1);
-				printf("s pressed");
-				break;
-				
-			case 'd':
-				move_pacman_position(&pacman_obj, 1,0);
-				printf("d pressed");
-				break;
-				
-			default:
-				printf("Invalid input\n");
-				break;
-				
-		}---------------------*/
-		
 	}
 
 	/*Cnecin();*/
@@ -275,34 +249,35 @@ void set_input(Pacman *pacman, char input)
 
 	pacman -> delta_y = 0;
     pacman -> delta_x = 0;              /* make this better? how to reset it everytime?*/
-    pacman->direction = 0;
+    pacman -> direction = 0;
 
 	switch(input)
 	{
 		case 'w': 
 			pacman -> delta_y = -1;   		/* UP*/
-            pacman->direction = UP; 
+            pacman -> direction = 1; 
 			break;
 				
 		case 'a': 
 			pacman -> delta_x = -1;			/*Left*/
-            pacman->direction = LEFT;
+            pacman -> direction = 3;
 			break;
 				
 		case 's': 
 			pacman -> delta_y = 1;			/*Down*/
-            pacman->direction = DOWN;
+            pacman -> direction = 2;
 			break;
 				
 		case 'd': 
 			pacman -> delta_x = 1;			/* Right*/
-            pacman->direction = RIGHT;
+            pacman -> direction = 4;
 			break;
 
 		default:
 			printf("Invalid input\n");
             pacman-> delta_x = 0;
             pacman -> delta_y = 0;
+			pacman -> direction = 0;
 			break;
 	}
 		

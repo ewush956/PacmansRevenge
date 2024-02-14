@@ -4,10 +4,11 @@
 #include "types.h"
 #include "bitmaps.h"
 
-#define UP 1
-#define DOWN 2
-#define LEFT 3
-#define RIGHT 4
+#define UP ((UINT8)1)
+#define DOWN ((UINT8)2)
+#define LEFT ((UINT8)3)
+#define RIGHT ((UINT8)4)
+
 
 #define MAP_TILE_LENGTH 18        /* 1 tile = 32 pixels*/ 
 #define MAP_TILE_HEIGHT 11         
@@ -44,7 +45,7 @@ typedef struct {
 	int delta_x, delta_y; 		/* displacement (horzontal or vertical) */
 
 	int current_frame;		/* current sprite (state) index */
-	UINT8 direction = 0;		/*UP, DOWN, LEFT, RIGHT*/
+	UINT8 direction;		/*UP, DOWN, LEFT, RIGHT*/
 	bool is_evil;
 	bool has_collided; 
 
@@ -78,7 +79,7 @@ extern Ghost cyclops_ghost;
 
 
 /* for object testing */
-void move_ghost_position (Ghost *ghost, int current_x, int current_y);
+void move_ghost_position (Ghost *ghost, Pacman *pacman ,int current_x, int current_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 bool move_pacman_position (Pacman *pacman);
  

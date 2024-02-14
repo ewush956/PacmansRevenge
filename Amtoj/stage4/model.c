@@ -177,6 +177,7 @@ void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4
         {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1},
         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+        
     };
     UINT16 awkward_ghost_path[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -225,7 +226,7 @@ void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4
 
 bool move_pacman_position(Pacman *pacman) 
 {
-    bool collision; 
+    bool can_movec = FALSE;
 	UINT16 new_x_position, new_y_position;
     /*
     pacman -> delta_y = 0;
@@ -233,57 +234,19 @@ bool move_pacman_position(Pacman *pacman)
     pacman->direction = 0;
      */
 
-/*
-	switch(input)
-	{
-		case 'w': pacman -> delta_y = -1;   		
-            pacman->direction = UP; 
-			break;
-				
-		case 'a': pacman -> delta_x = -1;			
-             pacman->direction = LEFT;
-			break;
-				
-		case 's': pacman -> delta_y = 1;			
-             pacman->direction = DOWN;
-			break;
-				
-		case 'd': pacman -> delta_x = 1;			
-            pacman->direction = RIGHT;
-			break;
-
-		default:
-			printf("Invalid input\n");
-            pacman-> delta_x = 0;
-            pacman -> delta_y = 0;
-			break;
-	}
-		*/
-
-
 	new_x_position = pacman->x + pacman->delta_x;
 	new_y_position = pacman->y + pacman->delta_y;
 
-    
-    /*
-	if (new_x_position < SCREEN_WIDTH && new_x_position >= 0 && 
-		new_y_position < SCREEN_HEIGHT && new_y_position >= 0)
-		{
-			pacman->x = new_x_position;
-			pacman->y = new_y_position;
 
-		}
-    */
     
 
     /*pacman->has_collided == FALSE) */
 
-    collision = check_collision(&pacman, new_x_position, new_y_position);
+    can_move = check_collision(&pacman, new_x_position, new_y_position);
 
-
-    if (collision == FALSE)
+/* below for the events that handle this*/
+    if (can_move == FALSE)
     {
-        printf("MOVING HIM");
         pacman->x = new_x_position;
 		pacman->y = new_y_position;
         pacman->current_cell = &cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
@@ -292,8 +255,7 @@ bool move_pacman_position(Pacman *pacman)
     }
 
 
-
-    return collision;
+    return can_move;
 	
 	
 }
@@ -310,60 +272,83 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 	
 	ghost->delta_x = horizontal_velocity;
 	ghost->delta_y = vertical_velocity;
-		
+	
 }
-
-
 /* 
 *	This is for checking if the ghost struct in 'model.h' is working correcctly 
 *    
 *	-Used ints for moving backwards by adding negatives 
 *
-*
-* (..hard-coded path)
+
 */
 
 /* pass in the current posiition into this and update accordingly 
 /* make different instances of ghosts in test main program to call
 */
-void move_ghost_position (Ghost *ghost,int current_x, int current_y)
+/*bool move_ghost_position (Ghost *ghost,Pacman* pacman, int current_x, int current_y)*/
+
+void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][MAP_TILE_LENGTH],Cell *cell_map[][MAP_TILE_LENGTH])
 {
-		
-	/* for now assume that the map will be 640x400 (chnage later once we figure out proper dimesn for map)*/
-	/*
-	if (!(ghost->x + new_x > SCREEN_WIDTH || ghost->x  + new_x < 0 ||
-		ghost->y + new_y > SCREEN_HEIGHT || ghost->y + new_y < 0))
-	{
-			ghost-> x += new_x;
-			ghost->y += new_y;
-	}
-	*/
+ 
 
-/* check direction first of pac ?
+    /* randomize it ...? */
+    
+    int random_direction = 0;
 
+    if(ghost_path[ghost -> y][ghost -> x + 1] == TRUE)          /* can move right*/
+        random_direction |= RIGHT;
+
+    if(ghost_path[ghost -> y][ghost -> x - 1] == TRUE)          /* can move left*/
+         random_direction |= LEFT;
+
+    if(ghost_path[ghost -> y - 1][ghost -> x] == TRUE)      /* can move up*/
+         random_direction |= UP;
+
+    if(ghost_path[ghost -> y + 1][ghost -> x] == TRUE)
+         random_direction |= DOWN;
+        
+ 
+         /* maybe randomize number mod 4 then get direction based upon that then move that way 
+         by incrementing correpd x or y posisition? */
+ 
+ 
+ /*!!!!! also change function protype in the model.h   */
+ 
+ 
+ 
+    /**** this code below is what we talked about returns a bool based upon if obj can move ****
+
+	bool can_move = FALSE;
+    UINT16 new_x_position, new_y_position;
+    
+    new_x_position = ghost->x += delta_x;
+    new_y_position = ghost->y += delta_y;
+
+    can_move = check_collision(new_x_position,new_y_position);
+        
+    return can_move;          
+
+    **************/
+
+
+    /*      use in events not here
     if (pacman->direction == UP)
-    {
-
         ghost->direction = DOWN;   
 
-    }
     if (pacman->direction == DOWN)
-    {
+        ghost->direction = UP;
 
-        ghost->direction = DOWN;   
+     if (pacman->direction == LEFT)
+        ghost->direction = RIGHT;   
 
-    }
+    if (pacman->direction == RIGHT)
+        ghost->direction = LEFT;   
     */
 
-
-  /* check pacmans posiition adn always go opposite of it */
-  /* then check for collsion if collsion then try a different direction and repreat */
-  return;
-
-
+    
+    /* then check for collsion if collsion then try a different direction and repreat */
 }
-
-bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position)
+bool check_collision (UINT16 object_x_position, UINT16 object_y_position)
 {
 
     bool collision  = FALSE; 

@@ -80,7 +80,7 @@ extern const UINT32 null_sprite_32[];
 
 extern const UINT32 test64[];
 # 5 "./model.h" 2
-# 32 "./model.h"
+# 33 "./model.h"
  typedef struct {
 
 	UINT16 x_position, y_position;
@@ -138,7 +138,7 @@ void init_map_cells(Cell cell_map[][18 ]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][18 ], Cell cell_map[][18 ]);
 void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][18 ]);
 bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_position);
-# 101 "./model.h"
+# 102 "./model.h"
 void clock_tick_handle();
 # 2 "model.c" 2
 # 1 "./bitmaps.h" 1
@@ -274,7 +274,7 @@ Ghost crying_ghost = {
     0,0,
     0,0,
     0,
-    1 ,
+    ((UINT8)1) ,
     0 
 
 
@@ -283,21 +283,21 @@ Ghost moustache_ghost = {
     0,0,
     0,0,
     0,
-    1 ,
+    ((UINT8)1) ,
     0 
 };
 Ghost cyclops_ghost = {
     0,0,
     0,0,
     0,
-    1 ,
+    ((UINT8)1) ,
     0 
 };
 Ghost awkward_ghost = {
     0,0,
     0,0,
     0,
-    1 ,
+    ((UINT8)1) ,
     0 
 };
 const UINT32 default_pac_sprites[][4];
@@ -422,16 +422,15 @@ bool move_pacman_position(Pacman *pacman)
 {
     bool collision;
 	UINT16 new_x_position, new_y_position;
-# 264 "model.c"
+# 236 "model.c"
 	new_x_position = pacman->x + pacman->delta_x;
 	new_y_position = pacman->y + pacman->delta_y;
-# 281 "model.c"
+# 244 "model.c"
     collision = check_collision(&pacman, new_x_position, new_y_position);
 
 
     if (collision == 0 )
     {
-        printf("MOVING HIM");
         pacman->x = new_x_position;
 		pacman->y = new_y_position;
         pacman->current_cell = &cell_map[11 ][18 ];
@@ -445,7 +444,7 @@ bool move_pacman_position(Pacman *pacman)
 
 
 }
-# 308 "model.c"
+# 270 "model.c"
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
 
@@ -453,10 +452,10 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 	ghost->delta_y = vertical_velocity;
 
 }
-# 329 "model.c"
+# 291 "model.c"
 void move_ghost_position (Ghost *ghost,int current_x, int current_y)
 {
-# 361 "model.c"
+# 323 "model.c"
   return;
 
 
