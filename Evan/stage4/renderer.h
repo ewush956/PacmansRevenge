@@ -8,5 +8,4 @@ void render_map(UINT16* base);
 void render_pacman();
 void render_ghosts();
 void render_gameover();
-
-void render_model();
+void render_timer();

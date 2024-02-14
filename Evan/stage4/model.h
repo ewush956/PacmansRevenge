@@ -41,8 +41,10 @@ typedef struct
 	bool is_evil;
 	bool has_collided; 
 
-	Cell* current_cell;
-
+	int x_cell_index, y_cell_index;
+	/*Check things like this:		
+	if (pacman->direction == DOWN) {check cell_map[pacman->x_cell_index][pacman->y_cell_index + 1].open_path}
+	*/
 }Pacman;
 
 typedef struct 
@@ -55,11 +57,21 @@ typedef struct
 	bool is_scared;		/*chnaged from bool*/
 
 	Cell* current_cell;
-	Cell path[MAP_TILE_LENGTH][MAP_TILE_HEIGHT];
+	int x_cell_index, y_cell_index;
+
+	
 
 }Ghost;
 
-extern Cell tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+typedef struct timer {
+	/* :(*/
+	UINT16 seconds, minutes;
+};
+
+
+extern int tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+extern Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+
 
 extern Pacman pacman;
 extern Ghost awkward_ghost;
@@ -80,6 +92,7 @@ bool check_collision(int x, int y);
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);
 void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][MAP_TILE_LENGTH]);
+void update_cell();
 
 /* get pacmans current posisiton -> then in the check colision function check whether that 
  [i][j] value has a 1 2 3 4 5 or 6 using (OR) if its true then there is a collsion otherise continue
