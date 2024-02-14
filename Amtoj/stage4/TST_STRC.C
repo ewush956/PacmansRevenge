@@ -76,6 +76,7 @@ int main()
 /**/
 	char input;
 	Pacman pacman_obj = {1,9,0,0,0,0,0,0};
+	Xor xor = {1234567};
 
 	init_map_cells(cell_map);
 
@@ -117,7 +118,7 @@ int main()
 		input = Cconin();
 		 /*input = Cauxin();*/
 
-		 printf("RAND::::%u\n",random_generator());
+		 printf("RAND::::%u\n",random_generator(&xor));
 
 		 set_input(&pacman_obj,input);
 		

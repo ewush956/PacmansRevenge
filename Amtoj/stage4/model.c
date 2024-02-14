@@ -31,14 +31,10 @@ const UINT32* sprites[] = {
 6 is UR (up -> right)
 */
 
-typedef struct Xor
-{
-    UINT value = 1236567;
 
-
-};
 
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+
 
 UINT16 tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
 /*0                               18*/
@@ -257,7 +253,9 @@ bool move_pacman_position(Pacman *pacman)
     {
         pacman->x = new_x_position;
 		pacman->y = new_y_position;
-        pacman->current_cell = &cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+        /*pacman->current_cell = &cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH]; 
+        wefixed this so erpace with the updated code */
+        
         printf("Direction: %d\n",pacman->direction);
        
     }
@@ -299,7 +297,7 @@ void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][MAP_TILE_LENGTH],Ce
 {
  
 
-    /* randomize it ...? */
+    
     
     int random_direction = 0;
 
@@ -315,7 +313,16 @@ void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][MAP_TILE_LENGTH],Ce
     if(ghost_path[ghost -> y + 1][ghost -> x] == 0)
          random_direction |= DOWN;
         
- 
+
+        if (ghost->current_cell.open_path == 0 )
+            random_direction |= ghost -> direction;
+            
+
+
+
+
+
+
          /* maybe randomize number mod 4 then get direction based upon that then move that way 
          by incrementing correpd x or y posisition? */
  
@@ -435,17 +442,17 @@ m > 0, divide by zero is impossible
 
 0 ≤ X < m
 */
-UINT32 random_generator()
+UINT32 random_generator(Xor *xor)
 {
 
-    UINT32 state = Xor->value;
+    UINT32 state = xor->value;
    
     
 	state ^= state << 13;
 	state ^= state >> 17;
 	state ^= state << 5;
 
-    Xor->value = state;
+    xor->value = state;
 
     
 

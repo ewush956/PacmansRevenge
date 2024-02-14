@@ -89,6 +89,12 @@ extern const UINT32 test64[];
 
 }Cell;
 
+typedef struct
+{
+    UINT32 value;
+
+}Xor;
+
 extern Cell cell_map[11 ][18 ];
 
 typedef struct {
@@ -139,8 +145,8 @@ void init_map_cells(Cell cell_map[][18 ]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][18 ], Cell cell_map[][18 ]);
 void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][18 ]);
 bool check_collision (UINT16 object_x_position, UINT16 object_y_position);
-UINT32 random_generator();
-# 104 "./model.h"
+UINT32 random_generator(Xor *xor);
+# 110 "./model.h"
 void clock_tick_handle();
 # 2 "model.c" 2
 # 1 "./bitmaps.h" 1
@@ -254,7 +260,7 @@ extern	FILE	_iob[];
 # 192 "C:/c68/include/stdio.h"
  int	_filbuf	(FILE *) ;
 # 5 "model.c" 2
-# 34 "model.c"
+# 36 "model.c"
 Cell cell_map[11 ][18 ];
 
 UINT16 tile_map[11 ][18 ] = {
@@ -271,7 +277,7 @@ UINT16 tile_map[11 ][18 ] = {
 {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
 {6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5}
 };
-# 64 "model.c"
+# 67 "model.c"
 Ghost crying_ghost = {
     0,0,
     0,0,
@@ -321,7 +327,7 @@ const UINT32* evil_pacman_sprites[4][4] = {
 
 void init_map_cells( Cell cell_map[][18 ] )
 {
-# 128 "model.c"
+# 131 "model.c"
     int i, j;
     for (i=0; i <= 11 ; i++){
         for(j=0; j <= 18 ; j ++){
@@ -425,10 +431,10 @@ bool move_pacman_position(Pacman *pacman)
 {
     bool can_move = 0 ;
 	UINT16 new_x_position, new_y_position;
-# 237 "model.c"
+# 240 "model.c"
 	new_x_position = pacman->x + pacman->delta_x;
 	new_y_position = pacman->y + pacman->delta_y;
-# 245 "model.c"
+# 248 "model.c"
     can_move = check_collision(new_x_position, new_y_position);
 
 
@@ -446,7 +452,7 @@ bool move_pacman_position(Pacman *pacman)
 
 
 }
-# 270 "model.c"
+# 273 "model.c"
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
 
@@ -454,7 +460,7 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 	ghost->delta_y = vertical_velocity;
 
 }
-# 290 "model.c"
+# 293 "model.c"
 void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][18 ],Cell *cell_map[][18 ])
 {
 
@@ -474,7 +480,7 @@ void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][18 ],Cell *cell_map
 
     if(ghost_path[ghost -> y + 1][ghost -> x] == 0)
          random_direction |= ((UINT8)2) ;
-# 350 "model.c"
+# 353 "model.c"
 }
 bool check_collision (UINT16 object_x_position, UINT16 object_y_position)
 {
@@ -498,19 +504,21 @@ bool check_collision (UINT16 object_x_position, UINT16 object_y_position)
 
 
 }
-# 430 "model.c"
-UINT32 random_generator()
+# 433 "model.c"
+UINT32 random_generator(Xor *xor)
 {
 
-    UINT32 state = 1236567;
+    UINT32 state = xor->value;
 
 
 	state ^= state << 13;
 	state ^= state >> 17;
 	state ^= state << 5;
 
-    state *= 6;
+    xor->value = state;
+
+
 
     return state;
-# 455 "model.c"
+# 460 "model.c"
 }
