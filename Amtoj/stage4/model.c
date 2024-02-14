@@ -31,6 +31,13 @@ const UINT32* sprites[] = {
 6 is UR (up -> right)
 */
 
+typedef struct Xor
+{
+    UINT value = 1236567;
+
+
+};
+
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 UINT16 tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH] = {
@@ -59,6 +66,7 @@ Pacman pacman = {
     FALSE,       /*Initial state
 };
 */
+
 
 
 Ghost crying_ghost = {
@@ -427,17 +435,19 @@ m > 0, divide by zero is impossible
 
 0 ≤ X < m
 */
-UINT32 random_generator(UINT32 state)
+UINT32 random_generator()
 {
 
-    /*UINT32 state = 1236567;*/
-
+    UINT32 state = Xor->value;
+   
     
 	state ^= state << 13;
 	state ^= state >> 17;
 	state ^= state << 5;
 
-    state *= 6;
+    Xor->value = state;
+
+    
 
     return state;
     /*
