@@ -120,13 +120,13 @@ bool check_collision (UINT16 object_x_position, UINT16 object_y_position){
 UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
 {  
     UINT8* collision = 0;
-    /* ghost *crying = entity->crying_ghost;   */
+   /* Enitites *crying = entity->crying_ghost; */
 
 
     if (cell_map[object_y_position][object_x_position].open_path == FALSE) 
         collision = WALL;                       /*defined in types.h*/
 
-    else if (entity->crying_ghost->x == entity->pacman->x && entity->crying_ghost->y == entity->pacman->y)
+    else if (entity.crying_ghost->x == entity.pacman->x && entity.crying_ghost->y == entity.pacman->y)
         collision = OBJECT;
     
     else if (entity->moustache_ghost->x == entity->pacman-> x && entity->moustache_ghost->y == entity->pacman->y)

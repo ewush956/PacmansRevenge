@@ -744,10 +744,19 @@ void update_cell(int* x_index, int* y_index);
 # 1 "./events.h" 2
 
 
-void clock_tick_handle(UINT16 *clock_count, Ghost *ghost, Pacman *pacman, Timer *timer);
+
+typedef struct
+{
+
+    UINT32 state;
+
+}Xor;
+
+ ;
 
 void handle_ghost_collision();
 void handle_pacman_collision(UINT8 collision_type);
+UINT32 random_number_generator(Xor *xor);
 # 11 "tst_strc.c" 2
 # 1 "./input.h" 1
 # 12 "tst_strc.c" 2
@@ -760,11 +769,6 @@ void handle_pacman_collision(UINT8 collision_type);
 # 4 "./renderer.h" 2
 
 
-typedef struct {
-
-    UINT32 value;
-
-}Xor;
 
 void clock_tick_handle();
 void render_map(UINT16* base);
@@ -776,7 +780,6 @@ void render_timer(Timer *timer);
 
 void clear_sprite(UINT32* base, int x, int y);
 bool check_next_cell(int dirrection, int x_cell_index, int y_cell_index);
-UINT32 random_number_generator(Xor* xor);
 # 13 "tst_strc.c" 2
 # 30 "tst_strc.c"
 int arbitrary_numbers_400[] = {
