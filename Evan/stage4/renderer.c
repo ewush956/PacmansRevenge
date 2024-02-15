@@ -42,8 +42,6 @@ const UINT32* moustache_ghost_sprites[4][2] = {
     {ghost_4_right, ghost_4_right}    /*RIGHT*/
 };
 
-
-
 void render_map(UINT16* base) {
     /*Called once at beggining of game*/
   
@@ -70,7 +68,7 @@ void render_frame(UINT32* base, Entities* entity) {
 
     render_pacman(base, &entity->pacman);
     render_ghosts(base, entity);
-
+    render_timer(base, entity->timer);
 }
 
 void render_pacman(UINT32* base32, Pacman* pacman) {
