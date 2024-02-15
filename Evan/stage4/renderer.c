@@ -28,47 +28,54 @@ void render_map(UINT16* base) {
         y += WALL_SIZE;
     }
 }
-void clock_tick_handle() {
-    /*
-    Evan
-    Called 70 times per second, renders all sprites, determines states (next position/collision status, etc.)
-
-    do stuff to figure out delta x,y then render sprite
-    */
-
-}
-void render_sprite_32() {
-    /*
-    print pacman or ghost 32 at position passed into function*/
-}
-void render_pacman() {
+void render_pacman(Pacman* pacman) {
     /*
     Amtoj
     1) Figure out pacman->delta_x and y based on direction 
     2) call move_pacman_position and pass in new 
-    3) check return status -> if true, call handle_pacman_collision*/
+    3) check return status -> if true, call handle_pacman_collision
+    
+    use check_next_cell(pacman->direction, pacman->x_cell_index, pacman->y_cell_index)*/
 }
-void render_ghost() {
+void render_ghost(Ghost* ghost) {
     /*
     Amtoj
     1) Figure out ghost->delta_x and y based on direction 
     2) call move_ghost_position and pass in new
-    3) check return status -> if true, call handle_pacman_collision*/
+    3) check return status -> if true, call handle_pacman_collision
+    
+    Use check_next_cell(ghost->direction, ghost->x_cell_index, ghost->y_cell_index)*/
 }
 void render_gameover() {
     /*
     Leave it for now
     */
 }
-void render_timer() {
+void render_timer(Timer* timer) {
     /*
     Evan
     every 70 clock ticks timer.second++*/
+    timer->seconds++;
+    if (timer->seconds == 60) {
+        timer->seconds = 0;
+        timer->minutes++;
+    }
+    if (timer->minutes < 10) {
+        /*plot_letter(base8, timer->MS_digit_minutes, 0, '0');
+        plot_letter(base8, timer->x, timer->y, timer->minutes);
+        */
+    }
+    else {
+        
+    }
+    /*plot_letter(base8, timer) */
+    
 }
-void clear_sprite(){
+void clear_sprite(UINT32* base, int x, int y) {
     /*
     Evan
     plot_bitmap_32(null_sprite_32)*/
+    plot_bitmap_32(base, x, y, null_sprite_32, SPRITE_HEIGHT);
 }
 bool check_next_cell(int dirrection, int x_cell_index, int y_cell_index){
     /*returns true if the next cell in corresponding dirrection has an an open path, false otherwise*/

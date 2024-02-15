@@ -23,7 +23,7 @@ const UINT32* evil_pacman_sprites[4][4] = {
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 Pacman pacman = {
-    16*19, 16*21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
+    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
     0,0,        /*Initial Displacement*/
     0,          /*Initial state index*/
     UP,         /*Initial direction*/
@@ -32,7 +32,7 @@ Pacman pacman = {
 };
 
 Ghost crying_ghost = {
-    16*17,16*10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
     0,0,
     0,
     UP,
@@ -41,25 +41,30 @@ Ghost crying_ghost = {
  
 };
 Ghost moustache_ghost = {
-    16*21,16*10 + Y_PIXEL_OFFSET,
+    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
     0,0,
     0,
     UP,
     FALSE
 };
 Ghost cyclops_ghost = {
-    16*17,16*12 + Y_PIXEL_OFFSET,
+    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
     UP,
     FALSE
 };
 Ghost awkward_ghost = {
-    16*21,16*12 + Y_PIXEL_OFFSET,
+    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
     UP,
     FALSE
+};
+
+Timer timer = {
+    0,0,
+    20, 28, 44, 52
 };
 
 void move_pacman_position (Pacman *pacman, UINT16 delta_x, UINT16 delta_y) 
@@ -119,8 +124,16 @@ void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell ce
     }
     */
 }
-void update_cell() {
+void update_cell(int* x_index, int* y_index) {
     /*Evans Doing this
     update sprite cell indeces, mod 16 or something idfk
     */
+   if (*x_index % PIXELS_PER_CELL == 0) {
+       *x_index = (*x_index)++;
+   }
+
+   if (*y_index % PIXELS_PER_CELL == 0) {
+       *y_index = (*y_index)++;
+   }
+
 }

@@ -4,18 +4,42 @@
 #include "TYPES.H"
 #include "events.h"
 
-void clock_tick_handle(UINT32* base32) {
-    /*Called once per clock tick*/
-
-   /* If pacman->x or y position % 32 == 0 then update cell index based on current direction */
+void clock_tick_handle(UINT16* clock_count) {
     /*
+    Evan
+    Called 70 times per second, renders all sprites, determines states (next position/collision status, etc.)
 
-    move_packman();
-    if (check_collision() != 0) {
-        handle_collision();
-    }
+    do stuff to figure out delta x,y then render sprite
+
+    TODO
     */
-   return;
+    if (*clock_count % 4 == 0) {
+
+        pacman.direction = get_input();
+        /*mod 4 because 70 ticks per second is very fast*/
+        render_pacman(&pacman);
+        update_cell(&pacman.x_cell_index, &pacman.y_cell_index);
+
+        render_ghost(&crying_ghost);
+        update_cell(&crying_ghost.x_cell_index, &crying_ghost.y_cell_index);
+
+        render_ghost(&moustache_ghost);
+        update_cell(&moustache_ghost.x_cell_index, &moustache_ghost.y_cell_index);
+
+        render_ghost(&cyclops_ghost);
+        update_cell(&cyclops_ghost.x_cell_index, &cyclops_ghost.y_cell_index);
+
+        render_ghost(&awkward_ghost);
+        update_cell(&awkward_ghost.x_cell_index, &awkward_ghost.y_cell_index);
+    
+    }
+    if (clock_count == 70) {
+        /*Rendered every second*/
+        render_timer();
+        clock_count = 0;
+    }
+    *clock_count++;
+
 }
 void handle_ghost_collision() {
     /*
@@ -29,4 +53,8 @@ void handle_pacman_collision() {
     otherwise update his position 
     
     */
+}
+UINT8 get_input() {
+    /*idk how the input stuff works so I just used this for now*/
+    return UP;
 }
