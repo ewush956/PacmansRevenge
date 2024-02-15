@@ -67,7 +67,9 @@ void render_map(UINT16* base) {
     }
 }
 void render_frame(UINT32* base, Entities* entity) {
+
     render_pacman(base, &entity->pacman);
+    render_ghosts(base, entity);
 
 }
 
@@ -80,22 +82,39 @@ void render_pacman(UINT32* base32, Pacman* pacman) {
         plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
     }    /* pacman->current_frame++; */
 }
-void render_ghost(UINT32* base32, Ghost* ghost) {
+void render_ghosts(UINT32* base32, Entities* entity) {
 
-    if (ghost->is_scared == TRUE) {
-        plot_bitmap_32(base32, ghost->x, ghost->y, ghost_freeze, SPRITE_HEIGHT);
+    Ghost* awkward = entity->awkward_ghost;
+    Ghost* moustache = entity->moustache_ghost;
+    Ghost* crying = entity->crying_ghost;
+    Ghost* cyclops = entity->cyclops_ghost;
+
+    if (awkward->state == DEFAULT) {
+        plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->current_frame][awkward->direction], SPRITE_HEIGHT);
+    } else {
+        render_non_default_ghost(base32, awkward);
     }
-    else if (ghost->is_running == TRUE) {
-        plot_bitmap_32(base32, ghost->x, ghost->y, ghost_run, SPRITE_HEIGHT);
+
+    if (moustache->state == DEFAULT) {
+        plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->current_frame][moustache->direction], SPRITE_HEIGHT);
+    } else {
+        render_non_default_ghost(base32, moustache);
     }
-    else {
-        
+
+    if (crying->state == DEFAULT) {
+        plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->current_frame][crying->direction], SPRITE_HEIGHT);
+    } else {
+        render_non_default_ghost(base32, crying);
+    }
+
+    if (cyclops->state == DEFAULT) {
+        plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->current_frame][cyclops->direction], SPRITE_HEIGHT);
+    } else {
+        render_non_default_ghost(base32, cyclops);
     }
 }
 void render_gameover() {
-    /*
-    Leave it for now
-    */
+    /* Renderes game over screen, we arent sure how to do that yet.*/
 }
 void render_timer(Timer* timer) {
     /*
@@ -115,7 +134,6 @@ void render_timer(Timer* timer) {
        
     }
     /*plot_letter(base8, timer) */
-    
 }
 void clear_sprite(UINT32* base, int x, int y) {
     /*
@@ -123,47 +141,18 @@ void clear_sprite(UINT32* base, int x, int y) {
     plot_bitmap_32(null_sprite_32)*/
     plot_bitmap_32(base, x, y, null_sprite_32, SPRITE_HEIGHT);
 }
-bool check_next_cell(int dirrection, int x_cell_index, int y_cell_index){
-    /*returns true if the next cell in corresponding dirrection has an an open path, false otherwise*/
-    switch(dirrection) {
-        case UP:
-            if (cell_map[y_cell_index - 1][x_cell_index].open_path == FALSE) {
-                return FALSE;
-            }
-            break;
-        case DOWN:
-            if (cell_map[y_cell_index + 1][x_cell_index].open_path == FALSE) {
-                return FALSE;
-            }
-            break;
-        case LEFT:
-            if (cell_map[y_cell_index][x_cell_index - 1].open_path == FALSE) {
-                return FALSE;
-            }
-            break;
-        case RIGHT:
-            if (cell_map[y_cell_index][x_cell_index + 1].open_path == FALSE) {
-                return FALSE;
-            }
-            break;
-        return TRUE;
-    }
-}
 void de_render_ghost(UINT32* base32, Ghost* ghost) {
     plot_bitmap_32(base32, ghost->x, ghost->y, null_sprite_32, SPRITE_HEIGHT);
     kill_ghost(ghost);
 
 }
-UINT32 random_number_generator(Xor *xor)
-{
+void render_non_default_ghost(UINT32* base32, Ghost* ghost) {
+    if (ghost->state == RUNNING) {
+        plot_bitmap_32(base32, ghost->x, ghost->y, ghost_run, SPRITE_HEIGHT);
+    }
+    else if (ghost->state == FROZEN) {
+        plot_bitmap_32(base32, ghost->x, ghost->y, ghost_freeze, SPRITE_HEIGHT);
+    }
 
-    UINT32 state = xor->value;
-
-	state ^= state << 13;
-	state ^= state >> 17;
-	state ^= state << 5;
-    xor->value = state;
-
-    return state;
 }
 

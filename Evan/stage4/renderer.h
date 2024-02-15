@@ -3,6 +3,13 @@
 #include "bitmaps.h"
 #include "types.h"
 
+extern const UINT32 default_pac_sprites[][4];
+extern const UINT32 evil_pac_sprites[][4];
+extern const UINT32 crying_ghost_sprites[][4];
+extern const UINT32 moustache_ghost_sprites[][4];
+extern const UINT32 cyclops_ghost_sprites[][4];
+extern const UINT32 awkward_ghost_sprites[][4];
+
 typedef struct Xor {
     
     UINT32 value;

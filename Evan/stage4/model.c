@@ -23,9 +23,7 @@ Ghost crying_ghost = {
     0,0,
     0,
     UP,
-    FALSE,
-    FALSE,
-    FALSE,
+    DEFAULT,
     10, 17
                /*Or whatever cell it starts in*/
  
@@ -35,9 +33,7 @@ Ghost moustache_ghost = {
     0,0,
     0,
     UP,
-    FALSE,
-    FALSE,
-    FALSE,
+    DEFAULT,
     10, 21
 };
 Ghost cyclops_ghost = {
@@ -45,9 +41,7 @@ Ghost cyclops_ghost = {
     0,0,
     0,
     UP,
-    FALSE,  /*Added for all 4 below*/
-    FALSE,
-    FALSE,
+    DEFAULT,
     12, 17
 };
 Ghost awkward_ghost = {
@@ -55,9 +49,7 @@ Ghost awkward_ghost = {
     0,0,
     0,
     UP,
-    FALSE,
-    FALSE,
-    FALSE,
+    DEFAULT,
     12, 21
 };
 
@@ -122,11 +114,10 @@ void update_cells(int* x_index, int* y_index) {
    }
 }
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
-   ghost->is_dead = TRUE;
-   cell_map[ghost->current_cell->y_position][ghost->current_cell->x_position].open_path = FALSE;
+   ghost->state = DEAD;
+   add_wall_to_map(cell_map, ghost->y, ghost->x);
 }
-void init_tombstone(Ghost* ghost, Tombstone* tombstone_object) {
-    tombstone_object->x = ghost->x;
-    tombstone_object->x = ghost->y;
+void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index) {
+   cell_map[y_cell_index][x_cell_index].open_path = FALSE;
 }
 
