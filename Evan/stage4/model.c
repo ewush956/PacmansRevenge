@@ -6,21 +6,6 @@
 
 const UINT8 map[][25];	/* I don't know how many*/
 
-const UINT32 default_pac_sprites[][4];
-const UINT32 evil_pac_sprites[][4];
-const UINT32 crying_ghost_sprites[][4];
-const UINT32 moustache_ghost_sprites[][4];
-const UINT32 cyclops_ghost_sprites[][4];
-const UINT32 awkward_ghost_sprites[][4];
-
-const UINT32* default_pacman_sprites[4][4] = {
-    {pac_1, pac_2, pac_3, pac_4},
-    {pac_1, pac_2, pac_3, pac_4}
-};
-const UINT32* evil_pacman_sprites[4][4] = {
-    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4},
-    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
-};
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 Pacman pacman = {
@@ -40,6 +25,7 @@ Ghost crying_ghost = {
     UP,
     FALSE,
     FALSE,
+    FALSE,
     10, 17
                /*Or whatever cell it starts in*/
  
@@ -51,6 +37,7 @@ Ghost moustache_ghost = {
     UP,
     FALSE,
     FALSE,
+    FALSE,
     10, 21
 };
 Ghost cyclops_ghost = {
@@ -58,6 +45,7 @@ Ghost cyclops_ghost = {
     0,0,
     0,
     UP,
+    FALSE,  /*Added for all 4 below*/
     FALSE,
     FALSE,
     12, 17
@@ -67,6 +55,7 @@ Ghost awkward_ghost = {
     0,0,
     0,
     UP,
+    FALSE,
     FALSE,
     FALSE,
     12, 21
@@ -81,7 +70,6 @@ void move_pacman_position (Pacman *pacman, UINT16 delta_x, UINT16 delta_y)
 {
     /*Amtoj*/
 }
-
 
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
@@ -121,27 +109,6 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]){
         }
     }
 }
-void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]) {
-
-    /*
-
-    probably wont use this, might use djsktras from running
-    int i, j;
-    for (i = 0; i < MAP_TILE_HEIGHT; i++) {
-        for (j = 0; j < MAP_TILE_LENGTH; j++) {
-            ghost->path[i][j].x_position = cell_map[i][j].x_position;
-            ghost->path[i][j].y_position = cell_map[i][j].y_position;
-            if (path_array[i][j] == 0) {
-                ghost->path[i][j].open_path = TRUE;
-            } else {
-                ghost->path[i][j].open_path = FALSE;
-            }
-
-        }
-
-    }
-    */
-}
 void update_cells(int* x_index, int* y_index) { 
     /*Evans Doing this
     update sprite cell indeces, mod 16 or something idfk
@@ -153,10 +120,10 @@ void update_cells(int* x_index, int* y_index) {
    if (*y_index % PIXELS_PER_CELL == 0) {
        *y_index = (*y_index)++;
    }
-   
 }
-void kill_ghost(Ghost* ghost) {
+void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
    ghost->is_dead = TRUE;
+   cell_map[ghost->current_cell->y_position][ghost->current_cell->x_position].open_path = FALSE;
 }
 void init_tombstone(Ghost* ghost, Tombstone* tombstone_object) {
     tombstone_object->x = ghost->x;
