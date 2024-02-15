@@ -69,39 +69,11 @@ Timer timer = {
     20, 28, 44, 52
 };
 
-/* maybe call this can_pacman_move ? we are not acually movign him so... */
-/* should not be a bool func? */
-void move_pacman_position (Pacman *pacman)/*, UINT16 delta_x, UINT16 delta_y) */{
-    /*Amtoj*/
-    /*
-    bool collided = FALSE;
-    new_x_position = pacman->x + pacman->delta_x;
-	new_y_position = pacman->y + pacman->delta_y;
-    collided = check_collision(new_x_position, new_y_position);
-    */
 
+void move_pacman (Pacman *pacman)
+{
     pacman -> x += pacman->delta_x;
     pacman -> y += pacman->delta_y;
-
-
-    /*
-    if (collided == FALSE){
-
-        /*handle_collsion()
-        pacman->x = new_x_position;
-		pacman->y = new_y_position;
-        /*pacman->current_cell = &cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH]; 
-        wefixed this so erpace with the updated code 
-        
-        printf("Direction: %d\n",pacman->direction);
-       
-    }
-    */
-
-    /* return has he collided false is NO 
-
-    return collided;*/
-
     
 }
 
@@ -139,22 +111,31 @@ bool check_collision (UINT16 object_x_position, UINT16 object_y_position){
 }
 */
 
-/* * * * * * * * * * 
+/* * * * * * * * * * * * * * 
 * Trying this as now we have a case where we can handle colliding with a ghost
 * without using two spearate check_collsions() funcs
 *
-* * * * * * * * * * * */
+* * * * * * * * * * * * * * */
 /*UINT8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position)*/
 UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
 {  
     UINT8* collision = 0;
-    /*ghost *crying = entity->ghost->crying_ghost;*/
+    /* ghost *crying = entity->crying_ghost;   */
 
 
     if (cell_map[object_y_position][object_x_position].open_path == FALSE) 
         collision = WALL;                       /*defined in types.h*/
 
-   else if (entity->ghost->crying_ghost->x == entity->pacman -> x && entity->ghost->crying_ghost y == entity->pacman->y)
+    else if (entity->crying_ghost->x == entity->pacman->x && entity->crying_ghost->y == entity->pacman->y)
+        collision = OBJECT;
+    
+    else if (entity->moustache_ghost->x == entity->pacman-> x && entity->moustache_ghost->y == entity->pacman->y)
+        collision = OBJECT;
+    
+    else if (entity->awkward_ghost->x == entity->pacman->x && entity->awkward_ghost->y == entity->pacman->y)
+        collision = OBJECT;
+
+    else if (entity->cyclops_ghost->x == entity->pacman->x && entity->cyclops_ghost->y == entity->pacman->y)
         collision = OBJECT;
 
 

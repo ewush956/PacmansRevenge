@@ -59,6 +59,7 @@ typedef struct
 
 	int current_frame;
 	UINT8 direction;
+	
 	bool is_scared;		
 
 	int x_cell_index, y_cell_index;

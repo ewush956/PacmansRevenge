@@ -6,6 +6,7 @@
 
 
 /* need to add paramters for ghost obj and such here */
+/*
 void clock_tick_handle(UINT16* clock_count,Ghost* ghost, Pacman *pacman,Timer *timer) {
     /*
     Evan
@@ -14,12 +15,12 @@ void clock_tick_handle(UINT16* clock_count,Ghost* ghost, Pacman *pacman,Timer *t
     do stuff to figure out delta x,y then render sprite
 
     TODO
-    */
+    
     if (*clock_count % 4 == 0) {
 
         pacman->direction = UP; /*get_input();*/
-        /*mod 4 because 70 ticks per second is very fast*/
-        render_pacman(&pacman,&ghost);              /*added &ghost here*/
+        /*mod 4 because 70 ticks per second is very fast
+        render_pacman(&pacman,&ghost);              /*added &ghost here
         update_cell(&pacman.x_cell_index, &pacman.y_cell_index);
 
         render_ghost(&crying_ghost);
@@ -36,13 +37,15 @@ void clock_tick_handle(UINT16* clock_count,Ghost* ghost, Pacman *pacman,Timer *t
     
     }
     if (clock_count == 70) {
-        /*Rendered every second*/
+        /*Rendered every second
         render_timer(&timer);
         clock_count = 0;
     }
     *clock_count++;
 
 }
+*/
+
 void handle_ghost_collision() {
     /*
     Amtoj
@@ -69,4 +72,24 @@ void handle_pacman_collision(UINT8 collision_type,Pacman *pacman) {
     }
 
 
+}
+
+/* * * * * *  
+*  Uses an XOR algorthm to generate a random number 
+*   -For randomizing direction of any ghost
+*    
+*@return 'state' this is the random number that is returned
+*
+* * * * * * */
+UINT32 random_number_generator(Xor *xor)
+{
+
+    UINT32 state = xor->value;
+
+	state ^= state << 13;
+	state ^= state >> 17;
+	state ^= state << 5;
+    xor->value = state;
+
+    return state;
 }
