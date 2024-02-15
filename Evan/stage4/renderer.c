@@ -28,7 +28,7 @@ void render_map(UINT16* base) {
         y += WALL_SIZE;
     }
 }
-void render_pacman(Pacman* pacman) {
+void render_pacman(Pacman* pacman, Ghost* ghost) {
     /*
     Amtoj
     1) Figure out pacman->delta_x and y based on direction 
@@ -36,15 +36,29 @@ void render_pacman(Pacman* pacman) {
     3) check return status -> if true, call handle_pacman_collision
     
     use check_next_cell(pacman->direction, pacman->x_cell_index, pacman->y_cell_index)*/
+    UINT8 collision_type; 
+
+    collision_type = check_collision(&ghost,&pacman,pacman->y,pacman->x);
+
+    if (check_collision(&ghost,&pacman,pacman->y,pacman->x) == FALSE) {
+        move_ghost_position(&pacman);
+    }
+    else {
+         handle_pacman_collsion(collision_type);
+    }
 }
-void render_ghost(Ghost* ghost) {
+void render_ghost(Pacman* pacman,Ghost* ghost) {
     /*
     Amtoj
     1) Figure out ghost->delta_x and y based on direction 
     2) call move_ghost_position and pass in new
     3) check return status -> if true, call handle_pacman_collision
     
+    
     Use check_next_cell(ghost->direction, ghost->x_cell_index, ghost->y_cell_index)*/
+    if (check_collision(&pacman,&ghost,ghost->y,ghost->x) == FALSE) {
+        move_ghost_position(&ghost);
+    }
 }
 void render_gameover() {
     /*

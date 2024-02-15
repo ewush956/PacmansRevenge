@@ -2,6 +2,7 @@
 #include "model.h"
 #include "bitmaps.h"
 #include "map_plot.c"
+#include "events.h"
 
 const UINT8 map[][25];	/* I don't know how many*/
 
@@ -84,19 +85,27 @@ void move_pacman_position (Pacman *pacman, UINT16 delta_x, UINT16 delta_y)
 
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
-	
 	ghost->delta_x = horizontal_velocity;
-	ghost->delta_y = vertical_velocity;
-		
+	ghost->delta_y = vertical_velocity;		
 }
 
 void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 {
     /*Amtoj is doing this, if you are evan you should NOT even be READING this, GO AWAY!*/
 }
-bool check_collision(int x, int y) {
-    return TRUE || FALSE; /* :) THIS WORKS BECAUSE HOW IT DOES :)*/
-} 
+UINT8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position)
+{  
+    UINT8 collision = 0;
+    
+    if (cell_map[object_y_position][object_x_position].open_path == FALSE) 
+        collision = WALL;                       /*defined in types.h*/
+
+    else if (ghost -> x == pacman -> x && ghost -> y == pacman->y)
+        collision = OBJECT;
+
+    return collision;
+
+}
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]){
 
     int i, j;
@@ -137,7 +146,6 @@ void update_cells(int* x_index, int* y_index) {
     /*Evans Doing this
     update sprite cell indeces, mod 16 or something idfk
     */
-   
    if (*x_index % PIXELS_PER_CELL == 0) {
        *x_index = (*x_index)++;
    }

@@ -18,6 +18,7 @@
 #define PIXELS_PER_CELL  16
 
 
+
 /* use the tile defn's for this */
 
 
@@ -44,6 +45,7 @@ typedef struct
 	bool has_collided; 
 
 	int x_cell_index, y_cell_index; 
+	Cell* current_cell;
 	/*Check things like this:		
 	if (pacman->direction == DOWN) {check cell_map[pacman->x_cell_index][pacman->y_cell_index + 1].open_path}
 	*/
@@ -60,6 +62,7 @@ typedef struct
 	bool is_dead;
 
 	int x_cell_index, y_cell_index;
+	Cell* current_cell;
 
 
 }Ghost;
@@ -71,11 +74,6 @@ typedef struct{
 	MS_digit_seconds, LS_digit_seconds; /*x positions*/
 
 }Timer;
-
-typedef struct
-{
-	UINT16 x,y;
-}Tombstone;
 
 extern int tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 extern Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];

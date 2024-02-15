@@ -5,7 +5,7 @@
 
 void clock_tick_handle();
 void render_map(UINT16* base);
-void render_pacman();
-void render_ghosts();
+void render_pacman(Pacman* pacman, Ghost* ghost);
+void render_ghost(Pacman* pacman, Ghost* ghost);
 void render_gameover();
 void render_timer();

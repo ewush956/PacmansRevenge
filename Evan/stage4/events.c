@@ -46,7 +46,7 @@ void handle_ghost_collision() {
     Amtoj
     if ghost collided returns true then check directions and move based on that */
 }
-void handle_pacman_collision() {
+void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
 
 /*  Amtoj
     if pacman check_collison returns true, then dont move him 
@@ -54,6 +54,16 @@ void handle_pacman_collision() {
     
     if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone
     */
+    switch(collision_type)
+    {
+    case WALL:
+        pacman -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
+        pacman -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
+        break;
+
+    case OBJECT:                            /* ask evan  */
+        break;
+    }
 }
 UINT8 get_input() {
     /*idk how the input stuff works so I just used this for now*/
