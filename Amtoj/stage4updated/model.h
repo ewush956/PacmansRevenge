@@ -27,6 +27,7 @@
 */
  /* move_ghost(int x, int y, Object *ref_to_object) */
  
+
 typedef struct {
 
 	int x_position, y_position;
@@ -51,7 +52,7 @@ typedef struct
 
 }Pacman;
 
-typedef struct 
+typedef struct
 {
 	UINT16 x,y;			
 	int delta_x,delta_y;
@@ -61,6 +62,7 @@ typedef struct
 	bool is_scared;		
 
 	int x_cell_index, y_cell_index;
+	struct Cell *current_cell;
 
 
 }Ghost;
@@ -71,6 +73,16 @@ typedef struct{
 	MS_digit_seconds, LS_digit_seconds; /*x positions*/
 
 }Timer;
+
+typedef struct 
+{
+    struct Pacman *pacman;
+	struct Ghost *crying_ghost;
+	struct Ghost *awkward_ghost;
+	struct Ghost *moustache_ghost;
+	struct Ghost *cyclops_ghost;
+	/*srruct Tombstone*/
+}Entities;
 
 
 extern int tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
@@ -85,16 +97,19 @@ extern Ghost cyclops_ghost;
 
 
 /* for object testing */
-void move_ghost_position (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y);
+void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
-void move_pacman_position (Pacman *pacman);/*,UINT16 delta_x, UINT16 delta_y); (may need this later so leaving parameters)*/ 
+void move_pacman (Pacman *pacman);/*,UINT16 delta_x, UINT16 delta_y); (may need this later so leaving parameters)*/ 
 
 /*UINT8 check_collision(Ghost *ghost, Pacman *pacman);*/
-UINT8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position);
+
+UINT8 check_collision(Entities *entity, UINT16 object_y_position, UINT16 object_x_position);
+
 /*bool check_collision(UINT16 object_x_position, UINT16 object_y_position);*/
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);
-void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][MAP_TILE_LENGTH]);
+
+/*void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][MAP_TILE_LENGTH]);*/
 void update_cell(int* x_index, int* y_index);
 
 #endif

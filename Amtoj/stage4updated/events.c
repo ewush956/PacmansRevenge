@@ -6,7 +6,7 @@
 
 
 /* need to add paramters for ghost obj and such here */
-void clock_tick_handle(UINT16* clock_count) {
+void clock_tick_handle(UINT16* clock_count,Ghost* ghost, Pacman *pacman,Timer *timer) {
     /*
     Evan
     Called 70 times per second, renders all sprites, determines states (next position/collision status, etc.)
@@ -17,7 +17,7 @@ void clock_tick_handle(UINT16* clock_count) {
     */
     if (*clock_count % 4 == 0) {
 
-        pacman.direction = get_input();
+        pacman->direction = UP; /*get_input();*/
         /*mod 4 because 70 ticks per second is very fast*/
         render_pacman(&pacman,&ghost);              /*added &ghost here*/
         update_cell(&pacman.x_cell_index, &pacman.y_cell_index);
@@ -37,7 +37,7 @@ void clock_tick_handle(UINT16* clock_count) {
     }
     if (clock_count == 70) {
         /*Rendered every second*/
-        render_timer();
+        render_timer(&timer);
         clock_count = 0;
     }
     *clock_count++;
@@ -49,7 +49,7 @@ void handle_ghost_collision() {
     if ghost collided returns true then check directions and move based on that */
     return;
 }
-void handle_pacman_collision(UINT8 collision_type) {
+void handle_pacman_collision(UINT8 collision_type,Pacman *pacman) {
 
     /*  Amtoj
     if pacman check_collison returns true, then dont move him 
@@ -65,34 +65,8 @@ void handle_pacman_collision(UINT8 collision_type) {
         case OBJECT:                            /* ask evan  */
             break;
         
-        default:
-            break;
+       
     }
 
 
-}
-UINT8 get_input() {
-    /*idk how the input stuff works so I just used this for now*/
-    return UP;
-}
-
-
-/* * * * * *  
-*  Uses an XOR algorthm to generate a random number 
-*   -For randomizing direction of any ghost
-*    
-*@return 'state' this is the random number that is returned
-*
-* * * * * * */
-UINT32 random_number_generator(Xor *xor)
-{
-
-    UINT32 state = xor->value;
-
-	state ^= state << 13;
-	state ^= state >> 17;
-	state ^= state << 5;
-    xor->value = state;
-
-    return state;
 }

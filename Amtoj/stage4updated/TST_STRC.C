@@ -10,6 +10,7 @@
 #include "model.h"
 #include "events.h"
 #include "input.h"
+#include "renderer.h"
 
 #define LETTERS_PER_BLOCK 6
 
@@ -131,7 +132,7 @@ int main()
 
 		 set_input(&pacman_obj,input);
 		
-		 render_pacman(&crying_ghost, &pacman);
+		 render_pacman(&pacman,&crying_ghost);
 		 
 		
 

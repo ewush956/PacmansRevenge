@@ -21,6 +21,7 @@ const UINT32* evil_pacman_sprites[4][4] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
 };
 
+
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 Pacman pacman = {
@@ -111,7 +112,7 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 		
 }
 
-void move_ghost_position (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y){
+void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y){
     /*Amtoj is doing this, if you are evil pacman you should NOT even be READING this, GO AWAY! */
     return;
 
@@ -143,15 +144,19 @@ bool check_collision (UINT16 object_x_position, UINT16 object_y_position){
 * without using two spearate check_collsions() funcs
 *
 * * * * * * * * * * * */
-UINT8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position)
+/*UINT8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position)*/
+UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
 {  
-    UINT8 collision = 0;
-    
+    UINT8* collision = 0;
+    /*ghost *crying = entity->ghost->crying_ghost;*/
+
+
     if (cell_map[object_y_position][object_x_position].open_path == FALSE) 
         collision = WALL;                       /*defined in types.h*/
 
-    if (ghost -> x == pacman -> x && ghost -> y == pacman->y)
+   else if (entity->ghost->crying_ghost->x == entity->pacman -> x && entity->ghost->crying_ghost y == entity->pacman->y)
         collision = OBJECT;
+
 
     return collision;
 

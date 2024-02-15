@@ -43,7 +43,7 @@ void render_pacman(Pacman *pacman, Ghost *ghost) {
     collision_type = check_collision(&ghost,&pacman,pacman->y,pacman->x);
 
     if (collision_type == NO_COLLISION)
-        move_ghost_position(&pacman);
+        move_ghost(&pacman);
     else
          handle_pacman_collsion(collision_type);
 
@@ -115,5 +115,26 @@ bool check_next_cell(int dirrection, int x_cell_index, int y_cell_index){
             break;
         return TRUE;
     }
+}
+
+
+/* * * * * *  
+*  Uses an XOR algorthm to generate a random number 
+*   -For randomizing direction of any ghost
+*    
+*@return 'state' this is the random number that is returned
+*
+* * * * * * */
+UINT32 random_number_generator(Xor *xor)
+{
+
+    UINT32 state = xor->value;
+
+	state ^= state << 13;
+	state ^= state >> 17;
+	state ^= state << 5;
+    xor->value = state;
+
+    return state;
 }
 
