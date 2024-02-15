@@ -57,6 +57,7 @@ typedef struct
 	int current_frame;
 	UINT8 direction;
 	bool is_scared;		/*chnaged from bool*/
+	bool is_dead;
 
 	int x_cell_index, y_cell_index;
 
@@ -70,6 +71,12 @@ typedef struct{
 	MS_digit_seconds, LS_digit_seconds; /*x positions*/
 
 }Timer;
+
+typedef struct
+{
+	UINT16 x,y;
+}Tombstone;
+
 
 
 extern int tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
@@ -95,6 +102,9 @@ bool check_collision(int x, int y);
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);
 void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][MAP_TILE_LENGTH]);
+void kill_ghost(Ghost* ghost);
 void update_cell(int* x_index, int* y_index);
+void init_tombstone(Ghost* ghost, Tombstone* tombstone_object);
+
 
 #endif

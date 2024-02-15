@@ -31,14 +31,15 @@ void clock_tick_handle(UINT16* clock_count) {
 
         render_ghost(&awkward_ghost);
         update_cell(&awkward_ghost.x_cell_index, &awkward_ghost.y_cell_index);
-    
+
+
     }
     if (clock_count == 70) {
         /*Rendered every second*/
         render_timer();
         clock_count = 0;
     }
-    *clock_count++;
+    (*clock_count)++;
 
 }
 void handle_ghost_collision() {
@@ -52,6 +53,7 @@ void handle_pacman_collision() {
     if pacman check_collison returns true, then dont move him 
     otherwise update his position 
     
+    if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone
     */
 }
 UINT8 get_input() {

@@ -36,6 +36,7 @@ Ghost crying_ghost = {
     0,0,
     0,
     UP,
+    FALSE,
     FALSE
                /*Or whatever cell it starts in*/
  
@@ -45,6 +46,7 @@ Ghost moustache_ghost = {
     0,0,
     0,
     UP,
+    FALSE,
     FALSE
 };
 Ghost cyclops_ghost = {
@@ -52,6 +54,7 @@ Ghost cyclops_ghost = {
     0,0,
     0,
     UP,
+    FALSE,
     FALSE
 };
 Ghost awkward_ghost = {
@@ -59,6 +62,7 @@ Ghost awkward_ghost = {
     0,0,
     0,
     UP,
+    FALSE,
     FALSE
 };
 
@@ -137,3 +141,11 @@ void update_cell(int* x_index, int* y_index) {
    }
 
 }
+void kill_ghost(Ghost* ghost) {
+   ghost->is_dead = TRUE;
+}
+void init_tombstone(Ghost* ghost, Tombstone* tombstone_object) {
+    tombstone_object->x = ghost->x;
+    tombstone_object->x = ghost->y;
+}
+

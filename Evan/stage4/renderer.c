@@ -66,7 +66,7 @@ void render_timer(Timer* timer) {
         */
     }
     else {
-        
+       
     }
     /*plot_letter(base8, timer) */
     
@@ -103,4 +103,12 @@ bool check_next_cell(int dirrection, int x_cell_index, int y_cell_index){
         return TRUE;
     }
 }
+void render_tombstone(UINT32* base32, Tombstone* tombstone_object) {
+    plot_bitmap_32(base32, tombstone_object->x, tombstone_object->y, tombstone, SPRITE_HEIGHT);
+}
+void de_render_ghost(UINT32* base32, Ghost* ghost) {
+    plot_bitmap_32(base32, ghost->x, ghost->y, null_sprite_32, SPRITE_HEIGHT);
+    kill_ghost(ghost);
+}
+
 
