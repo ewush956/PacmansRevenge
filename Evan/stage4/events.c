@@ -32,7 +32,6 @@ void clock_tick_handle(UINT16* clock_count) {
         render_ghost(&awkward_ghost);
         update_cell(&awkward_ghost.x_cell_index, &awkward_ghost.y_cell_index);
 
-
     }
     if (clock_count == 70) {
         /*Rendered every second*/

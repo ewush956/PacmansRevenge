@@ -28,7 +28,8 @@ Pacman pacman = {
     0,          /*Initial state index*/
     UP,         /*Initial direction*/
     FALSE,       /*Initial state*/
-
+    FALSE,
+    21,19          /*Cell index -> y, x*/
 };
 
 Ghost crying_ghost = {
@@ -37,7 +38,8 @@ Ghost crying_ghost = {
     0,
     UP,
     FALSE,
-    FALSE
+    FALSE,
+    10, 17
                /*Or whatever cell it starts in*/
  
 };
@@ -47,7 +49,8 @@ Ghost moustache_ghost = {
     0,
     UP,
     FALSE,
-    FALSE
+    FALSE,
+    10, 21
 };
 Ghost cyclops_ghost = {
     PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
@@ -55,7 +58,8 @@ Ghost cyclops_ghost = {
     0,
     UP,
     FALSE,
-    FALSE
+    FALSE,
+    12, 17
 };
 Ghost awkward_ghost = {
     PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
@@ -63,7 +67,8 @@ Ghost awkward_ghost = {
     0,
     UP,
     FALSE,
-    FALSE
+    FALSE,
+    12, 21
 };
 
 Timer timer = {
@@ -128,10 +133,11 @@ void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell ce
     }
     */
 }
-void update_cell(int* x_index, int* y_index) {
+void update_cells(int* x_index, int* y_index) { 
     /*Evans Doing this
     update sprite cell indeces, mod 16 or something idfk
     */
+   
    if (*x_index % PIXELS_PER_CELL == 0) {
        *x_index = (*x_index)++;
    }
@@ -139,7 +145,7 @@ void update_cell(int* x_index, int* y_index) {
    if (*y_index % PIXELS_PER_CELL == 0) {
        *y_index = (*y_index)++;
    }
-
+   
 }
 void kill_ghost(Ghost* ghost) {
    ghost->is_dead = TRUE;

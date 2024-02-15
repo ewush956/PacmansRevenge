@@ -77,8 +77,6 @@ typedef struct
 	UINT16 x,y;
 }Tombstone;
 
-
-
 extern int tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 extern Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
