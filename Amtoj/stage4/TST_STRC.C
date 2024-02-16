@@ -14,19 +14,6 @@
 
 #define LETTERS_PER_BLOCK 6
 
-/*
-const UINT32* sprites[] = {
-	pac_1, pac_2, pac_3, pac_4,
-	evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4,
-	ghost_1_up, ghost_1_down, ghost_1_left, ghost_1_right,
-	ghost_2_up, ghost_2_down, ghost_2_left, ghost_2_right,
-	ghost_3_up, ghost_3_down, ghost_3_left, ghost_3_right,
-	ghost_4_up, ghost_4_down, ghost_4_left, ghost_4_right,
-	wall_left_down_right, wall_up_down, wall_left_right, wall_down_right,
-	tombstone, ghost_run, ghost_freeze
-};
-
-*/
 int arbitrary_numbers_400[] = {
 	141, 276, 392, 345, 72, 307, 51, 17, 198, 63, 
 	366, 304, 383, 71, 111, 190, 255, 39, 110, 307, 
@@ -61,13 +48,51 @@ void test_arbitrary_letter(UINT8* base);
 
 void set_input(Pacman *pacman,char input);
 
+	Pacman pacman_obj = {
+    1,1,     		/*Initial position, */
+    0,0,        	/*Initial Displacement*/
+    0,          	/*Initial state index*/
+    UP,         	/*Initial direction*/
+    FALSE,       	/*Initial state*/
+    TRUE,
+    21,19          /*Cell index -> y, x*/
+	};
+	
+	Ghost c_ghost = {
+    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+    0,0,
+    0,
+    UP,
+    DEFAULT,
+    10, 17
+	};
 
-/* for object testing 
+	Ghost m_ghost = {
+    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
+    0,0,
+    0,
+    UP,
+    DEFAULT,
+    10, 21
+	};
 
-void move_ghost_position (Ghost *ghost, int new_x, int new_y);
-void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
-void move_pacman_position (Pacman *pacman, char input);
-*/
+	Ghost cy_ghost = {
+    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+    0,0,
+    0,
+    UP,
+    DEFAULT,
+    12, 17
+	};
+
+	Ghost a_ghost = {
+    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+    0,0,
+    0,
+    UP,
+    DEFAULT,
+    12, 21
+	};
 
 int main()
 {
@@ -77,67 +102,80 @@ int main()
 
 /**/
 	char input;
-	Pacman pacman_obj = {1,9,0,0,0,0,0,0};
-	
-	Ghost crying_ghost = {
-	PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      
-    0,0,
-    0,
-    UP,
-    FALSE
+	int i,j,k;
+	UINT8 collision_type; 
+
+	Entities all_objs = {
+
+		&pacman_obj,
+		&c_ghost,
+		&a_ghost,
+		&m_ghost,
+		&cy_ghost
 	};
+
+
+
+	Entities *ptr = &all_objs;
 
 	Xor xor = {1234567};					/* inits a random value to be used for the rand num generator*/
 
-	init_map_cells(cell_map,tile_map);
+	init_map_cells(cell_map,tile_map);				/* i added the paramters for the init_cell map function*/
 
 	/*init_ghost_paths()*/
 	
-	/*
-	Ghost crying_ghost = {100,100,0,0};
-	printf("Initial position: (%d, %d)\n", crying_ghost.x, crying_ghost.y);
-	move_ghost_position(&crying_ghost,-5,0);
-	move_ghost_position(&crying_ghost,1,0);
-	move_ghost_position(&crying_ghost,600,600); 		/* out of bounds test */
-	/*increase_ghost_velocity(&crying_ghost,10,10);
-	/*printf("New position: (%d, %d)\n", crying_ghost.x, crying_ghost.y);
-	printf("New speed: (%d, %d)\n", crying_ghost.delta_x, crying_ghost.delta_y);	*/
-
+	printf("%u,%d:",ptr->pacman->x,ptr->pacman->has_collided);
 
 	printf("pacman position old : (%d, %d)\n", pacman_obj.y, pacman_obj.x);
+
+	printf("pacman direction before:(%u)\n\n", pacman_obj.direction);
 	
 
+	printf("%d,%d\n",ptr->pacman->y_cell_index,ptr->pacman->x_cell_index);
+	/*
+	for (i = 0; i < MAP_TILE_HEIGHT; i++)
+	{
+		for(j = 0; j < MAP_TILE_LENGTH; j++)
+		{
+			printf("%d",cell_map[i][j].open_path);
+		}
+		printf("\n");
+		break;
+	}
+	*/
+	
 	
 	/* use plot font to test (...?) */ 
 	
 	/* im trying to take keyboard input here and each time  w a s or d is pressed 
 		i want to increment the position by 1 (we cna chnage this to whatever pixel amount)
 		NOT taking input but works with hard-coded funtion calls */
-		
-		/*
-		input = Cconin();
-		printf("%c\n",input);
-		*/
+	
 		
 
 	while(!Cconis())
 	{
 		
-		/*char input[2];*/
-		/*Cconrs(input[0]);  /* 2 is the input channel to read from */
-		
 		input = Cconin();
 
-		 printf("RAND::::%u\n",random_number_generator(&xor));
+		 printf("RAND NUM::%u\n",random_number_generator(&xor));
 
 		 set_input(&pacman_obj,input);
 		
-		 /*render_pacman(&pacman,&crying_ghost);*/
-		 
+		
+		  
+
+    	collision_type = check_collision(&ptr,ptr->pacman->y, ptr->pacman->x, ptr->pacman->delta_y, ptr->pacman->delta_x);
+
+    	if (collision_type == NO_COLLISION)
+        	move_pacman(&pacman_obj);
+    	else
+        	handle_pacman_collision(collision_type,&pacman_obj);
 		
 
 
-		 printf("pacman position now: (%d, %d)\n", pacman_obj.y, pacman_obj.x);
+		printf("pacman position now: (%d, %d)\n", pacman_obj.y, pacman_obj.x);
+		printf("pacman direction........:(%u)\n\n", pacman_obj.direction); 
 
 	}
 
@@ -149,7 +187,8 @@ int main()
 	return 0;
 }
 
-/*waits for input then calls clear_screen();*/
+
+/*waits for input then calls clear_screen();
 void next_test(UINT32* base) {
 
 	while(!Cconis()){
@@ -159,7 +198,7 @@ void next_test(UINT32* base) {
 	clear_screen_q(base);
 }
 
-
+*/
 
 void set_input(Pacman *pacman, char input)
 {
@@ -197,8 +236,5 @@ void set_input(Pacman *pacman, char input)
 			/*pacman -> direction = 0;*/
 			break;
 	}
-		
-
-
 
 }

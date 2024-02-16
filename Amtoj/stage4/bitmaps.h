@@ -3,6 +3,15 @@
 
 #include "TYPES.H"
 
+#define DIRECTIONS 4 
+
+extern const UINT32* default_pacman_sprites[DIRECTIONS][7];
+extern const UINT32* evil_pacman_sprites[DIRECTIONS][7]; 
+extern const UINT32* crying_ghost_sprites[DIRECTIONS][2]; 
+extern const UINT32* awkward_ghost_sprites[DIRECTIONS][2]; 
+extern const UINT32* cyclops_ghost_sprites[DIRECTIONS][2]; 
+extern const UINT32* moustache_ghost_sprites[DIRECTIONS][2]; 
+
 extern const UINT32 pac_1[];
 extern const UINT32 pac_2[];
 extern const UINT32 pac_3[];
@@ -65,5 +74,6 @@ extern const UINT32 test64[];
 extern const UINT32* wall_map[][20];
 
 extern UINT16 tile_map[][MAP_TILE_LENGTH];
+
 
 #endif 

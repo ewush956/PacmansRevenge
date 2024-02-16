@@ -10,10 +10,6 @@ typedef signed char bool;
 #define TRUE -1
 #define FALSE 0
 
-#define NO_COLLISION ((UINT8)0)
-#define WALL ((UINT8)1)
-#define OBJECT ((UINT8)2)            /* for seeing if pac collides with ghost or wall  */
-
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 400
 #define WALL_SIZE     16
@@ -36,6 +32,12 @@ typedef signed char bool;
 #define LONGS_PER_ROW 20
 #define WORDS_PER_ROW 40
 #define BYTES_PER_ROW 80
+
+#define NO_COLLISION ((UINT8) 0)
+#define WALL ((UINT8) 1)
+#define OBJECT ((UINT8) 2)
+
+
 
 
 #endif

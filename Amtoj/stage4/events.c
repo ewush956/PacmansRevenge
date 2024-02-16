@@ -1,86 +1,107 @@
+
 #include "bitmaps.h"
 #include "model.h"
 #include "TYPES.H"
 #include "events.h"
-#include "renderer.h"
 
-
-/* need to add paramters for ghost obj and such here */
+#include <stdio.h>
 /*
-void clock_tick_handle(UINT16* clock_count,Ghost* ghost, Pacman *pacman,Timer *timer) {
-    /*
+void clock_tick_handle(UINT16* clock_count, Entites* entity) {
+
     Evan
     Called 70 times per second, renders all sprites, determines states (next position/collision status, etc.)
 
     do stuff to figure out delta x,y then render sprite
 
     TODO
+    */
     
+    /*
+    TODO FOR EVAN MAKE UPDATE_CELL UPDATE ALL THE CELSS AND TAKE IN ENTITY TYPE 
     if (*clock_count % 4 == 0) {
 
-        pacman->direction = UP; /*get_input();*/
-        /*mod 4 because 70 ticks per second is very fast
-        render_pacman(&pacman,&ghost);              /*added &ghost here
-        update_cell(&pacman.x_cell_index, &pacman.y_cell_index);
+        Pacman* pac = entity->pacman;
+        Ghost* moustache = entity->moustache_ghost;
+        Ghost* crying = entity->crying_ghost;
+        Ghost* cyclops = entity->cyclops_ghost;
+        Ghost* awkward = entity->awkward_ghost;
+        
+        pac->direction = UP;
+        render_pacman(pac);
+        render_ghosts()
+        update_cell(&pac->x_cell_index, &pacman->y_cell_index);
 
-        render_ghost(&crying_ghost);
-        update_cell(&crying_ghost.x_cell_index, &crying_ghost.y_cell_index);
+        update_cell(&crying_ghost->x_cell_index, &crying_ghost->y_cell_index);
 
-        render_ghost(&moustache_ghost);
-        update_cell(&moustache_ghost.x_cell_index, &moustache_ghost.y_cell_index);
+        update_cell(&moustache_ghost->x_cell_index, &moustache_ghost->y_cell_index);
 
-        render_ghost(&cyclops_ghost);
-        update_cell(&cyclops_ghost.x_cell_index, &cyclops_ghost.y_cell_index);
+        update_cell(&cyclops_ghost->x_cell_index, &cyclops_ghost->y_cell_index);
 
-        render_ghost(&awkward_ghost);
-        update_cell(&awkward_ghost.x_cell_index, &awkward_ghost.y_cell_index);
-    
+        update_cell(&awkward_ghost->x_cell_index, &awkward_ghost->y_cell_index);
+
     }
     if (clock_count == 70) {
-        /*Rendered every second
-        render_timer(&timer);
+        render_timer();
         clock_count = 0;
     }
-    *clock_count++;
+    (*clock_count)++;
 
 }
 */
 
-void handle_ghost_collision() {
+void handle_ghost_collision(UINT8 collision_type) {
     /*
     Amtoj
     if ghost collided returns true then check directions and move based on that */
-    return;
 }
-void handle_pacman_collision(UINT8 collision_type,Pacman *pacman) {
+void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
 
-    /*  Amtoj
+/*  Amtoj
     if pacman check_collison returns true, then dont move him 
     otherwise update his position 
+    
+    if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone
     */
 
+    pacman->delta_y = 0;
+    pacman->delta_x = 0;
     switch(collision_type)
     {
-        case WALL:
-            pacman -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
-            pacman -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
-            break;
-        case OBJECT:                            /* ask evan  */
-            break;
-        
-       
+    case WALL: 
+        printf(".....COLLISION WALL....\n");
+        break;
+
+    case OBJECT:                            /* ask evan  */
+        printf("COLLIDED with an OBJECT\n");
+        break;
+
     }
 
+    /*move_pacman(&pacman);*/
 
+
+
+/*
+   if (pacman->direction == UP)
+            pacman ->delta_y = 0;
+        else if (pacman ->direction == DOWN)
+            pacman->delta_y = 0;
+        else if(pacman -> direction == RIGHT)
+            pacman->delta_x = 0;
+        else
+            pacman ->delta_x = 0;
+
+     /* pacman -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
+    /*  pacman -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
 }
 
-/* * * * * *  
-*  Uses an XOR algorthm to generate a random number 
+/* * * * * * * * * * * * *
+*  Uses an XOR shift algorthm to generate a random number 
 *   -For randomizing direction of any ghost
 *    
 *@return 'state' this is the random number that is returned
 *
-* * * * * * */
+* * * * * * * * * * */
 UINT32 random_number_generator(Xor *xor)
 {
 
@@ -93,3 +114,4 @@ UINT32 random_number_generator(Xor *xor)
 
     return state;
 }
+

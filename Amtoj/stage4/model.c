@@ -1,7 +1,6 @@
 #include "TYPES.H"
 #include "model.h"
 #include "bitmaps.h"
-#include "events.h"
 
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
@@ -50,6 +49,7 @@ Ghost awkward_ghost = {
     12, 21
 };
 
+
 Timer timer = {
     0,0,
     20, 28, 44, 52
@@ -67,25 +67,23 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 	ghost->delta_y = vertical_velocity;		
 }
 
-void move_ghost_position (Ghost *ghost, int new_x, int new_y)
+void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y)
 {
     /*Amtoj is doing this, if you are evan you should NOT even be READING this, GO AWAY!*/
 }
-UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
+UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position,UINT16 y_delta, UINT16 x_delta)
 {  
     UINT8 collision = 0;
-    /*
-    Entities *pac = entity->pacman;
-    Entities *crying = entity.crying_ghost; 
-    */
+   /* Enitites *crying = entity->crying_ghost; */
+    
+    if (cell_map[object_y_position + y_delta][object_x_position + x_delta].open_path ==FALSE)
+        collision = WALL;
 
-    if (cell_map[object_y_position][object_x_position].open_path == FALSE) 
-        collision = WALL;                       /*defined in types.h*/
 
     else if (entity->crying_ghost->x == entity->pacman->x && entity->crying_ghost->y == entity->pacman->y)
         collision = OBJECT;
     
-    else if (entity->moustache_ghost->x == entity->pacman->x && entity->moustache_ghost->y == entity->pacman->y)
+    else if (entity->moustache_ghost->x == entity->pacman-> x && entity->moustache_ghost->y == entity->pacman->y)
         collision = OBJECT;
     
     else if (entity->awkward_ghost->x == entity->pacman->x && entity->awkward_ghost->y == entity->pacman->y)
@@ -93,17 +91,16 @@ UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_
 
     else if (entity->cyclops_ghost->x == entity->pacman->x && entity->cyclops_ghost->y == entity->pacman->y)
         collision = OBJECT;
-
-
+  
     return collision;
 
 }
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]){
-
+/* off by 1 error inform evan *FIXED IT*  */
     int i, j;
-    for (i=0; i <= MAP_TILE_HEIGHT; i++){
-        for(j=0; j <= MAP_TILE_LENGTH; j ++){
-            cell_map[i][j].x_position = X_PIXEL_OFFSET + (j << 4); /*MULTIPLYING!!! by 16:))))*/
+    for (i=0; i < MAP_TILE_HEIGHT; i++){
+        for(j=0; j < MAP_TILE_LENGTH; j ++){
+            cell_map[i][j].x_position = X_PIXEL_OFFSET + (j << 4);  /* MULTIPLYING by 16 */
             cell_map[i][j].y_position = Y_PIXEL_OFFSET + (i << 4);
             if (tile_map[i][j] == 0) {
                 cell_map[i][j].open_path = TRUE;
