@@ -73,6 +73,7 @@ void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
 
     case OBJECT:                            /* ask evan  */
         printf("COLLIDED with an OBJECT\n");
+        /*add_wall_to_map(cell_map,ghost)*/
         break;
 
     }

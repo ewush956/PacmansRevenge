@@ -56,6 +56,7 @@ Timer timer = {
     20, 28, 44, 52
 };
 
+/* move by pixels in this NOT cells */
 void move_pacman (Pacman *pacman)
 {
     pacman -> x += pacman->delta_x;
@@ -68,9 +69,12 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 	ghost->delta_y = vertical_velocity;		
 }
 
-void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y)
+void move_ghost (Ghost *ghost)
 {
-    /*Amtoj is doing this, if you are evan you should NOT even be READING this, GO AWAY!*/
+
+    ghost -> x += ghost -> delta_x;
+    ghost -> y += ghost -> delta_y;
+
 }
 UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position,UINT16 y_delta, UINT16 x_delta)
 {  
@@ -90,13 +94,13 @@ UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_
 
     else{
         for (i = 0; i < 4; i++){
-             printf("(%u,%u)",all_ghosts[i]->y,all_ghosts[i]->x);
-                if (all_ghosts[i]->x == object_x_position + x_delta &&
-                    all_ghosts[i]->y == object_y_position + y_delta )
+             printf("(%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);
+                if (all_ghosts[i]->x_cell_index == object_x_position + x_delta &&
+                    all_ghosts[i]->y_cell_index == object_y_position + y_delta )
                 {
                     collision = OBJECT;
                     printf("This is with: %d\n",i);
-                    printf("(%u,%u)",all_ghosts[i]->y,all_ghosts[i]->x);
+                    printf("(%d,%d)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);
                     break;
                 }
 

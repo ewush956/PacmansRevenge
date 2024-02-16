@@ -48,51 +48,54 @@ void test_arbitrary_letter(UINT8* base);
 
 void set_input(Pacman *pacman,char input);
 
-	Pacman pacman_obj = {
-    1,1,     		/*Initial position, */
-    0,0,        	/*Initial Displacement*/
-    0,          	/*Initial state index*/
-    UP,         	/*Initial direction*/
-    FALSE,       	/*Initial state*/
-    TRUE,
+void move_pacman_test(Pacman *pacman);
+
+Pacman pacman_obj = {
+    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
+    0,0,        /*Initial Displacement*/
+    0,          /*Initial state index*/
+    UP,         /*Initial direction*/
+    FALSE,       /*Initial state*/
+    FALSE,
     21,19          /*Cell index -> y, x*/
-	};
-	
-	Ghost c_ghost = {
-    10,1,      /*starts in [10][18]*/
+};
+
+Ghost c_ghost = {
+    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
     0,0,
     0,
     UP,
     DEFAULT,
     10, 17
-	};
-
-	Ghost m_ghost = {
-	19,1,
+               /*Or whatever cell it starts in*/
+ 
+};
+Ghost m_ghost = {
+    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
     0,0,
     0,
     UP,
     DEFAULT,
     10, 21
-	};
-
-	Ghost cy_ghost = {
-	25,1,
+};
+Ghost cy_ghost = {
+    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
     UP,
     DEFAULT,
     12, 17
-	};
-
-	Ghost a_ghost = {
-    29,1,
+};
+Ghost a_ghost = {
+    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
     UP,
     DEFAULT,
     12, 21
-	};
+};
+
+
 
 int main()
 {
@@ -126,7 +129,7 @@ int main()
 	
 	printf("%u,%d:",ptr->pacman->x,ptr->pacman->has_collided);
 
-	printf("pacman position old : (%d, %d)\n", pacman_obj.y, pacman_obj.x);
+	printf("pacman position old : (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
 
 	printf("pacman direction before:(%u)\n\n", pacman_obj.direction);
 	
@@ -163,25 +166,26 @@ int main()
 		 set_input(&pacman_obj,input);
 		
 		
-		  
-
-    	collision_type = check_collision(&ptr,ptr->pacman->y, ptr->pacman->x, ptr->pacman->delta_y, ptr->pacman->delta_x);
+    	collision_type = check_collision(&ptr, ptr->pacman->y_cell_index, 
+										ptr->pacman->x_cell_index, 
+										ptr->pacman->delta_y, 
+										ptr->pacman->delta_x);
 
     	if (collision_type == NO_COLLISION)
-        	move_pacman(&pacman_obj);
+        	move_pacman_test(&pacman_obj);
     	else
         	handle_pacman_collision(collision_type,&pacman_obj);
 		
 
 
-		printf("pacman position now: (%d, %d)\n", pacman_obj.y, pacman_obj.x);
+		printf("pacman position now: (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
 		printf("pacman direction........:(%u)\n\n", pacman_obj.direction); 
 
 	}
 
 	/*Cnecin();*/
 	
-	printf("pacman position new : (%d, %d)\n", pacman_obj.y, pacman_obj.x);
+	printf("pacman position new : (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
 
 
 	return 0;
@@ -236,5 +240,22 @@ void set_input(Pacman *pacman, char input)
 			/*pacman -> direction = 0;*/
 			break;
 	}
+
+}
+
+void move_pacman_test(Pacman *pacman)
+{
+
+	pacman -> x_cell_index += pacman->delta_x;
+	pacman -> y_cell_index += pacman->delta_y;
+
+}
+
+void move_ghost_test(Ghost *ghost)
+{
+
+	ghost -> x_cell_index += ghost->delta_x;
+	ghost -> y_cell_index += ghost->delta_y;
+
 
 }

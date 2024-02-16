@@ -39,7 +39,7 @@ typedef struct
 	UINT8 direction;		/*UP, DOWN, LEFT, RIGHT*/
 	bool is_evil;
 	bool has_collided; 
-	int x_cell_index, y_cell_index; 
+	UINT16 x_cell_index, y_cell_index; 
 	/*Check things like this:		
 	if (pacman->direction == DOWN) {check cell_map[pacman->x_cell_index][pacman->y_cell_index + 1].open_path}
 	*/
@@ -53,7 +53,7 @@ typedef struct
 	int current_frame;
 	UINT8 direction;
 	UINT8 state;		
-	int x_cell_index, y_cell_index;
+	UINT16 x_cell_index, y_cell_index;
 	struct Cell *current_cell;
 
 }Ghost;
@@ -86,7 +86,7 @@ typedef struct {
 	/*srruct Tombstone*/
 }Entities;
 
-void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y);
+void move_ghost (Ghost *ghost);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman (Pacman *pacman);/*,UINT16 delta_x, UINT16 delta_y); (may need this later so leaving parameters)*/ 
 UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position,UINT16 y_delta, UINT16 x_delta);
