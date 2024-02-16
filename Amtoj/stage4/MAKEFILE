@@ -21,8 +21,7 @@ model.o: model.c model.h bitmaps.h events.h
 	cc68x -g -c model.c
 
 rast_asm.o: rast_asm.s
-	gen -D -L2 rast_asm.s
-
+	gen -D -L2 rast_asm.
  
 ################ - tst_rast - ################
 #tst_rast: tst_rast.o raster.o font.o bitmaps.o rast_asm.o

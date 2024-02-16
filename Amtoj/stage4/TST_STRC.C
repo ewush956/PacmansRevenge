@@ -89,7 +89,7 @@ int main()
 
 	Xor xor = {1234567};					/* inits a random value to be used for the rand num generator*/
 
-	init_map_cells(cell_map);
+	init_map_cells(cell_map,tile_map);
 
 	/*init_ghost_paths()*/
 	
@@ -132,7 +132,7 @@ int main()
 
 		 set_input(&pacman_obj,input);
 		
-		 render_pacman(&pacman,&crying_ghost);
+		 /*render_pacman(&pacman,&crying_ghost);*/
 		 
 		
 
