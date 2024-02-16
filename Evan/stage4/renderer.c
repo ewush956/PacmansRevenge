@@ -49,7 +49,7 @@ void render_ghosts(UINT32* base32, Entities* entity) {
     Ghost* moustache = entity->moustache_ghost;
     Ghost* crying = entity->crying_ghost;
     Ghost* cyclops = entity->cyclops_ghost;
-    /*
+    
     if (awkward->state == DEFAULT) {
         plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->current_frame][awkward->direction], SPRITE_HEIGHT);
     } else {
@@ -73,7 +73,7 @@ void render_ghosts(UINT32* base32, Entities* entity) {
     } else {
         render_non_default_ghost(base32, cyclops);
     }
-    */
+    
 }
 void render_gameover() {
     /* Renderes game over screen, we arent sure how to do that yet.*/

@@ -46,6 +46,10 @@ renderer.o: renderer.c renderer.h
 rast_asm.o: rast_asm.s
 	gen -D -L2 rast_asm.s
 
+clean:
+	rm -f *.o tst_rend
+
+
 #### 
 
 # tst_struct: tst_strc.o structs.o font.o bitmaps.o model.o events.o rast_asm.o

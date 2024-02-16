@@ -4,8 +4,8 @@
 #include "TYPES.H"
 #include "events.h"
 /*
-void clock_tick_handle(UINT16* clock_count) {
-    
+void clock_tick_handle(UINT16* clock_count, Entites* entity) {
+
     Evan
     Called 70 times per second, renders all sprites, determines states (next position/collision status, etc.)
 
@@ -13,29 +13,32 @@ void clock_tick_handle(UINT16* clock_count) {
 
     TODO
     */
+    
     /*
+    TODO FOR EVAN MAKE UPDATE_CELL UPDATE ALL THE CELSS AND TAKE IN ENTITY TYPE 
     if (*clock_count % 4 == 0) {
 
-        pacman.direction = get_input();
-        /*mod 4 because 70 ticks per second is very fast
-        render_pacman(&pacman);
-        update_cell(&pacman.x_cell_index, &pacman.y_cell_index);
+        Pacman* pac = entity->pacman;
+        Ghost* moustache = entity->moustache_ghost;
+        Ghost* crying = entity->crying_ghost;
+        Ghost* cyclops = entity->cyclops_ghost;
+        Ghost* awkward = entity->awkward_ghost;
+        
+        pac->direction = UP;
+        render_pacman(pac);
+        render_ghosts()
+        update_cell(&pac->x_cell_index, &pacman->y_cell_index);
 
-        render_ghost(&crying_ghost);
-        update_cell(&crying_ghost.x_cell_index, &crying_ghost.y_cell_index);
+        update_cell(&crying_ghost->x_cell_index, &crying_ghost->y_cell_index);
 
-        render_ghost(&moustache_ghost);
-        update_cell(&moustache_ghost.x_cell_index, &moustache_ghost.y_cell_index);
+        update_cell(&moustache_ghost->x_cell_index, &moustache_ghost->y_cell_index);
 
-        render_ghost(&cyclops_ghost);
-        update_cell(&cyclops_ghost.x_cell_index, &cyclops_ghost.y_cell_index);
+        update_cell(&cyclops_ghost->x_cell_index, &cyclops_ghost->y_cell_index);
 
-        render_ghost(&awkward_ghost);
-        update_cell(&awkward_ghost.x_cell_index, &awkward_ghost.y_cell_index);
+        update_cell(&awkward_ghost->x_cell_index, &awkward_ghost->y_cell_index);
 
     }
     if (clock_count == 70) {
-        /*Rendered every second
         render_timer();
         clock_count = 0;
     }
@@ -43,6 +46,7 @@ void clock_tick_handle(UINT16* clock_count) {
 
 }
 */
+
 void handle_ghost_collision(UINT8 collision_type) {
     /*
     Amtoj
