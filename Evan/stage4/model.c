@@ -4,8 +4,6 @@
 #include "map_plot.c"
 #include "events.h"
 
-const UINT8 map[][25];	/* I don't know how many*/
-
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 Pacman pacman = {
@@ -58,9 +56,10 @@ Timer timer = {
     20, 28, 44, 52
 };
 
-void move_pacman_position (Pacman *pacman, UINT16 delta_x, UINT16 delta_y) 
+void move_pacman (Pacman *pacman)
 {
-    /*Amtoj*/
+    pacman -> x += pacman->delta_x;
+    pacman -> y += pacman->delta_y;
 }
 
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
@@ -73,15 +72,27 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 {
     /*Amtoj is doing this, if you are evan you should NOT even be READING this, GO AWAY!*/
 }
-UINT8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position)
+UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
 {  
-    UINT8 collision = 0;
-    
+    UINT8* collision = 0;
+   /* Enitites *crying = entity->crying_ghost; */
+
+
     if (cell_map[object_y_position][object_x_position].open_path == FALSE) 
         collision = WALL;                       /*defined in types.h*/
 
-    else if (ghost -> x == pacman -> x && ghost -> y == pacman->y)
+    else if (entity.crying_ghost->x == entity.pacman->x && entity.crying_ghost->y == entity.pacman->y)
         collision = OBJECT;
+    
+    else if (entity->moustache_ghost->x == entity->pacman-> x && entity->moustache_ghost->y == entity->pacman->y)
+        collision = OBJECT;
+    
+    else if (entity->awkward_ghost->x == entity->pacman->x && entity->awkward_ghost->y == entity->pacman->y)
+        collision = OBJECT;
+
+    else if (entity->cyclops_ghost->x == entity->pacman->x && entity->cyclops_ghost->y == entity->pacman->y)
+        collision = OBJECT;
+
 
     return collision;
 
