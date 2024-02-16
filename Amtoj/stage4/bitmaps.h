@@ -64,4 +64,6 @@ extern const UINT32 test64[];
 
 extern const UINT32* wall_map[][20];
 
+extern UINT16 tile_map[][MAP_TILE_LENGTH];
+
 #endif 

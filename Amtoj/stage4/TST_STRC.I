@@ -654,7 +654,7 @@ extern const UINT32* wall_map[][20];
 # 4 "./model.h" 2
 # 1 "./bitmaps.h" 1
 # 5 "./model.h" 2
-# 31 "./model.h"
+# 28 "./model.h"
 typedef struct {
 
 	int x_position, y_position;
@@ -686,11 +686,10 @@ typedef struct
 
 	int current_frame;
 	UINT8 direction;
-	bool is_scared;
+	UINT8 state;
 
 	int x_cell_index, y_cell_index;
 	struct Cell *current_cell;
-
 
 }Ghost;
 
@@ -701,43 +700,45 @@ typedef struct{
 
 }Timer;
 
-typedef struct
-{
-    struct Pacman *pacman;
-	struct Ghost *crying_ghost;
-	struct Ghost *awkward_ghost;
-	struct Ghost *moustache_ghost;
-	struct Ghost *cyclops_ghost;
-
-}Entities;
 
 
-extern int tile_map[24 ][40 ];
+
+
 extern Cell cell_map[24 ][40 ];
-
-
 extern Pacman pacman;
 extern Ghost awkward_ghost;
 extern Ghost crying_ghost;
 extern Ghost moustache_ghost;
 extern Ghost cyclops_ghost;
 
+typedef struct
+{
+    Pacman *pacman;
+ 	Ghost *crying_ghost;
+	Ghost *awkward_ghost;
+	Ghost *moustache_ghost;
+	Ghost *cyclops_ghost;
+
+	struct Timer *timer;
+
+
+}Entities;
+
+
+
 
 
 void move_ghost (Ghost *ghost, Cell *cell_map[][40 ], int new_x, int new_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman (Pacman *pacman);
-
-
-
 UINT8 check_collision(Entities *entity, UINT16 object_y_position, UINT16 object_x_position);
 
 
-void init_map_cells(Cell cell_map[][40 ]);
+void init_map_cells(Cell cell_map[][40 ], UINT16 tile_map[][40 ]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][40 ], Cell cell_map[][40 ]);
-
-
 void update_cell(int* x_index, int* y_index);
+void kill_ghost(Ghost* ghost, Cell cell_map[][40 ]);
+void add_wall_to_map(Cell cell_map[24 ][40 ], int y_cell_index, int x_cell_index);
 # 10 "tst_strc.c" 2
 # 1 "./events.h" 1
 # 1 "./TYPES.H" 1
@@ -755,7 +756,7 @@ typedef struct
  ;
 
 void handle_ghost_collision();
-void handle_pacman_collision(UINT8 collision_type);
+void handle_pacman_collision(UINT8 collision_type,Pacman *pacman);
 UINT32 random_number_generator(Xor *xor);
 # 11 "tst_strc.c" 2
 # 1 "./input.h" 1
@@ -770,16 +771,26 @@ UINT32 random_number_generator(Xor *xor);
 
 
 
-void clock_tick_handle();
-void render_map(UINT16* base);
-void render_pacman(Pacman *pacman, Ghost *ghost);
-void render_ghosts(Ghost *ghost);
+extern const UINT32 default_pac_sprites[][4];
+extern const UINT32 evil_pac_sprites[][4];
+extern const UINT32 crying_ghost_sprites[][4];
+extern const UINT32 moustache_ghost_sprites[][4];
+extern const UINT32 cyclops_ghost_sprites[][4];
+extern const UINT32 awkward_ghost_sprites[][4];
+
+typedef struct Xor {
+
+    UINT32 value;
+};
+
+
+void render_map(UINT16* base, UINT16 tile_map[][40 ]);
+void render_frame(UINT32* base, Entities* entity);
+void render_pacman(Pacman* pacman, Ghost* ghost);
+void render_ghost(Pacman* pacman, Ghost* ghost);
 void render_gameover();
-
-void render_timer(Timer *timer);
-
-void clear_sprite(UINT32* base, int x, int y);
-bool check_next_cell(int dirrection, int x_cell_index, int y_cell_index);
+void render_timer();
+UINT32 random_number_generator(Xor *xor);
 # 13 "tst_strc.c" 2
 # 30 "tst_strc.c"
 int arbitrary_numbers_400[] = {
@@ -836,7 +847,7 @@ int main()
 
 	Xor xor = {1234567};
 
-	init_map_cells(cell_map);
+	init_map_cells(cell_map,tile_map);
 # 107 "tst_strc.c"
 	printf("pacman position old : (%d, %d)\n", pacman_obj.y, pacman_obj.x);
 # 123 "tst_strc.c"

@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "bitmaps.h"
+/*#include "map_plot.c"*/
 
 #define UP 1
 #define DOWN 2
@@ -17,16 +18,12 @@
 
 #define PIXELS_PER_CELL  16
 
+#define RUNNING 1
+#define FROZEN 2
+#define DEAD 3
+#define DEFAULT 0
 
-/* use the tile defn's for this */
 
-
-/*
-#define WALL 1;
-#define PATH 0;
-*/
- /* move_ghost(int x, int y, Object *ref_to_object) */
- 
 
 typedef struct {
 
@@ -59,11 +56,10 @@ typedef struct
 
 	int current_frame;
 	UINT8 direction;
-	bool is_scared;		
+	UINT8 state;		
 
 	int x_cell_index, y_cell_index;
 	struct Cell *current_cell;
-
 
 }Ghost;
 
@@ -74,42 +70,44 @@ typedef struct{
 
 }Timer;
 
-typedef struct 
-{
-    struct Pacman *pacman;
-	struct Ghost *crying_ghost;
-	struct Ghost *awkward_ghost;
-	struct Ghost *moustache_ghost;
-	struct Ghost *cyclops_ghost;
-	/*srruct Tombstone*/
-}Entities;
 
 
-extern int tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
+/*extern int tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];*/
+
 extern Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
-
-
 extern Pacman pacman;
 extern Ghost awkward_ghost;
 extern Ghost crying_ghost;
 extern Ghost moustache_ghost;
 extern Ghost cyclops_ghost;
 
+typedef struct 
+{
+    Pacman *pacman;
+ 	Ghost *crying_ghost;
+	Ghost *awkward_ghost;
+	Ghost *moustache_ghost;
+	Ghost *cyclops_ghost;
 
-/* for object testing */
+	struct Timer *timer;
+	/*srruct Tombstone*/
+	
+}Entities;
+
+
+
+
+
 void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman (Pacman *pacman);/*,UINT16 delta_x, UINT16 delta_y); (may need this later so leaving parameters)*/ 
-
-/*UINT8 check_collision(Ghost *ghost, Pacman *pacman);*/
-
 UINT8 check_collision(Entities *entity, UINT16 object_y_position, UINT16 object_x_position);
 
-/*bool check_collision(UINT16 object_x_position, UINT16 object_y_position);*/
-void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
-void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);
 
-/*void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][MAP_TILE_LENGTH]);*/
+void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
+void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);
 void update_cell(int* x_index, int* y_index);
+void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
+void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
 
 #endif
