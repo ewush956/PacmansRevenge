@@ -3,9 +3,8 @@
 #include "model.h"
 #include "bitmaps.h"
 #include "RASTER.H"
-#include "map_plot.c"
 
-void render_map(UINT16* base) {
+void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
     /*Called once at beggining of game*/
   
     int i, j, x, y;
@@ -29,15 +28,16 @@ void render_map(UINT16* base) {
 }
 void render_frame(UINT32* base, Entities* entity) {
 
-    render_pacman(base, &entity->pacman);
+    render_pacman(base, entity->pacman);
     render_ghosts(base, entity);
     render_timer(base, entity->timer);
 }
 
+
 void render_pacman(UINT32* base32, Pacman* pacman) {
 
     if (pacman->is_evil == TRUE) {
-        plot_bitmap_32(base32, pacman->x, pacman->y, evil_pac_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
     }
     else {
         plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
@@ -49,7 +49,7 @@ void render_ghosts(UINT32* base32, Entities* entity) {
     Ghost* moustache = entity->moustache_ghost;
     Ghost* crying = entity->crying_ghost;
     Ghost* cyclops = entity->cyclops_ghost;
-
+    /*
     if (awkward->state == DEFAULT) {
         plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->current_frame][awkward->direction], SPRITE_HEIGHT);
     } else {
@@ -73,6 +73,7 @@ void render_ghosts(UINT32* base32, Entities* entity) {
     } else {
         render_non_default_ghost(base32, cyclops);
     }
+    */
 }
 void render_gameover() {
     /* Renderes game over screen, we arent sure how to do that yet.*/
@@ -96,15 +97,15 @@ void render_timer(Timer* timer) {
     }
     /*plot_letter(base8, timer) */
 }
-void clear_sprite(UINT32* base, int x, int y) {
+void clr_sprite(UINT32* base, int x, int y) {
     /*
     Evan
     plot_bitmap_32(null_sprite_32)*/
     plot_bitmap_32(base, x, y, null_sprite_32, SPRITE_HEIGHT);
 }
-void de_render_ghost(UINT32* base32, Ghost* ghost) {
+void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     plot_bitmap_32(base32, ghost->x, ghost->y, null_sprite_32, SPRITE_HEIGHT);
-    kill_ghost(ghost);
+    kill_ghost(ghost, cell_map);
 
 }
 void render_non_default_ghost(UINT32* base32, Ghost* ghost) {

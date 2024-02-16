@@ -1,5 +1,6 @@
 
 #include "TYPES.H"
+#include "map_plot.h"
 
 UINT16 tile_map[][MAP_TILE_LENGTH] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},

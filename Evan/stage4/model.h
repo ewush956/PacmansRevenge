@@ -79,20 +79,7 @@ typedef struct{
 
 }Timer;
 
-typedef struct 
-{
-    struct Pacman *pacman;
-	struct Ghost *crying_ghost;
-	struct Ghost *awkward_ghost;
-	struct Ghost *moustache_ghost;
-	struct Ghost *cyclops_ghost;
 
-	struct Timer *timer;
-	/*srruct Tombstone*/
-}Entities;
-
-
-extern int tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 extern Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 
@@ -102,6 +89,16 @@ extern Ghost crying_ghost;
 extern Ghost moustache_ghost;
 extern Ghost cyclops_ghost;
 
+typedef struct {
+    Pacman *pacman;
+	Ghost *crying_ghost;
+	Ghost *awkward_ghost;
+	Ghost *moustache_ghost;
+	Ghost *cyclops_ghost;
+
+	Timer *timer;
+	/*srruct Tombstone*/
+}Entities;
 
 void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);

@@ -3,9 +3,9 @@
 #include "model.h"
 #include "TYPES.H"
 #include "events.h"
-
+/*
 void clock_tick_handle(UINT16* clock_count) {
-    /*
+    
     Evan
     Called 70 times per second, renders all sprites, determines states (next position/collision status, etc.)
 
@@ -13,10 +13,11 @@ void clock_tick_handle(UINT16* clock_count) {
 
     TODO
     */
+    /*
     if (*clock_count % 4 == 0) {
 
         pacman.direction = get_input();
-        /*mod 4 because 70 ticks per second is very fast*/
+        /*mod 4 because 70 ticks per second is very fast
         render_pacman(&pacman);
         update_cell(&pacman.x_cell_index, &pacman.y_cell_index);
 
@@ -34,14 +35,15 @@ void clock_tick_handle(UINT16* clock_count) {
 
     }
     if (clock_count == 70) {
-        /*Rendered every second*/
+        /*Rendered every second
         render_timer();
         clock_count = 0;
     }
     (*clock_count)++;
 
 }
-void handle_ghost_collision() {
+*/
+void handle_ghost_collision(UINT8 collision_type) {
     /*
     Amtoj
     if ghost collided returns true then check directions and move based on that */
@@ -65,7 +67,4 @@ void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
         break;
     }
 }
-UINT8 get_input() {
-    /*idk how the input stuff works so I just used this for now*/
-    return UP;
-}
+

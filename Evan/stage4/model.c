@@ -1,8 +1,6 @@
 #include "TYPES.H"
 #include "model.h"
 #include "bitmaps.h"
-#include "map_plot.c"
-#include "events.h"
 
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
@@ -74,14 +72,14 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 }
 UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
 {  
-    UINT8* collision = 0;
+    UINT8 collision = 0;
    /* Enitites *crying = entity->crying_ghost; */
 
 
     if (cell_map[object_y_position][object_x_position].open_path == FALSE) 
         collision = WALL;                       /*defined in types.h*/
 
-    else if (entity.crying_ghost->x == entity.pacman->x && entity.crying_ghost->y == entity.pacman->y)
+    else if (entity->crying_ghost->x == entity->pacman->x && entity->crying_ghost->y == entity->pacman->y)
         collision = OBJECT;
     
     else if (entity->moustache_ghost->x == entity->pacman-> x && entity->moustache_ghost->y == entity->pacman->y)

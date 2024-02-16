@@ -33,5 +33,11 @@ typedef signed char bool;
 #define WORDS_PER_ROW 40
 #define BYTES_PER_ROW 80
 
+#define NO_COLLISION ((UINT8) 0)
+#define WALL ((UINT8) 1)
+#define OBJECT ((UINT8) 2)
+
+
+
 
 #endif

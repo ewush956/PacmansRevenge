@@ -62,12 +62,12 @@ int main()
 	void *base8 = Physbase();
 	int x, y, i, j, index, countx, county, offset_x, offset_y;
 
-	clear_screen_q(base32);
+	/* clear_screen_q(base32); */
 
 	display_all_sprites(base32);
 	next_test(base32);
-    render_map(base16);
-
+    render_map(base16, tile_map);
+/*
 	plot_bitmap_32(base32, pacman.x, pacman.y, sprites[2], SPRITE_HEIGHT);
 	plot_bitmap_32(base32, crying_ghost.x, crying_ghost.y, sprites[8], SPRITE_HEIGHT);
 	plot_bitmap_32(base32, moustache_ghost.x, moustache_ghost.y, sprites[12], SPRITE_HEIGHT);
@@ -75,7 +75,7 @@ int main()
 	plot_bitmap_32(base32, awkward_ghost.x, awkward_ghost.y, sprites[20], SPRITE_HEIGHT);
 	next_test(base32);
 
-
+*/
 	/*18 x 11 !!!!!!!!!!!!!!!!*/
 
 	

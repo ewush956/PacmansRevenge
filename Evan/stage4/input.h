@@ -4,10 +4,10 @@
 
 /* add arrow keys for input later */
 
-#define UP 'w'
-#define LEFT 'a'
-#define DOWN 's'
-#define RIGHT 'd'
+#define W_KEY 'w'
+#define A_KEY 'a'
+#define S_KEY 's'
+#define D_KEY 'd'
 
 
 #endif
