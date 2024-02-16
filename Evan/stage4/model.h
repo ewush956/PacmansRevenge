@@ -50,7 +50,7 @@ typedef struct
 	bool is_evil;
 	bool has_collided; 
 
-	int x_cell_index, y_cell_index; 
+	UINT16 x_cell_index, y_cell_index; 
 	/*Check things like this:		
 	if (pacman->direction == DOWN) {check cell_map[pacman->x_cell_index][pacman->y_cell_index + 1].open_path}
 	*/
@@ -66,7 +66,7 @@ typedef struct
 	UINT8 direction;
 	UINT8 state;		
 
-	int x_cell_index, y_cell_index;
+	UINT16 x_cell_index, y_cell_index;
 	struct Cell *current_cell;
 
 
@@ -97,7 +97,7 @@ typedef struct {
 	Ghost *cyclops_ghost;
 
 	Timer *timer;
-	/*srruct Tombstone*/
+	
 }Entities;
 
 void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y);

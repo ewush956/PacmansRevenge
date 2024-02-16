@@ -17,8 +17,6 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
             case 1:
                 plot_bitmap_16(base, x, y, wall_single_16, WALL_SIZE);
                 break;
-            default:
-                break;
             }
             x += WALL_SIZE;
         }
@@ -37,10 +35,10 @@ void render_frame(UINT32* base, Entities* entity) {
 void render_pacman(UINT32* base32, Pacman* pacman) {
 
     if (pacman->is_evil == TRUE) {
-        plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
     }
     else {
-        plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
     }    /* pacman->current_frame++; */
 }
 void render_ghosts(UINT32* base32, Entities* entity) {
@@ -97,14 +95,8 @@ void render_timer(Timer* timer) {
     }
     /*plot_letter(base8, timer) */
 }
-void clr_sprite(UINT32* base, int x, int y) {
-    /*
-    Evan
-    plot_bitmap_32(null_sprite_32)*/
-    plot_bitmap_32(base, x, y, null_sprite_32, SPRITE_HEIGHT);
-}
 void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
-    plot_bitmap_32(base32, ghost->x, ghost->y, null_sprite_32, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, ghost->x, ghost->y, SPRITE_HEIGHT);
     kill_ghost(ghost, cell_map);
 
 }

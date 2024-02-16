@@ -16,6 +16,5 @@ void render_gameover();
 void render_timer();
 void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void render_non_default_ghost(UINT32* base32, Ghost* ghost);
-void clr_sprite(UINT32* base, int x, int y);
 
 UINT32 random_number_generator(Xor* xor_op);
