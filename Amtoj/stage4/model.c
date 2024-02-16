@@ -1,27 +1,28 @@
 #include "TYPES.H"
 #include "model.h"
 #include "bitmaps.h"
+#include <stdio.h>
 
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
-
+/*
 Pacman pacman = {
-    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
-    0,0,        /*Initial Displacement*/
-    0,          /*Initial state index*/
-    UP,         /*Initial direction*/
-    FALSE,       /*Initial state*/
+    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0
+    0,0,        /*Initial Displacement
+    0,          /*Initial state index
+    UP,         /*Initial direction
+    FALSE,       /*Initial state
     FALSE,
-    21,19          /*Cell index -> y, x*/
+    21,19          /*Cell index -> y, x
 };
 
 Ghost crying_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]
     0,0,
     0,
     UP,
     DEFAULT,
     10, 17
-               /*Or whatever cell it starts in*/
+               /*Or whatever cell it starts in
  
 };
 Ghost moustache_ghost = {
@@ -48,7 +49,7 @@ Ghost awkward_ghost = {
     DEFAULT,
     12, 21
 };
-
+*/
 
 Timer timer = {
     0,0,
@@ -74,12 +75,37 @@ void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int
 UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position,UINT16 y_delta, UINT16 x_delta)
 {  
     UINT8 collision = 0;
+    int i;
    /* Enitites *crying = entity->crying_ghost; */
     
+ 
+    Ghost *all_ghosts[4];
+    all_ghosts[0] = entity->crying_ghost;
+    all_ghosts[1] = entity->awkward_ghost;
+    all_ghosts[2] = entity->cyclops_ghost;
+    all_ghosts[3] = entity->moustache_ghost;
+
     if (cell_map[object_y_position + y_delta][object_x_position + x_delta].open_path ==FALSE)
         collision = WALL;
 
+    else{
+        for (i = 0; i < 4; i++){
+             printf("(%u,%u)",all_ghosts[i]->y,all_ghosts[i]->x);
+                if (all_ghosts[i]->x == object_x_position + x_delta &&
+                    all_ghosts[i]->y == object_y_position + y_delta )
+                {
+                    collision = OBJECT;
+                    printf("This is with: %d\n",i);
+                    printf("(%u,%u)",all_ghosts[i]->y,all_ghosts[i]->x);
+                    break;
+                }
 
+                /* check for pacman as well ...
+                    if (all_ghost[i]->x == object_x_position + x_delta)*/
+        }
+    }
+
+/*
     else if (entity->crying_ghost->x == entity->pacman->x && entity->crying_ghost->y == entity->pacman->y)
         collision = OBJECT;
     
@@ -91,6 +117,7 @@ UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_
 
     else if (entity->cyclops_ghost->x == entity->pacman->x && entity->cyclops_ghost->y == entity->pacman->y)
         collision = OBJECT;
+*/
   
     return collision;
 

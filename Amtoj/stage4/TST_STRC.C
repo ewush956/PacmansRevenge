@@ -59,7 +59,7 @@ void set_input(Pacman *pacman,char input);
 	};
 	
 	Ghost c_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+    10,1,      /*starts in [10][18]*/
     0,0,
     0,
     UP,
@@ -68,7 +68,7 @@ void set_input(Pacman *pacman,char input);
 	};
 
 	Ghost m_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
+	19,1,
     0,0,
     0,
     UP,
@@ -77,7 +77,7 @@ void set_input(Pacman *pacman,char input);
 	};
 
 	Ghost cy_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+	25,1,
     0,0,
     0,
     UP,
@@ -86,7 +86,7 @@ void set_input(Pacman *pacman,char input);
 	};
 
 	Ghost a_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+    29,1,
     0,0,
     0,
     UP,
