@@ -3,11 +3,6 @@
 #include "bitmaps.h"
 #include "types.h"
 
-typedef struct{
-    UINT32 value;
-}Xor;
-
-void clock_tick_handle();
 void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]);
 void render_frame(UINT32* base, Entities* entity);
 void render_pacman(UINT32* base32, Pacman* pacman);
@@ -17,4 +12,3 @@ void render_timer();
 void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void render_non_default_ghost(UINT32* base32, Ghost* ghost);
 
-UINT32 random_number_generator(Xor* xor_op);
