@@ -49,25 +49,25 @@ void render_ghosts(UINT32* base32, Entities* entity) {
     Ghost* cyclops = entity->cyclops_ghost;
     
     if (awkward->state == DEFAULT) {
-        plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->current_frame][awkward->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->direction][awkward->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, awkward);
     }
 
     if (moustache->state == DEFAULT) {
-        plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->current_frame][moustache->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->direction][moustache->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, moustache);
     }
 
     if (crying->state == DEFAULT) {
-        plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->current_frame][crying->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->direction][crying->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, crying);
     }
 
     if (cyclops->state == DEFAULT) {
-        plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->current_frame][cyclops->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->direction][cyclops->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, cyclops);
     }

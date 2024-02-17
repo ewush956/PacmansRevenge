@@ -4,10 +4,10 @@
 #include "types.h"
 #include "bitmaps.h"
 
-#define UP 1
-#define DOWN 2
-#define LEFT 3
-#define RIGHT 4
+#define UP ((UINT8)0)
+#define DOWN ((UINT8)1)
+#define LEFT ((UINT8)2)
+#define RIGHT ((UINT8)3)
 
 #define MAP_TILE_LENGTH 40        /* 1 tile = 16 pixels*/ 
 #define MAP_TILE_HEIGHT 24   
@@ -100,10 +100,10 @@ typedef struct {
 	
 }Entities;
 
-void move_ghost (Ghost *ghost, Cell *cell_map[][MAP_TILE_LENGTH], int new_x, int new_y);
+void move_ghost (Ghost *ghost);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman (Pacman *pacman);/*,UINT16 delta_x, UINT16 delta_y); (may need this later so leaving parameters)*/ 
-UINT8 check_collision(Entities *entity, UINT16 object_y_position, UINT16 object_x_position);
+UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position,UINT16 y_delta, UINT16 x_delta);
 
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);

@@ -66,32 +66,42 @@ void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 hor
 	ghost->delta_y = vertical_velocity;		
 }
 
-void move_ghost_position (Ghost *ghost, int new_x, int new_y)
+void move_ghost (Ghost *ghost)
 {
-    /*Amtoj is doing this, if you are evan you should NOT even be READING this, GO AWAY!*/
+
+    ghost -> x += ghost -> delta_x;
+    ghost -> y += ghost -> delta_y;
+
 }
-UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
+UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position,UINT16 y_delta, UINT16 x_delta)
 {  
     UINT8 collision = 0;
+    int i;
    /* Enitites *crying = entity->crying_ghost; */
-
-
-    if (cell_map[object_y_position][object_x_position].open_path == FALSE) 
-        collision = WALL;                       /*defined in types.h*/
-
-    else if (entity->crying_ghost->x == entity->pacman->x && entity->crying_ghost->y == entity->pacman->y)
-        collision = OBJECT;
     
-    else if (entity->moustache_ghost->x == entity->pacman-> x && entity->moustache_ghost->y == entity->pacman->y)
-        collision = OBJECT;
-    
-    else if (entity->awkward_ghost->x == entity->pacman->x && entity->awkward_ghost->y == entity->pacman->y)
-        collision = OBJECT;
+ 
+    Ghost *all_ghosts[4];
+    all_ghosts[0] = entity->crying_ghost;
+    all_ghosts[1] = entity->awkward_ghost;
+    all_ghosts[2] = entity->cyclops_ghost;
+    all_ghosts[3] = entity->moustache_ghost;
 
-    else if (entity->cyclops_ghost->x == entity->pacman->x && entity->cyclops_ghost->y == entity->pacman->y)
-        collision = OBJECT;
+    if (cell_map[object_y_position + y_delta][object_x_position + x_delta].open_path ==FALSE)
+        collision = WALL;
 
+    else{
+        for (i = 0; i < 4; i++){
+                if (all_ghosts[i]->x_cell_index == object_x_position + x_delta &&
+                    all_ghosts[i]->y_cell_index == object_y_position + y_delta )
+                {
+                    collision = OBJECT;
+                    break;
+                }
 
+                /* check for pacman as well ...
+                    if (all_ghost[i]->x == object_x_position + x_delta)*/
+        }
+    }
     return collision;
 
 }
