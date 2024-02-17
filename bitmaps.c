@@ -1,7 +1,6 @@
+#include "bitmaps.h"
 
-#include <raster.h>
-
-const UINT32 sprite1[32] = {
+const UINT32 ghost_1_up[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -36,7 +35,7 @@ const UINT32 sprite1[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite2[32] = {
+const UINT32 evil_pac_3[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -71,42 +70,7 @@ const UINT32 sprite2[32] = {
 0x000FF000
 };
 
-const UINT32 sprite3[32] = {
-0x00000000,
-0x00000000,
-0x00000000,
-0x1FFFFFFF,
-0x1FFFFFFF,
-0x1FFFFFFF,
-0x1D555555,
-0x1EAAAAAA,
-0x1D555555,
-0x1EAAAAAA,
-0x1D555555,
-0x1EAAAAAA,
-0x1D555555,
-0x1EAAAAAA,
-0x1D555555,
-0x1EAAAAAA,
-0x1D555555,
-0x1EAAAAAA,
-0x1D555555,
-0x1EAAAAAA,
-0x1D555555,
-0x1EAAAAAA,
-0x1D555555,
-0x1EAAAAAA,
-0x1D555555,
-0x1EAAAAAA,
-0x1D55557F,
-0x1EAAAABF,
-0x1D55557F,
-0x1EAAAAB8,
-0x1D555578,
-0x1EAAAAB8
-};
-
-const UINT32 sprite4[32] = {
+const UINT32 ghost_1_left[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -141,7 +105,7 @@ const UINT32 sprite4[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite5[32] = {
+const UINT32 pac_1[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -176,7 +140,7 @@ const UINT32 sprite5[32] = {
 0x000FF000
 };
 
-const UINT32 sprite6[32] = {
+const UINT32 tombstone[] = {
 0x00000000,
 0x00078000,
 0x003FF000,
@@ -211,7 +175,7 @@ const UINT32 sprite6[32] = {
 0xFFFFFFFF
 };
 
-const UINT32 sprite7[32] = {
+const UINT32 ghost_2_right[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -246,7 +210,7 @@ const UINT32 sprite7[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite8[32] = {
+const UINT32 ghost_freeze[] = {
 0x301FF80E,
 0x187FFE18,
 0xC3E007C1,
@@ -281,7 +245,7 @@ const UINT32 sprite8[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite9[32] = {
+const UINT32 ghost_3_right[] = {
 0x001FF800,
 0x007FFE00,
 0x01C00380,
@@ -316,7 +280,7 @@ const UINT32 sprite9[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite10[32] = {
+const UINT32 pac_2[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -351,7 +315,7 @@ const UINT32 sprite10[32] = {
 0x000FF000
 };
 
-const UINT32 sprite11[32] = {
+const UINT32 evil_pac_1[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -386,7 +350,7 @@ const UINT32 sprite11[32] = {
 0x000FF000
 };
 
-const UINT32 sprite12[32] = {
+const UINT32 evil_pac_4[] = {
 0x0007F800,
 0x000FFC00,
 0x00F00600,
@@ -421,7 +385,7 @@ const UINT32 sprite12[32] = {
 0x0007F800
 };
 
-const UINT32 sprite13[32] = {
+const UINT32 pac_3[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -456,7 +420,7 @@ const UINT32 sprite13[32] = {
 0x000FF000
 };
 
-const UINT32 sprite14[32] = {
+const UINT32 ghost_4_down[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -491,7 +455,7 @@ const UINT32 sprite14[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite15[32] = {
+const UINT32 ghost_1_down[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -526,7 +490,7 @@ const UINT32 sprite15[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite16[32] = {
+const UINT32 ghost_3_up[] = {
 0x003FFC00,
 0x007FFE00,
 0x01C00380,
@@ -561,7 +525,7 @@ const UINT32 sprite16[32] = {
 0x20606060
 };
 
-const UINT32 sprite17[32] = {
+const UINT32 ghost_3_down[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -596,7 +560,7 @@ const UINT32 sprite17[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite18[32] = {
+const UINT32 evil_pac_2[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -631,7 +595,7 @@ const UINT32 sprite18[32] = {
 0x000FF000
 };
 
-const UINT32 sprite19[32] = {
+const UINT32 pac_4[] = {
 0x0007F800,
 0x000FFC00,
 0x00F00600,
@@ -666,42 +630,8 @@ const UINT32 sprite19[32] = {
 0x0007F800
 };
 
-const UINT32 sprite20[32] = {
-0x00000000,
-0x00000000,
-0x00000000,
-0xFFFFFFFF,
-0xFFFFFFFF,
-0xFFFFFFFF,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0xFD55557F,
-0xFEAAAABF,
-0xFD55557F,
-0x1EAAAAB8,
-0x1D555578,
-0x1EAAAAB8
-};
 
-const UINT32 sprite21[32] = {
+const UINT32 ghost_4_right[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -736,7 +666,7 @@ const UINT32 sprite21[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite22[32] = {
+const UINT32 ghost_3_left[] = {
 0x001FF800,
 0x003FFC00,
 0x01C00380,
@@ -771,42 +701,8 @@ const UINT32 sprite22[32] = {
 0x10E0E0E0
 };
 
-const UINT32 sprite23[32] = {
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8,
-0x1F555578,
-0x1EAAAAF8
-};
 
-const UINT32 sprite24[32] = {
+const UINT32 ghost_4_up[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -841,7 +737,7 @@ const UINT32 sprite24[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite25[32] = {
+const UINT32 ghost_1_right[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -876,7 +772,7 @@ const UINT32 sprite25[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite26[32] = {
+const UINT32 ghost_2_left[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -911,7 +807,7 @@ const UINT32 sprite26[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite27[32] = {
+const UINT32 ghost_2_up[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -946,7 +842,7 @@ const UINT32 sprite27[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite28[32] = {
+const UINT32 ghost_2_down[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -981,7 +877,7 @@ const UINT32 sprite28[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite29[32] = {
+const UINT32 ghost_4_left[] = {
 0x003FFC00,
 0x007FFE00,
 0x03C003C0,
@@ -1016,72 +912,838 @@ const UINT32 sprite29[32] = {
 0x30F0F0F0
 };
 
-const UINT32 sprite30[32] = {
-0x00000000,
-0x00000000,
-0x00000000,
-0xFFFFFFFF,
-0xFFFFFFFF,
-0xFFFFFFFF,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0x55555555,
-0xAAAAAAAA,
-0xFFFFFFFF,
-0xFFFFFFFF,
-0xFFFFFFFF,
-0x00000000,
-0x00000000,
-0x00000000
+
+const UINT32 ghost_run[] = {
+    0x301FF80E,
+    0x187FFE18,
+    0xC3E007C1,
+    0x07C003E1,
+    0x3E00003C,
+    0x3C00003C,
+    0x7000000E,
+    0xF3F80F8F,
+    0xC60C3043,
+    0xC4046023,
+    0xC4C44223,
+    0xC8E24723,
+    0xC8424723,
+    0xC8044023,
+    0xC4046023,
+    0xC6183063,
+    0xC3F01FC3,
+    0xC0000003,
+    0xC0000003,
+    0xC0000003,
+    0xC0C0C0C3,
+    0xC1E0E1E3,
+    0xC3F3F3F3,
+    0xC73F3F33,
+    0xCE1E1E1B,
+    0xCC0C0C03,
+    0xC0000003,
+    0xC0000003,
+    0xC606060E,
+    0xCF0F0F0C,
+    0x79F9F9F8,
+    0x30F0F0F0
 };
 
-const UINT32 sprite31[32] = {
-0x301FF80E,
-0x187FFE18,
-0xC3E007C1,
-0x07C003E1,
-0x3E00003C,
-0x3C00003C,
-0x7000000E,
-0xF3F80F8F,
-0xC60C3043,
-0xC4046023,
-0xC4C44223,
-0xC8E24723,
-0xC8424723,
-0xC8044023,
-0xC4046023,
-0xC6183063,
-0xC3F01FC3,
-0xC0000003,
-0xC0000003,
-0xC0000003,
-0xC0C0C0C3,
-0xC1E0E1E3,
-0xC3F3F3F3,
-0xC73F3F33,
-0xCE1E1E1B,
-0xCC0C0C03,
-0xC0000003,
-0xC0000003,
-0xC606060E,
-0xCF0F0F0C,
-0x79F9F9F8,
-0x30F0F0F0
+const UINT32 null_sprite_32[] = {
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000
+};
+const UINT32 null_sprite_16[] = {
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+	0x0000,
+
+
+};
+
+const UINT32 test64[] = {
+    0xFFFFFFFF, 0xFFFFFFFF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFAAAAAAA, 0xAAAAAAAF,
+    0xFFFFFFFF, 0xFFFFFFFF
+};
+const UINT32 cyclops_ghost_D[32] = {
+	0x003FFC00,
+	0x007FFE00,
+	0x01C00380,
+	0x078001E0,
+	0x1C000038,
+	0x3800001C,
+	0x7000000E,
+	0xE0000007,
+	0xC007F003,
+	0xC0080803,
+	0xC0300603,
+	0xC0200203,
+	0xC0408103,
+	0xC041C103,
+	0xC041C103,
+	0xC0214203,
+	0xC0308603,
+	0xC0080803,
+	0xC007F003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0081003,
+	0xC00FF003,
+	0xC00FF003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC6060604,
+	0xCF0F0F0C,
+	0x71F1F9F8,
+	0x20606060,
+};
+
+const UINT32 wall_ULD[32] = {
+	0x00CAAF00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00C55F00,
+	0x00EAAB00,
+	0x00D55700,
+	0x00E2BB00,
+	0x00D55700,
+	0xFFEAAB00,
+	0xFFD17700,
+	0x2AAAAB00,
+	0x45555700,
+	0xA8A8EB00,
+	0x55155700,
+	0xAAA2AB00,
+	0x5554D700,
+	0xAAAB2B00,
+	0x555D5700,
+	0xAAEAAB00,
+	0x57571700,
+	0xBAAAAB00,
+	0xD5555700,
+	0xFFEE8B00,
+	0xFFD55700,
+	0x00EAAB00,
+	0x00DD4700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00FAA300,
+	0x00D55700,
+	0x00EAAB00,
+	0x00F55300,
+};
+
+const UINT32 wall_all[32] = {
+	0x00CAAF00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00C55F00,
+	0x00EAAB00,
+	0x00D55700,
+	0x00E2BB00,
+	0x00D55700,
+	0xFFEAABFF,
+	0xFFD177FF,
+	0x2AAAAAAB,
+	0x4555555D,
+	0xA8A8EAEA,
+	0x55155755,
+	0xAAA2BAAA,
+	0x55555555,
+	0xAAABAAAA,
+	0x555D4555,
+	0xAAEAA8AA,
+	0x57571515,
+	0xBAAAAAA2,
+	0xD5555554,
+	0xFFEE8BFF,
+	0xFFD557FF,
+	0x00EAAB00,
+	0x00DD4700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00FAA300,
+	0x00D55700,
+	0x00EAAB00,
+	0x00F55300,
+};
+
+const UINT32 wall_vert[32] = {
+	0x00CAAF00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00C55F00,
+	0x00EAAB00,
+	0x00D55700,
+	0x00E2BB00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00D17700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00E8EB00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00EB2B00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00D71700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00EE8B00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00DD4700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00FAA300,
+	0x00D55700,
+	0x00EAAB00,
+	0x00F55300,
+};
+
+const UINT32 wall_UL[32] = {
+	0x00C55F00,
+	0x00EAAB00,
+	0x00D55700,
+	0x00E2BB00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00D17700,
+	0x00EAAB00,
+	0xFFD55700,
+	0xFFE8EB00,
+	0x55555700,
+	0x8AAAAB00,
+	0x5154D700,
+	0xAA2AAB00,
+	0x55455F00,
+	0xAAA8EB00,
+	0x55571700,
+	0xAABAA300,
+	0x55D55700,
+	0xAEAE2B00,
+	0x75555700,
+	0xAAAAAB00,
+	0xFFFFFF00,
+	0xFFFFFF00,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+};
+
+const UINT32 wall_UR[32] = {
+	0x00CAAF00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00C55F00,
+	0x00EAAB00,
+	0x00D55700,
+	0x00E2BB00,
+	0x00D55700,
+	0x00EAABFF,
+	0x00D177FF,
+	0x00FAAAAB,
+	0x00D5555D,
+	0x00E8EAEA,
+	0x00DD5755,
+	0x00EABAAA,
+	0x00D4D555,
+	0x00EB2AAA,
+	0x00DD4555,
+	0x00EAA8AA,
+	0x00D77515,
+	0x00EAAEA2,
+	0x00D55554,
+	0x00FFFFFF,
+	0x00FFFFFF,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+};
+
+const UINT32 wall_LDR[32] = {
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0xFFFFFFFF,
+	0xFFFFFFFF,
+	0x55555555,
+	0x0AAAAAAE,
+	0x51555575,
+	0xAA2AABAA,
+	0x55455D55,
+	0xAAA8EAAA,
+	0x55571555,
+	0xAABAA2AA,
+	0x55D55455,
+	0xAEAB2A8A,
+	0xF5555551,
+	0xAAAAAAAA,
+	0xFFD717FF,
+	0xFFEAABFF,
+	0x00D55700,
+	0x00EE8B00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00DD4700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00FAA300,
+};
+
+const UINT32 cyclops_ghost_R[32] = {
+	0x003FFC00,
+	0x007FFE00,
+	0x01C00380,
+	0x078001E0,
+	0x1C000038,
+	0x3800001C,
+	0x7003F80E,
+	0xE00C0607,
+	0xC0101103,
+	0xC0203883,
+	0xC0402843,
+	0xC0402843,
+	0xC0403843,
+	0xC0203883,
+	0xC0101103,
+	0xC00C0603,
+	0xC003F803,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0008103,
+	0xC000FF03,
+	0xC000FF03,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC6060606,
+	0xCF0F0F0C,
+	0x79F9F9F8,
+	0x20606060,
+};
+
+const UINT32 cyclops_ghost_L[32] = {
+	0x003FFC00,
+	0x007FFE00,
+	0x01C00380,
+	0x078001E0,
+	0x1C000038,
+	0x3800001C,
+	0x700FE00E,
+	0xE0301807,
+	0xC0440403,
+	0xC08E0203,
+	0xC10A0103,
+	0xC10A0103,
+	0xC10E0103,
+	0xC08E0203,
+	0xC0440403,
+	0xC0301803,
+	0xC00FE003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0408003,
+	0xC07F8003,
+	0xC07F8003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC6060606,
+	0xCF0F0F0C,
+	0x79F9F9F8,
+	0x20606060,
+};
+
+const UINT32 wall_ULR[32] = {
+	0x00C55F00,
+	0x00EAAB00,
+	0x00D55700,
+	0x00E2BB00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00D17700,
+	0x00EAAB00,
+	0xFFD557FF,
+	0xFFE8EBFF,
+	0x55555555,
+	0x8AAAAAAF,
+	0x5154D575,
+	0xAA2AABAA,
+	0x55455D55,
+	0xAAA8EAAA,
+	0x55571555,
+	0xAABAA2AA,
+	0x55D55455,
+	0xAEAAAA8A,
+	0x75555550,
+	0xAAAAAAAA,
+	0xFFFFFFFF,
+	0xFFFFFFFF,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+};
+
+const UINT32 wall_UDR[32] = {
+	0x00CAAF00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00C55F00,
+	0x00EAAB00,
+	0x00D55700,
+	0x00E2BB00,
+	0x00D55700,
+	0x00EAABFF,
+	0x00D177FF,
+	0x00EAAAAB,
+	0x00D5555D,
+	0x00E8EAEA,
+	0x00D55755,
+	0x00EABAAA,
+	0x00D4D555,
+	0x00EB2AAA,
+	0x00D54555,
+	0x00EAA8AA,
+	0x00D71515,
+	0x00EAAAA2,
+	0x00D55554,
+	0x00EE8BFF,
+	0x00D557FF,
+	0x00EAAB00,
+	0x00DD4700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00FAA300,
+	0x00D55700,
+	0x00EAAB00,
+	0x00F55300,
+};
+
+const UINT32 wall_LD[32] = {
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0xFFFFFF00,
+	0xFFFFFF00,
+	0x2AAAAB00,
+	0x45755700,
+	0xA8AEEB00,
+	0x55155700,
+	0xAAA2BB00,
+	0x5554D700,
+	0xAAAB2B00,
+	0x555D5700,
+	0xAAEABB00,
+	0x57571700,
+	0xBAAAAB00,
+	0xD5555F00,
+	0xFFEE8B00,
+	0xFFD55700,
+	0x00EAAB00,
+	0x00DD4700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00FAA300,
+	0x00D55700,
+	0x00EAAB00,
+	0x00F55300,
+};
+
+const UINT32 wall_DR[32] = {
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00FFFFFF,
+	0x00FFFFFF,
+	0x00D55555,
+	0x00EAAAAE,
+	0x00D47575,
+	0x00EAABAA,
+	0x00C55D55,
+	0x00E8EAAA,
+	0x00D71555,
+	0x00FAA2AA,
+	0x00D55455,
+	0x00EB2A8A,
+	0x00D55551,
+	0x00EAAAAA,
+	0x00D717FF,
+	0x00EAABFF,
+	0x00D55700,
+	0x00EE8B00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00DD4700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00FAA300,
+};
+
+const UINT32 cyclops_ghost_U[32] = {
+	0x003FFC00,
+	0x007FFE00,
+	0x01C00380,
+	0x060001E0,
+	0x1C07C038,
+	0x3818301C,
+	0x7021080E,
+	0xE0438407,
+	0xC0828203,
+	0xC0838203,
+	0xC0838203,
+	0xC0810203,
+	0xC0800203,
+	0xC0400403,
+	0xC0200803,
+	0xC0183003,
+	0xC007C003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC0081003,
+	0xC00FF003,
+	0xC00FF003,
+	0xC0000003,
+	0xC0000003,
+	0xC0000003,
+	0xC6060604,
+	0xCF0F0F0C,
+	0x71F1F9F8,
+	0x20606060,
+};
+
+const UINT32 wall_horz[32] = {
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0xFFFFFFFF,
+	0xFFFFFFFF,
+	0x55555557,
+	0x8AAAAABA,
+	0x515555D5,
+	0xAA2AAEAA,
+	0x55457555,
+	0xAAA9AAAA,
+	0x55565555,
+	0xAABA8AAA,
+	0x55D55155,
+	0xAEAAAA2A,
+	0x75555545,
+	0xAAAAAAA8,
+	0xFFFFFFFF,
+	0xFFFFFFFF,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+};
+
+const UINT32 wall_horz_end_L[32] = {
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00FFFFFF,
+	0x00FFFFFF,
+	0x00FF5557,
+	0x00FFAABA,
+	0x00FF55D5,
+	0x00FFAEAA,
+	0x00FF7555,
+	0x00FFAAAA,
+	0x00FF5555,
+	0x00FF8AAA,
+	0x00FF5155,
+	0x00FFAA2A,
+	0x00FF5545,
+	0x00FFAAA8,
+	0x00FFFFFF,
+	0x00FFFFFF,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+};
+
+const UINT32 wall_single[32] = {
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00FFFF00,
+	0x00FFFF00,
+	0x00EAAB00,
+	0x00D55700,
+	0x00E8EB00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00EB2B00,
+	0x00D55700,
+	0x00EAAB00,
+	0x00D71700,
+	0x00EAAB00,
+	0x00D55700,
+	0x00FFFF00,
+	0x00FFFF00,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+};
+const UINT16 wall_single_16[16] = {
+	0xFFFF,
+	0xFFFF,
+	0xEAAB,
+	0xD557,
+	0xE8EB,
+	0xD557,
+	0xEAAB,
+	0xD557,
+	0xEB2B,
+	0xD557,
+	0xEAAB,
+	0xD717,
+	0xEAAB,
+	0xD557,
+	0xFFFF,
+	0xFFFF,
+};
+
+UINT16 tile_map[][MAP_TILE_LENGTH] = {
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1},
+    {1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 1},
+    {1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1},
+    {1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1},
+    {1, 0, 2, 1, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 2, 2, 0, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 1, 0, 2, 1},
+    {1, 0, 2, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 1, 1, 0, 2, 1, 1, 0, 2, 1, 1, 0, 2, 1, 1, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 0, 2, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1},
+    {1, 0, 2, 2, 0, 2, 2, 0, 2, 1, 0, 2, 1, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 1, 0, 2, 1, 0, 2, 2, 0, 2, 2, 0, 2, 1},
+    {1, 2, 2, 1, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0, 2, 1, 2, 2, 1},
+    {1, 1, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 0, 0, 0, 0, 0, 2, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1},
+    {0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {2, 0, 2, 2, 0, 2, 2, 0, 2, 1, 0, 2, 2, 0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 2, 2, 0, 2, 1, 0, 2, 2, 0, 2, 2, 0, 2, 2},
+    {1, 0, 2, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 2, 2, 0, 2, 2, 2, 1, 1, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0, 2, 1, 0, 2, 1},
+    {1, 0, 2, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 0, 2, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1},
+    {1, 0, 2, 2, 0, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 0, 2, 2, 0, 2, 1},
+    {1, 0, 2, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 0, 2, 1},
+    {1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1},
+    {1, 0, 2, 1, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 1, 0, 2, 1},
+    {1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1},
+    {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+};
+
+
+const UINT32* default_pacman_sprites[4][7] = {
+    {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2},   /*UP*/
+    {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2},   /*DOWN*/
+    {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2},   /*LEFT*/
+    {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2}    /*RIGHT*/
+};
+const UINT32* evil_pacman_sprites[4][7] = {
+    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2},   /*UP*/
+    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2},   /*DOWN*/
+    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2},   /*LEFT*/
+    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2}    /*RIGHT*/
+};
+const UINT32* moustache_ghost_sprites[4][2] = {
+    {ghost_1_up, ghost_1_up},   /*UP*/
+    {ghost_1_down, ghost_1_down},   /*DOWN*/
+    {ghost_1_left, ghost_1_left},   /*LEFT*/
+    {ghost_1_right, ghost_1_right}    /*RIGHT*/
+};
+const UINT32* awkward_ghost_sprites[4][2] = {
+    {ghost_2_up, ghost_2_up},   /*UP*/
+    {ghost_2_down, ghost_2_down},   /*DOWN*/
+    {ghost_2_left, ghost_2_left},   /*LEFT*/
+    {ghost_2_right, ghost_2_right}    /*RIGHT*/
+};
+const UINT32* cyclops_ghost_sprites[4][2] = {
+    {ghost_3_up, ghost_3_up},   /*UP*/
+    {ghost_3_down, ghost_3_down},   /*DOWN*/
+    {ghost_3_left, ghost_3_left},   /*LEFT*/
+    {ghost_3_right, ghost_3_right}    /*RIGHT*/
+};
+const UINT32* crying_ghost_sprites[4][2] = {
+    {ghost_4_up, ghost_4_up},   /*UP*/
+    {ghost_4_down, ghost_4_down},   /*DOWN*/
+    {ghost_4_left, ghost_4_left},   /*LEFT*/
+    {ghost_4_right, ghost_4_right}    /*RIGHT*/
 };
