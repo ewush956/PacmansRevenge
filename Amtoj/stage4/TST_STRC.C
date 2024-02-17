@@ -57,7 +57,7 @@ Pacman pacman_obj = {
     UP,         /*Initial direction*/
     FALSE,       /*Initial state*/
     FALSE,
-    21,19          /*Cell index -> y, x*/
+    0,0          /*Cell index -> y, x*/
 };
 
 Ghost c_ghost = {
@@ -66,7 +66,7 @@ Ghost c_ghost = {
     0,
     UP,
     DEFAULT,
-    10, 17
+    1,1 
                /*Or whatever cell it starts in*/
  
 };
@@ -76,7 +76,7 @@ Ghost m_ghost = {
     0,
     UP,
     DEFAULT,
-    10, 21
+    18, 1
 };
 Ghost cy_ghost = {
     PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
@@ -84,7 +84,7 @@ Ghost cy_ghost = {
     0,
     UP,
     DEFAULT,
-    12, 17
+    1, 3						/*(x,y)*/
 };
 Ghost a_ghost = {
     PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
@@ -105,8 +105,9 @@ int main()
 
 /**/
 	char input;
-	int i,j,k;
+	int i,j,counter;
 	UINT8 collision_type; 
+	UINT32* base = Physbase();
 
 	Entities all_objs = {
 
@@ -126,13 +127,13 @@ int main()
 	init_map_cells(cell_map,tile_map);				/* i added the paramters for the init_cell map function*/
 
 	/*init_ghost_paths()*/
-	
+	/*
 	printf("%u,%d:",ptr->pacman->x,ptr->pacman->has_collided);
 
 	printf("pacman position old : (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
 
 	printf("pacman direction before:(%u)\n\n", pacman_obj.direction);
-	
+	*/
 
 	printf("%d,%d\n",ptr->pacman->y_cell_index,ptr->pacman->x_cell_index);
 	/*
@@ -155,7 +156,7 @@ int main()
 		NOT taking input but works with hard-coded funtion calls */
 	
 		
-
+/*
 	while(!Cconis())
 	{
 		
@@ -179,20 +180,50 @@ int main()
 
 
 		printf("pacman position now: (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
-		printf("pacman direction........:(%u)\n\n", pacman_obj.direction); 
+		printf("pacman's cuurent direction.:(%u)\n", pacman_obj.direction); 
 
 	}
 
 	/*Cnecin();*/
 	
-	printf("pacman position new : (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
+	/* first loop used for testing if pacman collised with any objects */
+		printf("Press enter key to go to next next\n\n\n");
+		counter = 0;
+		for (i = 0; i < MAP_TILE_HEIGHT; i++){
+			for(j =0; j < MAP_TILE_LENGTH; j++){
+				printf("---------Case number %d---------\n\n\n",counter);
+
+				collision_type = check_collision(ptr, ptr->pacman->y_cell_index, 
+												ptr->pacman->x_cell_index, 
+												ptr->pacman->delta_y, 
+												ptr->pacman->delta_x);
+				if (collision_type == NO_COLLISION)
+        			move_pacman_test(&pacman_obj);
+    			else
+        			handle_pacman_collision(collision_type,&pacman_obj);
+
+				printf("pacman position now: (%d, %d)\n\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
+				/*printf("pacman's direction: %u\n", pacman_obj.direction);*/
+
+				if (j % 3 == 0)
+					next_test(base);
+
+				ptr->pacman->x_cell_index += 1;
+				counter++;
+			}
+			ptr->pacman -> y_cell_index += 1;
+			ptr->pacman -> x_cell_index =0; 
+		}
+
+
+	printf("pacman position final: (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
 
 
 	return 0;
 }
 
 
-/*waits for input then calls clear_screen();
+/*waits for input then calls clear_screen();*/
 void next_test(UINT32* base) {
 
 	while(!Cconis()){
@@ -202,7 +233,7 @@ void next_test(UINT32* base) {
 	clear_screen_q(base);
 }
 
-*/
+
 
 void set_input(Pacman *pacman, char input)
 {

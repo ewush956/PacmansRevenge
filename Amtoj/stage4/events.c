@@ -49,10 +49,28 @@ void clock_tick_handle(UINT16* clock_count, Entites* entity) {
 }
 */
 
-void handle_ghost_collision(UINT8 collision_type) {
+void handle_ghost_collision(UINT8 collision_type, Ghost* ghost,Cell cell_map[][MAP_TILE_LENGTH]) {
     /*
     Amtoj
     if ghost collided returns true then check directions and move based on that */
+
+    UINT16 possible_directions;
+    switch (collision_type)
+    {
+        case WALL:
+          if ( ghost->current_= + 1 == TRUE )
+
+
+            random_direction |= ghost -> direction;
+        possible_direction |= ghost->direction;
+            break;
+
+
+
+
+    }
+
+
 }
 void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
 
@@ -68,13 +86,16 @@ void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
     switch(collision_type)
     {
     case WALL: 
-        printf(".....COLLISION WALL....\n");
+        printf("COLLISION WITH A WALL\n\n");
         break;
 
     case OBJECT:                            /* ask evan  */
-        printf("COLLIDED with an OBJECT\n");
+        printf("COLLIDED with an OBJECT\n\n");
         /*add_wall_to_map(cell_map,ghost)*/
         break;
+    
+    default:
+        printf("NO COLLSION");
 
     }
 

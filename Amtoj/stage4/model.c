@@ -76,7 +76,7 @@ void move_ghost (Ghost *ghost)
     ghost -> y += ghost -> delta_y;
 
 }
-UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position,UINT16 y_delta, UINT16 x_delta)
+UINT8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta)
 {  
     UINT8 collision = 0;
     int i;
@@ -88,19 +88,20 @@ UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_
     all_ghosts[1] = entity->awkward_ghost;
     all_ghosts[2] = entity->cyclops_ghost;
     all_ghosts[3] = entity->moustache_ghost;
+    
 
     if (cell_map[object_y_position + y_delta][object_x_position + x_delta].open_path ==FALSE)
         collision = WALL;
 
     else{
         for (i = 0; i < 4; i++){
-             printf("(%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);
-                if (all_ghosts[i]->x_cell_index == object_x_position + x_delta &&
-                    all_ghosts[i]->y_cell_index == object_y_position + y_delta )
+            /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
+                if (all_ghosts[i]->x_cell_index == object_x_index + x_delta &&
+                    all_ghosts[i]->y_cell_index == object_y_index + y_delta )
                 {
                     collision = OBJECT;
-                    printf("This is with: %d\n",i);
-                    printf("(%d,%d)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);
+                    printf("COLLISION AT LOCATION (y,x) ->(%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);
+                    
                     break;
                 }
 
