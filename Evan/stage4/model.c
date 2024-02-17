@@ -138,9 +138,8 @@ UINT8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_i
     all_ghosts[1] = entity->awkward_ghost;
     all_ghosts[2] = entity->cyclops_ghost;
     all_ghosts[3] = entity->moustache_ghost;
-    
 
-    if (cell_map[object_y_position + y_delta][object_x_position + x_delta].open_path ==FALSE)
+    if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path ==FALSE)
         collision = WALL;
 
     else{
@@ -193,7 +192,6 @@ void update_cells(int* x_index, int* y_index) {
    if (*x_index % PIXELS_PER_CELL == 0) {
        *x_index = (*x_index)++;
    }
-
    if (*y_index % PIXELS_PER_CELL == 0) {
        *y_index = (*y_index)++;
    }

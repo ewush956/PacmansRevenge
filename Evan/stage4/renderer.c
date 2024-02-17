@@ -62,7 +62,7 @@ void render_frame(UINT32* base, Entities* entity) {
 *************************************************************/
 void render_pacman(UINT32* base32, Pacman* pacman) {
 
-    if (pacman->is_evil == TRUE) {
+    if (pacman->state == EVIL) {
         plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
     }
     else {
@@ -113,21 +113,22 @@ void render_ghosts(UINT32* base32, Entities* entity) {
 * Function: de_render_ghost
 * Purpose: Removes the ghost's sprite from its last position and marks its current position with a tombstone.
 * Parameters: UINT32* base32 - Pointer to the frame buffer's base address,
-              Ghost* ghost - Pointer to the ghost structure to be de-rendered,
-              Cell cell_map[][MAP_TILE_LENGTH] - The game's cell map for reference.
+*             Ghost* ghost - Pointer to the ghost structure to be de-rendered,
+*             Cell cell_map[][MAP_TILE_LENGTH] - The game's cell map for reference.
 * Details: This function clears the ghost's sprite from its previous position using the
 *          clear_bitmap_32 function. Then, it plots a tombstone bitmap at the ghost's current
 *          cell position to indicate where it was caught or removed from the game.
 *************************************************************/
 void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
-    clear_bitmap_32(base32, ghost->x, ghost->y, SPRITE_HEIGHT);
-    plot_bitmap_32(base32, ghost->current_cell->x, ghost->current_cell->y, tombstone, SPRITE_HEIGHT);
+    Cell current_cell = cell_map[ghost->y_cell_index][ghost->x_cell_index];
+    clear_bitmap_32(base32, ghost->x, ghost->y, null_sprite_32, SPRITE_HEIGHT);
+    plot_bitmap_32(base32, current_cell.x_position, current_cell.y_position, tombstone, SPRITE_HEIGHT);
 }
 /*************************************************************
 * Function: render_non_default_ghost
 * Purpose: Renders a ghost in a non-default state, such as RUNNING or FROZEN.
 * Parameters: UINT32* base32 - Pointer to the frame buffer's base address,
-              Ghost* ghost - Pointer to the ghost structure.
+*             Ghost* ghost - Pointer to the ghost structure.
 * Details: Depending on the ghost's state, this function renders the ghost with
 *          a specific sprite (RUNNING or FROZEN) at its current position.
 *          - RUNNING state uses the ghost_run sprite.

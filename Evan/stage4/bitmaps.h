@@ -67,6 +67,7 @@ extern const UINT16 wall_single_16[];
 
 extern const UINT32 wall_horz_end_L[];
 
+extern const UINT32 null_sprite_16[];
 extern const UINT32 null_sprite_32[];
 
 extern const UINT32 test64[];
