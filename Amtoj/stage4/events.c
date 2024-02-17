@@ -49,37 +49,68 @@ void clock_tick_handle(UINT16* clock_count, Entites* entity) {
 }
 */
 
-void handle_ghost_collision(UINT8 collision_type, Ghost* ghost,Cell cell_map[][MAP_TILE_LENGTH]) {
-    /*
-    Amtoj
-    if ghost collided returns true then check directions and move based on that */
+/*
+*   We are using an XOR algorithm to generate a random number to mod it by 4 to select a random
+*   direction for the ghosts to choose from if they encounter multiple open paths after colliding with a wall 
+*
+*
+**/
+void handle_ghost_collision(UINT8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct) {
+  
+    UINT8 possible_direction = 0;
+    UINT32 random_number;
 
-    UINT16 possible_directions;
-    switch (collision_type)
+    
+    if (collision_type == WALL)
     {
-        case WALL:
-          if ( ghost->current_= + 1 == TRUE )
+        if (ghost->x_cell_index + 1 == TRUE )
+        {
+            possible_direction |= RIGHT;
+            printf("right \n");
+        }
+
+        if (ghost->x_cell_index - 1 == TRUE)
+        {
+            possible_direction |= LEFT;
+            printf("left \n");
+        }
+
+        if (ghost->y_cell_index + 1 == TRUE)
+        {
+            possible_direction |= DOWN;
+            printf("down \n");
+        }
+
+        if (ghost-> y_cell_index - 1 == TRUE)
+        {
+            possible_direction |= UP;
+            printf("up \n");
+        }
 
 
-            random_direction |= ghost -> direction;
-        possible_direction |= ghost->direction;
-            break;
+           random_number = random_number_generator(&xor_shift_struct);
 
+           printf("random number --> %u\n",random_number);
 
+            printf("random number --> %u\n",random_number_generator(&xor_shift_struct));
 
+           random_number %= possible_direction; 
+           possible_direction = random_number % possible_direction;
+           ghost -> direction = possible_direction;
 
+           printf("ghost direction: %u",ghost->direction);
     }
+    else{
 
+        printf("Not a wall in the switch struct\n");
+    }
 
 }
 void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
 
-/*  Amtoj
-    if pacman check_collison returns true, then dont move him 
-    otherwise update his position 
     
-    if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone
-    */
+    /*if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone*/
+    
 
     pacman->delta_y = 0;
     pacman->delta_x = 0;
@@ -89,7 +120,7 @@ void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
         printf("COLLISION WITH A WALL\n\n");
         break;
 
-    case OBJECT:                            /* ask evan  */
+    case OBJECT:                            
         printf("COLLIDED with an OBJECT\n\n");
         /*add_wall_to_map(cell_map,ghost)*/
         break;
