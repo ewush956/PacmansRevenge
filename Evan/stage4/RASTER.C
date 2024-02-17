@@ -25,7 +25,7 @@ void plot_bitmap_32(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned 
             /* dx++; Can't get dx working :(*/
         }
 }
-void clear_bitmap_32(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height) {
+void clear_bitmap_32(UINT32* base, int x, int y, unsigned int height) {
     int row;
     int dx = x;
     int dy = y;

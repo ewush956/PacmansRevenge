@@ -1,6 +1,7 @@
 #include "TYPES.H"
 #include "model.h"
 #include "bitmaps.h"
+#include <stdio.h>
 
 /*************************************************************
 * Declaration: Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH]

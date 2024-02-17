@@ -3,6 +3,7 @@
 #include "model.h"
 #include "TYPES.H"
 #include "events.h"
+#include <stdio.h>
 /*
 void clock_tick_handle(UINT16* clock_count, Entites* entity) {
 

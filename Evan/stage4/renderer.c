@@ -121,7 +121,7 @@ void render_ghosts(UINT32* base32, Entities* entity) {
 *************************************************************/
 void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     Cell current_cell = cell_map[ghost->y_cell_index][ghost->x_cell_index];
-    clear_bitmap_32(base32, ghost->x, ghost->y, null_sprite_32, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, ghost->x, ghost->y, SPRITE_HEIGHT);
     plot_bitmap_32(base32, current_cell.x_position, current_cell.y_position, tombstone, SPRITE_HEIGHT);
 }
 /*************************************************************

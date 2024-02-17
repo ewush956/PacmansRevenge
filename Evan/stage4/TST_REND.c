@@ -75,7 +75,7 @@ int main()
 	render_frame(base32, &entity);
 
 	next_test(base32);
-	clear_bitmap_32(base32, pacman.x, pacman.y, null_sprite_32, SPRITE_HEIGHT);
+	clear_bitmap_32(base32, pacman.x, pacman.y, SPRITE_HEIGHT);
 	next_test(base32);
 	pacman.delta_x = 1;
 	pacman.delta_y = 0;
@@ -105,7 +105,7 @@ void next_test(UINT32* base) {
 void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 	int i;
 	for (i=0; i < stop; i++) {
-		clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, null_sprite_32, SPRITE_HEIGHT); 
+		clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
 		move_pacman(entity->pacman);
 		render_frame(base, entity);
 		if (i % 4 == 0) {
@@ -117,7 +117,7 @@ void test_ghost_movement(UINT32* base, Entities* entity, int stop) {
 	int i;
 	Ghost* ghost = entity->crying_ghost;
 	for (i=0; i < stop; i++) {
-		clear_bitmap_32(base, ghost->x, ghost->y, null_sprite_32, SPRITE_HEIGHT); 
+		clear_bitmap_32(base, ghost->x, ghost->y, SPRITE_HEIGHT); 
 		move_ghost(ghost);
 		render_frame(base, entity);
 		next_test(base);
