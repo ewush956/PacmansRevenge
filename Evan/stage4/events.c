@@ -47,28 +47,112 @@ void clock_tick_handle(UINT16* clock_count, Entites* entity) {
 }
 */
 
-void handle_ghost_collision(UINT8 collision_type) {
-    /*
-    Amtoj
-    if ghost collided returns true then check directions and move based on that */
+
+
+/*
+*   We are using an XOR algorithm to generate a random number to mod it by 4 to select a random
+*   direction for the ghosts to choose from if they encounter multiple open paths after colliding with a wall 
+*   
+*   NOTE this is not currently functional there is a bug with random generation in this and a logic error 
+*   
+**/
+void handle_ghost_collision (UINT8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct) {
+  
+    UINT8 possible_direction = 0;
+    UINT32 random_number;
+
+    
+    if (collision_type == WALL)
+    {
+        if (ghost->x_cell_index + 1 == TRUE )
+        {
+            possible_direction |= RIGHT;
+            printf("right \n");
+        }
+
+        if (ghost->x_cell_index - 1 == TRUE)
+        {
+            possible_direction |= LEFT;
+            printf("left \n");
+        }
+
+        if (ghost->y_cell_index + 1 == TRUE)
+        {
+            possible_direction |= DOWN;
+            printf("down \n");
+        }
+
+        if (ghost-> y_cell_index - 1 == TRUE)
+        {
+            possible_direction |= UP;
+            printf("up \n");
+        }
+
+
+           random_number = random_number_generator(&xor_shift_struct);
+           random_number %= possible_direction; 
+           possible_direction = random_number % possible_direction;
+           ghost -> direction = possible_direction;
+
+           printf("ghost direction: %u",ghost->direction);
+    }
+    else{
+
+        printf("Not a wall collsion struct\n");
+    }
+
 }
+
+/*
+*
+*
+*
+*
+*
+*
+**/
 void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
 
-/*  Amtoj
-    if pacman check_collison returns true, then dont move him 
-    otherwise update his position 
     
-    if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone
-    */
+    /*if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone*/
+    
+
+    pacman->delta_y = 0;
+    pacman->delta_x = 0;
     switch(collision_type)
     {
-    case WALL:
-        pacman -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
-        pacman -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
+    case WALL: 
+        printf("COLLISION WITH A WALL\n\n");
         break;
 
-    case OBJECT:                            /* ask evan  */
+    case OBJECT:                            
+        printf("COLLIDED with an OBJECT\n\n");
+        /*add_wall_to_map(cell_map,ghost)*/
         break;
+    
+    default:
+        printf("NO COLLSION");
+
     }
+
+}
+/* * * * * * * * * * * * *
+*  Uses an XOR shift algorthm to generate a random number 
+*   -For randomizing direction of any ghost
+*    
+*   @return 'state' this is the random number that is returned
+*
+* * * * * * * * * * */
+UINT32 random_number_generator(Xor *xor)
+{
+
+    UINT32 state = xor->value;
+
+	state ^= state << 13;
+	state ^= state >> 17;
+	state ^= state << 5;
+    xor->value = state;
+
+    return state;
 }
 

@@ -2,6 +2,13 @@
 #include "TYPES.H"
 #include "model.h"
 
-void clock_tick_handle(UINT16* clock_count, Entities* entity);		/* calls move pacman calls all synch event handlers */
+typedef struct
+{
+
+    UINT32 value;
+
+}Xor;
+
+void handle_ghost_collision (UINT8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct);
+UINT32 random_number_generator(Xor *xor);
 void handle_pacman_collision(UINT8 collision_type, Pacman *pacman);
-void handle_ghost_collision(UINT8 collision_type);
