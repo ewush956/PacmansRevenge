@@ -84,6 +84,8 @@ void render_ghosts(UINT32* base32, Entities* entity) {
     Ghost* moustache = entity->moustache_ghost;
     Ghost* crying = entity->crying_ghost;
     Ghost* cyclops = entity->cyclops_ghost;
+
+    /*THIS IS A TEST*/
     
     if (awkward->state == DEFAULT) {
         plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->direction][awkward->current_frame], SPRITE_HEIGHT);
