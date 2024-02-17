@@ -17,44 +17,27 @@
 
 #define PIXELS_PER_CELL  16
 
-#define RUNNING 1
-#define FROZEN 2
-#define DEAD 3
-#define DEFAULT 0
-
-
-/* use the tile defn's for this */
-
-
-/*
-#define WALL 1;
-#define PATH 0;
-*/
- /* move_ghost(int x, int y, Object *ref_to_object) */
- 
+#define RUNNING ((UINT8)1)
+#define FROZEN ((UINT8)2)
+#define DEAD ((UINT8)3)
+#define DEFAULT ((UINT8)0)
+#define EVIL ((UINT8)1)
 
 typedef struct {
-
 	int x_position, y_position;
 	bool open_path;
-	
 }Cell;
 
 typedef struct 
 {
 	UINT16 x, y;					/*positon */
-	int delta_x, delta_y; 		/* displacement (horzontal or vertical) */
+	int delta_x, delta_y; 		    /* displacement (horzontal or vertical) */
 
-	int current_frame;		/* current sprite (state) index */
-	UINT8 direction;		/*UP, DOWN, LEFT, RIGHT*/
-	bool is_evil;
-	bool has_collided; 
+	int current_frame;		        /* current sprite (state) index */
+	UINT8 direction;		        /*UP, DOWN, LEFT, RIGHT*/
+	UINT8 state;					/*DEFAULT OR EVIL*/
 
 	UINT16 x_cell_index, y_cell_index; 
-	/*Check things like this:		
-	if (pacman->direction == DOWN) {check cell_map[pacman->x_cell_index][pacman->y_cell_index + 1].open_path}
-	*/
-
 }Pacman;
 
 typedef struct
@@ -69,19 +52,17 @@ typedef struct
 	UINT16 x_cell_index, y_cell_index;
 	struct Cell *current_cell;
 
-
 }Ghost;
 
 typedef struct{
 	UINT16 seconds, minutes,
 	MS_digit_minutes, LS_digit_minutes,
-	MS_digit_seconds, LS_digit_seconds; /*x positions*/
+	MS_digit_seconds, LS_digit_seconds; 
 
 }Timer;
 
 
 extern Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
-
 
 extern Pacman pacman;
 extern Ghost awkward_ghost;
@@ -97,16 +78,13 @@ typedef struct {
 	Ghost *cyclops_ghost;
 
 	Timer *timer;
-	
 }Entities;
 
 void move_ghost (Ghost *ghost);
-void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
-void move_pacman (Pacman *pacman);/*,UINT16 delta_x, UINT16 delta_y); (may need this later so leaving parameters)*/ 
+void move_pacman (Pacman *pacman);
 UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position,UINT16 y_delta, UINT16 x_delta);
 
-void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
-void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);
+void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
 void update_cell(int* x_index, int* y_index);
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
