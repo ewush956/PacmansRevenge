@@ -47,114 +47,76 @@ int arbitrary_numbers_640[] = {
 };
 
 void next_test(UINT32* base);
-void display_all_ascii(UINT8* base, int x0, int y0);
+void test_pacman_movement(UINT32* base, Entities* entity, int stop);
+void test_ghost_movement(UINT32* base, Entities* entity, int stop);
+
 void test_arbitrary_letter(UINT8* base);
 
-/*All below functions call next_test*/
-void speed_test(UINT32* base, UINT32 sprite[], unsigned int height);
-void display_all_sprites(UINT32* base);
-void test_boundaries(UINT32* base);
-void test_arbitrary_32(UINT32* base);
+
 int main()
 {
+	Entities entity = {
+		&pacman,
+		&crying_ghost,
+		&moustache_ghost,
+		&awkward_ghost,
+		&cyclops_ghost
+	};
+	
 	void *base32 = Physbase();
 	void *base16 = Physbase();
 	void *base8 = Physbase();
+
 	int x, y, i, j, index, countx, county, offset_x, offset_y;
 
 	clear_screen_q(base32); 
-
-	display_all_sprites(base32);
 	next_test(base32);
     render_map(base16, tile_map);
+	render_frame(base32, &entity);
 
-	plot_bitmap_32(base32, pacman.x, pacman.y, sprites[2], SPRITE_HEIGHT);
-	plot_bitmap_32(base32, crying_ghost.x, crying_ghost.y, sprites[8], SPRITE_HEIGHT);
-	plot_bitmap_32(base32, moustache_ghost.x, moustache_ghost.y, sprites[12], SPRITE_HEIGHT);
-	plot_bitmap_32(base32, cyclops_ghost.x, cyclops_ghost.y, sprites[16], SPRITE_HEIGHT);
-	plot_bitmap_32(base32, awkward_ghost.x, awkward_ghost.y, sprites[20], SPRITE_HEIGHT);
+	next_test(base32);
+	clear_bitmap_32(base32, pacman.x, pacman.y, SPRITE_HEIGHT);
+	next_test(base32);
+	pacman.delta_x = 1;
+	pacman.delta_y = 0;
+	test_pacman_movement(base32, &entity, 150);
 	next_test(base32);
 
+	/*KNOWN BUG: Ghost deletes adjacent wall cell apon first render*/
+	crying_ghost.delta_x = 1;
+	crying_ghost.delta_y = 0;
+	test_ghost_movement(base32, &entity, 32);
 
-	/*18 x 11 !!!!!!!!!!!!!!!!*/
-
-	
+	crying_ghost.delta_x = 0;
+	crying_ghost.delta_y = -1;
+	crying_ghost.direction = UP;
+	test_ghost_movement(base32, &entity, 32);
 	return 0;
 }
 /*waits for input then calls clear_screen();*/
 void next_test(UINT32* base) {
-
 	while(!Cconis()){
-
 	}
 	Cnecin();
-	clear_screen_q(base);
-}
-void display_all_ascii(UINT8* base, int x0, int y0) {
-
-	int x, y, i;
-	int index = 0;
-
-	for (y = y0; y < y0 + (LETTER_HEIGHT * LETTERS_PER_BLOCK); y += 16) {
-		for (i = 0, x = x0; i < 16 ; i++, x += LETTER_WIDTH) {
-			if (index < 95) 
-				plot_letter(base, x, y, font, index++); /*a*/
-		}
-	}	
-}
-void speed_test(UINT32* base, UINT32 sprite[], unsigned int height) {
-
-	int i;
-
-	for (i = 0; i < 608; i++) {
-		plot_bitmap_32(base, i, 0, sprite, height);
-		plot_bitmap_32(base, i, 50, sprite, height);
-		plot_bitmap_32(base, i, 100, sprite, height);
-		plot_bitmap_32(base, i, 150, sprite, height);
-		plot_bitmap_32(base, i, 200, sprite, height);
-		plot_bitmap_32(base, i, 250, sprite, height);
-		plot_bitmap_32(base, i, 300, sprite, height);
-		plot_bitmap_32(base, i, 350, sprite, height);
-	}
-}
-void display_all_sprites(UINT32* base) {
-    int x, y, i;
-    int spritesPerRow = 8; 
-    int spriteWidth = 32; 
-    int spriteHeight = 32; 
-    int spacing = 10; 
-    int startX = 20; 
-    int startY = 20; 
-
-    for (i = 0; i < 31; i++) {
-        x = startX + (i % spritesPerRow) * (spriteWidth + spacing);
-        y = startY + (i / spritesPerRow) * (spriteHeight + spacing);
-        plot_bitmap_32(base, x, y, sprites[i], spriteHeight);
-    }
-}
-/*Tests allowable plotting limmits*/
-void test_boundaries(UINT32* base) {
-    
-    plot_bitmap_32(base, 0, 0, sprites[0], SPRITE_HEIGHT); 
-    plot_bitmap_32(base, SCREEN_WIDTH - SPRITE_WIDTH, 0, sprites[1], SPRITE_HEIGHT); 
-    plot_bitmap_32(base, 0, SCREEN_HEIGHT - SPRITE_HEIGHT, sprites[2], SPRITE_HEIGHT); 
-    plot_bitmap_32(base, SCREEN_WIDTH - SPRITE_WIDTH, SCREEN_HEIGHT - SPRITE_HEIGHT, sprites[3], SPRITE_HEIGHT); 
-    plot_bitmap_32(base, (SCREEN_WIDTH - SPRITE_WIDTH) / 2, 0, sprites[4], SPRITE_HEIGHT); 
-    plot_bitmap_32(base, (SCREEN_WIDTH - SPRITE_WIDTH) / 2, SCREEN_HEIGHT - SPRITE_HEIGHT, sprites[5], SPRITE_HEIGHT); 
-    plot_bitmap_32(base, 0, (SCREEN_HEIGHT - SPRITE_HEIGHT) / 2, sprites[6], SPRITE_HEIGHT); 
-    plot_bitmap_32(base, SCREEN_WIDTH - SPRITE_WIDTH, (SCREEN_HEIGHT - SPRITE_HEIGHT) / 2, sprites[7], SPRITE_HEIGHT); 
 }
 /*Displays all prites within allowable range at aribitrary (x,y)*/
-void test_arbitrary_32(UINT32* base) {
+void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 	int i;
-
-	for (i=0; i < 95; i++) {
-		plot_bitmap_32(base, arbitrary_numbers_640[i], arbitrary_numbers_400[i], sprites[i % 30], SPRITE_HEIGHT);
+	for (i=0; i < stop; i++) {
+		clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
+		move_pacman(entity->pacman);
+		render_frame(base, entity);
+		if (i % 4 == 0) {
+			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
+		}
 	}
 }
-void test_arbitrary_letter(UINT8* base) {
+void test_ghost_movement(UINT32* base, Entities* entity, int stop) {
 	int i;
-	for(i = 0; i < 95; i++) {
-		plot_letter(base, arbitrary_numbers_640[i], arbitrary_numbers_400[i], font, i);
+	Ghost* ghost = entity->crying_ghost;
+	for (i=0; i < stop; i++) {
+		clear_bitmap_32(base, ghost->x, ghost->y, SPRITE_HEIGHT); 
+		move_ghost(ghost);
+		render_frame(base, entity);
 	}
 }

@@ -17,8 +17,6 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
             case 1:
                 plot_bitmap_16(base, x, y, wall_single_16, WALL_SIZE);
                 break;
-            default:
-                break;
             }
             x += WALL_SIZE;
         }
@@ -37,10 +35,10 @@ void render_frame(UINT32* base, Entities* entity) {
 void render_pacman(UINT32* base32, Pacman* pacman) {
 
     if (pacman->is_evil == TRUE) {
-        plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
     }
     else {
-        plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
     }    /* pacman->current_frame++; */
 }
 void render_ghosts(UINT32* base32, Entities* entity) {
@@ -51,25 +49,25 @@ void render_ghosts(UINT32* base32, Entities* entity) {
     Ghost* cyclops = entity->cyclops_ghost;
     
     if (awkward->state == DEFAULT) {
-        plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->current_frame][awkward->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->direction][awkward->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, awkward);
     }
 
     if (moustache->state == DEFAULT) {
-        plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->current_frame][moustache->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->direction][moustache->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, moustache);
     }
 
     if (crying->state == DEFAULT) {
-        plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->current_frame][crying->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->direction][crying->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, crying);
     }
 
     if (cyclops->state == DEFAULT) {
-        plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->current_frame][cyclops->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->direction][cyclops->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, cyclops);
     }
@@ -97,14 +95,8 @@ void render_timer(Timer* timer) {
     }
     /*plot_letter(base8, timer) */
 }
-void clr_sprite(UINT32* base, int x, int y) {
-    /*
-    Evan
-    plot_bitmap_32(null_sprite_32)*/
-    plot_bitmap_32(base, x, y, null_sprite_32, SPRITE_HEIGHT);
-}
 void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
-    plot_bitmap_32(base32, ghost->x, ghost->y, null_sprite_32, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, ghost->x, ghost->y, SPRITE_HEIGHT);
     kill_ghost(ghost, cell_map);
 
 }

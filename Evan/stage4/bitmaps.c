@@ -1703,7 +1703,7 @@ const UINT32* evil_pacman_sprites[4][7] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2},   /*LEFT*/
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2}    /*RIGHT*/
 };
-const UINT32* crying_ghost_sprites[4][2] = {
+const UINT32* moustache_ghost_sprites[4][2] = {
     {ghost_1_up, ghost_1_up},   /*UP*/
     {ghost_1_down, ghost_1_down},   /*DOWN*/
     {ghost_1_left, ghost_1_left},   /*LEFT*/
@@ -1721,7 +1721,7 @@ const UINT32* cyclops_ghost_sprites[4][2] = {
     {ghost_3_left, ghost_3_left},   /*LEFT*/
     {ghost_3_right, ghost_3_right}    /*RIGHT*/
 };
-const UINT32* moustache_ghost_sprites[4][2] = {
+const UINT32* crying_ghost_sprites[4][2] = {
     {ghost_4_up, ghost_4_up},   /*UP*/
     {ghost_4_down, ghost_4_down},   /*DOWN*/
     {ghost_4_left, ghost_4_left},   /*LEFT*/
