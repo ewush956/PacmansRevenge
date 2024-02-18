@@ -51,12 +51,15 @@ int main()
 		&awkward_ghost,
 		&cyclops_ghost
 	};
-	
+	Ghost* moustache = entity.moustache_ghost;
+
 	void *base32 = Physbase();
 	void *base16 = Physbase();
 	void *base8 = Physbase();
 
 	int x, y, i, j, index, countx, county, offset_x, offset_y;
+
+	init_map_cells(cell_map, tile_map);
 
 	clear_screen_q(base32); 
 	next_test(base32);
@@ -66,16 +69,13 @@ int main()
 	next_test(base32);
 	refresh_screen(base32, &entity);
 	next_test(base32);
-	/*
-	clear_bitmap_32(base32, pacman.x, pacman.y, SPRITE_HEIGHT);
+
 	next_test(base32);
 	pacman.delta_x = 1;
 	pacman.delta_y = 0;
 	test_pacman_movement(base32, &entity, 150);
 	next_test(base32);
-	*/
-
-	/*KNOWN BUG: Ghost deletes adjacent wall cell apon first render*/
+	
 	crying_ghost.delta_x = 1;
 	crying_ghost.delta_y = 0;
 	test_ghost_movement(base32, &entity, 32);
@@ -86,12 +86,11 @@ int main()
 	test_ghost_movement(base32, &entity, 32);
 
 	next_test(base32);
-	/*
-	moustache_ghost.current_cell = cell_map[11][23];
 
-	De-render ghost is currently not functioning, plots tombstone at incorect position
+	/* *moustache->current_cell = *cell_map[11][23]; */
+	
 	de_render_ghost(base32, &moustache_ghost, tile_map); 
-	*/
+	
 
 
 	return 0;
