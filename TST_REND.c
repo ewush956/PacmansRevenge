@@ -9,17 +9,6 @@
 
 #define LETTERS_PER_BLOCK 6
 
-const UINT32* sprites[] = {
-	pac_1, pac_2, pac_3, pac_4,
-	evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4,
-	ghost_1_up, ghost_1_down, ghost_1_left, ghost_1_right,
-	ghost_2_up, ghost_2_down, ghost_2_left, ghost_2_right,
-	ghost_3_up, ghost_3_down, ghost_3_left, ghost_3_right,
-	ghost_4_up, ghost_4_down, ghost_4_left, ghost_4_right,
-	wall_all, wall_horz, wall_vert, wall_LD, wall_ULD,
-	tombstone, ghost_run, ghost_freeze
-};
-
 int arbitrary_numbers_400[] = {
 	141, 276, 392, 345, 72, 307, 51, 17, 198, 63, 
 	366, 304, 383, 71, 111, 190, 255, 39, 110, 307, 
@@ -75,12 +64,16 @@ int main()
 	render_frame(base32, &entity);
 
 	next_test(base32);
+	refresh_screen(base32, &entity);
+	next_test(base32);
+	/*
 	clear_bitmap_32(base32, pacman.x, pacman.y, SPRITE_HEIGHT);
 	next_test(base32);
 	pacman.delta_x = 1;
 	pacman.delta_y = 0;
 	test_pacman_movement(base32, &entity, 150);
 	next_test(base32);
+	*/
 
 	/*KNOWN BUG: Ghost deletes adjacent wall cell apon first render*/
 	crying_ghost.delta_x = 1;

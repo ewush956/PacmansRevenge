@@ -75,8 +75,12 @@ int main()
 	plot_bitmap_32(base32, 200+64, 80+64, tombstone, SPRITE_HEIGHT);
 	next_test(base32);
 
-	test_arbitrary_32(base32);
+	plot_bitmap_32(base32, 200+32, 80+64, tombstone, SPRITE_HEIGHT);
+	plot_bitmap_32(base32, 200+64, 80+64, tombstone, SPRITE_HEIGHT);
+	clear_bitmap_32(base32, 200+32, 80+64, SPRITE_HEIGHT);
 	next_test(base32);
+
+	test_arbitrary_32(base32);
 
 	test_arbitrary_letter(base8);
 	next_test(base32);

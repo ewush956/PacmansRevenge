@@ -10,7 +10,6 @@
 #include "model.h"
 #include "events.h"
 #include "input.h"
-#include "renderer.h"
 
 #define LETTERS_PER_BLOCK 6
 
@@ -25,53 +24,6 @@ void move_pacman_test(Pacman *pacman);
 
 void move_ghost_test(Ghost *ghost);
 
-Pacman pacman_obj = {
-    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
-    0,0,        /*Initial Displacement*/
-    0,          /*Initial state index*/
-    UP,         /*Initial direction*/
-    FALSE,       /*Initial state*/
-    FALSE,
-    0,0          /*Cell index -> y, x*/
-};
-
-Ghost c_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
-    1,1,
-    0,
-    UP,
-    DEFAULT,
-    1,1 
-               /*Or whatever cell it starts in*/
- 
-};
-Ghost m_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
-    1,1,
-    0,
-    UP,
-    DEFAULT,
-    18, 1
-};
-Ghost cy_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
-    1,1,
-    0,
-    UP,
-    DEFAULT,
-    1, 3						/*(x,y)*/
-};
-Ghost a_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
-    1,1,
-    0,
-    UP,
-    DEFAULT,
-    12, 21
-};
-
-
-
 int main()
 {
 /* - - - - - - - - - - - - - - - - - - -  - - - - -  - - - - - - - - - - - -  -- - */
@@ -83,7 +35,7 @@ int main()
 	int i,j,counter;
 	UINT8 collision_type; 
 	UINT32* base = Physbase();
-
+	/*
 	Entities all_objs = {
 
 		&pacman_obj,
@@ -92,8 +44,18 @@ int main()
 		&m_ghost,
 		&cy_ghost
 	};
+	*/
+		Entities all_objs = {
+		&pacman,
+		&crying_ghost,
+		&moustache_ghost,
+		&awkward_ghost,
+		&cyclops_ghost
+	};
 
 	Entities *ptr = &all_objs;
+	Pacman* pacman_obj = &pacman;
+
 
 	Xor xor = {1234567};					/* inits a random value to be used for the rand num generator*/
 
@@ -111,11 +73,11 @@ int main()
 												ptr->pacman->delta_y, 
 												ptr->pacman->delta_x);
 				if (collision_type == NO_COLLISION)
-        			move_pacman_test(&pacman_obj);
+        			move_pacman_test(pacman_obj);
     			else
-        			handle_pacman_collision(collision_type,&pacman_obj);
+        			handle_pacman_collision(collision_type, pacman_obj);
 				 
-				printf("pacman position now: (%d, %d)\n\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
+				printf("pacman position now: (%d, %d)\n\n", pacman_obj->y_cell_index, pacman_obj->x_cell_index);
 				/*printf("pacman's direction: %u\n", pacman_obj.direction);*/
 	
 				if (j % 3 == 0)
@@ -129,7 +91,7 @@ int main()
 		}
 
 
-	printf("pacman position final: (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
+	printf("pacman position final: (%d, %d)\n", pacman_obj->y_cell_index, pacman_obj->x_cell_index);
 
 
 	return 0;

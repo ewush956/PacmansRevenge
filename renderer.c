@@ -168,4 +168,11 @@ void render_timer(Timer* timer) {
     }
     /*plot_letter(base8, timer) */
 }
-
+void refresh_screen(UINT32* base32, Entities* entity) {
+    /*removes all entities from the screen*/
+    clear_bitmap_32(base32, entity->pacman->x, entity->pacman->y, SCREEN_HEIGHT);    
+    clear_bitmap_32(base32, entity->crying_ghost->x, entity->crying_ghost->y, SCREEN_HEIGHT);    
+    clear_bitmap_32(base32, entity->moustache_ghost->x, entity->moustache_ghost->y, SCREEN_HEIGHT);    
+    clear_bitmap_32(base32, entity->awkward_ghost->x, entity->awkward_ghost->y, SCREEN_HEIGHT);    
+    clear_bitmap_32(base32, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SCREEN_HEIGHT);
+}
