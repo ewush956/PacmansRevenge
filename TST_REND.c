@@ -86,6 +86,12 @@ int main()
 	next_test(base32);
 	test_pacman_movement(base32, &entity, 150);
 
+	pac->direction = UP;
+	pac->delta_x = 0;
+	pac->delta_y = -1;
+	test_pacman_movement(base32, &entity, 32 + 16);
+	next_test(base32);
+
 	pac->delta_x = -1;
 	pac->delta_y = 0;
 	pac->direction = LEFT;
@@ -143,6 +149,7 @@ void next_test(UINT32* base) {
 void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 	int i;
 	UINT16 cell_x = entity->pacman->x_cell_index;
+	UINT16 cell_y = entity->pacman->y_cell_index;
 	for (i=0; i < stop; i++) {
 		clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
 		move_pacman(entity->pacman);
@@ -154,11 +161,17 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 			next_test(base);
 			cell_x = entity->pacman->x_cell_index;
 		}
+		if (entity->pacman->y_cell_index != cell_y) {
+			next_test(base);
+			cell_y = entity->pacman->y_cell_index;
+		}
 	}
 }
 void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop) {
 	int i;
 	int cell_x = ghost->x_cell_index;
+	int cell_y = ghost->y_cell_index;
+
 	for (i=0; i < stop; i++) {
 		clear_bitmap_32(base, ghost->x, ghost->y, SPRITE_HEIGHT); 
 		move_ghost(ghost);
@@ -169,5 +182,9 @@ void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop)
 		if (ghost->x_cell_index != cell_x) {
 			cell_x = ghost->x_cell_index;
 		}
+		if (ghost->y_cell_index != cell_y) {
+			cell_y = ghost->y_cell_index;
+		}
+		
 	}
 }
