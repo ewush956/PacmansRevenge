@@ -51,6 +51,7 @@ int main()
 		&awkward_ghost,
 		&cyclops_ghost
 	};
+	Pacman* pac = entity.pacman;
 	Ghost* moustache = entity.moustache_ghost;
 	Ghost* crying = entity.crying_ghost;
 	Ghost* awkward = entity.awkward_ghost;
@@ -81,8 +82,9 @@ int main()
 	test_pacman_movement(base32, &entity, 150);
 	next_test(base32);
 
-	pacman.delta_x = -1;
-	pacman.direction = LEFT;
+	pac->delta_x = -1;
+	pac->delta_y = 0;
+	pac->direction = LEFT;
 	test_pacman_movement(base32, &entity, 150);
 	next_test(base32);
 	
@@ -117,8 +119,8 @@ int main()
 	/* *moustache->current_cell = *cell_map[11][23]; */
 	
 	de_render_ghost(base32, moustache, tile_map); 
+	de_render_ghost(base32, cyclops, tile_map);
 	
-
 
 	return 0;
 }
@@ -131,6 +133,7 @@ void next_test(UINT32* base) {
 /*Displays all prites within allowable range at aribitrary (x,y)*/
 void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 	int i;
+	UINT16 cell_x = entity->pacman->x_cell_index;
 	for (i=0; i < stop; i++) {
 		clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
 		move_pacman(entity->pacman);
@@ -138,16 +141,24 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 		if (i % 4 == 0) {
 			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
 		}
+		if (entity->pacman->x_cell_index != cell_x) {
+			plot_bitmap_32(base, (entity->pacman->x)-16, entity->pacman->y, evil_pac_1, SPRITE_HEIGHT);
+			cell_x = entity->pacman->x_cell_index;
+		}
 	}
 }
 void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop) {
 	int i;
+	int cell_x = ghost->x_cell_index;
 	for (i=0; i < stop; i++) {
 		clear_bitmap_32(base, ghost->x, ghost->y, SPRITE_HEIGHT); 
 		move_ghost(ghost);
 		render_frame(base, entity);
 		if (i % 8 == 0) {
 			ghost->current_frame = ((ghost->current_frame) + 1) % 2;
+		}
+		if (ghost->x_cell_index != cell_x) {
+			cell_x = ghost->x_cell_index;
 		}
 	}
 }

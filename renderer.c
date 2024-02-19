@@ -3,6 +3,7 @@
 #include "model.h"
 #include "bitmaps.h"
 #include "RASTER.H"
+#include "font.h"
 /*************************************************************
 * Function: render_map
 * Purpose: Initialize game map rendering by plotting tiles.
@@ -124,7 +125,7 @@ void render_ghosts(UINT32* base32, Entities* entity) {
 *************************************************************/
 void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     Cell current_cell = cell_map[ghost->y_cell_index][ghost->x_cell_index];
-    int tombstone_y = ghost->y_cell_index * PIXELS_PER_CELL;
+    int tombstone_y = (ghost->y_cell_index * PIXELS_PER_CELL) + Y_PIXEL_OFFSET;
     int tombstone_x = ghost->x_cell_index * PIXELS_PER_CELL;
 
     clear_bitmap_32(base32, ghost->x, ghost->y, SPRITE_HEIGHT);
@@ -164,4 +165,18 @@ void refresh_screen(UINT32* base32, Entities* entity) {
     clear_bitmap_32(base32, entity->moustache_ghost->x, entity->moustache_ghost->y, SPRITE_HEIGHT);    
     clear_bitmap_32(base32, entity->awkward_ghost->x, entity->awkward_ghost->y, SPRITE_HEIGHT);    
     clear_bitmap_32(base32, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SPRITE_HEIGHT);
+}
+void render_initial_timer(UINT8* base) {
+    int start_x = 240;
+    plot_letter(base, start_x, 0, font, 'T');
+    plot_letter(base, start_x+8, 0, font, 'i');
+    plot_letter(base, start_x+16,0,font, 'm');
+    plot_letter(base, start_x+24,0,font, 'e');
+    plot_letter(base, start_x+32,0,font, ':');
+
+    plot_letter(base, start_x+48,0,font, '0');
+    plot_letter(base, start_x+56,0,font, '0');
+    plot_letter(base, start_x+64,0,font, ':');
+    plot_letter(base, start_x+72,0,font, '0');
+    plot_letter(base, start_x+80,0,font, '0');
 }

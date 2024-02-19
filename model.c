@@ -101,6 +101,7 @@ void move_pacman (Pacman *pacman)
 {
     pacman -> x += pacman->delta_x;
     pacman -> y += pacman->delta_y;
+    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y);
 }
 /*************************************************************
 * Function: move_ghost
@@ -114,6 +115,7 @@ void move_ghost (Ghost *ghost)
 {
     ghost -> x += ghost -> delta_x;
     ghost -> y += ghost -> delta_y;
+    update_cell(&ghost->x_cell_index, &ghost->y_cell_index, ghost->x, ghost->y);
 }
 /*************************************************************
 * Function: check_collision
@@ -189,12 +191,13 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
 *          PIXELS_PER_CELL, indicating a complete move into a new cell. This function
 *          aids in tracking movement across cells in the game grid.
 *************************************************************/
-void update_cells(int* x_index, int* y_index) { 
-   if (*x_index % PIXELS_PER_CELL == 0) {
-       *x_index = (*x_index)++;
+void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position) {
+
+   if (x_position % PIXELS_PER_CELL == 0) {
+       (*x_index) = (*x_index)+1;
    }
-   if (*y_index % PIXELS_PER_CELL == 0) {
-       *y_index = (*y_index)++;
+   if (y_position % PIXELS_PER_CELL == 0) {
+       (*y_index) = (*y_index)+1;
    }
 }
 /*************************************************************
