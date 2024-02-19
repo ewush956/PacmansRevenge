@@ -3,6 +3,7 @@
         "TST_RAST.C": "cpp",
         "STRUCTS.C": "cpp",
         "TST_STRC.C": "cpp",
-        "RASTER.C": "cpp"
+        "RASTER.C": "cpp",
+        "events.h": "c"
     }
 }

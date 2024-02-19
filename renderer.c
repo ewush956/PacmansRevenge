@@ -28,8 +28,7 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
         }
         x = X_PIXEL_OFFSET;
         y += WALL_SIZE;
-    }
-    
+    } 
 }
 /*************************************************************
 * Function: render_frame
