@@ -80,7 +80,6 @@ int main()
 
 	next_test(base32);
 	test_pacman_movement(base32, &entity, 150);
-	next_test(base32);
 
 	pac->delta_x = -1;
 	pac->delta_y = 0;
@@ -91,13 +90,20 @@ int main()
 	crying->delta_x = 1;
 	crying->delta_y = 0;
 	crying->direction = RIGHT;
+
 	test_ghost_movement(base32, &entity, crying, 32);
 
 	crying->delta_x = 0;
 	crying->delta_y = -1;
 	crying->direction = UP;
 	test_ghost_movement(base32, &entity, crying, 32+16);
+
+	de_render_ghost(base32, moustache, tile_map); 
+	de_render_ghost(base32, cyclops, tile_map);
+	de_render_ghost(base32, awkward, tile_map);
+	de_render_ghost(base32, crying, tile_map);
 	next_test(base32);
+
 
 	awkward->delta_x = -1;
 	awkward->delta_y = 0;
@@ -117,9 +123,7 @@ int main()
 	next_test(base32);
 
 	/* *moustache->current_cell = *cell_map[11][23]; */
-	
-	de_render_ghost(base32, moustache, tile_map); 
-	de_render_ghost(base32, cyclops, tile_map);
+
 	
 
 	return 0;
@@ -142,7 +146,6 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
 		}
 		if (entity->pacman->x_cell_index != cell_x) {
-			plot_bitmap_32(base, (entity->pacman->x)-16, entity->pacman->y, evil_pac_1, SPRITE_HEIGHT);
 			cell_x = entity->pacman->x_cell_index;
 		}
 	}

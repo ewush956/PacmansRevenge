@@ -101,7 +101,7 @@ void move_pacman (Pacman *pacman)
 {
     pacman -> x += pacman->delta_x;
     pacman -> y += pacman->delta_y;
-    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y);
+    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->direction);
 }
 /*************************************************************
 * Function: move_ghost
@@ -115,7 +115,7 @@ void move_ghost (Ghost *ghost)
 {
     ghost -> x += ghost -> delta_x;
     ghost -> y += ghost -> delta_y;
-    update_cell(&ghost->x_cell_index, &ghost->y_cell_index, ghost->x, ghost->y);
+    update_cell(&ghost->x_cell_index, &ghost->y_cell_index, ghost->x, ghost->y, ghost->direction);
 }
 /*************************************************************
 * Function: check_collision
@@ -191,14 +191,25 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
 *          PIXELS_PER_CELL, indicating a complete move into a new cell. This function
 *          aids in tracking movement across cells in the game grid.
 *************************************************************/
-void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position) {
+void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position, UINT8 direction) {
 
-   if (x_position % PIXELS_PER_CELL == 0) {
-       (*x_index) = (*x_index)+1;
-   }
-   if (y_position % PIXELS_PER_CELL == 0) {
-       (*y_index) = (*y_index)+1;
-   }
+    if (x_position % PIXELS_PER_CELL == 0) {
+
+        if (direction == LEFT) {
+            (*x_index) = (*x_index)-1;
+        } 
+        else {
+            (*x_index) = (*x_index)+1;
+        }
+    }
+    else if (y_position % PIXELS_PER_CELL == 0) {
+        if (direction == UP) {
+            (*y_index) = (*y_index)-1;
+        } 
+        else {
+            (*y_index) = (*y_index)+1;
+        }
+    }
 }
 /*************************************************************
 * Function: kill_ghost
