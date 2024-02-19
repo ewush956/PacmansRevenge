@@ -27,19 +27,25 @@ void plot_bitmap_32(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned 
 }
 void clear_bitmap_32(UINT32* base, int x, int y, unsigned int height) {
     int row;
-    int dx = x;
     int dy = y;
     UINT32* location = base + (y * LONGS_PER_ROW) + (x >> 5);
-        for (row = 0; row < height; row++) {
-            if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && dy >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT) ) {
-                *location = 0;
-                *(location + 1) = 0;
+    UINT32 mask1, mask2;
+
+    for (row = 0; row < height; row++) {
+        if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && y >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT)) {
+            mask1 = ~(0xFFFFFFFF >> (x % SPRITE_WIDTH));
+            mask2 = ~(0xFFFFFFFF << (SPRITE_WIDTH - (x % SPRITE_WIDTH)));
+            
+            *location &= mask1;
+            if ((x % 32) + SPRITE_WIDTH > 32) {
+                *(location + 1) &= mask2;
             }
-            location += LONGS_PER_ROW;
-            /*dy++; /*For bounds checking*/
-            /* dx++; Can't get dx working :(*/
         }
+        location += LONGS_PER_ROW; 
+        /*dy++; */
+    }
 }
+
 void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height) {
     int row;
     int dy = y;

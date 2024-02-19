@@ -7,9 +7,9 @@ def png_to_hex_bitmap(file_path):
 
         hex_bitmap = []
 
-        for y in range(32):
+        for y in range(16):
             row = ""
-            for x in range(32):
+            for x in range(16):
                 pixel = img.getpixel((x, y))
                 row += '1' if pixel == 0 else '0'  # Assuming black pixel is 1, white is 0
 
@@ -34,6 +34,6 @@ def process_folder_to_c_file(folder_path, output_file):
                 file.write("};\n\n")
 
 # Example usage
-folder_path = 'walls'  # Replace with your folder path
-output_file = 'wallz.c'  # The output C file
+folder_path = 'wall'  # Replace with your folder path
+output_file = 'new_wall.c'  # The output C file
 process_folder_to_c_file(folder_path, output_file)

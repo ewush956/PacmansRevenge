@@ -28,7 +28,7 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
         }
         x = X_PIXEL_OFFSET;
         y += WALL_SIZE;
-    }
+    } 
 }
 /*************************************************************
 * Function: render_frame
@@ -84,6 +84,9 @@ void render_ghosts(UINT32* base32, Entities* entity) {
     Ghost* moustache = entity->moustache_ghost;
     Ghost* crying = entity->crying_ghost;
     Ghost* cyclops = entity->cyclops_ghost;
+
+    /*THIS IS A TEST*/
+    /*THIS IS ALSO A TEST*/
     
     if (awkward->state == DEFAULT) {
         plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->direction][awkward->current_frame], SPRITE_HEIGHT);
@@ -148,21 +151,13 @@ void render_gameover() {
 }
 /*This code is incomplete. No timer functionality has been added yet.*/
 void render_timer(Timer* timer) {
-    /*
-    every 70 clock ticks timer.second++*/
-    timer->seconds++;
-    if (timer->seconds == 60) {
-        timer->seconds = 0;
-        timer->minutes++;
-    }
-    if (timer->minutes < 10) {
-        /*plot_letter(base8, timer->MS_digit_minutes, 0, '0');
-        plot_letter(base8, timer->x, timer->y, timer->minutes);
-        */
-    }
-    else {
-       
-    }
-    /*plot_letter(base8, timer) */
-}
 
+}
+void refresh_screen(UINT32* base32, Entities* entity) {
+    /*removes all entities from the screen*/
+    clear_bitmap_32(base32, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT);    
+    clear_bitmap_32(base32, entity->crying_ghost->x, entity->crying_ghost->y, SPRITE_HEIGHT);    
+    clear_bitmap_32(base32, entity->moustache_ghost->x, entity->moustache_ghost->y, SPRITE_HEIGHT);    
+    clear_bitmap_32(base32, entity->awkward_ghost->x, entity->awkward_ghost->y, SPRITE_HEIGHT);    
+    clear_bitmap_32(base32, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SPRITE_HEIGHT);
+}

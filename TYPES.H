@@ -15,7 +15,7 @@ typedef signed char bool;
 #define WALL_SIZE     16
 
 #define X_PIXEL_OFFSET 0
-#define Y_PIXEL_OFFSET 8
+#define Y_PIXEL_OFFSET 16
 
 #define SPRITE_HEIGHT 32
 #define SPRITE_WIDTH 32

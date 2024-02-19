@@ -11,4 +11,6 @@ void render_gameover();
 void render_timer();
 void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void render_non_default_ghost(UINT32* base32, Ghost* ghost);
+void refresh_screen(UINT32* base32, Entities* entity);
+
 
