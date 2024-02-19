@@ -10,12 +10,11 @@
 const UINT32* sprites[] = {
 	pac_1, pac_2, pac_3, pac_4,
 	evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4,
-	ghost_1_up, ghost_1_down, ghost_1_left, ghost_1_right,
-	ghost_2_up, ghost_2_down, ghost_2_left, ghost_2_right,
-	ghost_3_up, ghost_3_down, ghost_3_left, ghost_3_right,
-	ghost_4_up, ghost_4_down, ghost_4_left, ghost_4_right,
-	wall_all, wall_horz, wall_vert, wall_LD, wall_ULD,
-	tombstone, ghost_run, ghost_freeze
+	moustache_ghost_down_1, moustache_ghost_up_1, moustache_ghost_left_1, moustache_ghost_right_1,
+	awkward_ghost_down_1, awkward_ghost_up_1, awkward_ghost_left_1, awkward_ghost_right_1,
+	crying_ghost_down_1, crying_ghost_up_1, crying_ghost_left_1, crying_ghost_right_1,
+	cyclops_ghost_down_1, cyclops_ghost_up_1, cyclops_ghost_left_1, cyclops_ghost_right_1,
+	tombstone, ghost_run_1, ghost_freeze_1
 };
 
 int arbitrary_numbers_400[] = {
@@ -192,7 +191,7 @@ void display_all_sprites(UINT32* base) {
     int startX = 20; 
     int startY = 20; 
 
-    for (i = 0; i < 31; i++) {
+    for (i = 0; i < 27; i++) {
         x = startX + (i % spritesPerRow) * (spriteWidth + spacing);
         y = startY + (i / spritesPerRow) * (spriteHeight + spacing);
         plot_bitmap_32(base, x, y, sprites[i], spriteHeight);
@@ -215,7 +214,7 @@ void test_arbitrary_32(UINT32* base) {
 	int i;
 
 	for (i=0; i < 95; i++) {
-		plot_bitmap_32(base, arbitrary_numbers_640[i], arbitrary_numbers_400[i], sprites[i % 30], SPRITE_HEIGHT);
+		plot_bitmap_32(base, arbitrary_numbers_640[i], arbitrary_numbers_400[i], sprites[i % 27], SPRITE_HEIGHT);
 	}
 }
 void test_arbitrary_letter(UINT8* base) {

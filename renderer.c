@@ -139,10 +139,10 @@ void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENG
 *************************************************************/
 void render_non_default_ghost(UINT32* base32, Ghost* ghost) {
     if (ghost->state == RUNNING) {
-        plot_bitmap_32(base32, ghost->x, ghost->y, ghost_run, SPRITE_HEIGHT);
+        plot_bitmap_32(base32, ghost->x, ghost->y, running_ghost_sprites[ghost->direction][ghost->current_frame], SPRITE_HEIGHT);
     }
     else if (ghost->state == FROZEN) {
-        plot_bitmap_32(base32, ghost->x, ghost->y, ghost_freeze, SPRITE_HEIGHT);
+        plot_bitmap_32(base32, ghost->x, ghost->y, frozen_ghost_sprites[ghost->direction][ghost->current_frame], SPRITE_HEIGHT);
     }
 }
 /*BOTH FUNCTIONS BELOW ARE INCOMPLETE*/
