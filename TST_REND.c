@@ -64,10 +64,15 @@ int main()
 	int x, y, i, j, index, countx, county, offset_x, offset_y;
 
 	init_map_cells(cell_map, tile_map);
-
+/*
 	pacman.direction = RIGHT;
 	pacman.delta_x = 1;
 	pacman.delta_y = 0;
+*/
+
+	pac->direction = RIGHT;
+	pac->delta_x = 1;
+	pac->delta_y = 0;
 
 	clear_screen_q(base32); 
 	next_test(base32);
@@ -146,6 +151,7 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
 		}
 		if (entity->pacman->x_cell_index != cell_x) {
+			next_test(base);
 			cell_x = entity->pacman->x_cell_index;
 		}
 	}

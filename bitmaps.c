@@ -2692,7 +2692,6 @@ const UINT32* running_ghost_sprites[4][2] = {
 	{ghost_run_1, ghost_run_1},
 	{ghost_run_1, ghost_run_1},
 	{ghost_run_1, ghost_run_1}
-
 };
 const UINT32* frozen_ghost_sprites[4][2] = {
 	{ghost_freeze_1, ghost_freeze_1},
