@@ -37,7 +37,7 @@ int arbitrary_numbers_640[] = {
 
 void next_test(UINT32* base);
 void test_pacman_movement(UINT32* base, Entities* entity, int stop);
-void test_ghost_movement(UINT32* base, Entities* entity, int stop);
+void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop);
 
 void test_arbitrary_letter(UINT8* base);
 
@@ -52,6 +52,9 @@ int main()
 		&cyclops_ghost
 	};
 	Ghost* moustache = entity.moustache_ghost;
+	Ghost* crying = entity.crying_ghost;
+	Ghost* awkward = entity.awkward_ghost;
+	Ghost* cyclops = entity.cyclops_ghost;
 
 	void *base32 = Physbase();
 	void *base16 = Physbase();
@@ -60,6 +63,10 @@ int main()
 	int x, y, i, j, index, countx, county, offset_x, offset_y;
 
 	init_map_cells(cell_map, tile_map);
+
+	pacman.direction = RIGHT;
+	pacman.delta_x = 1;
+	pacman.delta_y = 0;
 
 	clear_screen_q(base32); 
 	next_test(base32);
@@ -71,25 +78,45 @@ int main()
 	next_test(base32);
 
 	next_test(base32);
-	pacman.delta_x = 1;
-	pacman.delta_y = 0;
+	test_pacman_movement(base32, &entity, 150);
+	next_test(base32);
+
+	pacman.delta_x = -1;
+	pacman.direction = LEFT;
 	test_pacman_movement(base32, &entity, 150);
 	next_test(base32);
 	
-	crying_ghost.delta_x = 1;
-	crying_ghost.delta_y = 0;
-	test_ghost_movement(base32, &entity, 32);
+	crying->delta_x = 1;
+	crying->delta_y = 0;
+	crying->direction = RIGHT;
+	test_ghost_movement(base32, &entity, crying, 32);
 
-	crying_ghost.delta_x = 0;
-	crying_ghost.delta_y = -1;
-	crying_ghost.direction = UP;
-	test_ghost_movement(base32, &entity, 32);
+	crying->delta_x = 0;
+	crying->delta_y = -1;
+	crying->direction = UP;
+	test_ghost_movement(base32, &entity, crying, 32+16);
+	next_test(base32);
+
+	awkward->delta_x = -1;
+	awkward->delta_y = 0;
+	awkward->direction = LEFT;
+	test_ghost_movement(base32, &entity, awkward, 32);
+
+	moustache->delta_x = 0;
+	moustache->delta_y = -1;
+	moustache->direction = UP;
+	test_ghost_movement(base32, &entity, moustache, 16);
+
+	moustache->delta_x = 1;
+	moustache->delta_y = 0;
+	moustache->direction = RIGHT;
+	test_ghost_movement(base32, &entity, moustache, 64);
 
 	next_test(base32);
 
 	/* *moustache->current_cell = *cell_map[11][23]; */
 	
-	de_render_ghost(base32, &moustache_ghost, tile_map); 
+	de_render_ghost(base32, moustache, tile_map); 
 	
 
 
@@ -113,12 +140,14 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 		}
 	}
 }
-void test_ghost_movement(UINT32* base, Entities* entity, int stop) {
+void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop) {
 	int i;
-	Ghost* ghost = entity->crying_ghost;
 	for (i=0; i < stop; i++) {
 		clear_bitmap_32(base, ghost->x, ghost->y, SPRITE_HEIGHT); 
 		move_ghost(ghost);
 		render_frame(base, entity);
+		if (i % 8 == 0) {
+			ghost->current_frame = ((ghost->current_frame) + 1) % 2;
+		}
 	}
 }

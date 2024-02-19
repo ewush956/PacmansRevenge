@@ -124,8 +124,12 @@ void render_ghosts(UINT32* base32, Entities* entity) {
 *************************************************************/
 void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     Cell current_cell = cell_map[ghost->y_cell_index][ghost->x_cell_index];
+    int tombstone_y = ghost->y_cell_index * PIXELS_PER_CELL;
+    int tombstone_x = ghost->x_cell_index * PIXELS_PER_CELL;
+
     clear_bitmap_32(base32, ghost->x, ghost->y, SPRITE_HEIGHT);
-    plot_bitmap_32(base32, current_cell.x_position, current_cell.y_position, tombstone, SPRITE_HEIGHT);
+   /* plot_bitmap_32(base32, current_cell.x_position, current_cell.y_position, tombstone, SPRITE_HEIGHT); */
+   plot_bitmap_32(base32, tombstone_x, tombstone_y, tombstone, SPRITE_HEIGHT);
 }
 /*************************************************************
 * Function: render_non_default_ghost

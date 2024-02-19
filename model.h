@@ -37,7 +37,7 @@ typedef struct
 	UINT8 direction;		        /*UP, DOWN, LEFT, RIGHT*/
 	UINT8 state;					/*DEFAULT OR EVIL*/
 
-	UINT16 x_cell_index, y_cell_index;
+	UINT16 y_cell_index, x_cell_index;
 	struct Cell *current_cell; 
 }Pacman;
 
@@ -50,7 +50,7 @@ typedef struct
 	UINT8 direction;
 	UINT8 state;		
 
-	UINT16 x_cell_index, y_cell_index;
+	UINT16 y_cell_index, x_cell_index;
 	struct Cell *current_cell;
 
 }Ghost;
