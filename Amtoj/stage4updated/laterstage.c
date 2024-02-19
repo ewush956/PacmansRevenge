@@ -298,3 +298,181 @@ void update_cell(int* x_index, int* y_index) {
    }
 
 }
+
+
+/********************ghost collsion styuff **********/ 
+    
+     UINT8 possible_direction = 0;
+    UINT32 random_number;
+    UINT8 direction_bit;
+    UINT8 counter = 0;
+    UINT8 prev_direction = ghost -> direction;
+
+    /*(UINT8 arr[4] = {UP,DOWN,LEFT,RIGHT};*/
+
+
+    if (collision_type == WALL)
+    {
+     
+        if (cell_map[ghost->y_cell_index][ghost -> x_cell_index + 1].open_path == TRUE )
+        {
+            possible_direction |= RIGHT;
+            counter++;
+            printf("right \n");
+            /*ghost -> direction = RIGHT;*/
+        }
+
+       if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == TRUE)
+        {
+            possible_direction |= LEFT;
+            counter++;
+            printf("left \n");
+            /*ghost -> direction = LEFT;*/
+        }
+
+       if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == TRUE)
+        {
+            possible_direction |= DOWN;
+            counter++;
+            printf("down \n");
+            /*ghost -> direction = DOWN;*/
+        }
+
+       if (cell_map[ghost-> y_cell_index - 1][ghost->x_cell_index].open_path == TRUE)
+        {
+            possible_direction |= UP;
+            counter++;
+            printf("up \n");
+            /*ghost -> direction = UP;*/
+        }
+
+            
+        printf("possible direction --> %u\n",possible_direction & 0x0A);
+            /*
+            if (RIGHT > possible_direction && possible_direction > 2)
+                ghost -> direction = LEFT;
+            else if (UP >= possible_direction)
+                ghost -> direction = UP;
+            else if(possible_direction > RIGHT)
+                ghost -> direction = RIGHT;
+            else
+                ghost -> direction = DOWN;
+            */
+
+            /*
+            if (possible_direction > RIGHT && possible_direction & 0x01 == 1)
+                ghost -> direction = UP;
+            else if (possible_direction > RIGHT && possible_direction & 0x02 == 2)
+                ghost -> direction = DOWN;
+            else if (possible_direction < RIGHT && possible_direction & 0x4 == 4)
+                ghost -> direction = LEFT;
+            else if ( possible_direction < LEFT && possible_direction & 0x2 == 2)
+                ghost -> direction = DOWN;
+            else if (possible_direction == RIGHT)
+                ghost -> direction = RIGHT;
+            else if ()
+                */
+
+                random_number = random_number_generator(xor_shift_struct);
+                random_number %= 4;
+                                            /* cant mod with 0*/
+
+
+                direction_bit = (1 << random_number);
+
+                /*RIGHT AND UP --> GO UP
+             if (possible_direction & random_number) 
+                ghost -> direction = UP;
+               
+            else if(possible_direction & random_number)
+                ghost -> direction = LEFT;
+
+            else if ( possible_direction & random_number) 
+                ghost -> direction = DOWN;
+            
+            else if (possible_direction & random_number) 
+                ghost -> direction = RIGHT;
+                */
+
+
+
+            switch(random_number) 
+            {
+                case 0:
+                    ghost->direction = UP;
+                    break;
+                case 1:
+                    ghost->direction = LEFT;
+                    break;
+                case 2:
+                    ghost->direction = DOWN;
+                    break;
+                case 3:
+                    ghost->direction = RIGHT;
+                    break;
+            }
+
+
+            printf("ghost direction: %u",ghost->direction);
+
+
+            /*
+             if (RIGHT > possible_direction && possible_direction >= 2)
+                ghost -> direction = LEFT;
+            else if (UP >= possible_direction)
+                ghost -> direction = UP;
+            else if(possible_direction > RIGHT)
+                ghost -> direction = RIGHT;
+            else
+                ghost -> direction = DOWN;
+            /*
+
+
+            /*printf("possible direction --> %u\n",possible_direction);
+           random_number = random_number_generator(xor_shift_struct);
+
+           printf("random number --> %u\n",random_number);
+
+           /*ans = random_number % 4;     /* changed from %= 4*/
+           /*printf("ans --> %u\n",ans);*/
+           /*possible_direction &= ans;       /*changed from random_number to ans*/
+
+
+            /*
+            random_number &= 0xFF;          /* clear what we dont need 
+            random_number %= counter;
+         
+
+            printf("using the arr %u\n",arr[random_number]);
+            
+            random_number &= possible_direction; 
+            random_number++;
+            
+            /*
+            if (random_number == 0)
+                ghost -> direction = RIGHT;
+            else
+                ghost -> direction = random_number;
+
+            /*
+            if ( 8 > possible_direction && possible_direction > 2)
+                ghost->direction = LEFT;
+            else if (possible_direction >= 8 )
+                ghost ->direction = RIGHT;
+            else
+                ghost-> direction = UP;
+            */
+/*
+           printf("random number after mod --> %u\n",random_number);
+           printf("possible direction --> %u\n",possible_direction);
+
+           
+           printf("ghost direction: %u",ghost->direction);*/
+    }
+
+    else{
+
+        printf("Not a wall in the switch struct\n");
+    }
+
+}

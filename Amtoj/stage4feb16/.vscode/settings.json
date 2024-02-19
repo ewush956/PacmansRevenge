@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "STRUCTS.C": "cpp",
+        "TST_STRC.C": "cpp",
+        "RASTER.C": "cpp",
+        "TST_RAST.C": "cpp"
+    }
+}
