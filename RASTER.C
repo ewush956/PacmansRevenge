@@ -97,7 +97,9 @@ void plot_bitmap_64(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned 
  */
 void plot_letter(UINT8* base, int x, int y, const UINT8 bitmap[], unsigned int letter) {
     int row;
-    int index = letter << 3;
+    /*int index = letter << 3;*/
+    int index = letter - '0';
+
     UINT8* location = base + (y * BYTES_PER_ROW) + (x >> 3);
 
     if (x >= 0 && x < (SCREEN_WIDTH - LETTER_WIDTH) && y >= 0 && y < (SCREEN_HEIGHT - LETTER_HEIGHT)) {

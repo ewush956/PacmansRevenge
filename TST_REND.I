@@ -724,6 +724,8 @@ int arbitrary_numbers_640[] = {
 void next_test(UINT32* base);
 void test_pacman_movement(UINT32* base, Entities* entity, int stop);
 void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop);
+void debug_print(UINT8* base, UINT16 value);
+
 
 void test_arbitrary_letter(UINT8* base);
 
@@ -765,6 +767,8 @@ int main()
 	pacman.delta_y = 0;
 	next_test(base32);
 
+	debug_print(base8, (UINT16)42);
+
 	next_test(base32);
 	test_pacman_movement(base32, &entity, 16 * 15);
 
@@ -786,11 +790,11 @@ int main()
 	test_ghost_movement(base32, &entity, crying, 32+16);
 
 	kill_ghost(moustache, cell_map);
-	de_render_ghost(base32, moustache, tile_map);
+	de_render_ghost(base32, moustache, cell_map);
 	next_test(base32);
-	de_render_ghost(base32, cyclops, tile_map);
-	de_render_ghost(base32, crying, tile_map);
-	de_render_ghost(base32, awkward, tile_map);
+	de_render_ghost(base32, cyclops, cell_map);
+	de_render_ghost(base32, crying, cell_map);
+	de_render_ghost(base32, awkward, cell_map);
 	next_test(base32);
 
 	awkward->delta_x = -1;
@@ -809,8 +813,6 @@ int main()
 	test_ghost_movement(base32, &entity, moustache, 64);
 
 	next_test(base32);
-
-
 
 
 
@@ -836,7 +838,7 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 		if (i % 4 == 0) {
 			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
 		}
-# 159 "tst_rend.c"
+# 161 "tst_rend.c"
 		if (entity->pacman->y_cell_index != cell_y && entity->pacman->delta_x == 0) {
 			next_test(base);
 			cell_y = entity->pacman->y_cell_index;
@@ -858,4 +860,16 @@ void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop)
 			ghost->current_frame = ((ghost->current_frame) + 1) % 2;
 		}
 	}
+}
+
+void debug_print(UINT8* base, UINT16 value) {
+    UINT16 tens = value / 10;
+    UINT16 ones = value % 10;
+
+    unsigned int tens_char = tens;
+    unsigned int ones_char = ones;
+
+    plot_letter(base, 0, 0, font, 'a');
+    plot_letter(base, 8, 0, font, 'A');
+	plot_letter(base, 16, 0, font, '0');
 }
