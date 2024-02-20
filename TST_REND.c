@@ -41,7 +41,6 @@ void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop)
 
 void test_arbitrary_letter(UINT8* base);
 
-
 int main()
 {
 	Entities entity = {
@@ -64,27 +63,24 @@ int main()
 	int x, y, i, j, index, countx, county, offset_x, offset_y;
 
 	init_map_cells(cell_map, tile_map);
-/*
-	pacman.direction = RIGHT;
-	pacman.delta_x = 1;
-	pacman.delta_y = 0;
-*/
-
-	pac->direction = RIGHT;
-	pac->delta_x = 1;
-	pac->delta_y = 0;
 
 	clear_screen_q(base32); 
 	next_test(base32);
     render_map(base16, tile_map);
 	render_frame(base32, &entity);
-
 	next_test(base32);
+
+
 	refresh_screen(base32, &entity);
+	test_pacman_movement(base32, &entity, 15);
+
+	pacman.direction = RIGHT;
+	pacman.delta_x = 1;
+	pacman.delta_y = 0;
 	next_test(base32);
 
 	next_test(base32);
-	test_pacman_movement(base32, &entity, 150);
+	test_pacman_movement(base32, &entity, 16 * 16);
 
 	pac->direction = UP;
 	pac->delta_x = 0;
@@ -114,7 +110,6 @@ int main()
 	de_render_ghost(base32, awkward, tile_map);
 	de_render_ghost(base32, crying, tile_map);
 	next_test(base32);
-
 
 	awkward->delta_x = -1;
 	awkward->delta_y = 0;
@@ -150,6 +145,7 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 	int i;
 	UINT16 cell_x = entity->pacman->x_cell_index;
 	UINT16 cell_y = entity->pacman->y_cell_index;
+
 	for (i=0; i < stop; i++) {
 		clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
 		move_pacman(entity->pacman);
@@ -157,11 +153,13 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 		if (i % 4 == 0) {
 			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
 		}
+		/*
 		if (entity->pacman->x_cell_index != cell_x) {
 			next_test(base);
 			cell_x = entity->pacman->x_cell_index;
 		}
-		if (entity->pacman->y_cell_index != cell_y) {
+		*/
+		if (entity->pacman->y_cell_index != cell_y && entity->pacman->delta_x == 0) {
 			next_test(base);
 			cell_y = entity->pacman->y_cell_index;
 		}

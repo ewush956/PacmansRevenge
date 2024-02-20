@@ -30,6 +30,8 @@ int main()
                 process sync events      <-- update model
                 render model (next frame)
         */
+        
+        /*Note: render_ghosts renders ALL the ghosts, but move ghost needs to be called individually*/
         state = update_game_state(state);
     }
     return 0;

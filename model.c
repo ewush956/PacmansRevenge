@@ -17,12 +17,12 @@ Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 *          direction, and cell index on the game map.
 *************************************************************/
 Pacman pacman = {
-    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,  
-    0,0,           /*Initial Displacement*/
+    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 19 + Y_PIXEL_OFFSET-1,  
+    0,-1,           /*Initial Displacement*/
     0,             /*Initial state index*/
     UP,            /*Initial direction*/
     DEFAULT,       /*Initial state*/
-    21,19          /*Cell index -> y, x*/
+    19,19          /*Cell index -> y, x*/
 };
 /*************************************************************
 * Declaration: Ghost crying_ghost
@@ -32,7 +32,7 @@ Pacman pacman = {
 *************************************************************/
 Ghost crying_ghost = {
     PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
-    0,0,
+    1,0,
     0,
     UP,
     DEFAULT,
