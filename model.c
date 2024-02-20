@@ -31,7 +31,7 @@ Pacman pacman = {
 *          and cell index on the game map.
 *************************************************************/
 Ghost crying_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
+    PIXELS_PER_CELL * 17 + 1, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
     1,0,
     0,
     UP,
@@ -45,7 +45,7 @@ Ghost crying_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Ghost cyclops_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+    PIXELS_PER_CELL * 17 + 1, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
     UP,
@@ -59,7 +59,7 @@ Ghost cyclops_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Ghost moustache_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
+    PIXELS_PER_CELL * 21 - 1, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
     0,0,
     0,
     UP,
@@ -73,7 +73,7 @@ Ghost moustache_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Ghost awkward_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+    PIXELS_PER_CELL * 21 - 1, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
     UP,
@@ -101,7 +101,7 @@ void move_pacman (Pacman *pacman)
 {
     pacman -> x += pacman->delta_x;
     pacman -> y += pacman->delta_y;
-    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->direction);
+   /* update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->direction); */
 }
 /*************************************************************
 * Function: move_ghost
@@ -115,7 +115,7 @@ void move_ghost (Ghost *ghost)
 {
     ghost -> x += ghost -> delta_x;
     ghost -> y += ghost -> delta_y;
-    update_cell(&ghost->x_cell_index, &ghost->y_cell_index, ghost->x, ghost->y, ghost->direction);
+   /* update_cell(&ghost->x_cell_index, &ghost->y_cell_index, ghost->x, ghost->y, ghost->direction); */
 }
 /*************************************************************
 * Function: check_collision
@@ -191,8 +191,26 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
 *          PIXELS_PER_CELL, indicating a complete move into a new cell. This function
 *          aids in tracking movement across cells in the game grid.
 *************************************************************/
-void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position, UINT8 direction) {
+void update_cells(Entities* entity) {
+    Pacman* pacman = entity->pacman;
+    Ghost* crying = entity->crying_ghost;
+    Ghost* moustache = entity->moustache_ghost;
+    Ghost* cyclops = entity->cyclops_ghost;
+    Ghost* awkward = entity->awkward_ghost;
 
+    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->direction, DEFAULT);
+    /*Pacmans state doesn't matter here, probably faster to pass in const value*/
+
+    update_cell(&crying->x_cell_index, &crying->y_cell_index, crying->x, crying->y, crying->direction, crying->state);
+    update_cell(&moustache->x_cell_index, &moustache->y_cell_index, moustache->x, moustache->y, moustache->direction, moustache->state);
+    update_cell(&cyclops->x_cell_index, &cyclops->y_cell_index, cyclops->x, cyclops->y, cyclops->direction, cyclops->state);
+    update_cell(&awkward->x_cell_index, &awkward->y_cell_index, awkward->x, awkward->y, awkward->direction, awkward->state);
+}
+void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position, UINT8 direction, UINT8 state) {
+
+    if (state == DEAD) {
+        return;
+    }
     if (x_position % PIXELS_PER_CELL == 0) {
 
         if (direction == LEFT) {
@@ -201,8 +219,9 @@ void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_p
         else {
             (*x_index) = (*x_index)+1;
         }
+
     }
-    if (y_position % PIXELS_PER_CELL == 0) {
+    else if (y_position % PIXELS_PER_CELL == 0) {
         if (direction == UP) {
             (*y_index) = (*y_index)-1;
         } 

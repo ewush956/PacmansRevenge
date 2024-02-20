@@ -87,12 +87,6 @@ int main()
 	pac->delta_y = -1;
 	test_pacman_movement(base32, &entity, 32 + 16);
 	next_test(base32);
-
-	pac->delta_x = -1;
-	pac->delta_y = 0;
-	pac->direction = LEFT;
-	test_pacman_movement(base32, &entity, 150);
-	next_test(base32);
 	
 	crying->delta_x = 1;
 	crying->delta_y = 0;
@@ -105,10 +99,12 @@ int main()
 	crying->direction = UP;
 	test_ghost_movement(base32, &entity, crying, 32+16);
 
-	de_render_ghost(base32, moustache, tile_map); 
+	kill_ghost(moustache, cell_map);
+	de_render_ghost(base32, moustache, tile_map);
+	next_test(base32);
 	de_render_ghost(base32, cyclops, tile_map);
-	de_render_ghost(base32, awkward, tile_map);
 	de_render_ghost(base32, crying, tile_map);
+	de_render_ghost(base32, awkward, tile_map);
 	next_test(base32);
 
 	awkward->delta_x = -1;
@@ -149,6 +145,7 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 	for (i=0; i < stop; i++) {
 		clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
 		move_pacman(entity->pacman);
+		update_cells(entity);
 		render_frame(base, entity);
 		if (i % 4 == 0) {
 			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
@@ -163,6 +160,7 @@ void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
 			next_test(base);
 			cell_y = entity->pacman->y_cell_index;
 		}
+		/*Something similar to this can be used for collision checking?*/
 	}
 }
 void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop) {
@@ -173,16 +171,10 @@ void test_ghost_movement(UINT32* base, Entities* entity, Ghost* ghost, int stop)
 	for (i=0; i < stop; i++) {
 		clear_bitmap_32(base, ghost->x, ghost->y, SPRITE_HEIGHT); 
 		move_ghost(ghost);
+		update_cells(entity);
 		render_frame(base, entity);
 		if (i % 8 == 0) {
 			ghost->current_frame = ((ghost->current_frame) + 1) % 2;
 		}
-		if (ghost->x_cell_index != cell_x) {
-			cell_x = ghost->x_cell_index;
-		}
-		if (ghost->y_cell_index != cell_y) {
-			cell_y = ghost->y_cell_index;
-		}
-		
 	}
 }

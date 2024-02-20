@@ -86,7 +86,8 @@ void move_pacman (Pacman *pacman);
 UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position,UINT16 y_delta, UINT16 x_delta);
 
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
-void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position, UINT8 direction);
+void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position, UINT8 direction, UINT8 state);
+void update_cells(Entities* entity);
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
 
