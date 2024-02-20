@@ -80,7 +80,7 @@ int main()
 	next_test(base32);
 
 	next_test(base32);
-	test_pacman_movement(base32, &entity, 16 * 16);
+	test_pacman_movement(base32, &entity, 16 * 15);
 
 	pac->direction = UP;
 	pac->delta_x = 0;
