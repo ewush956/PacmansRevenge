@@ -119,148 +119,159 @@ _main:
 	jsr	(a0)
 	addq.l	#4,a7
 	;line	84
-	move.w	#42,-(a7)
+	move.l	d6,a0
+	move.w	14(a0),-(a7)
 	move.l	-56(a6),-(a7)
 	jsr	_debug_print
 	addq.l	#6,a7
-	;line	86
+	;line	85
 	move.l	d3,-(a7)
 	move.l	d5,a0
 	jsr	(a0)
 	addq.l	#4,a7
-	;line	87
+	;line	86
+	move.w	#43,-(a7)
+	move.l	-56(a6),-(a7)
+	jsr	_debug_print
+	addq.l	#6,a7
+	;line	88
+	move.l	d3,-(a7)
+	move.l	d5,a0
+	jsr	(a0)
+	addq.l	#4,a7
+	;line	89
 	move.w	#240,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_test_pacman_movement
 	lea	10(a7),a7
-	;line	89
+	;line	91
 	move.l	d6,a0
 	clr.b	10(a0)
-	;line	90
-	clr.w	4(a0)
-	;line	91
-	move.w	#-1,6(a0)
 	;line	92
+	clr.w	4(a0)
+	;line	93
+	move.w	#-1,6(a0)
+	;line	94
 	move.w	#48,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_test_pacman_movement
 	lea	10(a7),a7
-	;line	93
+	;line	95
 	move.l	d3,-(a7)
 	move.l	d5,a0
 	jsr	(a0)
 	addq.l	#4,a7
-	;line	95
-	move.w	#1,4(a4)
-	;line	96
-	clr.w	6(a4)
 	;line	97
-	move.b	#3,10(a4)
+	move.w	#1,4(a4)
+	;line	98
+	clr.w	6(a4)
 	;line	99
+	move.b	#3,10(a4)
+	;line	101
 	move.w	#32,-(a7)
 	move.l	a4,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_test_ghost_movement
 	lea	14(a7),a7
-	;line	101
-	clr.w	4(a4)
-	;line	102
-	move.w	#-1,6(a4)
 	;line	103
-	clr.b	10(a4)
+	clr.w	4(a4)
 	;line	104
+	move.w	#-1,6(a4)
+	;line	105
+	clr.b	10(a4)
+	;line	106
 	move.w	#48,-(a7)
 	move.l	a4,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_test_ghost_movement
 	lea	14(a7),a7
-	;line	106
+	;line	108
 	move.l	d7,-(a7)
 	move.l	a3,-(a7)
 	jsr	_kill_ghost
 	addq.l	#8,a7
-	;line	107
+	;line	109
 	move.l	d7,-(a7)
 	move.l	a3,-(a7)
 	move.l	d3,-(a7)
 	jsr	_de_render_ghost
 	lea	12(a7),a7
-	;line	108
+	;line	110
 	move.l	d3,-(a7)
 	move.l	d5,a0
 	jsr	(a0)
 	addq.l	#4,a7
-	;line	109
+	;line	111
 	move.l	d7,-(a7)
 	move.l	-44(a6),-(a7)
 	move.l	d3,-(a7)
 	jsr	_de_render_ghost
 	lea	12(a7),a7
-	;line	110
+	;line	112
 	move.l	d7,-(a7)
 	move.l	a4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_de_render_ghost
 	lea	12(a7),a7
-	;line	111
+	;line	113
 	move.l	d7,-(a7)
 	move.l	a5,-(a7)
 	move.l	d3,-(a7)
 	jsr	_de_render_ghost
 	lea	12(a7),a7
-	;line	112
+	;line	114
 	move.l	d3,-(a7)
 	move.l	d5,a0
 	jsr	(a0)
 	addq.l	#4,a7
-	;line	114
-	move.w	#-1,4(a5)
-	;line	115
-	clr.w	6(a5)
 	;line	116
-	move.b	#2,10(a5)
+	move.w	#-1,4(a5)
 	;line	117
+	clr.w	6(a5)
+	;line	118
+	move.b	#2,10(a5)
+	;line	119
 	move.w	#32,-(a7)
 	move.l	a5,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_test_ghost_movement
 	lea	14(a7),a7
-	;line	119
-	clr.w	4(a3)
-	;line	120
-	move.w	#-1,6(a3)
 	;line	121
-	clr.b	10(a3)
+	clr.w	4(a3)
 	;line	122
+	move.w	#-1,6(a3)
+	;line	123
+	clr.b	10(a3)
+	;line	124
 	move.w	#16,-(a7)
 	move.l	a3,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_test_ghost_movement
 	lea	14(a7),a7
-	;line	124
-	move.w	#1,4(a3)
-	;line	125
-	clr.w	6(a3)
 	;line	126
-	move.b	#3,10(a3)
+	move.w	#1,4(a3)
 	;line	127
+	clr.w	6(a3)
+	;line	128
+	move.b	#3,10(a3)
+	;line	129
 	move.w	#64,-(a7)
 	move.l	a3,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_test_ghost_movement
 	lea	14(a7),a7
-	;line	129
+	;line	131
 	move.l	d3,-(a7)
 	move.l	d5,a0
 	jsr	(a0)
-	;line	133
+	;line	135
 	moveq	#0,d0
 L2:
 	movem.l	-106(a6),d3/d4/d5/d6/d7/a3/a4/a5
@@ -270,14 +281,14 @@ _next_test:
 	link	a6,#0
 L3:
 L4:
-	;line	138
+	;line	140
 	move.w	#11,-(a7)
 	jsr	__trap_1_w
 	addq.l	#2,a7
 	tst.w	d0
 	beq	L3
 L5:
-	;line	139
+	;line	141
 	move.w	#8,-(a7)
 	jsr	__trap_1_w
 	unlk	a6
@@ -287,16 +298,16 @@ _test_pacman_movement:
 	movem.l	d3/d4/d5/a3,-(a7)
 	move.l	12(a6),a3
 	move.l	8(a6),d4
-	;line	147
+	;line	149
 	move.l	(a3),a0
 	move.w	14(a0),-4(a6)
 	move.l	(a3),a0
 	move.w	12(a0),d5
-	;line	147
+	;line	149
 	moveq	#0,d3
 	bra	L7
 L6:
-	;line	148
+	;line	150
 	move.w	#32,-(a7)
 	move.l	(a3),a0
 	move.w	2(a0),-(a7)
@@ -305,27 +316,27 @@ L6:
 	move.l	d4,-(a7)
 	jsr	_clear_bitmap_32
 	lea	10(a7),a7
-	;line	149
+	;line	151
 	move.l	(a3),-(a7)
 	jsr	_move_pacman
 	addq.l	#4,a7
-	;line	150
+	;line	152
 	move.l	a3,-(a7)
 	jsr	_update_cells
 	addq.l	#4,a7
-	;line	151
+	;line	153
 	move.l	a3,-(a7)
 	move.l	d4,-(a7)
 	jsr	_render_frame
 	addq.l	#8,a7
-	;line	152
+	;line	154
 	move.w	d3,d0
 	ext.l	d0
 	divs	#4,d0
 	swap	d0
 	tst.w	d0
 	bne	L10
-	;line	153
+	;line	155
 	move.l	(a3),a0
 	move.w	8(a0),d0
 	addq.w	#1,d0
@@ -334,17 +345,17 @@ L6:
 	swap	d0
 	move.w	d0,8(a0)
 L10:
-	;line	161
+	;line	163
 	move.l	(a3),a0
 	cmp.w	12(a0),d5
 	beq	L11
 	tst.w	4(a0)
 	bne	L11
-	;line	162
+	;line	164
 	move.l	d4,-(a7)
 	jsr	_next_test
 	addq.l	#4,a7
-	;line	163
+	;line	165
 	move.l	(a3),a0
 	move.w	12(a0),d5
 L11:
@@ -361,41 +372,41 @@ _test_ghost_movement:
 	link	a6,#-6
 	movem.l	d3/a3,-(a7)
 	move.l	16(a6),a3
-	;line	173
+	;line	175
 	move.w	14(a3),-4(a6)
 	move.w	12(a3),-6(a6)
-	;line	173
+	;line	175
 	moveq	#0,d3
 	bra	L13
 L12:
-	;line	174
+	;line	176
 	move.w	#32,-(a7)
 	move.w	2(a3),-(a7)
 	move.w	(a3),-(a7)
 	move.l	8(a6),-(a7)
 	jsr	_clear_bitmap_32
 	lea	10(a7),a7
-	;line	175
+	;line	177
 	move.l	a3,-(a7)
 	jsr	_move_ghost
 	addq.l	#4,a7
-	;line	176
+	;line	178
 	move.l	12(a6),-(a7)
 	jsr	_update_cells
 	addq.l	#4,a7
-	;line	177
+	;line	179
 	move.l	12(a6),-(a7)
 	move.l	8(a6),-(a7)
 	jsr	_render_frame
 	addq.l	#8,a7
-	;line	178
+	;line	180
 	move.w	d3,d0
 	ext.l	d0
 	divs	#8,d0
 	swap	d0
 	tst.w	d0
 	bne	L16
-	;line	179
+	;line	181
 	move.w	8(a3),d0
 	addq.w	#1,d0
 	ext.l	d0
@@ -416,7 +427,7 @@ _debug_print:
 	link	a6,#-8
 	move.l	d3,-(a7)
 	move.l	8(a6),d3
-	;line	191
+	;line	193
 	clr.l	d0
 	move.w	12(a6),d0
 	divu	#10,d0
@@ -426,29 +437,37 @@ _debug_print:
 	divu	#10,d0
 	swap	d0
 	move.w	d0,-4(a6)
-	move.w	-2(a6),-6(a6)
-	move.w	-4(a6),-8(a6)
-	;line	191
-	move.w	#97,-(a7)
-	pea	_font
+	move.w	-2(a6),d0
+	add.w	#48,d0
+	move.w	d0,-6(a6)
+	move.w	-4(a6),d0
+	add.w	#48,d0
+	move.w	d0,-8(a6)
+	;line	193
 	clr.w	-(a7)
 	clr.w	-(a7)
 	move.l	d3,-(a7)
-	jsr	_plot_letter
-	lea	14(a7),a7
-	;line	192
-	move.w	#65,-(a7)
-	pea	_font
+	jsr	_clear_letter
+	addq.l	#8,a7
+	;line	194
 	clr.w	-(a7)
 	move.w	#8,-(a7)
 	move.l	d3,-(a7)
-	jsr	_plot_letter
-	lea	14(a7),a7
-	;line	193
-	move.w	#48,-(a7)
+	jsr	_clear_letter
+	addq.l	#8,a7
+	;line	195
+	move.w	-6(a6),-(a7)
 	pea	_font
 	clr.w	-(a7)
-	move.w	#16,-(a7)
+	clr.w	-(a7)
+	move.l	d3,-(a7)
+	jsr	_plot_letter
+	lea	14(a7),a7
+	;line	196
+	move.w	-8(a6),-(a7)
+	pea	_font
+	clr.w	-(a7)
+	move.w	#8,-(a7)
 	move.l	d3,-(a7)
 	jsr	_plot_letter
 	move.l	-12(a6),d3

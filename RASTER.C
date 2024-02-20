@@ -97,8 +97,7 @@ void plot_bitmap_64(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned 
  */
 void plot_letter(UINT8* base, int x, int y, const UINT8 bitmap[], unsigned int letter) {
     int row;
-    /*int index = letter << 3;*/
-    int index = letter - '0';
+    int index = ((letter - ' ') << 3);
 
     UINT8* location = base + (y * BYTES_PER_ROW) + (x >> 3);
 
@@ -107,6 +106,19 @@ void plot_letter(UINT8* base, int x, int y, const UINT8 bitmap[], unsigned int l
         
             *location |= bitmap[row] >> (x % LETTER_WIDTH);     
             *(location + 1) |= bitmap[row] << LETTER_WIDTH - (x % LETTER_WIDTH);
+            location += BYTES_PER_ROW;       
+        }
+    }
+}
+void clear_letter(UINT8* base, int x, int y) {
+    int row;
+    UINT8* location = base + (y * BYTES_PER_ROW) + (x >> 3);
+
+        if (x >= 0 && x < (SCREEN_WIDTH - LETTER_WIDTH) && y >= 0 && y < (SCREEN_HEIGHT - LETTER_HEIGHT)) {
+        for (row = 0; row < 15; row++) {
+        
+            *location = 0;    
+            *(location + 1) = 0;
             location += BYTES_PER_ROW;       
         }
     }

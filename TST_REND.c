@@ -81,7 +81,9 @@ int main()
 	pacman.delta_y = 0;
 	next_test(base32);
 
-	debug_print(base8, (UINT16)42);
+	debug_print(base8, pac->x_cell_index);
+	next_test(base32);
+	debug_print(base8, 43);
 
 	next_test(base32);
 	test_pacman_movement(base32, &entity, 16 * 15);
@@ -185,10 +187,11 @@ void debug_print(UINT8* base, UINT16 value) {
     UINT16 tens = value / 10;
     UINT16 ones = value % 10;
 
-    unsigned int tens_char = tens;
-    unsigned int ones_char = ones;
+    unsigned int tens_char = tens + '0';
+    unsigned int ones_char = ones + '0';
 
-    plot_letter(base, 0, 0, font, 'a');
-    plot_letter(base, 8, 0, font, 'A');
-	plot_letter(base, 16, 0, font, '0');
+	clear_letter(base, 0, 0);
+	clear_letter(base, 8, 0);
+    plot_letter(base, 0, 0, font, tens_char);
+    plot_letter(base, 8, 0, font, ones_char);
 }
