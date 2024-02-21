@@ -13,7 +13,7 @@
 #define LETTERS_PER_BLOCK 6
 
 /*
-const UINT32* sprites[] = {
+const ULONG32* sprites[] = {
 	pac_1, pac_2, pac_3, pac_4,
 	evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4,
 	ghost_1_up, ghost_1_down, ghost_1_left, ghost_1_right,
@@ -53,9 +53,9 @@ int arbitrary_numbers_640[] = {
 
 
 
-void next_test(UINT32* base);
-void display_all_ascii(UINT8* base, int x0, int y0);
-void test_arbitrary_letter(UINT8* base);
+void next_test(ULONG32* base);
+void display_all_ascii(UCHAR8* base, int x0, int y0);
+void test_arbitrary_letter(UCHAR8* base);
 
 void set_input(Pacman *pacman,char input);
 
@@ -141,7 +141,7 @@ int main()
 }
 
 /*waits for input then calls clear_screen();*/
-void next_test(UINT32* base) {
+void next_test(ULONG32* base) {
 
 	while(!Cconis()){
 

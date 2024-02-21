@@ -27,7 +27,7 @@ typedef struct
 {
 	
 	int x,y;		/*position of pellets*/
-	UINT8 eaten;		/* no bools in c? */
+	UCHAR8 eaten;		/* no bools in c? */
 	
 	/*Sprite struct ?? */
 	

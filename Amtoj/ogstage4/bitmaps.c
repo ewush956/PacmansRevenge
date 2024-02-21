@@ -1,6 +1,6 @@
 #include "bitmaps.h"
 
-const UINT32 ghost_1_up[] = {
+const ULONG32 ghost_1_up[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -35,7 +35,7 @@ const UINT32 ghost_1_up[] = {
 0x30F0F0F0
 };
 
-const UINT32 evil_pac_3[] = {
+const ULONG32 evil_pac_3[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -70,7 +70,7 @@ const UINT32 evil_pac_3[] = {
 0x000FF000
 };
 
-const UINT32 wall_down_right[] = {
+const ULONG32 wall_down_right[] = {
 0x00000000,
 0x00000000,
 0x00000000,
@@ -105,7 +105,7 @@ const UINT32 wall_down_right[] = {
 0x1EAAAAB8
 };
 
-const UINT32 ghost_1_left[] = {
+const ULONG32 ghost_1_left[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -140,7 +140,7 @@ const UINT32 ghost_1_left[] = {
 0x30F0F0F0
 };
 
-const UINT32 pac_1[] = {
+const ULONG32 pac_1[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -175,7 +175,7 @@ const UINT32 pac_1[] = {
 0x000FF000
 };
 
-const UINT32 tombstone[] = {
+const ULONG32 tombstone[] = {
 0x00000000,
 0x00078000,
 0x003FF000,
@@ -210,7 +210,7 @@ const UINT32 tombstone[] = {
 0xFFFFFFFF
 };
 
-const UINT32 ghost_2_right[] = {
+const ULONG32 ghost_2_right[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -245,7 +245,7 @@ const UINT32 ghost_2_right[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_freeze[] = {
+const ULONG32 ghost_freeze[] = {
 0x301FF80E,
 0x187FFE18,
 0xC3E007C1,
@@ -280,7 +280,7 @@ const UINT32 ghost_freeze[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_3_right[] = {
+const ULONG32 ghost_3_right[] = {
 0x001FF800,
 0x007FFE00,
 0x01C00380,
@@ -315,7 +315,7 @@ const UINT32 ghost_3_right[] = {
 0x30F0F0F0
 };
 
-const UINT32 pac_2[] = {
+const ULONG32 pac_2[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -350,7 +350,7 @@ const UINT32 pac_2[] = {
 0x000FF000
 };
 
-const UINT32 evil_pac_1[] = {
+const ULONG32 evil_pac_1[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -385,7 +385,7 @@ const UINT32 evil_pac_1[] = {
 0x000FF000
 };
 
-const UINT32 evil_pac_4[] = {
+const ULONG32 evil_pac_4[] = {
 0x0007F800,
 0x000FFC00,
 0x00F00600,
@@ -420,7 +420,7 @@ const UINT32 evil_pac_4[] = {
 0x0007F800
 };
 
-const UINT32 pac_3[] = {
+const ULONG32 pac_3[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -455,7 +455,7 @@ const UINT32 pac_3[] = {
 0x000FF000
 };
 
-const UINT32 ghost_4_down[] = {
+const ULONG32 ghost_4_down[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -490,7 +490,7 @@ const UINT32 ghost_4_down[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_1_down[] = {
+const ULONG32 ghost_1_down[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -525,7 +525,7 @@ const UINT32 ghost_1_down[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_3_up[] = {
+const ULONG32 ghost_3_up[] = {
 0x003FFC00,
 0x007FFE00,
 0x01C00380,
@@ -560,7 +560,7 @@ const UINT32 ghost_3_up[] = {
 0x20606060
 };
 
-const UINT32 ghost_3_down[] = {
+const ULONG32 ghost_3_down[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -595,7 +595,7 @@ const UINT32 ghost_3_down[] = {
 0x30F0F0F0
 };
 
-const UINT32 evil_pac_2[] = {
+const ULONG32 evil_pac_2[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -630,7 +630,7 @@ const UINT32 evil_pac_2[] = {
 0x000FF000
 };
 
-const UINT32 pac_4[] = {
+const ULONG32 pac_4[] = {
 0x0007F800,
 0x000FFC00,
 0x00F00600,
@@ -665,7 +665,7 @@ const UINT32 pac_4[] = {
 0x0007F800
 };
 
-const UINT32 wall_left_down_right[] = {
+const ULONG32 wall_left_down_right[] = {
 0x00000000,
 0x00000000,
 0x00000000,
@@ -700,7 +700,7 @@ const UINT32 wall_left_down_right[] = {
 0x1EAAAAB8
 };
 
-const UINT32 ghost_4_right[] = {
+const ULONG32 ghost_4_right[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -735,7 +735,7 @@ const UINT32 ghost_4_right[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_3_left[] = {
+const ULONG32 ghost_3_left[] = {
 0x001FF800,
 0x003FFC00,
 0x01C00380,
@@ -770,7 +770,7 @@ const UINT32 ghost_3_left[] = {
 0x10E0E0E0
 };
 
-const UINT32 wall_up_down[] = {
+const ULONG32 wall_up_down[] = {
 0x1F555578,
 0x1EAAAAF8,
 0x1F555578,
@@ -805,7 +805,7 @@ const UINT32 wall_up_down[] = {
 0x1EAAAAF8
 };
 
-const UINT32 ghost_4_up[] = {
+const ULONG32 ghost_4_up[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -840,7 +840,7 @@ const UINT32 ghost_4_up[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_1_right[] = {
+const ULONG32 ghost_1_right[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -875,7 +875,7 @@ const UINT32 ghost_1_right[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_2_left[] = {
+const ULONG32 ghost_2_left[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -910,7 +910,7 @@ const UINT32 ghost_2_left[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_2_up[] = {
+const ULONG32 ghost_2_up[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -945,7 +945,7 @@ const UINT32 ghost_2_up[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_2_down[] = {
+const ULONG32 ghost_2_down[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -980,7 +980,7 @@ const UINT32 ghost_2_down[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_4_left[] = {
+const ULONG32 ghost_4_left[] = {
 0x003FFC00,
 0x007FFE00,
 0x03C003C0,
@@ -1015,7 +1015,7 @@ const UINT32 ghost_4_left[] = {
 0x30F0F0F0
 };
 
-const UINT32 wall_left_right[] = {
+const ULONG32 wall_left_right[] = {
     0x00000000,
     0x00000000,
     0x00000000,
@@ -1050,7 +1050,7 @@ const UINT32 wall_left_right[] = {
     0x00000000
 };
 
-const UINT32 ghost_run[] = {
+const ULONG32 ghost_run[] = {
     0x301FF80E,
     0x187FFE18,
     0xC3E007C1,
@@ -1085,7 +1085,7 @@ const UINT32 ghost_run[] = {
     0x30F0F0F0
 };
 
-const UINT32 wall2_all[] = {
+const ULONG32 wall2_all[] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1120,7 +1120,7 @@ const UINT32 wall2_all[] = {
 	0x00F55300,
 };
 
-const UINT32 wall2_horz[] = {
+const ULONG32 wall2_horz[] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1155,7 +1155,7 @@ const UINT32 wall2_horz[] = {
 	0x00000000,
 };
 
-const UINT32 wall1_URD[] = {
+const ULONG32 wall1_URD[] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1190,7 +1190,7 @@ const UINT32 wall1_URD[] = {
 	0x00F55300,
 };
 
-const UINT32 wall1_LD[] = {
+const ULONG32 wall1_LD[] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1225,7 +1225,7 @@ const UINT32 wall1_LD[] = {
 	0x00F55300,
 };
 
-const UINT32 wall2_RDL[] = {
+const ULONG32 wall2_RDL[] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1260,7 +1260,7 @@ const UINT32 wall2_RDL[] = {
 	0x00CAAF00,
 };
 
-const UINT32 wall1_vert[] = {
+const ULONG32 wall1_vert[] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1295,7 +1295,7 @@ const UINT32 wall1_vert[] = {
 	0x00F55300,
 };
 
-const UINT32 wall1_LUR[] = {
+const ULONG32 wall1_LUR[] = {
 	0x00F55300,
 	0x00EAAB00,
 	0x00D55700,
@@ -1330,7 +1330,7 @@ const UINT32 wall1_LUR[] = {
 	0x00000000,
 };
 
-const UINT32 wall2_RD[] = {
+const ULONG32 wall2_RD[] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1365,7 +1365,7 @@ const UINT32 wall2_RD[] = {
 	0x00CAAF00,
 };
 
-const UINT32 wall2_DLU[] = {
+const ULONG32 wall2_DLU[] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1400,7 +1400,7 @@ const UINT32 wall2_DLU[] = {
 	0x00F55300,
 };
 
-const UINT32 wall2_LU[] = {
+const ULONG32 wall2_LU[] = {
 	0x00F55300,
 	0x00EAAB00,
 	0x00D55700,
@@ -1435,7 +1435,7 @@ const UINT32 wall2_LU[] = {
 	0x00000000,
 };
 
-const UINT32 wall2_vert[] = {
+const ULONG32 wall2_vert[] = {
 	0x00F55300,
 	0x00EAAB00,
 	0x00D55700,
@@ -1470,7 +1470,7 @@ const UINT32 wall2_vert[] = {
 	0x00CAAF00,
 };
 
-const UINT32 wall1_horz[] = {
+const ULONG32 wall1_horz[] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1505,7 +1505,7 @@ const UINT32 wall1_horz[] = {
 	0x00000000,
 };
 
-const UINT32 wall2_UR[] = {
+const ULONG32 wall2_UR[] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1540,7 +1540,7 @@ const UINT32 wall2_UR[] = {
 	0x00000000,
 };
 
-const UINT32 wall1_all[] = {
+const ULONG32 wall1_all[] = {
 	0x00F55300,
 	0x00EAAB00,
 	0x00D55700,
@@ -1576,7 +1576,7 @@ const UINT32 wall1_all[] = {
 };
 
 
-const UINT32 null_sprite_32[] = {
+const ULONG32 null_sprite_32[] = {
     0x00000000,
     0x00000000,
     0x00000000,
@@ -1611,7 +1611,7 @@ const UINT32 null_sprite_32[] = {
     0x00000000
 };
 
-const UINT32 test64[] = {
+const ULONG32 test64[] = {
     0xFFFFFFFF, 0xFFFFFFFF,
     0xFAAAAAAA, 0xAAAAAAAF,
     0xFAAAAAAA, 0xAAAAAAAF,

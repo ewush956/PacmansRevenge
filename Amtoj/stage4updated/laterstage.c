@@ -8,7 +8,7 @@ void render_pacman(Pacman *pacman, Ghost *ghost) {
     use check_next_cell(pacman->direction, pacman->x_cell_index, pacman->y_cell_index)*/
 
     /*later stage use this */
-    UINT8 collision_type; 
+    UCHAR8 collision_type; 
 
     collision_type = check_collision(&ghost,&pacman,pacman->y,pacman->x);
 
@@ -110,20 +110,20 @@ void render_timer(Timer* timer) {
 #include "bitmaps.h"
 /*#include "map_plot.c"*/
 
-const UINT8 map[][25];	/* I don't know how many */
+const UCHAR8 map[][25];	/* I don't know how many */
 
-const UINT32 default_pac_sprites[][4];
-const UINT32 evil_pac_sprites[][4];
-const UINT32 crying_ghost_sprites[][4];
-const UINT32 moustache_ghost_sprites[][4];
-const UINT32 cyclops_ghost_sprites[][4];
-const UINT32 awkward_ghost_sprites[][4];
+const ULONG32 default_pac_sprites[][4];
+const ULONG32 evil_pac_sprites[][4];
+const ULONG32 crying_ghost_sprites[][4];
+const ULONG32 moustache_ghost_sprites[][4];
+const ULONG32 cyclops_ghost_sprites[][4];
+const ULONG32 awkward_ghost_sprites[][4];
 
-const UINT32* default_pacman_sprites[4][4] = {
+const ULONG32* default_pacman_sprites[4][4] = {
     {pac_1, pac_2, pac_3, pac_4},
     {pac_1, pac_2, pac_3, pac_4}
 };
-const UINT32* evil_pacman_sprites[4][4] = {
+const ULONG32* evil_pacman_sprites[4][4] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4},
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
 };
@@ -223,10 +223,10 @@ bool check_collision (UINT16 object_x_position, UINT16 object_y_position){
 * without using two spearate check_collsions() funcs
 *
 * * * * * * * * * * * * * * */
-/*UINT8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position)*/
-UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
+/*UCHAR8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position)*/
+UCHAR8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
 {  
-    UINT8* collision = 0;
+    UCHAR8* collision = 0;
    /* Enitites *crying = entity->crying_ghost; */
 
 
@@ -297,4 +297,53 @@ void update_cell(int* x_index, int* y_index) {
        *y_index = (*y_index)++;
    }
 
+}
+void handle_collisions(Entities* entity, Xor *xor) {
+
+    /*UCHAR8 collision_type;*/
+    Pacman* pac = entity->pacman;
+    Ghost* moustache = entity->moustache_ghost;
+    Ghost* crying = entity->crying_ghost;
+    Ghost* cyclops = entity->cyclops_ghost;
+    Ghost* awkward = entity->awkward_ghost;
+
+    if (check_collision(entity, pac->y_cell_index, 
+                                    pac->x_cell_index, 
+                                    pac->delta_y, 
+                                    pac->delta_x,
+                                    pac->type) != NO_COLLISION) {
+        handle_pacman_collision(collision_type, pac);
+
+
+    if (check_collision(entity, awkward->y_cell_index, 
+                                    awkward->x_cell_index, 
+                                    awkward->delta_y, 
+                                    awkward->delta_x,
+                                    awkward->type) != NO_COLLISION)
+        handle_ghost_collision(collision_type, awkward, cell_map, xor);
+    
+
+    if (check_collision(entity, moustache->y_cell_index, moustache->x_cell_index, 
+                moustache->delta_y, moustache->delta_x,
+                moustache->type) != NO_COLLISION)
+        handle_ghost_collision(collision_type, moustache, cell_map, xor);
+            
+
+    if(check_collision(entity, crying->y_cell_index, 
+                                    crying->x_cell_index, 
+                                    crying->delta_y, 
+                                    crying->delta_x,
+                                    crying->type) != NO_COLLISION) 
+                                    {
+        handle_ghost_collision(collision_type, crying, cell_map, xor);
+    }
+
+    if(check_collision(entity, cyclops->y_cell_index, 
+                                    cyclops->x_cell_index, 
+                                    cyclops->delta_y, 
+                                    cyclops->delta_x,
+                                    cyclops->type) != NO_COLLISION)
+                                    {
+        handle_ghost_collision(collision_type, cyclops, cell_map, xor);
+    }
 }

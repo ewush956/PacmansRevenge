@@ -129,9 +129,9 @@ void move_ghost (Ghost *ghost)
 *          with any ghost is detected, and 0 if no collision is detected. The function
 *          also logs the collision location for ghost collisions.
 *************************************************************/
-UINT8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta)
+UCHAR8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta)
 {  
-    UINT8 collision = 0;
+    UCHAR8 collision = 0;
     int i;
 
     Ghost *all_ghosts[4];

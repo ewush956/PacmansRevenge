@@ -45,7 +45,13 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
 *          game elements like characters, enemies, and 
 *          terrain.
 *************************************************************/
-void render_frame(UINT32* base, Entities* entity) {
+void render_frame(ULONG32* base, Entities* entity) {
+
+    clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
+    clear_bitmap_32(base, entity->crying_ghost->x, entity->crying_ghost->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base, entity->moustache_ghost->x, entity->moustache_ghost->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base, entity->awkward_ghost->x, entity->awkward_ghost->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SPRITE_HEIGHT);
 
     render_pacman(base, entity->pacman);
     render_ghosts(base, entity);
@@ -55,13 +61,13 @@ void render_frame(UINT32* base, Entities* entity) {
 * Function: render_pacman
 * Purpose: Renders Pacman's current state to the screen.
 * Parameters: 
-*     - UINT32* base32 - Base address for frame buffer,
+*     - ULONG32* base32 - Base address for frame buffer,
 *     - Pacman* pacman - Pointer to the Pacman structure.
 * Details: This function draws Pacman at its current position,
 *          orientation, and state, using the provided base address
 *          for rendering operations. 
 *************************************************************/
-void render_pacman(UINT32* base32, Pacman* pacman) {
+void render_pacman(ULONG32* base32, Pacman* pacman) {
 
     if (pacman->state == EVIL) {
         plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
@@ -73,13 +79,13 @@ void render_pacman(UINT32* base32, Pacman* pacman) {
 /*************************************************************
 * Function: render_ghosts
 * Purpose: Renders all ghosts' current states to the screen.
-* Parameters: UINT32* base32 - Pointer to the frame buffer's base address,
+* Parameters: ULONG32* base32 - Pointer to the frame buffer's base address,
               Entities* entity - Pointer to the entities structure containing ghost data.
 * Details: This function iterates through the ghost entities and draws each
 *          one at its current position and state on the screen using the frame buffer's
 *          base address. 
 *************************************************************/
-void render_ghosts(UINT32* base32, Entities* entity) {
+void render_ghosts(ULONG32* base32, Entities* entity) {
 
     Ghost* awkward = entity->awkward_ghost;
     Ghost* moustache = entity->moustache_ghost;
@@ -116,14 +122,14 @@ void render_ghosts(UINT32* base32, Entities* entity) {
 /*************************************************************
 * Function: de_render_ghost
 * Purpose: Removes the ghost's sprite from its last position and marks its current position with a tombstone.
-* Parameters: UINT32* base32 - Pointer to the frame buffer's base address,
+* Parameters: ULONG32* base32 - Pointer to the frame buffer's base address,
 *             Ghost* ghost - Pointer to the ghost structure to be de-rendered,
 *             Cell cell_map[][MAP_TILE_LENGTH] - The game's cell map for reference.
 * Details: This function clears the ghost's sprite from its previous position using the
 *          clear_bitmap_32 function. Then, it plots a tombstone bitmap at the ghost's current
 *          cell position to indicate where it was caught or removed from the game.
 *************************************************************/
-void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
+void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     int tombstone_y = (ghost->y_cell_index * PIXELS_PER_CELL) + Y_PIXEL_OFFSET;
     int tombstone_x = ghost->x_cell_index * PIXELS_PER_CELL;
 
@@ -133,14 +139,14 @@ void de_render_ghost(UINT32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENG
 /*************************************************************
 * Function: render_non_default_ghost
 * Purpose: Renders a ghost in a non-default state, such as RUNNING or FROZEN.
-* Parameters: UINT32* base32 - Pointer to the frame buffer's base address,
+* Parameters: ULONG32* base32 - Pointer to the frame buffer's base address,
 *             Ghost* ghost - Pointer to the ghost structure.
 * Details: Depending on the ghost's state, this function renders the ghost with
 *          a specific sprite (RUNNING or FROZEN) at its current position.
 *          - RUNNING state uses the ghost_run sprite.
 *          - FROZEN state uses the ghost_freeze sprite.
 *************************************************************/
-void render_non_default_ghost(UINT32* base32, Ghost* ghost) {
+void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
     if (ghost->state == RUNNING) {
         plot_bitmap_32(base32, ghost->x, ghost->y, running_ghost_sprites[ghost->direction][ghost->current_frame], SPRITE_HEIGHT);
     }
@@ -156,7 +162,7 @@ void render_gameover() {
 void render_timer(Timer* timer) {
 
 }
-void refresh_screen(UINT32* base32, Entities* entity) {
+void refresh_screen(ULONG32* base32, Entities* entity) {
     /*removes all entities from the screen*/
     clear_bitmap_32(base32, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT);    
     clear_bitmap_32(base32, entity->crying_ghost->x, entity->crying_ghost->y, SPRITE_HEIGHT);    
@@ -164,7 +170,7 @@ void refresh_screen(UINT32* base32, Entities* entity) {
     clear_bitmap_32(base32, entity->awkward_ghost->x, entity->awkward_ghost->y, SPRITE_HEIGHT);    
     clear_bitmap_32(base32, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SPRITE_HEIGHT);
 }
-void render_initial_timer(UINT8* base) {
+void render_initial_timer(UCHAR8* base) {
     int start_x = 240;
     plot_letter(base, start_x, 0, font, 'T');
     plot_letter(base, start_x+8, 0, font, 'i');

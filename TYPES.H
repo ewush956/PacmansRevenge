@@ -1,9 +1,9 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-typedef unsigned char UINT8;
+typedef unsigned char UCHAR8;
 typedef unsigned int  UINT16;
-typedef unsigned long UINT32;
+typedef unsigned long ULONG32;
 
 typedef signed char bool; 
 
@@ -32,12 +32,5 @@ typedef signed char bool;
 #define LONGS_PER_ROW 20
 #define WORDS_PER_ROW 40
 #define BYTES_PER_ROW 80
-
-#define NO_COLLISION ((UINT8) 0)
-#define WALL ((UINT8) 1)
-#define OBJECT ((UINT8) 2)
-
-
-
 
 #endif

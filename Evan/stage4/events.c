@@ -65,10 +65,10 @@ void clock_tick_handle(UINT16* clock_count, Entites* entity) {
 *   Note: This function is currently not functional due to a bug with random number generation
 *         and a logic error.
  *************************************************************************************/
-void handle_ghost_collision (UINT8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct) {
+void handle_ghost_collision (UCHAR8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct) {
   
-    UINT8 possible_direction = 0;
-    UINT32 random_number;
+    UCHAR8 possible_direction = 0;
+    ULONG32 random_number;
 
     
     if (collision_type == WALL)
@@ -120,7 +120,7 @@ void handle_ghost_collision (UINT8 collision_type, Ghost* ghost, Cell cell_map[]
 *      - collision_type: An integer representing the type of collision (e.g., WALL, OBJECT).
 *      - pacman: A pointer to the Pacman structure representing the Pacman character.
 **********************************************************************************/
-void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
+void handle_pacman_collision(UCHAR8 collision_type, Pacman *pacman) {
 
     
     /*if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone*/
@@ -152,10 +152,10 @@ void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
 *   @return 'state' this is the random number that is returned
 *
 ***********************************************************/
-UINT32 random_number_generator(Xor *xor)
+ULONG32 random_number_generator(Xor *xor)
 {
 
-    UINT32 state = xor->value;
+    ULONG32 state = xor->value;
 
 	state ^= state << 13;
 	state ^= state >> 17;

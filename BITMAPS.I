@@ -1,4 +1,116 @@
-#include "bitmaps.h"
+# 1 "bitmaps.c" 1
+# 1 "./bitmaps.h" 1
+# 1 "./TYPES.H" 1
+
+
+
+typedef unsigned char UCHAR8;
+typedef unsigned int  UINT16;
+typedef unsigned long ULONG32;
+
+typedef signed char bool;
+# 4 "./bitmaps.h" 2
+
+
+
+
+extern const ULONG32* default_pacman_sprites[5 ][7];
+extern const ULONG32* evil_pacman_sprites[5 ][7];
+extern const ULONG32* crying_ghost_sprites[5 ][2];
+extern const ULONG32* awkward_ghost_sprites[5 ][2];
+extern const ULONG32* cyclops_ghost_sprites[5 ][2];
+extern const ULONG32* moustache_ghost_sprites[5 ][2];
+extern const ULONG32* frozen_ghost_sprites[5 ][2];
+extern const ULONG32* running_ghost_sprites[5 ][2];
+
+extern const ULONG32 evil_pac_up_2[32];
+extern const ULONG32 evil_pac_down_1[32];
+extern const ULONG32 pac_left_2[32];
+extern const ULONG32 cyclops_ghost_down_2[32];
+extern const ULONG32 evil_pac_up_3[32];
+extern const ULONG32 pac_up_2[32];
+extern const ULONG32 pac_left_3[32];
+extern const ULONG32 evil_pac_down_4[32];
+extern const ULONG32 pac_up_3[32];
+extern const ULONG32 pac_left_1[32];
+extern const ULONG32 evil_pac_left_2[32];
+extern const ULONG32 cyclops_ghost_left_2[32];
+extern const ULONG32 moustache_ghost_right_2[32];
+extern const ULONG32 evil_pac_left_4[32];
+extern const ULONG32 moustache_ghost_down_2[32];
+extern const ULONG32 evil_pac_up_1[32];
+extern const ULONG32 cyclops_ghost_right_2[32];
+extern const ULONG32 moustache_ghost_up_2[32];
+extern const ULONG32 crying_ghost_left_2[32];
+extern const ULONG32 crying_ghost_down_2[32];
+extern const ULONG32 pac_up_4[32];
+extern const ULONG32 evil_pac_left_3[32];
+extern const ULONG32 evil_pac_up_4[32];
+extern const ULONG32 awkward_ghost_down_2[32];
+extern const ULONG32 awkward_ghost_left_2[32];
+extern const ULONG32 pac_left_4[32];
+extern const ULONG32 cyclops_ghost_up_2[32];
+extern const ULONG32 awkward_ghost_up_2[32];
+extern const ULONG32 evil_pac_down_2[32];
+extern const ULONG32 crying_ghost_right_2[32];
+extern const ULONG32 moustache_ghost_left_2[32];
+extern const ULONG32 evil_pac_left_1[32];
+extern const ULONG32 pac_down_1[32];
+extern const ULONG32 pac_down_2[32];
+extern const ULONG32 crying_ghost_up_2[32];
+extern const ULONG32 evil_pac_down_3[32];
+extern const ULONG32 pac_down_4[32];
+extern const ULONG32 pac_up_1[32];
+extern const ULONG32 awkward_ghost_right_2[32];
+extern const ULONG32 pac_down_3[32];
+
+
+extern const ULONG32 pac_1[];
+extern const ULONG32 pac_2[];
+extern const ULONG32 pac_3[];
+extern const ULONG32 pac_4[];
+
+extern const ULONG32 evil_pac_1[];
+extern const ULONG32 evil_pac_2[];
+extern const ULONG32 evil_pac_3[];
+extern const ULONG32 evil_pac_4[];
+
+extern const ULONG32 moustache_ghost_up_1[];
+extern const ULONG32 moustache_ghost_down_1[];
+extern const ULONG32 moustache_ghost_left_1[];
+extern const ULONG32 moustache_ghost_right_1[];
+
+extern const ULONG32 awkward_ghost_up_1[];
+extern const ULONG32 awkward_ghost_down_1[];
+extern const ULONG32 awkward_ghost_left_1[];
+extern const ULONG32 awkward_ghost_right_1[];
+
+extern const ULONG32 crying_ghost_up_1[];
+extern const ULONG32 crying_ghost_down_1[];
+extern const ULONG32 crying_ghost_left_1[];
+extern const ULONG32 crying_ghost_right_1[];
+
+extern const ULONG32 cyclops_ghost_left_1[];
+extern const ULONG32 cyclops_ghost_right_1[];
+extern const ULONG32 cyclops_ghost_up_1[];
+extern const ULONG32 cyclops_ghost_down_1[];
+
+extern const ULONG32 tombstone[];
+extern const ULONG32 ghost_run_1[];
+extern const ULONG32 ghost_freeze_1[];
+
+extern const UINT16 wall_single_16[];
+
+extern const ULONG32 null_sprite_16[];
+extern const ULONG32 null_sprite_32[];
+
+extern const ULONG32 test64[];
+
+extern const ULONG32* wall_map[][20];
+
+extern UINT16 tile_map[][40 ];
+# 1 "bitmaps.c" 2
+
 
 const ULONG32 moustache_ghost_up_1[] = {
 	0x001FF800,
@@ -2625,7 +2737,7 @@ const UINT16 wall_single_16[16] = {
 0xBD55,
 0xFFFF
 };
-UINT16 tile_map[][MAP_TILE_LENGTH] = {
+UINT16 tile_map[][40 ] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1},
     {1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 1},
@@ -2652,47 +2764,47 @@ UINT16 tile_map[][MAP_TILE_LENGTH] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
 const ULONG32* default_pacman_sprites[4][7] = {
-    {pac_up_1, pac_up_2, pac_up_3, pac_up_4, pac_up_3, pac_up_2},   /*UP*/
-    {pac_down_1, pac_down_2, pac_down_3, pac_down_4, pac_down_3, pac_down_2},   /*DOWN*/
-    {pac_left_1, pac_left_2, pac_left_3, pac_left_4, pac_left_3, pac_left_2},   /*LEFT*/
-    {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2}    /*RIGHT*/
+    {pac_up_1, pac_up_2, pac_up_3, pac_up_4, pac_up_3, pac_up_2},
+    {pac_down_1, pac_down_2, pac_down_3, pac_down_4, pac_down_3, pac_down_2},
+    {pac_left_1, pac_left_2, pac_left_3, pac_left_4, pac_left_3, pac_left_2},
+    {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2}
 };
 const ULONG32* evil_pacman_sprites[4][7] = {
-    {evil_pac_up_1, evil_pac_up_2, evil_pac_up_3, evil_pac_up_4, evil_pac_up_3, evil_pac_up_2},   /*UP*/
-    {evil_pac_down_1, evil_pac_down_2, evil_pac_down_3, evil_pac_down_4, evil_pac_down_3, evil_pac_down_2},   /*DOWN*/
-    {evil_pac_left_1, evil_pac_left_2, evil_pac_left_3, evil_pac_left_4, evil_pac_left_3, evil_pac_left_2},   /*LEFT*/
-    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2}    /*RIGHT*/
+    {evil_pac_up_1, evil_pac_up_2, evil_pac_up_3, evil_pac_up_4, evil_pac_up_3, evil_pac_up_2},
+    {evil_pac_down_1, evil_pac_down_2, evil_pac_down_3, evil_pac_down_4, evil_pac_down_3, evil_pac_down_2},
+    {evil_pac_left_1, evil_pac_left_2, evil_pac_left_3, evil_pac_left_4, evil_pac_left_3, evil_pac_left_2},
+    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2}
 };
 const ULONG32* moustache_ghost_sprites[][2] = {
-    {moustache_ghost_up_1, moustache_ghost_up_2},   /*UP*/
-    {moustache_ghost_down_1, moustache_ghost_down_2},   /*DOWN*/
-    {moustache_ghost_left_1, moustache_ghost_left_2},   /*LEFT*/
-    {moustache_ghost_right_1, moustache_ghost_right_2},    /*RIGHT*/
-    {moustache_ghost_left_1, moustache_ghost_left_2}   /*LEFT*/
+    {moustache_ghost_up_1, moustache_ghost_up_2},
+    {moustache_ghost_down_1, moustache_ghost_down_2},
+    {moustache_ghost_left_1, moustache_ghost_left_2},
+    {moustache_ghost_right_1, moustache_ghost_right_2},
+    {moustache_ghost_left_1, moustache_ghost_left_2}
 };
 const ULONG32* awkward_ghost_sprites[][2] = {
-    {awkward_ghost_up_1, awkward_ghost_up_2},   /*UP*/
-	{awkward_ghost_down_1, awkward_ghost_down_2},   /*DOWN*/
-	{awkward_ghost_left_1, awkward_ghost_left_2},   /*LEFT*/
-	{awkward_ghost_right_1, awkward_ghost_right_2},    /*RIGHT*/
-	{awkward_ghost_left_1, awkward_ghost_left_2}   /*STOP (left)*/
+    {awkward_ghost_up_1, awkward_ghost_up_2},
+	{awkward_ghost_down_1, awkward_ghost_down_2},
+	{awkward_ghost_left_1, awkward_ghost_left_2},
+	{awkward_ghost_right_1, awkward_ghost_right_2},
+	{awkward_ghost_left_1, awkward_ghost_left_2}
 };
 const ULONG32* cyclops_ghost_sprites[][2] = {
-	{cyclops_ghost_up_1, cyclops_ghost_up_2},   /*UP*/
-	{cyclops_ghost_down_1, cyclops_ghost_down_2},   /*DOWN*/
-	{cyclops_ghost_left_1, cyclops_ghost_left_2},   /*LEFT*/
-	{cyclops_ghost_right_1, cyclops_ghost_right_2},    /*RIGHT*/
-	{cyclops_ghost_right_1, cyclops_ghost_right_2}    /*STOP (RIGHT)*/
+	{cyclops_ghost_up_1, cyclops_ghost_up_2},
+	{cyclops_ghost_down_1, cyclops_ghost_down_2},
+	{cyclops_ghost_left_1, cyclops_ghost_left_2},
+	{cyclops_ghost_right_1, cyclops_ghost_right_2},
+	{cyclops_ghost_right_1, cyclops_ghost_right_2}
 };
 const ULONG32* crying_ghost_sprites[][2] = {
-	{crying_ghost_up_1, crying_ghost_up_2},   /*UP*/
-	{crying_ghost_down_1, crying_ghost_down_2},   /*DOWN*/
-	{crying_ghost_left_1, crying_ghost_left_2},   /*LEFT*/
-	{crying_ghost_right_1, crying_ghost_right_2},    /*RIGHT*/
-	{crying_ghost_right_1, crying_ghost_right_2}    /*RIGHT*/
+	{crying_ghost_up_1, crying_ghost_up_2},
+	{crying_ghost_down_1, crying_ghost_down_2},
+	{crying_ghost_left_1, crying_ghost_left_2},
+	{crying_ghost_right_1, crying_ghost_right_2},
+	{crying_ghost_right_1, crying_ghost_right_2}
 };
 const ULONG32* running_ghost_sprites[4][2] = {
-	{ghost_run_1, ghost_run_1},					/*All the same for now*/
+	{ghost_run_1, ghost_run_1},
 	{ghost_run_1, ghost_run_1},
 	{ghost_run_1, ghost_run_1},
 	{ghost_run_1, ghost_run_1}

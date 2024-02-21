@@ -15,9 +15,9 @@
 #define LETTERS_PER_BLOCK 6
 
 
-void next_test(UINT32* base);
-void display_all_ascii(UINT8* base, int x0, int y0);
-void test_arbitrary_letter(UINT8* base);
+void next_test(ULONG32* base);
+void display_all_ascii(UCHAR8* base, int x0, int y0);
+void test_arbitrary_letter(UCHAR8* base);
 
 void set_input(Pacman *pacman,char input);
 
@@ -81,8 +81,8 @@ int main()
 /**/
 	char input;
 	int i,j,counter;
-	UINT8 collision_type; 
-	UINT32* base = Physbase();
+	UCHAR8 collision_type; 
+	ULONG32* base = Physbase();
 
 	Entities all_objs = {
 
@@ -254,7 +254,7 @@ int main()
 
 
 /*waits for input then calls clear_screen();*/
-void next_test(UINT32* base) {
+void next_test(ULONG32* base) {
 
 	while(!Cconis()){
 
@@ -315,7 +315,7 @@ void move_pacman_test(Pacman *pacman)
 void move_ghost_test(Ghost *ghost)
 {
 
-	UINT8 direction = ghost -> direction;
+	UCHAR8 direction = ghost -> direction;
 
 	switch(direction)
 	{

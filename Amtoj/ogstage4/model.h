@@ -4,10 +4,10 @@
 #include "types.h"
 #include "bitmaps.h"
 
-#define UP ((UINT8)1)
-#define DOWN ((UINT8)2)
-#define LEFT ((UINT8)3)
-#define RIGHT ((UINT8)4)
+#define UP ((UCHAR8)1)
+#define DOWN ((UCHAR8)2)
+#define LEFT ((UCHAR8)3)
+#define RIGHT ((UCHAR8)4)
 
 
 #define MAP_TILE_LENGTH 18        /* 1 tile = 32 pixels*/ 
@@ -40,7 +40,7 @@ extern const UINT16 tile_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 typedef struct 
 {
-    UINT32 value;
+    ULONG32 value;
 
 }Xor;
 
@@ -51,7 +51,7 @@ typedef struct {
 	int delta_x, delta_y; 		/* displacement (horzontal or vertical) */
 
 	int current_frame;		/* current sprite (state) index */
-	UINT8 direction;		/*UP, DOWN, LEFT, RIGHT*/
+	UCHAR8 direction;		/*UP, DOWN, LEFT, RIGHT*/
 	bool is_evil;
 	bool has_collided; 
 
@@ -65,7 +65,7 @@ typedef struct
 	int delta_x,delta_y;
 
 	int current_frame;
-	UINT8 direction;
+	UCHAR8 direction;
 	bool is_scared;		/*chnaged from bool*/
 
 	Cell* current_cell;
@@ -94,7 +94,7 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
 void set_ghost_path(Ghost *ghost, UINT16* path_array[][MAP_TILE_LENGTH], Cell cell_map[][MAP_TILE_LENGTH]);
 void init_ghost_paths(Ghost *ghost1, Ghost *ghost2, Ghost *ghost3, Ghost *ghost4, Cell cell_map[][MAP_TILE_LENGTH]);
 bool check_collision (UINT16 object_x_position, UINT16 object_y_position);
-UINT32 random_generator(Xor *xor);
+ULONG32 random_generator(Xor *xor);
 
 /*bool check_collision(Pacman* pacman, UINT16 pacman_x_position, UINT16 pacman_y_position); */
 

@@ -37,13 +37,13 @@ int arbitrary_numbers_640[] = {
 	210, 240, 39, 255, 492, 515, 174, 377, 255, 37
 };
 
-void next_test(UINT32* base);
-void test_pacman_movement(UINT32* base, UINT8* base8, Entities* entity, int stop);
-void test_ghost_movement(UINT32* base, UINT8* base8, Entities* entity, Ghost* ghost, int stop);
-void debug_print(UINT8* base, UINT16 x, UINT16 y, UINT16 value);
+void next_test(ULONG32* base);
+void test_pacman_movement(ULONG32* base, UCHAR8* base8, Entities* entity, int stop);
+void test_ghost_movement(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost, int stop);
+void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
 
 
-void test_arbitrary_letter(UINT8* base);
+void test_arbitrary_letter(UCHAR8* base);
 
 int main()
 {
@@ -136,13 +136,13 @@ int main()
 	return 0;
 }
 /*waits for input then calls clear_screen();*/
-void next_test(UINT32* base) {
+void next_test(ULONG32* base) {
 	while(!Cconis()){
 	}
 	Cnecin();
 }
 /*Displays all prites within allowable range at aribitrary (x,y)*/
-void test_pacman_movement(UINT32* base, UINT8* base8, Entities* entity, int stop) {
+void test_pacman_movement(ULONG32* base, UCHAR8* base8, Entities* entity, int stop) {
 	int i;
 	UINT16 cell_x = entity->pacman->x_cell_index;
 	UINT16 cell_y = entity->pacman->y_cell_index;
@@ -170,7 +170,7 @@ void test_pacman_movement(UINT32* base, UINT8* base8, Entities* entity, int stop
 		/*Something similar to this can be used for collision checking?*/
 	}
 }
-void test_ghost_movement(UINT32* base, UINT8* base8, Entities* entity, Ghost* ghost, int stop) {
+void test_ghost_movement(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost, int stop) {
 	int i;
 	int cell_x = ghost->x_cell_index;
 	int cell_y = ghost->y_cell_index;
@@ -205,7 +205,7 @@ void test_ghost_movement(UINT32* base, UINT8* base8, Entities* entity, Ghost* gh
 	}
 }
 
-void debug_print(UINT8* base, UINT16 x, UINT16 y, UINT16 value){
+void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
     UINT16 tens = value / 10;
     UINT16 ones = value % 10;
 

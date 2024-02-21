@@ -20,16 +20,16 @@
 #define BYTES_PER_ROW 80
 
 void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height);
-void plot_bitmap_32(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
-void clear_bitmap_32(UINT32* base, int x, int y, unsigned int height);
+void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
+void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height);
 
-void plot_bitmap_32_quick(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
-void plot_bitmap_64(UINT32* base, int x, int y, const UINT32 bitmap[], unsigned int height);
-void plot_letter(UINT8* base, int x, int y, const UINT8 bitmap[], unsigned int letter);
-void plot_screen(UINT32* base, const UINT32* bitmap);
-void clear_screen_q(UINT32* base); 
+void plot_bitmap_32_quick(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
+void plot_bitmap_64(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
+void plot_letter(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int letter);
+void plot_screen(ULONG32* base, const ULONG32* bitmap);
+void clear_screen_q(ULONG32* base); 
 /*
-void clear_screen_c(UINT32* base);
+void clear_screen_c(ULONG32* base);
 */
-void plot_screen(UINT32* base, const UINT32* bitmap);
+void plot_screen(ULONG32* base, const ULONG32* bitmap);
 #endif

@@ -28,7 +28,7 @@ def process_folder_to_c_file(folder_path, output_file):
                 file_path = os.path.join(folder_path, filename)
                 hex_bitmap = png_to_hex_bitmap(file_path)
 
-                file.write(f"const UINT32 {base_name}[32] = {{\n")
+                file.write(f"const ULONG32 {base_name}[32] = {{\n")
                 for line in hex_bitmap:
                     file.write(f"\t0x{line},\n")
                 file.write("};\n\n")
