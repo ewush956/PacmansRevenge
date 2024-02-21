@@ -221,7 +221,7 @@ void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_p
         }
 
     }
-    else if (y_position % PIXELS_PER_CELL == 0) {
+    if (y_position % PIXELS_PER_CELL == 0) {
         if (direction == UP) {
             (*y_index) = (*y_index)-1;
         } 
