@@ -3,7 +3,7 @@
 
 #include "TYPES.H"
 
-#define DIRECTIONS 4 
+#define DIRECTIONS 5 
 
 extern const UINT32* default_pacman_sprites[DIRECTIONS][7];
 extern const UINT32* evil_pacman_sprites[DIRECTIONS][7]; 

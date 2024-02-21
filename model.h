@@ -8,6 +8,7 @@
 #define DOWN ((UINT8)1)
 #define LEFT ((UINT8)2)
 #define RIGHT ((UINT8)3)
+#define STOP ((UINT8)4)
 
 #define MAP_TILE_LENGTH 40        /* 1 tile = 16 pixels*/ 
 #define MAP_TILE_HEIGHT 24   

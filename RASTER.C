@@ -123,6 +123,14 @@ void clear_letter(UINT8* base, int x, int y) {
         }
     }
 }
+void plot_string(UINT8* base, int x, int y, const UINT8 bitmap[], const char* str) {
+    int current_x = x;
+    while (*str != '\0') {
+        plot_letter(base, current_x, y, bitmap, *str);
+        current_x += LETTER_WIDTH; 
+        str++;
+    }
+}
 /**
  * Plots a 640 x 400 bitmap on the screen. 
  * Not complete

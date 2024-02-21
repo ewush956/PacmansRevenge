@@ -34,9 +34,9 @@ Ghost crying_ghost = {
     PIXELS_PER_CELL * 17 + 1, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
     1,0,
     0,
-    UP,
+    STOP,
     DEFAULT,
-    10, 17 
+    (UINT16)10, (UINT16)17 
 };
 /*************************************************************
 * Declaration: Ghost cyclops_ghost
@@ -48,7 +48,7 @@ Ghost cyclops_ghost = {
     PIXELS_PER_CELL * 17 + 1, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
-    UP,
+    STOP,
     DEFAULT,
     12, 17
 };
@@ -62,9 +62,9 @@ Ghost moustache_ghost = {
     PIXELS_PER_CELL * 21 - 1, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
     0,0,
     0,
-    UP,
+    STOP,
     DEFAULT,
-    10, 21
+    (UINT16)10, (UINT16)21
 };
 /*************************************************************
 * Declaration: Ghost awkward_ghost
@@ -76,7 +76,7 @@ Ghost awkward_ghost = {
     PIXELS_PER_CELL * 21 - 1, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
-    UP,
+    STOP,
     DEFAULT,
     12, 21
 };
@@ -208,7 +208,7 @@ void update_cells(Entities* entity) {
 }
 void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position, UINT8 direction, UINT8 state) {
 
-    if (state == DEAD) {
+    if (state == DEAD || direction == STOP) {
         return;
     }
     if (x_position % PIXELS_PER_CELL == 0) {
@@ -216,7 +216,7 @@ void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_p
         if (direction == LEFT) {
             (*x_index) = (*x_index)-1;
         } 
-        else {
+        else if (direction == RIGHT) {
             (*x_index) = (*x_index)+1;
         }
 
@@ -225,7 +225,7 @@ void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_p
         if (direction == UP) {
             (*y_index) = (*y_index)-1;
         } 
-        else {
+        else if (direction == DOWN) {
             (*y_index) = (*y_index)+1;
         }
     }

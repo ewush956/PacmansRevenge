@@ -2663,28 +2663,32 @@ const UINT32* evil_pacman_sprites[4][7] = {
     {evil_pac_left_1, evil_pac_left_2, evil_pac_left_3, evil_pac_left_4, evil_pac_left_3, evil_pac_left_2},   /*LEFT*/
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2}    /*RIGHT*/
 };
-const UINT32* moustache_ghost_sprites[4][2] = {
+const UINT32* moustache_ghost_sprites[][2] = {
     {moustache_ghost_up_1, moustache_ghost_up_2},   /*UP*/
     {moustache_ghost_down_1, moustache_ghost_down_2},   /*DOWN*/
     {moustache_ghost_left_1, moustache_ghost_left_2},   /*LEFT*/
-    {moustache_ghost_right_1, moustache_ghost_right_2}    /*RIGHT*/
+    {moustache_ghost_right_1, moustache_ghost_right_2},    /*RIGHT*/
+    {moustache_ghost_left_1, moustache_ghost_left_2}   /*LEFT*/
 };
-const UINT32* awkward_ghost_sprites[4][2] = {
+const UINT32* awkward_ghost_sprites[][2] = {
     {awkward_ghost_up_1, awkward_ghost_up_2},   /*UP*/
 	{awkward_ghost_down_1, awkward_ghost_down_2},   /*DOWN*/
 	{awkward_ghost_left_1, awkward_ghost_left_2},   /*LEFT*/
-	{awkward_ghost_right_1, awkward_ghost_right_2}    /*RIGHT*/
+	{awkward_ghost_right_1, awkward_ghost_right_2},    /*RIGHT*/
+	{awkward_ghost_left_1, awkward_ghost_left_2}   /*STOP (left)*/
 };
-const UINT32* cyclops_ghost_sprites[4][2] = {
+const UINT32* cyclops_ghost_sprites[][2] = {
 	{cyclops_ghost_up_1, cyclops_ghost_up_2},   /*UP*/
 	{cyclops_ghost_down_1, cyclops_ghost_down_2},   /*DOWN*/
 	{cyclops_ghost_left_1, cyclops_ghost_left_2},   /*LEFT*/
-	{cyclops_ghost_right_1, cyclops_ghost_right_2}    /*RIGHT*/
+	{cyclops_ghost_right_1, cyclops_ghost_right_2},    /*RIGHT*/
+	{cyclops_ghost_right_1, cyclops_ghost_right_2}    /*STOP (RIGHT)*/
 };
-const UINT32* crying_ghost_sprites[4][2] = {
+const UINT32* crying_ghost_sprites[][2] = {
 	{crying_ghost_up_1, crying_ghost_up_2},   /*UP*/
 	{crying_ghost_down_1, crying_ghost_down_2},   /*DOWN*/
 	{crying_ghost_left_1, crying_ghost_left_2},   /*LEFT*/
+	{crying_ghost_right_1, crying_ghost_right_2},    /*RIGHT*/
 	{crying_ghost_right_1, crying_ghost_right_2}    /*RIGHT*/
 };
 const UINT32* running_ghost_sprites[4][2] = {
