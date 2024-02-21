@@ -1,6 +1,6 @@
 #include "bitmaps.h"
 
-const UINT32 ghost_1_up[] = {
+const ULONG32 ghost_1_up[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -35,7 +35,7 @@ const UINT32 ghost_1_up[] = {
 0x30F0F0F0
 };
 
-const UINT32 evil_pac_3[] = {
+const ULONG32 evil_pac_3[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -70,7 +70,7 @@ const UINT32 evil_pac_3[] = {
 0x000FF000
 };
 
-const UINT32 ghost_1_left[] = {
+const ULONG32 ghost_1_left[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -105,7 +105,7 @@ const UINT32 ghost_1_left[] = {
 0x30F0F0F0
 };
 
-const UINT32 pac_1[] = {
+const ULONG32 pac_1[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -140,7 +140,7 @@ const UINT32 pac_1[] = {
 0x000FF000
 };
 
-const UINT32 tombstone[] = {
+const ULONG32 tombstone[] = {
 0x00000000,
 0x00078000,
 0x003FF000,
@@ -175,7 +175,7 @@ const UINT32 tombstone[] = {
 0xFFFFFFFF
 };
 
-const UINT32 ghost_2_right[] = {
+const ULONG32 ghost_2_right[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -210,7 +210,7 @@ const UINT32 ghost_2_right[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_freeze[] = {
+const ULONG32 ghost_freeze[] = {
 0x301FF80E,
 0x187FFE18,
 0xC3E007C1,
@@ -245,7 +245,7 @@ const UINT32 ghost_freeze[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_3_right[] = {
+const ULONG32 ghost_3_right[] = {
 0x001FF800,
 0x007FFE00,
 0x01C00380,
@@ -280,7 +280,7 @@ const UINT32 ghost_3_right[] = {
 0x30F0F0F0
 };
 
-const UINT32 pac_2[] = {
+const ULONG32 pac_2[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -315,7 +315,7 @@ const UINT32 pac_2[] = {
 0x000FF000
 };
 
-const UINT32 evil_pac_1[] = {
+const ULONG32 evil_pac_1[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -350,7 +350,7 @@ const UINT32 evil_pac_1[] = {
 0x000FF000
 };
 
-const UINT32 evil_pac_4[] = {
+const ULONG32 evil_pac_4[] = {
 0x0007F800,
 0x000FFC00,
 0x00F00600,
@@ -385,7 +385,7 @@ const UINT32 evil_pac_4[] = {
 0x0007F800
 };
 
-const UINT32 pac_3[] = {
+const ULONG32 pac_3[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -420,7 +420,7 @@ const UINT32 pac_3[] = {
 0x000FF000
 };
 
-const UINT32 ghost_4_down[] = {
+const ULONG32 ghost_4_down[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -455,7 +455,7 @@ const UINT32 ghost_4_down[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_1_down[] = {
+const ULONG32 ghost_1_down[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -490,7 +490,7 @@ const UINT32 ghost_1_down[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_3_up[] = {
+const ULONG32 ghost_3_up[] = {
 0x003FFC00,
 0x007FFE00,
 0x01C00380,
@@ -525,7 +525,7 @@ const UINT32 ghost_3_up[] = {
 0x20606060
 };
 
-const UINT32 ghost_3_down[] = {
+const ULONG32 ghost_3_down[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -560,7 +560,7 @@ const UINT32 ghost_3_down[] = {
 0x30F0F0F0
 };
 
-const UINT32 evil_pac_2[] = {
+const ULONG32 evil_pac_2[] = {
 0x00000000,
 0x00000000,
 0x000FFC00,
@@ -595,7 +595,7 @@ const UINT32 evil_pac_2[] = {
 0x000FF000
 };
 
-const UINT32 pac_4[] = {
+const ULONG32 pac_4[] = {
 0x0007F800,
 0x000FFC00,
 0x00F00600,
@@ -631,7 +631,7 @@ const UINT32 pac_4[] = {
 };
 
 
-const UINT32 ghost_4_right[] = {
+const ULONG32 ghost_4_right[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -666,7 +666,7 @@ const UINT32 ghost_4_right[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_3_left[] = {
+const ULONG32 ghost_3_left[] = {
 0x001FF800,
 0x003FFC00,
 0x01C00380,
@@ -702,7 +702,7 @@ const UINT32 ghost_3_left[] = {
 };
 
 
-const UINT32 ghost_4_up[] = {
+const ULONG32 ghost_4_up[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -737,7 +737,7 @@ const UINT32 ghost_4_up[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_1_right[] = {
+const ULONG32 ghost_1_right[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -772,7 +772,7 @@ const UINT32 ghost_1_right[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_2_left[] = {
+const ULONG32 ghost_2_left[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -807,7 +807,7 @@ const UINT32 ghost_2_left[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_2_up[] = {
+const ULONG32 ghost_2_up[] = {
 0x001FF800,
 0x007FFE00,
 0x03E007C0,
@@ -842,7 +842,7 @@ const UINT32 ghost_2_up[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_2_down[] = {
+const ULONG32 ghost_2_down[] = {
 0x003FFC00,
 0x007FFE00,
 0x03E007C0,
@@ -877,7 +877,7 @@ const UINT32 ghost_2_down[] = {
 0x30F0F0F0
 };
 
-const UINT32 ghost_4_left[] = {
+const ULONG32 ghost_4_left[] = {
 0x003FFC00,
 0x007FFE00,
 0x03C003C0,
@@ -913,7 +913,7 @@ const UINT32 ghost_4_left[] = {
 };
 
 
-const UINT32 ghost_run[] = {
+const ULONG32 ghost_run[] = {
     0x301FF80E,
     0x187FFE18,
     0xC3E007C1,
@@ -948,7 +948,7 @@ const UINT32 ghost_run[] = {
     0x30F0F0F0
 };
 
-const UINT32 null_sprite_32[] = {
+const ULONG32 null_sprite_32[] = {
     0x00000000,
     0x00000000,
     0x00000000,
@@ -983,7 +983,7 @@ const UINT32 null_sprite_32[] = {
     0x00000000
 };
 
-const UINT32 test64[] = {
+const ULONG32 test64[] = {
     0xFFFFFFFF, 0xFFFFFFFF,
     0xFAAAAAAA, 0xAAAAAAAF,
     0xFAAAAAAA, 0xAAAAAAAF,
@@ -1050,7 +1050,7 @@ const UINT32 test64[] = {
     0xFAAAAAAA, 0xAAAAAAAF,
     0xFFFFFFFF, 0xFFFFFFFF
 };
-const UINT32 cyclops_ghost_D[32] = {
+const ULONG32 cyclops_ghost_D[32] = {
 	0x003FFC00,
 	0x007FFE00,
 	0x01C00380,
@@ -1085,7 +1085,7 @@ const UINT32 cyclops_ghost_D[32] = {
 	0x20606060,
 };
 
-const UINT32 wall_ULD[32] = {
+const ULONG32 wall_ULD[32] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1120,7 +1120,7 @@ const UINT32 wall_ULD[32] = {
 	0x00F55300,
 };
 
-const UINT32 wall_all[32] = {
+const ULONG32 wall_all[32] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1155,7 +1155,7 @@ const UINT32 wall_all[32] = {
 	0x00F55300,
 };
 
-const UINT32 wall_vert[32] = {
+const ULONG32 wall_vert[32] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1190,7 +1190,7 @@ const UINT32 wall_vert[32] = {
 	0x00F55300,
 };
 
-const UINT32 wall_UL[32] = {
+const ULONG32 wall_UL[32] = {
 	0x00C55F00,
 	0x00EAAB00,
 	0x00D55700,
@@ -1225,7 +1225,7 @@ const UINT32 wall_UL[32] = {
 	0x00000000,
 };
 
-const UINT32 wall_UR[32] = {
+const ULONG32 wall_UR[32] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1260,7 +1260,7 @@ const UINT32 wall_UR[32] = {
 	0x00000000,
 };
 
-const UINT32 wall_LDR[32] = {
+const ULONG32 wall_LDR[32] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1295,7 +1295,7 @@ const UINT32 wall_LDR[32] = {
 	0x00FAA300,
 };
 
-const UINT32 cyclops_ghost_R[32] = {
+const ULONG32 cyclops_ghost_R[32] = {
 	0x003FFC00,
 	0x007FFE00,
 	0x01C00380,
@@ -1330,7 +1330,7 @@ const UINT32 cyclops_ghost_R[32] = {
 	0x20606060,
 };
 
-const UINT32 cyclops_ghost_L[32] = {
+const ULONG32 cyclops_ghost_L[32] = {
 	0x003FFC00,
 	0x007FFE00,
 	0x01C00380,
@@ -1365,7 +1365,7 @@ const UINT32 cyclops_ghost_L[32] = {
 	0x20606060,
 };
 
-const UINT32 wall_ULR[32] = {
+const ULONG32 wall_ULR[32] = {
 	0x00C55F00,
 	0x00EAAB00,
 	0x00D55700,
@@ -1400,7 +1400,7 @@ const UINT32 wall_ULR[32] = {
 	0x00000000,
 };
 
-const UINT32 wall_UDR[32] = {
+const ULONG32 wall_UDR[32] = {
 	0x00CAAF00,
 	0x00D55700,
 	0x00EAAB00,
@@ -1435,7 +1435,7 @@ const UINT32 wall_UDR[32] = {
 	0x00F55300,
 };
 
-const UINT32 wall_LD[32] = {
+const ULONG32 wall_LD[32] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1470,7 +1470,7 @@ const UINT32 wall_LD[32] = {
 	0x00F55300,
 };
 
-const UINT32 wall_DR[32] = {
+const ULONG32 wall_DR[32] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1505,7 +1505,7 @@ const UINT32 wall_DR[32] = {
 	0x00FAA300,
 };
 
-const UINT32 cyclops_ghost_U[32] = {
+const ULONG32 cyclops_ghost_U[32] = {
 	0x003FFC00,
 	0x007FFE00,
 	0x01C00380,
@@ -1540,7 +1540,7 @@ const UINT32 cyclops_ghost_U[32] = {
 	0x20606060,
 };
 
-const UINT32 wall_horz[32] = {
+const ULONG32 wall_horz[32] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1575,7 +1575,7 @@ const UINT32 wall_horz[32] = {
 	0x00000000,
 };
 
-const UINT32 wall_horz_end_L[32] = {
+const ULONG32 wall_horz_end_L[32] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1610,7 +1610,7 @@ const UINT32 wall_horz_end_L[32] = {
 	0x00000000,
 };
 
-const UINT32 wall_single[32] = {
+const ULONG32 wall_single[32] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -1691,37 +1691,37 @@ UINT16 tile_map[][MAP_TILE_LENGTH] = {						  /*20*/												  /*37*/
 };											/*13*/
 /*23*/
 
-const UINT32* default_pacman_sprites[4][7] = {
+const ULONG32* default_pacman_sprites[4][7] = {
     {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2},   /*UP*/
     {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2},   /*DOWN*/
     {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2},   /*LEFT*/
     {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2}    /*RIGHT*/
 };
-const UINT32* evil_pacman_sprites[4][7] = {
+const ULONG32* evil_pacman_sprites[4][7] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2},   /*UP*/
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2},   /*DOWN*/
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2},   /*LEFT*/
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2}    /*RIGHT*/
 };
-const UINT32* crying_ghost_sprites[4][2] = {
+const ULONG32* crying_ghost_sprites[4][2] = {
     {ghost_1_up, ghost_1_up},   /*UP*/
     {ghost_1_down, ghost_1_down},   /*DOWN*/
     {ghost_1_left, ghost_1_left},   /*LEFT*/
     {ghost_1_right, ghost_1_right}    /*RIGHT*/
 };
-const UINT32* awkward_ghost_sprites[4][2] = {
+const ULONG32* awkward_ghost_sprites[4][2] = {
     {ghost_2_up, ghost_2_up},   /*UP*/
     {ghost_2_down, ghost_2_down},   /*DOWN*/
     {ghost_2_left, ghost_2_left},   /*LEFT*/
     {ghost_2_right, ghost_2_right}    /*RIGHT*/
 };
-const UINT32* cyclops_ghost_sprites[4][2] = {
+const ULONG32* cyclops_ghost_sprites[4][2] = {
     {ghost_3_up, ghost_3_up},   /*UP*/
     {ghost_3_down, ghost_3_down},   /*DOWN*/
     {ghost_3_left, ghost_3_left},   /*LEFT*/
     {ghost_3_right, ghost_3_right}    /*RIGHT*/
 };
-const UINT32* moustache_ghost_sprites[4][2] = {
+const ULONG32* moustache_ghost_sprites[4][2] = {
     {ghost_4_up, ghost_4_up},   /*UP*/
     {ghost_4_down, ghost_4_down},   /*DOWN*/
     {ghost_4_left, ghost_4_left},   /*LEFT*/

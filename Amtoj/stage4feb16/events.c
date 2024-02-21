@@ -55,12 +55,12 @@ void clock_tick_handle(UINT16* clock_count, Entites* entity) {
 *
 *
 **/
-void handle_ghost_collision(UINT8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct) {
+void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct) {
   
-    UINT8 possible_direction = 0;
-    UINT32 random_number;
-    UINT8 counter = 0;
-    UINT8 prev_direction = ghost -> direction;
+    UCHAR8 possible_direction = 0;
+    ULONG32 random_number;
+    UCHAR8 counter = 0;
+    UCHAR8 prev_direction = ghost -> direction;
 
   
     if (collision_type == WALL)
@@ -116,6 +116,7 @@ void handle_ghost_collision(UINT8 collision_type, Ghost* ghost, Cell cell_map[][
         else
             ghost -> direction = DOWN;
 
+
 /*
         switch(random_number) 
         {
@@ -138,11 +139,11 @@ void handle_ghost_collision(UINT8 collision_type, Ghost* ghost, Cell cell_map[][
 
     }
     else
-        printf("Not a wall in the switch struct\n");
+        printf("\n HANDLE GHOST COLLISION WITH ANOTHER OBJECT\n");
     
 
 }
-void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
+void handle_pacman_collision(UCHAR8 collision_type, Pacman *pacman) {
 
     
     /*if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone*/
@@ -153,16 +154,16 @@ void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
     switch(collision_type)
     {
     case WALL: 
-        printf("COLLISION WITH A WALL\n\n");
+        printf("\n PACMAN COLLISION WITH A WALL\n");
         break;
 
     case OBJECT:                            
-        printf("COLLIDED with an OBJECT\n\n");
+        printf("\n PACMAN COLLIDED with an OBJECT\n");
         /*add_wall_to_map(cell_map,ghost)*/
         break;
     
     default:
-        printf("NO COLLSION");
+        printf("NO COLLSION");                          /*remove later as this is just for testing*/
 
     }
 
@@ -191,10 +192,10 @@ void handle_pacman_collision(UINT8 collision_type, Pacman *pacman) {
 *@return 'state' this is the random number that is returned
 *
 * * * * * * * * * * */
-UINT32 random_number_generator(Xor *xor)
+ULONG32 random_number_generator(Xor *xor)
 {
 
-    UINT32 state = xor->value;
+    ULONG32 state = xor->value;
 
 	state ^= state << 13;
 	state ^= state >> 17;

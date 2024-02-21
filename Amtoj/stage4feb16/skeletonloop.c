@@ -15,17 +15,17 @@
 #define LETTERS_PER_BLOCK 6
 
 
-void next_test(ULONG32* base);
-void display_all_ascii(UCHAR8* base, int x0, int y0);
-void test_arbitrary_letter(UCHAR8* base);
-
+void next_test(UINT32* base);
+void display_all_ascii(UINT8* base, int x0, int y0);
+void test_arbitrary_letter(UINT8* base);
 void set_input(Pacman *pacman,char input);
-
 void move_pacman_test(Pacman *pacman);
-
 void move_ghost_test(Ghost *ghost);
 
 ULONG32 get_time();
+
+
+
 
 Pacman pacman_obj = {
     PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
@@ -34,7 +34,7 @@ Pacman pacman_obj = {
     UP,         /*Initial direction*/
     FALSE,       /*Initial state*/
     FALSE,
-    1,1,         /*Cell index -> y, x*/
+    0,0,         /*Cell index -> y, x*/
 	PACMAN
 };
 
@@ -44,8 +44,7 @@ Ghost c_ghost = {
     0,
     UP,
     DEFAULT,
-    10,25,
-	&cell_map[25][10],
+    1,4,
 	GHOST_TYPE_CRYING
                /*Or whatever cell it starts in*/
  
@@ -57,7 +56,7 @@ Ghost m_ghost = {
     UP,
     DEFAULT,
     10, 21,
-	&cell_map[21][10],
+	&cell_map[10][21],
 	GHOST_TYPE_MOUSTACHE
 };
 Ghost cy_ghost = {
@@ -67,7 +66,6 @@ Ghost cy_ghost = {
     UP,
     DEFAULT,
     1, 3,
-	&cell_map[3][1],
 	GHOST_TYPE_CRYING					/*(x,y)*/
 };
 Ghost a_ghost = {
@@ -85,11 +83,11 @@ Ghost a_ghost = {
 
 int main()
 {
+
 	char input;
 	int i,j,counter;
-	UCHAR8 collision_type = 0;
-	ULONG32* base = Physbase();
-	ULONG32 time_then, time_now;
+	UINT8 collision_type = 0;
+	UINT32* base = Physbase();
 
 	Entities all_objs = {
 
@@ -108,120 +106,36 @@ int main()
 
 	init_map_cells(cell_map,tile_map);				/* i added the paramters for the init_cell map function*/
 
-	/*init_ghost_paths()*/
-	/*
-	printf("%u,%d:",ptr->pacman->x,ptr->pacman->has_collided);
 
-	printf("pacman position old : (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
-	
-	printf("pacman direction before:(%u)\n\n", pacman_obj.direction);
 	
 
-	/*printf("%d,%d\n",ptr->pacman->y_cell_index,ptr->pacman->x_cell_index);
-	/*
-	for (i = 0; i < MAP_TILE_HEIGHT; i++)
-	{
-		for(j = 0; j < MAP_TILE_LENGTH; j++)
-		{
-			printf("%d",cell_map[i][j].open_path);
-		}
-		printf("\n");
-		break;
-	}
-	*/
-	
-	
-	/* use plot font to test (...?) */ 
-	
-	/* im trying to take keyboard input here and each time  w a s or d is pressed 
-		i want to increment the position by 1 (we cna chnage this to whatever pixel amount)
-		NOT taking input but works with hard-coded funtion calls */
-	
-	/******************************/
-	
-	if (Cconis())
-	{
-		input = (char)Cnecin();
-	}
 
-	while(input != 'Q')
+	while(!Cconis())
 	{
 		
-		/*input = Cconin();*/
+		input = Cconin();
 
-		if (Cconis())
-		{
-			input = (char)Cnecin();
-		 	set_input(&pacman_obj,input);
-	
-			
+		 printf("RAND NUM::%u\n",random_number_generator(&xor));
+
+		 set_input(&pacman_obj,input);
 		
-			/*set_input(&pacman_obj,input);*/
-			
-			collision_type = check_collision(ptr, ptr->pacman->y_cell_index, 
-											ptr->pacman->x_cell_index, 
-											ptr->pacman->delta_y, 
-											ptr->pacman->delta_x,
-											ptr->pacman->type);
+		
+    	collision_type = check_collision(&ptr, ptr->pacman->y_cell_index, 
+										ptr->pacman->x_cell_index, 
+										ptr->pacman->delta_y, 
+										ptr->pacman->delta_x);
 
-			if (collision_type == NO_COLLISION)
-				move_pacman_test(&pacman_obj);
-			else
-				handle_pacman_collision(collision_type,&pacman_obj);
-			
-			printf("pacman position now: (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
-			printf("pacman's cuurent direction.:(%u)\n", pacman_obj.direction); 
+    	if (collision_type == NO_COLLISION)
+        	move_pacman_test(&pacman_obj);
+    	else
+        	handle_pacman_collision(collision_type,&pacman_obj);
+		
 
 
-			printf("awkward ghosts's x_cell : %u\n", ptr->awkward_ghost->x_cell_index);
+		printf("pacman position now: (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
+		printf("pacman's cuurent direction.:(%u)\n", pacman_obj.direction); 
 
-			collision_type = check_collision(ptr, ptr->awkward_ghost->y_cell_index, 
-											ptr->awkward_ghost->x_cell_index, 
-											ptr->awkward_ghost->delta_y, 
-											ptr->awkward_ghost->delta_x,
-											ptr->awkward_ghost->type);
-
-
-			printf("awkward ghosts's direction BEFORE IF : %u\n", a_ghost.direction);
-
-			if (collision_type == NO_COLLISION)
-			{
-				move_ghost_test(&a_ghost);
-				printf("No ghost collision\n");
-			}
-			else
-			{
-				printf("yes there is a collision\n");
-				handle_ghost_collision(collision_type, &a_ghost, cell_map, &xor);
-				move_ghost_test(&a_ghost);
-			}
-						
-
-
-			printf("a_ghost position now: (%u, %u)\n\n", a_ghost.y_cell_index, a_ghost.x_cell_index);
-
-
-			collision_type = check_collision(ptr, ptr->moustache_ghost->y_cell_index, 
-											ptr->moustache_ghost->x_cell_index, 
-											ptr->moustache_ghost->delta_y, 
-											ptr->moustache_ghost->delta_x,
-											ptr->moustache_ghost->type);
-			if (collision_type == NO_COLLISION)
-			{
-				move_ghost_test(&m_ghost);
-				printf("No ghost collision\n");
-			}
-			else{
-				printf("yes there is a collision\n");
-
-				handle_ghost_collision(collision_type, &m_ghost, cell_map, &xor);
-				move_ghost_test(&m_ghost);
-						
-			}
-			printf("moustche_ghost position now: (%u, %u)\n\n", m_ghost.y_cell_index, m_ghost.x_cell_index);
-		}	
 	}
-	/******************************************/
 
 	/*Cnecin();*/
 	
@@ -253,7 +167,7 @@ int main()
 			ptr->pacman -> x_cell_index =0; 
 		}
 
-
+*/
 
 
 
@@ -284,7 +198,7 @@ int main()
 				collision_type = check_collision(ptr, ptr->moustache_ghost->y_cell_index, 
 												ptr->moustache_ghost->x_cell_index, 
 												ptr->moustache_ghost->delta_y, 
-												ptr->moustache_ghost->delta_x);
+												ptr->moustache_ghost->delta_x);*/
 
 				printf("awkward ghosts's x_cell : %u\n", ptr->awkward_ghost->x_cell_index);
 
@@ -334,8 +248,8 @@ int main()
 				}
 				printf("moustche_ghost position now: (%u, %u)\n\n", m_ghost.y_cell_index, m_ghost.x_cell_index);
 
-			
 
+					
 					/*
 					collision_type = check_collision(ptr, ptr->moustache_ghost_ghost->y_cell_index, 
 													ptr->moustache_ghost->x_cell_index, 
@@ -365,7 +279,7 @@ int main()
 
 
 				printf("pacman position now: (%d, %d)\n\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
-				/*printf("pacman's direction: %u\n", pacman_obj.direction);
+				/*printf("pacman's direction: %u\n", pacman_obj.direction);*/
 
 				if (j % 1 == 0)
 					next_test(base);
@@ -378,7 +292,7 @@ int main()
 		}
 
 
-*/
+
 
 	printf("pacman position final: (%d, %d)\n", pacman_obj.y_cell_index, pacman_obj.x_cell_index);
 
@@ -388,7 +302,7 @@ int main()
 
 
 /*waits for input then calls clear_screen();*/
-void next_test(ULONG32* base) {
+void next_test(UINT32* base) {
 
 	while(!Cconis()){
 
@@ -449,7 +363,7 @@ void move_pacman_test(Pacman *pacman)
 void move_ghost_test(Ghost *ghost)
 {
 
-	UCHAR8 direction = ghost -> direction;
+	UINT8 direction = ghost -> direction;
 
 	ghost -> delta_x = 0;
 	ghost -> delta_y = 0;
@@ -487,12 +401,13 @@ void move_ghost_test(Ghost *ghost)
 	}
 
 }
+
 ULONG32 get_time()
 {
 
-	ULONG32 *timer = (ULONG32 *)0x462; 		/* address of longword auto-inc’ed 70 x per second */
-	ULONG32 timeNow;
-	ULONG32 old_ssp;
+	long *timer = (long *)0x462; 		/* address of longword auto-inc’ed 70 x per second */
+	long timeNow;
+	long old_ssp;
 	old_ssp = Super(0); 				/* enter privileged mode */
 	timeNow = *timer;
 	Super(old_ssp); 					/* exit privileged mode as soon as possible */
