@@ -3,6 +3,11 @@
 #include "bitmaps.h"
 #include <stdio.h>
 
+#define UP_RANDOMN ((UCHAR8)1)
+#define DOWN_RANDOM ((UCHAR8)2)
+#define LEFT_RANDOM ((UCHAR8)4)						/*usaing powers of 2 numbers*/
+#define RIGHT_RANDOM ((UCHAR8)8)	
+
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 
@@ -83,6 +88,7 @@ void move_ghost (Ghost *ghost)
 UCHAR8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta,
                      ObjectType curr_type)
 {  
+    
     UCHAR8 collision = 0;
     int i;
    /* Enitites *crying = entity->crying_ghost; */

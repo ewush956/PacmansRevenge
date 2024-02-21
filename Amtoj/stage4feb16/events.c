@@ -68,7 +68,7 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
      
         if (cell_map[ghost->y_cell_index][ghost -> x_cell_index + 1].open_path == TRUE )
         {
-            possible_direction |= RIGHT;
+            possible_direction |= RIGHT_RANDOM;
             counter++;
             printf("right \n");
             /*ghost -> direction = RIGHT;*/
@@ -76,7 +76,7 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
 
        if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == TRUE)
         {
-            possible_direction |= LEFT;
+            possible_direction |= LEFT_RANDOM;
             counter++;
             printf("left \n");
             /*ghost -> direction = LEFT;*/
@@ -84,7 +84,7 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
 
        if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == TRUE)
         {
-            possible_direction |= DOWN;
+            possible_direction |= DOWN_RANDOM;
             counter++;
             printf("down \n");
             /*ghost -> direction = DOWN;*/
@@ -92,7 +92,7 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
 
        if (cell_map[ghost-> y_cell_index - 1][ghost->x_cell_index].open_path == TRUE)
         {
-            possible_direction |= UP;
+            possible_direction |= UP_RANDOMN;
             counter++;
             printf("up \n");
             /*ghost -> direction = UP;*/
@@ -108,13 +108,13 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
 
      
         if (possible_direction & 0x01)
-            ghost -> direction = UP;
+            ghost -> direction = UP_RANDOMN;
         else if(possible_direction & 0x08)
-            ghost -> direction = RIGHT;
+            ghost -> direction = RIGHT_RANDOM;
         else if( possible_direction & 0x04)
-            ghost -> direction = LEFT;
+            ghost -> direction = LEFT_RANDOM;
         else
-            ghost -> direction = DOWN;
+            ghost -> direction = DOWN_RANDOM;
 
 
 /*

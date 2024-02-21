@@ -2,6 +2,10 @@
 #include "TYPES.H"
 #include "model.h"
 
+#define UP_RANDOMN ((UCHAR8)1)
+#define DOWN_RANDOM ((UCHAR8)2)
+#define LEFT_RANDOM ((UCHAR8)4)						/*usaing powers of 2 numbers*/
+#define RIGHT_RANDOM ((UCHAR8)8)                    /*FOR numbers with only 1 bit showing up (eg 1000 0100) */
 
 typedef struct
 {
