@@ -11,7 +11,7 @@
 #define LETTERS_PER_BLOCK 6
 
 
-const UINT32* sprites[] = {
+const ULONG32* sprites[] = {
 	pac_1, pac_2, pac_3, pac_4,
 	evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4,
 	ghost_1_up, ghost_1_down, ghost_1_left, ghost_1_right,
@@ -25,7 +25,7 @@ const UINT32* sprites[] = {
 /*wall2_all, took this out undef ref*/ 
 
 /*
-const UINT32* wall_sprites[] = 
+const ULONG32* wall_sprites[] = 
 {
 	wall1_horz, wall1_vert
 };
@@ -57,15 +57,15 @@ int arbitrary_numbers_640[] = {
 	210, 240, 39, 255, 492, 515, 174, 377, 255, 37
 };
 
-void next_test(UINT32* base);
-void display_all_ascii(UINT8* base, int x0, int y0);
-void test_arbitrary_letter(UINT8* base);
+void next_test(ULONG32* base);
+void display_all_ascii(UCHAR8* base, int x0, int y0);
+void test_arbitrary_letter(UCHAR8* base);
 
 /*All below functions call next_test*/
-void speed_test(UINT32* base, UINT32 sprite[], unsigned int height);
-void display_all_sprites(UINT32* base);
-void test_boundaries(UINT32* base);
-void test_arbitrary_32(UINT32* base);
+void speed_test(ULONG32* base, ULONG32 sprite[], unsigned int height);
+void display_all_sprites(ULONG32* base);
+void test_boundaries(ULONG32* base);
+void test_arbitrary_32(ULONG32* base);
 int main()
 {
 	void *base32 = Physbase();
@@ -265,7 +265,7 @@ int main()
 	return 0;
 }
 /*waits for input then calls clear_screen();*/
-void next_test(UINT32* base) {
+void next_test(ULONG32* base) {
 
 	while(!Cconis()){
 
@@ -273,7 +273,7 @@ void next_test(UINT32* base) {
 	Cnecin();
 	clear_screen_q(base);
 }
-void display_all_ascii(UINT8* base, int x0, int y0) {
+void display_all_ascii(UCHAR8* base, int x0, int y0) {
 
 	int x, y, i;
 	int index = 0;
@@ -285,7 +285,7 @@ void display_all_ascii(UINT8* base, int x0, int y0) {
 		}
 	}	
 }
-void speed_test(UINT32* base, UINT32 sprite[], unsigned int height) {
+void speed_test(ULONG32* base, ULONG32 sprite[], unsigned int height) {
 
 	int i;
 
@@ -300,7 +300,7 @@ void speed_test(UINT32* base, UINT32 sprite[], unsigned int height) {
 		plot_bitmap_32(base, i, 350, sprite, height);
 	}
 }
-void display_all_sprites(UINT32* base) {
+void display_all_sprites(ULONG32* base) {
     int x, y, i;
     int spritesPerRow = 8; 
     int spriteWidth = 32; 
@@ -316,7 +316,7 @@ void display_all_sprites(UINT32* base) {
     }
 }
 /*Tests allowable plotting limmits*/
-void test_boundaries(UINT32* base) {
+void test_boundaries(ULONG32* base) {
     
     plot_bitmap_32(base, 0, 0, sprites[0], SPRITE_HEIGHT); 
     plot_bitmap_32(base, SCREEN_WIDTH - SPRITE_WIDTH, 0, sprites[1], SPRITE_HEIGHT); 
@@ -328,14 +328,14 @@ void test_boundaries(UINT32* base) {
     plot_bitmap_32(base, SCREEN_WIDTH - SPRITE_WIDTH, (SCREEN_HEIGHT - SPRITE_HEIGHT) / 2, sprites[7], SPRITE_HEIGHT); 
 }
 /*Displays all prites within allowable range at aribitrary (x,y)*/
-void test_arbitrary_32(UINT32* base) {
+void test_arbitrary_32(ULONG32* base) {
 	int i;
 
 	for (i=0; i < 95; i++) {
 		plot_bitmap_32(base, arbitrary_numbers_640[i], arbitrary_numbers_400[i], sprites[i % 30], SPRITE_HEIGHT);
 	}
 }
-void test_arbitrary_letter(UINT8* base) {
+void test_arbitrary_letter(UCHAR8* base) {
 	int i;
 	for(i = 0; i < 95; i++) {
 		plot_letter(base, arbitrary_numbers_640[i], arbitrary_numbers_400[i], font, i);

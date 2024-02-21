@@ -8,7 +8,7 @@ void render_pacman(Pacman *pacman, Ghost *ghost) {
     use check_next_cell(pacman->direction, pacman->x_cell_index, pacman->y_cell_index)*/
 
     /*later stage use this */
-    UINT8 collision_type; 
+    UCHAR8 collision_type; 
 
     collision_type = check_collision(&ghost,&pacman,pacman->y,pacman->x);
 
@@ -110,20 +110,20 @@ void render_timer(Timer* timer) {
 #include "bitmaps.h"
 /*#include "map_plot.c"*/
 
-const UINT8 map[][25];	/* I don't know how many */
+const UCHAR8 map[][25];	/* I don't know how many */
 
-const UINT32 default_pac_sprites[][4];
-const UINT32 evil_pac_sprites[][4];
-const UINT32 crying_ghost_sprites[][4];
-const UINT32 moustache_ghost_sprites[][4];
-const UINT32 cyclops_ghost_sprites[][4];
-const UINT32 awkward_ghost_sprites[][4];
+const ULONG32 default_pac_sprites[][4];
+const ULONG32 evil_pac_sprites[][4];
+const ULONG32 crying_ghost_sprites[][4];
+const ULONG32 moustache_ghost_sprites[][4];
+const ULONG32 cyclops_ghost_sprites[][4];
+const ULONG32 awkward_ghost_sprites[][4];
 
-const UINT32* default_pacman_sprites[4][4] = {
+const ULONG32* default_pacman_sprites[4][4] = {
     {pac_1, pac_2, pac_3, pac_4},
     {pac_1, pac_2, pac_3, pac_4}
 };
-const UINT32* evil_pacman_sprites[4][4] = {
+const ULONG32* evil_pacman_sprites[4][4] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4},
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
 };
@@ -223,10 +223,10 @@ bool check_collision (UINT16 object_x_position, UINT16 object_y_position){
 * without using two spearate check_collsions() funcs
 *
 * * * * * * * * * * * * * * */
-/*UINT8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position)*/
-UINT8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
+/*UCHAR8 check_collision(Ghost *ghost, Pacman *pacman, UINT16 object_y_position, UINT16 object_x_position)*/
+UCHAR8 check_collision(Entities* entity, UINT16 object_y_position, UINT16 object_x_position)
 {  
-    UINT8* collision = 0;
+    UCHAR8* collision = 0;
    /* Enitites *crying = entity->crying_ghost; */
 
 
@@ -298,181 +298,52 @@ void update_cell(int* x_index, int* y_index) {
    }
 
 }
+void handle_collisions(Entities* entity, Xor *xor) {
+
+    /*UCHAR8 collision_type;*/
+    Pacman* pac = entity->pacman;
+    Ghost* moustache = entity->moustache_ghost;
+    Ghost* crying = entity->crying_ghost;
+    Ghost* cyclops = entity->cyclops_ghost;
+    Ghost* awkward = entity->awkward_ghost;
+
+    if (check_collision(entity, pac->y_cell_index, 
+                                    pac->x_cell_index, 
+                                    pac->delta_y, 
+                                    pac->delta_x,
+                                    pac->type) != NO_COLLISION) {
+        handle_pacman_collision(collision_type, pac);
 
 
-/********************ghost collsion styuff **********/ 
+    if (check_collision(entity, awkward->y_cell_index, 
+                                    awkward->x_cell_index, 
+                                    awkward->delta_y, 
+                                    awkward->delta_x,
+                                    awkward->type) != NO_COLLISION)
+        handle_ghost_collision(collision_type, awkward, cell_map, xor);
     
-     UINT8 possible_direction = 0;
-    UINT32 random_number;
-    UINT8 direction_bit;
-    UINT8 counter = 0;
-    UINT8 prev_direction = ghost -> direction;
 
-    /*(UINT8 arr[4] = {UP,DOWN,LEFT,RIGHT};*/
-
-
-    if (collision_type == WALL)
-    {
-     
-        if (cell_map[ghost->y_cell_index][ghost -> x_cell_index + 1].open_path == TRUE )
-        {
-            possible_direction |= RIGHT;
-            counter++;
-            printf("right \n");
-            /*ghost -> direction = RIGHT;*/
-        }
-
-       if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == TRUE)
-        {
-            possible_direction |= LEFT;
-            counter++;
-            printf("left \n");
-            /*ghost -> direction = LEFT;*/
-        }
-
-       if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == TRUE)
-        {
-            possible_direction |= DOWN;
-            counter++;
-            printf("down \n");
-            /*ghost -> direction = DOWN;*/
-        }
-
-       if (cell_map[ghost-> y_cell_index - 1][ghost->x_cell_index].open_path == TRUE)
-        {
-            possible_direction |= UP;
-            counter++;
-            printf("up \n");
-            /*ghost -> direction = UP;*/
-        }
-
+    if (check_collision(entity, moustache->y_cell_index, moustache->x_cell_index, 
+                moustache->delta_y, moustache->delta_x,
+                moustache->type) != NO_COLLISION)
+        handle_ghost_collision(collision_type, moustache, cell_map, xor);
             
-        printf("possible direction --> %u\n",possible_direction & 0x0A);
-            /*
-            if (RIGHT > possible_direction && possible_direction > 2)
-                ghost -> direction = LEFT;
-            else if (UP >= possible_direction)
-                ghost -> direction = UP;
-            else if(possible_direction > RIGHT)
-                ghost -> direction = RIGHT;
-            else
-                ghost -> direction = DOWN;
-            */
 
-            /*
-            if (possible_direction > RIGHT && possible_direction & 0x01 == 1)
-                ghost -> direction = UP;
-            else if (possible_direction > RIGHT && possible_direction & 0x02 == 2)
-                ghost -> direction = DOWN;
-            else if (possible_direction < RIGHT && possible_direction & 0x4 == 4)
-                ghost -> direction = LEFT;
-            else if ( possible_direction < LEFT && possible_direction & 0x2 == 2)
-                ghost -> direction = DOWN;
-            else if (possible_direction == RIGHT)
-                ghost -> direction = RIGHT;
-            else if ()
-                */
-
-                random_number = random_number_generator(xor_shift_struct);
-                random_number %= 4;
-                                            /* cant mod with 0*/
-
-
-                direction_bit = (1 << random_number);
-
-                /*RIGHT AND UP --> GO UP
-             if (possible_direction & random_number) 
-                ghost -> direction = UP;
-               
-            else if(possible_direction & random_number)
-                ghost -> direction = LEFT;
-
-            else if ( possible_direction & random_number) 
-                ghost -> direction = DOWN;
-            
-            else if (possible_direction & random_number) 
-                ghost -> direction = RIGHT;
-                */
-
-
-
-            switch(random_number) 
-            {
-                case 0:
-                    ghost->direction = UP;
-                    break;
-                case 1:
-                    ghost->direction = LEFT;
-                    break;
-                case 2:
-                    ghost->direction = DOWN;
-                    break;
-                case 3:
-                    ghost->direction = RIGHT;
-                    break;
-            }
-
-
-            printf("ghost direction: %u",ghost->direction);
-
-
-            /*
-             if (RIGHT > possible_direction && possible_direction >= 2)
-                ghost -> direction = LEFT;
-            else if (UP >= possible_direction)
-                ghost -> direction = UP;
-            else if(possible_direction > RIGHT)
-                ghost -> direction = RIGHT;
-            else
-                ghost -> direction = DOWN;
-            /*
-
-
-            /*printf("possible direction --> %u\n",possible_direction);
-           random_number = random_number_generator(xor_shift_struct);
-
-           printf("random number --> %u\n",random_number);
-
-           /*ans = random_number % 4;     /* changed from %= 4*/
-           /*printf("ans --> %u\n",ans);*/
-           /*possible_direction &= ans;       /*changed from random_number to ans*/
-
-
-            /*
-            random_number &= 0xFF;          /* clear what we dont need 
-            random_number %= counter;
-         
-
-            printf("using the arr %u\n",arr[random_number]);
-            
-            random_number &= possible_direction; 
-            random_number++;
-            
-            /*
-            if (random_number == 0)
-                ghost -> direction = RIGHT;
-            else
-                ghost -> direction = random_number;
-
-            /*
-            if ( 8 > possible_direction && possible_direction > 2)
-                ghost->direction = LEFT;
-            else if (possible_direction >= 8 )
-                ghost ->direction = RIGHT;
-            else
-                ghost-> direction = UP;
-            */
-/*
-           printf("random number after mod --> %u\n",random_number);
-           printf("possible direction --> %u\n",possible_direction);
-
-           
-           printf("ghost direction: %u",ghost->direction);*/
+    if(check_collision(entity, crying->y_cell_index, 
+                                    crying->x_cell_index, 
+                                    crying->delta_y, 
+                                    crying->delta_x,
+                                    crying->type) != NO_COLLISION) 
+                                    {
+        handle_ghost_collision(collision_type, crying, cell_map, xor);
     }
 
-    else{
-
-        printf("Not a wall in the switch struct\n");
+    if(check_collision(entity, cyclops->y_cell_index, 
+                                    cyclops->x_cell_index, 
+                                    cyclops->delta_y, 
+                                    cyclops->delta_x,
+                                    cyclops->type) != NO_COLLISION)
+                                    {
+        handle_ghost_collision(collision_type, cyclops, cell_map, xor);
     }
-
 }

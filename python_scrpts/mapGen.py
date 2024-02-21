@@ -30,7 +30,7 @@ def process_folder_to_c_file(folder_path, output_file):
                 hex_bitmap = png_to_hex_bitmap(file_path)
 
                 # Update the format for the larger array size
-                file.write(f"const UINT32 sprite{sprite_count}[400][20] = {{\n")  # 400 rows, 20 UINT32s per row
+                file.write(f"const ULONG32 sprite{sprite_count}[400][20] = {{\n")  # 400 rows, 20 ULONG32s per row
                 for i in range(0, len(hex_bitmap), 20):  # Process 20 hex values (80 bits) at a time
                     file.write(f"{{0x{''.join(hex_bitmap[i:i+20])}}},\n")
                 file.write("};\n\n")

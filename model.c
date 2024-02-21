@@ -10,97 +10,11 @@
 *************************************************************/
 Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
-/*************************************************************
-* Declaration: Pacman pacman
-* Purpose: Initializes the player character, Pacman, with its
-*          starting position, movement displacement, state,
-*          direction, and cell index on the game map.
-*************************************************************/
-Pacman pacman = {
-    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,  
-    0,0,           /*Initial Displacement*/
-    0,             /*Initial state index*/
-    UP,            /*Initial direction*/
-    DEFAULT,       /*Initial state*/
-    21,19          /*Cell index -> y, x*/
-};
-/*************************************************************
-* Declaration: Ghost crying_ghost
-* Purpose: Initializes the 'crying' ghost entity with its starting
-*          position, movement displacement, state, direction, 
-*          and cell index on the game map.
-*************************************************************/
-Ghost crying_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
-    0,0,
-    0,
-    UP,
-    DEFAULT,
-    10, 17 
-};
-/*************************************************************
-* Declaration: Ghost cyclops_ghost
-* Purpose: Initializes the 'cyclops' ghost entity with its
-*          starting position, movement displacement, state,
-*          direction, and cell index on the game map.
-*************************************************************/
-Ghost cyclops_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
-    0,0,
-    0,
-    UP,
-    DEFAULT,
-    12, 17
-};
-/*************************************************************
-* Declaration: Ghost moustache_ghost
-* Purpose: Initializes the 'moustache' ghost entity with its
-*          starting position, movement displacement, state,
-*          direction, and cell index on the game map.
-*************************************************************/
-Ghost moustache_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
-    0,0,
-    0,
-    UP,
-    DEFAULT,
-    10, 21
-};
-/*************************************************************
-* Declaration: Ghost awkward_ghost
-* Purpose: Initializes the 'awkward' ghost entity with its
-*          starting position, movement displacement, state,
-*          direction, and cell index on the game map.
-*************************************************************/
-Ghost awkward_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
-    0,0,
-    0,
-    UP,
-    DEFAULT,
-    12, 21
-};
-/*************************************************************
-* Declaration: Timer timer
-* Purpose: Initializes the game timer with starting values
-*          and thresholds for various game events.
-*************************************************************/
-Timer timer = {
-    0,0,
-    20, 28, 44, 52
-};
-/*************************************************************
-* Function: move_pacman
-* Purpose: Updates Pacman's position based on its current velocity.
-* Parameters: Pacman* pacman - Pointer to the Pacman structure.
-* Details: Adjusts Pacman's x and y coordinates by adding the current
-*          delta_x and delta_y values, effectively moving Pacman in the
-*          direction and speed specified by these delta values.
-*************************************************************/
 void move_pacman (Pacman *pacman)
 {
     pacman -> x += pacman->delta_x;
     pacman -> y += pacman->delta_y;
+   /* update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->direction); */
 }
 /*************************************************************
 * Function: move_ghost
@@ -112,8 +26,39 @@ void move_pacman (Pacman *pacman)
 *************************************************************/
 void move_ghost (Ghost *ghost)
 {
-    ghost -> x += ghost -> delta_x;
-    ghost -> y += ghost -> delta_y;
+	UCHAR8 direction = ghost -> direction;
+
+	ghost -> delta_x = 0;
+	ghost -> delta_y = 0;
+	
+	if (ghost -> x > SCREEN_WIDTH - MAP_PIXEL_LENGTH && ghost -> x < MAP_PIXEL_LENGTH
+		&& ghost -> y + Y_PIXEL_OFFSET > SCREEN_HEIGHT - MAP_PIXEL_HEIGHT && ghost -> y < MAP_PIXEL_HEIGHT) 
+	
+	{
+		switch(direction)
+		{
+			case UP:
+				ghost -> delta_y = -1;
+				ghost -> delta_x = 0;
+				break;
+			
+			case DOWN:
+				ghost -> delta_y = 1;
+				ghost -> delta_x = 0;
+				break;
+			
+			case RIGHT:
+				ghost -> delta_x = 1;
+				ghost -> delta_y = 0;
+				break;
+			
+			case LEFT:
+				ghost -> delta_x = -1;
+				ghost -> delta_y = 0;
+				break;
+		}
+	}
+
 }
 /*************************************************************
 * Function: check_collision
@@ -129,10 +74,16 @@ void move_ghost (Ghost *ghost)
 *          with any ghost is detected, and 0 if no collision is detected. The function
 *          also logs the collision location for ghost collisions.
 *************************************************************/
-UINT8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta)
+ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta,
+                     ObjectType curr_type)
 {  
-    UINT8 collision = 0;
+    
+    ObjectType collision = OPEN_PATH;
     int i;
+   /* Enitites *crying = entity->crying_ghost; */
+    
+
+   /* collsion with itsefl*/
 
     Ghost *all_ghosts[4];
     all_ghosts[0] = entity->crying_ghost;
@@ -140,22 +91,26 @@ UINT8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_i
     all_ghosts[2] = entity->cyclops_ghost;
     all_ghosts[3] = entity->moustache_ghost;
 
-    if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path ==FALSE)
+    if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE)
         collision = WALL;
 
     else{
         for (i = 0; i < 4; i++){
-            if (all_ghosts[i]->x_cell_index == object_x_index + x_delta &&
-                all_ghosts[i]->y_cell_index == object_y_index + y_delta )
+            /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
+            
+            if (all_ghosts[i]->type != curr_type) /* no collsiion with ghost itself only other objs*/
             {
-                collision = OBJECT;
-                /*This is only for testing, will be removed in final version*/
-                printf("COLLISION AT LOCATION (y,x) ->(%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);
-                break;
+                if ((all_ghosts[i]->x_cell_index == object_x_index + x_delta &&
+                    all_ghosts[i]->y_cell_index == object_y_index + y_delta) ||
+                    (all_ghosts[i]->x_cell_index == object_x_index && 
+                    all_ghosts[i]->y_cell_index == object_y_index))
+                   /* collision = OBJECT; */
+                   collision = all_ghosts[i]->type;
             }
         }
-    }  
+    }    
     return collision;
+
 }
 /*************************************************************
 * Function: init_map_cells
@@ -189,13 +144,44 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
 *          PIXELS_PER_CELL, indicating a complete move into a new cell. This function
 *          aids in tracking movement across cells in the game grid.
 *************************************************************/
-void update_cells(int* x_index, int* y_index) { 
-   if (*x_index % PIXELS_PER_CELL == 0) {
-       *x_index = (*x_index)++;
-   }
-   if (*y_index % PIXELS_PER_CELL == 0) {
-       *y_index = (*y_index)++;
-   }
+void update_cells(Entities* entity) {
+    Pacman* pacman = entity->pacman;
+    Ghost* crying = entity->crying_ghost;
+    Ghost* moustache = entity->moustache_ghost;
+    Ghost* cyclops = entity->cyclops_ghost;
+    Ghost* awkward = entity->awkward_ghost;
+
+    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->direction, DEFAULT);
+    /*Pacmans state doesn't matter here, probably faster to pass in const value*/
+
+    update_cell(&crying->x_cell_index, &crying->y_cell_index, crying->x, crying->y, crying->direction, crying->state);
+    update_cell(&moustache->x_cell_index, &moustache->y_cell_index, moustache->x, moustache->y, moustache->direction, moustache->state);
+    update_cell(&cyclops->x_cell_index, &cyclops->y_cell_index, cyclops->x, cyclops->y, cyclops->direction, cyclops->state);
+    update_cell(&awkward->x_cell_index, &awkward->y_cell_index, awkward->x, awkward->y, awkward->direction, awkward->state);
+}
+void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position, UCHAR8 direction, UCHAR8 state) {
+
+    if (state == DEAD || direction == STOP) {
+        return;
+    }
+    if (x_position % PIXELS_PER_CELL == 0) {
+
+        if (direction == LEFT) {
+            (*x_index) = (*x_index)-1;
+        } 
+        else if (direction == RIGHT) {
+            (*x_index) = (*x_index)+1;
+        }
+
+    }
+    if (y_position % PIXELS_PER_CELL == 0) {
+        if (direction == UP) {
+            (*y_index) = (*y_index)-1;
+        } 
+        else if (direction == DOWN) {
+            (*y_index) = (*y_index)+1;
+        }
+    }
 }
 /*************************************************************
 * Function: kill_ghost

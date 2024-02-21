@@ -8,7 +8,7 @@
 #define MAX_MAP_HEIGHT 11         /* 11 vert walls x 32 pixels = 352   */
 
 /*
-const UINT32* sprites[] = {
+const ULONG32* sprites[] = {
     pac_1, pac_2, pac_3, pac_4,
     evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4,
     ghost_1_up, ghost_1_down, ghost_1_left, ghost_1_right,
@@ -95,18 +95,18 @@ Ghost awkward_ghost = {
     UP,
     FALSE
 };
-const UINT32 default_pac_sprites[][4];
-const UINT32 evil_pac_sprites[][4];
-const UINT32 crying_ghost_sprites[][4];
-const UINT32 moustache_ghost_sprites[][4];
-const UINT32 cyclops_ghost_sprites[][4];
-const UINT32 awkward_ghost_sprites[][4];
+const ULONG32 default_pac_sprites[][4];
+const ULONG32 evil_pac_sprites[][4];
+const ULONG32 crying_ghost_sprites[][4];
+const ULONG32 moustache_ghost_sprites[][4];
+const ULONG32 cyclops_ghost_sprites[][4];
+const ULONG32 awkward_ghost_sprites[][4];
 
-const UINT32* default_pacman_sprites[4][4] = {
+const ULONG32* default_pacman_sprites[4][4] = {
     {pac_1, pac_2, pac_3, pac_4},
     {pac_1, pac_2, pac_3, pac_4}
 };
-const UINT32* evil_pacman_sprites[4][4] = {
+const ULONG32* evil_pacman_sprites[4][4] = {
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4},
     {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4}
 };
@@ -442,10 +442,10 @@ m > 0, divide by zero is impossible
 
 0 ≤ X < m
 */
-UINT32 random_generator(Xor *xor)
+ULONG32 random_generator(Xor *xor)
 {
 
-    UINT32 state = xor->value;
+    ULONG32 state = xor->value;
    
     
 	state ^= state << 13;

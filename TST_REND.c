@@ -7,6 +7,8 @@
 #include "font.h"
 #include "bitmaps.h"
 
+#include <stdio.h>
+
 #define LETTERS_PER_BLOCK 6
 
 int arbitrary_numbers_400[] = {
@@ -35,12 +37,13 @@ int arbitrary_numbers_640[] = {
 	210, 240, 39, 255, 492, 515, 174, 377, 255, 37
 };
 
-void next_test(UINT32* base);
-void test_pacman_movement(UINT32* base, Entities* entity, int stop);
-void test_ghost_movement(UINT32* base, Entities* entity, int stop);
+void next_test(ULONG32* base);
+void test_pacman_movement(ULONG32* base, UCHAR8* base8, Entities* entity, int stop);
+void test_ghost_movement(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost, int stop);
+void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
 
-void test_arbitrary_letter(UINT8* base);
 
+void test_arbitrary_letter(UCHAR8* base);
 
 int main()
 {
@@ -51,7 +54,13 @@ int main()
 		&awkward_ghost,
 		&cyclops_ghost
 	};
+	/*
+	Pacman* pac = entity.pacman;
 	Ghost* moustache = entity.moustache_ghost;
+	Ghost* crying = entity.crying_ghost;
+	Ghost* awkward = entity.awkward_ghost;
+	Ghost* cyclops = entity.cyclops_ghost;
+	*/
 
 	void *base32 = Physbase();
 	void *base16 = Physbase();
@@ -65,60 +74,146 @@ int main()
 	next_test(base32);
     render_map(base16, tile_map);
 	render_frame(base32, &entity);
-
 	next_test(base32);
+
 	refresh_screen(base32, &entity);
-	next_test(base32);
+	test_pacman_movement(base32, base8, &entity, 15);
+
+	entity.pacman->direction = RIGHT;
+	entity.pacman->delta_x = 1;
+	entity.pacman->delta_y = 0;
 
 	next_test(base32);
-	pacman.delta_x = 1;
-	pacman.delta_y = 0;
-	test_pacman_movement(base32, &entity, 150);
+	test_pacman_movement(base32, base8, &entity, 16 * 15);
+
+	entity.pacman->direction = UP;
+	entity.pacman->delta_x = 0;
+	entity.pacman->delta_y = -1;
+	test_pacman_movement(base32, base8, &entity, 32 + 16);
 	next_test(base32);
 	
-	crying_ghost.delta_x = 1;
-	crying_ghost.delta_y = 0;
-	test_ghost_movement(base32, &entity, 32);
+	entity.crying_ghost->delta_x = 1;
+	entity.crying_ghost->delta_y = 0;
+	entity.crying_ghost->direction = RIGHT;
 
-	crying_ghost.delta_x = 0;
-	crying_ghost.delta_y = -1;
-	crying_ghost.direction = UP;
-	test_ghost_movement(base32, &entity, 32);
+	test_ghost_movement(base32, base8, &entity, entity.crying_ghost, 31);
 
+	entity.crying_ghost->delta_x = 0;
+	entity.crying_ghost->delta_y = -1;
+	entity.crying_ghost->direction = UP;
+	test_ghost_movement(base32, base8, &entity, entity.crying_ghost, 32+16);
+
+	kill_ghost(entity.moustache_ghost, cell_map);
+	
+	de_render_ghost(base32, entity.moustache_ghost, cell_map);
+	next_test(base32);
+	de_render_ghost(base32, entity.cyclops_ghost, cell_map);
+	de_render_ghost(base32, entity.crying_ghost, cell_map);
+	de_render_ghost(base32, entity.awkward_ghost, cell_map);
+	next_test(base32);
+	
+
+/*
+	awkward->delta_x = -1;
+	awkward->delta_y = 0;
+	awkward->direction = LEFT;
+	test_ghost_movement(base32, base8, &entity, awkward, 32);
+
+	moustache->delta_x = 0;
+	moustache->delta_y = -1;
+	moustache->direction = UP;
+	test_ghost_movement(base32, base8, &entity, moustache, 16);
+
+	moustache->delta_x = 1;
+	moustache->delta_y = 0;
+	moustache->direction = RIGHT;
+	test_ghost_movement(base32, base8, &entity, moustache, 64);
+*/
 	next_test(base32);
 
 	/* *moustache->current_cell = *cell_map[11][23]; */
-	
-	de_render_ghost(base32, &moustache_ghost, tile_map); 
-	
-
 
 	return 0;
 }
 /*waits for input then calls clear_screen();*/
-void next_test(UINT32* base) {
+void next_test(ULONG32* base) {
 	while(!Cconis()){
 	}
 	Cnecin();
 }
 /*Displays all prites within allowable range at aribitrary (x,y)*/
-void test_pacman_movement(UINT32* base, Entities* entity, int stop) {
+void test_pacman_movement(ULONG32* base, UCHAR8* base8, Entities* entity, int stop) {
 	int i;
+	UINT16 cell_x = entity->pacman->x_cell_index;
+	UINT16 cell_y = entity->pacman->y_cell_index;
+
 	for (i=0; i < stop; i++) {
 		clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
 		move_pacman(entity->pacman);
+		update_cells(entity);
+		debug_print(base8, 0, 0, entity->pacman->x_cell_index);
 		render_frame(base, entity);
+		
 		if (i % 4 == 0) {
 			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
 		}
+		/*
+		if (entity->pacman->x_cell_index != cell_x) {
+			next_test(base);
+			cell_x = entity->pacman->x_cell_index;
+		}
+		*/
+		if (entity->pacman->y_cell_index != cell_y && entity->pacman->delta_x == 0) {
+			next_test(base);
+			cell_y = entity->pacman->y_cell_index;
+		}
+		/*Something similar to this can be used for collision checking?*/
 	}
 }
-void test_ghost_movement(UINT32* base, Entities* entity, int stop) {
+void test_ghost_movement(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost, int stop) {
 	int i;
-	Ghost* ghost = entity->crying_ghost;
+	int cell_x = ghost->x_cell_index;
+	int cell_y = ghost->y_cell_index;
+
+	const char strx[] = "X: ";
+	const char stry[] = "Y: ";	
+	/*
+	next_test(base);
+	printf("X: %d\n", ghost->x_cell_index);
+	next_test(base);
+	printf("Y: %d\n", ghost->y_cell_index);
+	*/
+
 	for (i=0; i < stop; i++) {
+		int j;
 		clear_bitmap_32(base, ghost->x, ghost->y, SPRITE_HEIGHT); 
 		move_ghost(ghost);
+		update_cells(entity);
+		
+		for (j = 0; j < 14; j++) {
+			clear_letter(base8, j*LETTER_WIDTH, 0);
+		}
+
+		plot_string(base8, 0, 0, font, strx);
+		debug_print(base8, 4*LETTER_WIDTH, 0, ghost->x_cell_index);
+		plot_string(base8, 8*LETTER_WIDTH, 0, font, stry);
+		debug_print(base8, 12*LETTER_WIDTH, 0, ghost->y_cell_index);
 		render_frame(base, entity);
+		if (i % 8 == 0) {
+			ghost->current_frame = ((ghost->current_frame) + 1) % 2;
+		}
 	}
+}
+
+void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
+    UINT16 tens = value / 10;
+    UINT16 ones = value % 10;
+
+    unsigned int tens_char = tens + '0';
+    unsigned int ones_char = ones + '0';
+
+	clear_letter(base, x, y);
+	clear_letter(base, x+LETTER_WIDTH, y);
+    plot_letter(base, x , y, font, tens_char);
+    plot_letter(base, x + LETTER_WIDTH, y, font, ones_char);
 }

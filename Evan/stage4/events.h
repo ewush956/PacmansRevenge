@@ -3,13 +3,13 @@
 #include "model.h"
 
 typedef struct {
-    UINT32 value; /**< Current state of the random number generator. */
+    ULONG32 value; /**< Current state of the random number generator. */
 }Xor;
 
-void handle_ghost_collision(UINT8 collision_type, Ghost *ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct);
+void handle_ghost_collision(UCHAR8 collision_type, Ghost *ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct);
 
-UINT32 random_number_generator(Xor *xor);
+ULONG32 random_number_generator(Xor *xor);
 
-void handle_pacman_collision(UINT8 collision_type, Pacman *pacman);
+void handle_pacman_collision(UCHAR8 collision_type, Pacman *pacman);
 
 #endif

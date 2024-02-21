@@ -4,10 +4,10 @@
 #include "types.h"
 #include "bitmaps.h"
 
-#define UP ((UINT8)1)
-#define DOWN ((UINT8)2)
-#define LEFT ((UINT8)3)
-#define RIGHT ((UINT8)4)
+#define UP ((UCHAR8)1)
+#define DOWN ((UCHAR8)2)
+#define LEFT ((UCHAR8)3)
+#define RIGHT ((UCHAR8)4)
 
 #define MAP_TILE_LENGTH 40        /* 1 tile = 16 pixels*/ 
 #define MAP_TILE_HEIGHT 24   
@@ -36,7 +36,7 @@ typedef struct
 	UINT16 x, y;					/*positon */
 	int delta_x, delta_y; 		/* displacement (horzontal or vertical) */
 	int current_frame;		/* current sprite (state) index */
-	UINT8 direction;		/*UP, DOWN, LEFT, RIGHT*/
+	UCHAR8 direction;		/*UP, DOWN, LEFT, RIGHT*/
 	bool is_evil;
 	bool has_collided; 
 	UINT16 x_cell_index, y_cell_index; 
@@ -51,8 +51,8 @@ typedef struct
 	UINT16 x,y;						/*2 2 1 1 2 1 = 9*/
 	int delta_x,delta_y;
 	int current_frame;
-	UINT8 direction;
-	UINT8 state;		
+	UCHAR8 direction;
+	UCHAR8 state;		
 	UINT16 x_cell_index, y_cell_index;
 	struct Cell *current_cell;
 
@@ -89,7 +89,7 @@ typedef struct {
 void move_ghost (Ghost *ghost);
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity);
 void move_pacman (Pacman *pacman);/*,UINT16 delta_x, UINT16 delta_y); (may need this later so leaving parameters)*/ 
-UINT8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta);
+UCHAR8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta);
 /*
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH]);
 */
