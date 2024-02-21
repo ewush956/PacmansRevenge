@@ -47,12 +47,6 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
 *************************************************************/
 void render_frame(ULONG32* base, Entities* entity) {
 
-    clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
-    clear_bitmap_32(base, entity->crying_ghost->x, entity->crying_ghost->y, SPRITE_HEIGHT);
-    clear_bitmap_32(base, entity->moustache_ghost->x, entity->moustache_ghost->y, SPRITE_HEIGHT);
-    clear_bitmap_32(base, entity->awkward_ghost->x, entity->awkward_ghost->y, SPRITE_HEIGHT);
-    clear_bitmap_32(base, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SPRITE_HEIGHT);
-
     render_pacman(base, entity->pacman);
     render_ghosts(base, entity);
     render_timer(base, entity->timer);

@@ -151,17 +151,32 @@ void update_cells(Entities* entity) {
     Ghost* cyclops = entity->cyclops_ghost;
     Ghost* awkward = entity->awkward_ghost;
 
-    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->direction, DEFAULT);
+    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, 
+                pacman->direction, DEFAULT,
+                pacman->delta_x, pacman->delta_y);
     /*Pacmans state doesn't matter here, probably faster to pass in const value*/
 
-    update_cell(&crying->x_cell_index, &crying->y_cell_index, crying->x, crying->y, crying->direction, crying->state);
-    update_cell(&moustache->x_cell_index, &moustache->y_cell_index, moustache->x, moustache->y, moustache->direction, moustache->state);
-    update_cell(&cyclops->x_cell_index, &cyclops->y_cell_index, cyclops->x, cyclops->y, cyclops->direction, cyclops->state);
-    update_cell(&awkward->x_cell_index, &awkward->y_cell_index, awkward->x, awkward->y, awkward->direction, awkward->state);
-}
-void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, UINT16 y_position, UCHAR8 direction, UCHAR8 state) {
+    update_cell(&crying->x_cell_index, &crying->y_cell_index, crying->x, 
+                crying->y, crying->direction, crying->state,
+                crying->delta_x, crying->delta_y);
 
-    if (state == DEAD || direction == STOP) {
+    update_cell(&moustache->x_cell_index, &moustache->y_cell_index, 
+                moustache->x, moustache->y, moustache->direction, moustache->state,
+                moustache->delta_x, moustache->delta_y);
+
+    update_cell(&cyclops->x_cell_index, &cyclops->y_cell_index, cyclops->x, 
+                cyclops->y, cyclops->direction, cyclops->state,
+                cyclops->delta_x, cyclops->delta_y);
+
+    update_cell(&awkward->x_cell_index, &awkward->y_cell_index, awkward->x, 
+                awkward->y, awkward->direction, awkward->state,
+                awkward->delta_x, awkward->delta_y);
+}
+void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, 
+                UINT16 y_position, UCHAR8 direction, UCHAR8 state,
+                int delta_x, int delta_y) {
+
+    if (state == DEAD || (delta_x == 0 && delta_y == 0)) {
         return;
     }
     if (x_position % PIXELS_PER_CELL == 0) {

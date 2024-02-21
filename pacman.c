@@ -20,12 +20,12 @@
 *          direction, and cell index on the game map.
 *************************************************************/
 Pacman pacman = {
-    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 19 + Y_PIXEL_OFFSET-1,  
+    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 18 + Y_PIXEL_OFFSET,  
     0,0,           /*Initial Displacement*/
     0,             /*Initial state index*/
     UP,            /*Initial direction*/
     DEFAULT,       /*Initial state*/
-    19,19,          /*Cell index -> y, x*/
+    18,19,          /*Cell index -> y, x*/
     PACMAN
 };
 /*************************************************************
@@ -166,6 +166,7 @@ int main()
 
                 update_cells(&entity);
 
+                debug_cells_pac(base8, &pacman);
                 render_frame(base32, &entity);
 
             time_then = time_now;
@@ -197,7 +198,33 @@ ULONG32 get_time()
 	return timeNow;
 
 }
+void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
+    UINT16 tens = value / 10;
+    UINT16 ones = value % 10;
 
+    unsigned int tens_char = tens + '0';
+    unsigned int ones_char = ones + '0';
+
+	clear_letter(base, x, y);
+	clear_letter(base, x+LETTER_WIDTH, y);
+    plot_letter(base, x , y, font, tens_char);
+    plot_letter(base, x + LETTER_WIDTH, y, font, ones_char);
+}
+void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
+    int j;
+
+    const char strx[] = "X: ";
+	const char stry[] = "Y: ";	
+
+    for (j = 0; j < 14; j++) {
+    	clear_letter(base, j*LETTER_WIDTH, 0);
+	}
+
+    plot_string(base, 0, 0, font, strx);
+    debug_print(base, 4*LETTER_WIDTH, 0, pacman->x_cell_index);
+    plot_string(base, 8*LETTER_WIDTH, 0, font, stry);
+    debug_print(base, 12*LETTER_WIDTH, 0, pacman->y_cell_index);
+}
 
 /*TODO:
 1) Initialize cell map
