@@ -82,9 +82,10 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
     case GHOST_TYPE_CYCLOPS:
         break;        
                
-    case OPEN_PATH: 
+  case OPEN_PATH: 
         switch (pacman->direction)
         {
+        /*
         case UP:
             if ((cell_map[pacman->y_cell_index - 1][pacman->x_cell_index + 1].open_path == FALSE) &&
                 (pacman->x % PIXELS_PER_CELL != 0) ) {
@@ -94,7 +95,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
             break;
 
         case DOWN:
-            if ((cell_map[pacman->y_cell_index + 1][pacman->x_cell_index + 1].open_path == FALSE) &&
+            if ((cell_map[pacman->y_cell_index + 2][pacman->x_cell_index + 2].open_path == FALSE) &&
                 (pacman->x % PIXELS_PER_CELL != 0) ) {
                 pacman->x = (pacman->x / PIXELS_PER_CELL) * PIXELS_PER_CELL;                
             }
@@ -103,13 +104,38 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         case LEFT:
             if ((cell_map[pacman->y_cell_index + 1][pacman->x_cell_index - 1].open_path == FALSE) &&
                 (pacman->y % PIXELS_PER_CELL != 0) ) {
-                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL;
+                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL ;
             }
             break;
 
         case RIGHT:
             if ((cell_map[pacman->y_cell_index + 1][pacman->x_cell_index + 1].open_path == FALSE) &&
                 (pacman->y % PIXELS_PER_CELL != 0) ) {
+                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL;
+                }
+            break;
+            */
+            case UP:
+            if (pacman->x % PIXELS_PER_CELL != 0) {
+                
+                pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;
+            }
+            break;
+
+        case DOWN:
+            if (pacman->x % PIXELS_PER_CELL != 0) {
+                pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;                
+            }
+            break;
+
+        case LEFT:
+            if (pacman->y % PIXELS_PER_CELL != 0) {
+                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL;
+            }
+            break;
+
+        case RIGHT:
+            if (pacman->y % PIXELS_PER_CELL != 0) {
                 pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL;
                 }
             break;
@@ -133,7 +159,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
      /* pacman -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
     /*  pacman -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
-}
+    }
 /***********************************************************
 *  Uses an XOR shift algorthm to generate a random number 
 *   -For randomizing direction of any ghost
@@ -155,9 +181,9 @@ void handle_collisions(Entities* entity, Xor *xor) {
                                     pac->delta_y, 
                                     pac->delta_x,
                                     pac->type);
-    handle_pacman_collision(collision_type, entity);
-    if (collision_type != OPEN_PATH)
-        /*handle_pacman_collision(collision_type, entity);*/
+    handle_pacman_collision(collision_type, entity); 
+    /* if (collision_type != OPEN_PATH) */
+        handle_pacman_collision(collision_type, entity);
 
 
     collision_type = check_collision(entity, awkward->y_cell_index, 

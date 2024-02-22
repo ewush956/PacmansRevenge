@@ -92,9 +92,17 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
     all_ghosts[3] = entity->moustache_ghost;
 
 /*LEFT: DX=-1, DY=0*/
-    if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE)
-        return WALL;
-    
+    if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
+        if ((entity->pacman->direction == UP || entity->pacman->direction == DOWN) &&
+           (entity->pacman->y >= (UINT16)cell_map[object_y_index][object_x_index].y_position))
+            return WALL;
+        if ((entity->pacman->direction == LEFT || entity->pacman->direction == RIGHT) &&
+           (entity->pacman->x >= (UINT16)cell_map[object_y_index][object_x_index].x_position))
+            return WALL;  
+    }
+    return OPEN_PATH;
+
+        /*tile_map[object_y_index + y_delta][object_x_index + x_delta] != 1) */
 
     for (i = 0; i < 4; i++){
         /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
@@ -200,7 +208,7 @@ void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position,
     */
     }
     *x_index = x_position >> 4; 
-    *y_index = y_position >> 4;
+    *y_index = (y_position >> 4) - 1;
 }
 /*************************************************************
 * Function: kill_ghost

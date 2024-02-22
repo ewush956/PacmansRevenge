@@ -20,12 +20,12 @@
 *          direction, and cell index on the game map.
 *************************************************************/
 Pacman pacman = {
-    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 19 + Y_PIXEL_OFFSET,  
+    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,  
     0,0,           /*Initial Displacement*/
     0,             /*Initial state index*/
     UP,            /*Initial direction*/
     DEFAULT,       /*Initial state*/
-    19,19,          /*Cell index -> y, x*/
+    21,19,          /*Cell index -> y, x*/
     PACMAN
 };
 /*************************************************************
@@ -149,7 +149,6 @@ int main()
             {
                 input = (char)Cnecin();
             }
-                set_input(&pacman,input);
 
 
                 clear_bitmap_32(base32, pacman.x, pacman.y, SPRITE_HEIGHT); 
@@ -157,7 +156,9 @@ int main()
                 clear_bitmap_32(base32, moustache_ghost.x, moustache_ghost.y, SPRITE_HEIGHT);
                 clear_bitmap_32(base32, awkward_ghost.x, awkward_ghost.y, SPRITE_HEIGHT);
                 clear_bitmap_32(base32, cyclops_ghost.x, cyclops_ghost.y, SPRITE_HEIGHT);
+                update_cells(&entity);
 
+                set_input(&pacman,input);
                 handle_collisions(&entity, &xor);       /*Checks and handles collisions*/
 
                 move_pacman(entity.pacman);
@@ -165,7 +166,7 @@ int main()
                 move_ghost(&crying_ghost);
                 move_ghost(&cyclops_ghost);
                 move_ghost(&awkward_ghost);
-                update_cells(&entity);
+                
 
                 debug_cells_pac(base8, &pacman);
                 render_frame(base32, &entity);
