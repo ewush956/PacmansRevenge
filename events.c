@@ -56,6 +56,14 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
             ghost -> direction = DOWN_RANDOM;
     }
 }
+/*************************************************************
+ * Function: handle_pacman_collision
+ * Purpose: Handles collisions between pacman and other entities
+ * Parameters: ObjectType object_type - The type of object
+ *              Entities* entity - Pointer to the entity
+ * Details: 
+ * the OPEN_PATH case will lock pacmans x / y movement to valid positions
+****************************************************************/
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     /*if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone*/
@@ -63,6 +71,14 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
     
     switch(object_type)
     {
+    case OPEN_PATH:
+        if (entity->pacman->direction == UP || entity->pacman->direction == DOWN) {
+            pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;
+        }
+        else if (entity->pacman->direction == LEFT || entity->pacman->direction == RIGHT) {
+            pacman->y = pacman->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
+        }
+        break;
     case WALL:
 
         pacman->delta_y = 0;
@@ -81,83 +97,8 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     case GHOST_TYPE_CYCLOPS:
         break;        
-               
-    case OPEN_PATH: 
-        switch (pacman->direction)
-        {
-        /*
-        case UP:
-            if ((cell_map[pacman->y_cell_index - 1][pacman->x_cell_index + 1].open_path == FALSE) &&
-                (pacman->x % PIXELS_PER_CELL != 0) ) {
-                
-                pacman->x = (pacman->x / PIXELS_PER_CELL) * PIXELS_PER_CELL ;
-            }
-            break;
-
-        case DOWN:
-            if ((cell_map[pacman->y_cell_index + 2][pacman->x_cell_index + 2].open_path == FALSE) &&
-                (pacman->x % PIXELS_PER_CELL != 0) ) {
-                pacman->x = (pacman->x / PIXELS_PER_CELL) * PIXELS_PER_CELL;                
-            }
-            break;
-
-        case LEFT:
-            if ((cell_map[pacman->y_cell_index + 1][pacman->x_cell_index - 1].open_path == FALSE) &&
-                (pacman->y % PIXELS_PER_CELL != 0) ) {
-                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL ;
-            }
-            break;
-
-        case RIGHT:
-            if ((cell_map[pacman->y_cell_index + 1][pacman->x_cell_index + 1].open_path == FALSE) &&
-                (pacman->y % PIXELS_PER_CELL != 0) ) {
-                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL;
-                }
-            break;
-            */
-            case UP:
-            pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;
-            break;
-
-
-        case DOWN:
-            pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;                
-            break;
-
-        case LEFT:
-            if (pacman->y % PIXELS_PER_CELL != 0) {
-                /*pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL; */
-            }
-                pacman->y = pacman->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
-            break;
-
-        case RIGHT:
-            if (pacman->y % PIXELS_PER_CELL != 0) {
-               /* pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL; */
-                }
-                pacman->y = pacman->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
-            break;
-        }
-        break;
     }
-
-    /*move_pacman(&pacman);*/
-
-
-
-/*
-   if (pacman->direction == UP)
-            pacman ->delta_y = 0;
-        else if (pacman ->direction == DOWN)
-            pacman->delta_y = 0;
-        else if(pacman -> direction == RIGHT)
-            pacman->delta_x = 0;
-        else
-            pacman ->delta_x = 0;
-
-     /* pacman -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
-    /*  pacman -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
-    }
+}
 /***********************************************************
 *  Uses an XOR shift algorthm to generate a random number 
 *   -For randomizing direction of any ghost
@@ -179,8 +120,9 @@ void handle_collisions(Entities* entity, Xor *xor) {
                                     pac->delta_y, 
                                     pac->delta_x);
     handle_pacman_collision(collision_type, entity); 
-    /* if (collision_type != OPEN_PATH) */
-        /*handle_pacman_collision(collision_type, entity);*/
+    /*NOTE:
+     currently handle_pacman_collision is handling all cases, thats why it's not in an if block
+    we should change that at some point but my brain hurts and I no no wanna :(*/
 
 
     collision_type = check_collision(entity, awkward->y_cell_index, 
