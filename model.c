@@ -74,35 +74,18 @@ void move_ghost (Ghost *ghost)
 *          with any ghost is detected, and 0 if no collision is detected. The function
 *          also logs the collision location for ghost collisions.
 *************************************************************/
-ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta,
+ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index, int y_delta, int x_delta,
                            ObjectType curr_type)
 {  
     
     ObjectType collision = OPEN_PATH;
     int i;
-   /* Enitites *crying = entity->crying_ghost; */
-    
-
-   /* collsion with itsefl*/
 
     Ghost *all_ghosts[4];
     all_ghosts[0] = entity->crying_ghost;
     all_ghosts[1] = entity->awkward_ghost;
     all_ghosts[2] = entity->cyclops_ghost;
     all_ghosts[3] = entity->moustache_ghost;
-
-/*LEFT: DX=-1, DY=0*/
-    if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
-        if ((entity->pacman->direction == UP || entity->pacman->direction == DOWN) &&
-           (entity->pacman->y >= (UINT16)cell_map[object_y_index][object_x_index].y_position))
-            return WALL;
-        if ((entity->pacman->direction == LEFT || entity->pacman->direction == RIGHT) &&
-           (entity->pacman->x >= (UINT16)cell_map[object_y_index][object_x_index].x_position))
-            return WALL;  
-    }
-    return OPEN_PATH;
-
-        /*tile_map[object_y_index + y_delta][object_x_index + x_delta] != 1) */
 
     for (i = 0; i < 4; i++){
         /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
@@ -119,6 +102,40 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
     }
     return collision;
 }    
+/*************************************************************
+ * Function: check_pacman_collision
+ * Purpose: Checks for collisions between an object and walls.
+ * Parameters: Entities* entity - Pointer to the entities structure containing
+ *              ghosts, UINT16 object_y_index - Y index of the object,
+ *              UINT16 object_x_index - X index of the object,
+ *              UINT16 y_delta - Y direction movement delta,
+ *              UINT16 x_delta - X direction movement delta.
+ * Details: Determines if the specified object's next position (based on deltas)
+ *          will result in a collision with a wall.
+ *          It returns WALL if a wall collision is detected, and 0 if no collision
+ *          is detected.
+ *************************************************************/
+ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
+                                  UINT16 object_x_index, int y_delta, int x_delta) 
+                                  {
+    UINT16 effective_y_position;
+    UINT16 effective_x_position;
+    UINT16 COLLISION_THRESHOLD = 1;
+
+    if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
+        if ((entity->pacman->direction == UP || entity->pacman->direction == DOWN)) {
+            effective_y_position = entity->pacman->y - COLLISION_THRESHOLD;
+            if (effective_y_position <= (UINT16)cell_map[object_y_index][object_x_index].y_position)
+                return WALL;
+        }
+        if ((entity->pacman->direction == LEFT || entity->pacman->direction == RIGHT)) {
+            effective_x_position = entity->pacman->x - COLLISION_THRESHOLD;
+            if (effective_x_position <= (UINT16)cell_map[object_y_index][object_x_index].x_position)
+                return WALL;  
+        }
+    }
+    return OPEN_PATH;
+}
 /*************************************************************
 * Function: init_map_cells
 * Purpose: Initializes the cell map with positions and path openness based on the tile map.
@@ -158,54 +175,26 @@ void update_cells(Entities* entity) {
     Ghost* cyclops = entity->cyclops_ghost;
     Ghost* awkward = entity->awkward_ghost;
 
-    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, 
-                pacman->direction, DEFAULT,
-                pacman->delta_x, pacman->delta_y);
+    update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, DEFAULT);
     /*Pacmans state doesn't matter here, probably faster to pass in const value*/
 
     update_cell(&crying->x_cell_index, &crying->y_cell_index, crying->x, 
-                crying->y, crying->direction, crying->state,
-                crying->delta_x, crying->delta_y);
+                crying->y, crying->state);
 
     update_cell(&moustache->x_cell_index, &moustache->y_cell_index, 
-                moustache->x, moustache->y, moustache->direction, moustache->state,
-                moustache->delta_x, moustache->delta_y);
+                moustache->x, moustache->y, moustache->state);
 
     update_cell(&cyclops->x_cell_index, &cyclops->y_cell_index, cyclops->x, 
-                cyclops->y, cyclops->direction, cyclops->state,
-                cyclops->delta_x, cyclops->delta_y);
+                cyclops->y, cyclops->state);
 
     update_cell(&awkward->x_cell_index, &awkward->y_cell_index, awkward->x, 
-                awkward->y, awkward->direction, awkward->state,
-                awkward->delta_x, awkward->delta_y);
+                awkward->y, awkward->state);
 }
 void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, 
-                UINT16 y_position, UCHAR8 direction, UCHAR8 state,
-                int delta_x, int delta_y) {
+                UINT16 y_position, UCHAR8 state) {
 
-    if (state == DEAD || (delta_x == 0 && delta_y == 0)) {
+    if (state == DEAD) {
         return;
-    /*
-    }
-    if (x_position % PIXELS_PER_CELL == 0) {
-
-        if (direction == LEFT) {
-            (*x_index) = (*x_index)-1;
-        } 
-        else if (direction == RIGHT) {
-            (*x_index) = (*x_index)+1;
-        }
-
-    }
-    if (y_position % PIXELS_PER_CELL == 0) {
-        if (direction == UP) {
-            (*y_index) = (*y_index)-1;
-        } 
-        else if (direction == DOWN) {
-            (*y_index) = (*y_index)+1;
-        }
-    }
-    */
     }
     *x_index = x_position >> 4; 
     *y_index = (y_position >> 4) - 1;

@@ -82,7 +82,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
     case GHOST_TYPE_CYCLOPS:
         break;        
                
-  case OPEN_PATH: 
+    case OPEN_PATH: 
         switch (pacman->direction)
         {
         /*
@@ -116,28 +116,26 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
             break;
             */
             case UP:
-            if (pacman->x % PIXELS_PER_CELL != 0) {
-                
-                pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;
-            }
+            pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;
             break;
 
+
         case DOWN:
-            if (pacman->x % PIXELS_PER_CELL != 0) {
-                pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;                
-            }
+            pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;                
             break;
 
         case LEFT:
             if (pacman->y % PIXELS_PER_CELL != 0) {
-                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL;
+                /*pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL; */
             }
+                pacman->y = pacman->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
             break;
 
         case RIGHT:
             if (pacman->y % PIXELS_PER_CELL != 0) {
-                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL;
+               /* pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL; */
                 }
+                pacman->y = pacman->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
             break;
         }
         break;
@@ -176,14 +174,13 @@ void handle_collisions(Entities* entity, Xor *xor) {
     Ghost* cyclops = entity->cyclops_ghost;
     Ghost* awkward = entity->awkward_ghost;
 
-    collision_type = check_collision(entity, pac->y_cell_index, 
+    collision_type = check_pacman_collision(entity, pac->y_cell_index, 
                                     pac->x_cell_index, 
                                     pac->delta_y, 
-                                    pac->delta_x,
-                                    pac->type);
+                                    pac->delta_x);
     handle_pacman_collision(collision_type, entity); 
     /* if (collision_type != OPEN_PATH) */
-        handle_pacman_collision(collision_type, entity);
+        /*handle_pacman_collision(collision_type, entity);*/
 
 
     collision_type = check_collision(entity, awkward->y_cell_index, 

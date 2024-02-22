@@ -150,6 +150,7 @@ int main()
                 input = (char)Cnecin();
             }
 
+                render_frame(base32, &entity);
 
                 clear_bitmap_32(base32, pacman.x, pacman.y, SPRITE_HEIGHT); 
                 clear_bitmap_32(base32, crying_ghost.x, crying_ghost.y, SPRITE_HEIGHT);
@@ -169,7 +170,6 @@ int main()
                 
 
                 debug_cells_pac(base8, &pacman);
-                render_frame(base32, &entity);
 
             time_then = time_now;
         }
