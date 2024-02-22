@@ -75,7 +75,7 @@ void move_ghost (Ghost *ghost)
 *          also logs the collision location for ghost collisions.
 *************************************************************/
 ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,UINT16 y_delta, UINT16 x_delta,
-                     ObjectType curr_type)
+                           ObjectType curr_type)
 {  
     
     ObjectType collision = OPEN_PATH;
@@ -91,27 +91,26 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
     all_ghosts[2] = entity->cyclops_ghost;
     all_ghosts[3] = entity->moustache_ghost;
 
+/*LEFT: DX=-1, DY=0*/
     if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE)
-        collision = WALL;
+        return WALL;
+    
 
-    else{
-        for (i = 0; i < 4; i++){
-            /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
-            
-            if (all_ghosts[i]->type != curr_type) /* no collsiion with ghost itself only other objs*/
-            {
-                if ((all_ghosts[i]->x_cell_index == object_x_index + x_delta &&
-                    all_ghosts[i]->y_cell_index == object_y_index + y_delta) ||
-                    (all_ghosts[i]->x_cell_index == object_x_index && 
-                    all_ghosts[i]->y_cell_index == object_y_index))
-                   /* collision = OBJECT; */
-                   collision = all_ghosts[i]->type;
-            }
+    for (i = 0; i < 4; i++){
+        /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
+        
+        if (all_ghosts[i]->type != curr_type) /* no collsiion with ghost itself only other objs*/
+        {
+            if ((all_ghosts[i]->x_cell_index == object_x_index + x_delta &&
+                all_ghosts[i]->y_cell_index == object_y_index + y_delta) ||
+                (all_ghosts[i]->x_cell_index == object_x_index && 
+                all_ghosts[i]->y_cell_index == object_y_index))
+                /* collision = OBJECT; */
+                collision = all_ghosts[i]->type;
         }
-    }    
+    }
     return collision;
-
-}
+}    
 /*************************************************************
 * Function: init_map_cells
 * Purpose: Initializes the cell map with positions and path openness based on the tile map.
@@ -125,7 +124,7 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
     int i, j;
     for (i=0; i < MAP_TILE_HEIGHT; i++){
         for(j=0; j < MAP_TILE_LENGTH; j ++){
-            cell_map[i][j].x_position = X_PIXEL_OFFSET + (j << 4);  /* MULTIPLYING by 16 */
+            cell_map[i][j].x_position = (j << 4);  /* MULTIPLYING by 16 */
             cell_map[i][j].y_position = Y_PIXEL_OFFSET + (i << 4);
             if (tile_map[i][j] == 0) {
                 cell_map[i][j].open_path = TRUE;
@@ -178,6 +177,7 @@ void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position,
 
     if (state == DEAD || (delta_x == 0 && delta_y == 0)) {
         return;
+    /*
     }
     if (x_position % PIXELS_PER_CELL == 0) {
 
@@ -197,6 +197,10 @@ void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position,
             (*y_index) = (*y_index)+1;
         }
     }
+    */
+    }
+    *x_index = x_position >> 4; 
+    *y_index = y_position >> 4;
 }
 /*************************************************************
 * Function: kill_ghost

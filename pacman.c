@@ -20,12 +20,12 @@
 *          direction, and cell index on the game map.
 *************************************************************/
 Pacman pacman = {
-    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 18 + Y_PIXEL_OFFSET,  
+    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 19 + Y_PIXEL_OFFSET,  
     0,0,           /*Initial Displacement*/
     0,             /*Initial state index*/
     UP,            /*Initial direction*/
     DEFAULT,       /*Initial state*/
-    18,19,          /*Cell index -> y, x*/
+    19,19,          /*Cell index -> y, x*/
     PACMAN
 };
 /*************************************************************
@@ -35,10 +35,10 @@ Pacman pacman = {
 *          and cell index on the game map.
 *************************************************************/
 Ghost crying_ghost = {
-    PIXELS_PER_CELL * 17 + 1, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
-    1,0,
+    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
+    0,0,
     0,
-    STOP,
+    LEFT,
     DEFAULT,
     (UINT16)10, (UINT16)17,
     GHOST_TYPE_CRYING
@@ -50,10 +50,10 @@ Ghost crying_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Ghost cyclops_ghost = {
-    PIXELS_PER_CELL * 17 + 1, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
-    STOP,
+    LEFT,
     DEFAULT,
     12, 17,
     GHOST_TYPE_CYCLOPS
@@ -65,10 +65,10 @@ Ghost cyclops_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Ghost moustache_ghost = {
-    PIXELS_PER_CELL * 21 - 1, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
+    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
     0,0,
     0,
-    STOP,
+    RIGHT,
     DEFAULT,
     (UINT16)10, (UINT16)21,
     GHOST_TYPE_MOUSTACHE
@@ -80,10 +80,10 @@ Ghost moustache_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Ghost awkward_ghost = {
-    PIXELS_PER_CELL * 21 - 1, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
     0,0,
     0,
-    STOP,
+    RIGHT,
     DEFAULT,
     12, 21,
     GHOST_TYPE_AWKWARD
@@ -150,7 +150,7 @@ int main()
                 input = (char)Cnecin();
             }
                 set_input(&pacman,input);
-                handle_collisions(&entity, &xor);       /*Checks and handles collisions*/
+
 
                 clear_bitmap_32(base32, pacman.x, pacman.y, SPRITE_HEIGHT); 
                 clear_bitmap_32(base32, crying_ghost.x, crying_ghost.y, SPRITE_HEIGHT);
@@ -158,12 +158,13 @@ int main()
                 clear_bitmap_32(base32, awkward_ghost.x, awkward_ghost.y, SPRITE_HEIGHT);
                 clear_bitmap_32(base32, cyclops_ghost.x, cyclops_ghost.y, SPRITE_HEIGHT);
 
-                move_pacman(&pacman);
+                handle_collisions(&entity, &xor);       /*Checks and handles collisions*/
+
+                move_pacman(entity.pacman);
                 move_ghost(&moustache_ghost);
                 move_ghost(&crying_ghost);
                 move_ghost(&cyclops_ghost);
                 move_ghost(&awkward_ghost);
-
                 update_cells(&entity);
 
                 debug_cells_pac(base8, &pacman);

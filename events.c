@@ -59,14 +59,16 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     /*if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone*/
-
+    Pacman *pacman = entity->pacman;
+    
     switch(object_type)
     {
     case WALL:
-        entity->pacman->delta_y = 0;
-        entity->pacman->delta_x = 0;
-        break;
 
+        pacman->delta_y = 0;
+        pacman->delta_x = 0;
+        
+        break;
     case GHOST_TYPE_CRYING:
        /* kill_ghost(&entity->crying_ghost, cell_map);       */                     
         break;
@@ -78,7 +80,41 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         break;
 
     case GHOST_TYPE_CYCLOPS:
-        break;                   
+        break;        
+               
+    case OPEN_PATH: 
+        switch (pacman->direction)
+        {
+        case UP:
+            if ((cell_map[pacman->y_cell_index - 1][pacman->x_cell_index + 1].open_path == FALSE) &&
+                (pacman->x % PIXELS_PER_CELL != 0) ) {
+                
+                pacman->x = (pacman->x / PIXELS_PER_CELL) * PIXELS_PER_CELL ;
+            }
+            break;
+
+        case DOWN:
+            if ((cell_map[pacman->y_cell_index + 1][pacman->x_cell_index + 1].open_path == FALSE) &&
+                (pacman->x % PIXELS_PER_CELL != 0) ) {
+                pacman->x = (pacman->x / PIXELS_PER_CELL) * PIXELS_PER_CELL;                
+            }
+            break;
+
+        case LEFT:
+            if ((cell_map[pacman->y_cell_index + 1][pacman->x_cell_index - 1].open_path == FALSE) &&
+                (pacman->y % PIXELS_PER_CELL != 0) ) {
+                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL;
+            }
+            break;
+
+        case RIGHT:
+            if ((cell_map[pacman->y_cell_index + 1][pacman->x_cell_index + 1].open_path == FALSE) &&
+                (pacman->y % PIXELS_PER_CELL != 0) ) {
+                pacman->y = (pacman->y / PIXELS_PER_CELL) * PIXELS_PER_CELL;
+                }
+            break;
+        }
+        break;
     }
 
     /*move_pacman(&pacman);*/
@@ -119,9 +155,9 @@ void handle_collisions(Entities* entity, Xor *xor) {
                                     pac->delta_y, 
                                     pac->delta_x,
                                     pac->type);
-
+    handle_pacman_collision(collision_type, entity);
     if (collision_type != OPEN_PATH)
-        handle_pacman_collision(collision_type, entity);
+        /*handle_pacman_collision(collision_type, entity);*/
 
 
     collision_type = check_collision(entity, awkward->y_cell_index, 
@@ -184,21 +220,25 @@ void set_input(Pacman *pacman, char input)
 	{
 		case W_KEY: 
 			pacman -> delta_y = -1;   		/* UP 1*/
+            pacman -> delta_x = 0;
             pacman -> direction = UP; 
 			break;
 				
 		case A_KEY: 
 			pacman -> delta_x = -1;			/*Left 3*/
+            pacman -> delta_y = 0;
             pacman -> direction = LEFT;
 			break;
 				
 		case S_KEY: 
 			pacman -> delta_y = 1;			/*Down 2*/
+            pacman -> delta_x = 0;
             pacman -> direction = DOWN;
 			break;
 				
 		case D_KEY: 
 			pacman -> delta_x = 1;			/* Right 4*/
+            pacman -> delta_y = 0;
             pacman -> direction = RIGHT;
 			break;
 
