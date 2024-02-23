@@ -53,35 +53,35 @@ void move_ghost (Ghost *ghost)
 	{
 		switch(direction)
 		{
-			case UP_RANDOMN:
+			case UP:
 				ghost -> y_cell_index -= 1;
 				ghost -> delta_x = 0;
                 ghost ->delta_y = -1;
 				break;
 			
-			case DOWN_RANDOM:
+			case DOWN:
 				ghost -> y_cell_index += 1;
 				ghost -> delta_x = 0;
                 ghost ->delta_y = 1;
 				break;
 			
-			case RIGHT_RANDOM:
+			case RIGHT:
 				ghost -> x_cell_index += 1;
 				ghost -> delta_y = 0;
                 ghost ->delta_x = 1;
 				break;
 			
-			case LEFT_RANDOM:
+			case LEFT:
 				ghost -> x_cell_index -= 1;
 				ghost -> delta_y = 0;
                 ghost -> delta_x = -1;
 				break;
 		}
 	
-        if (ghost->direction == UP_RANDOMN || ghost->direction == DOWN_RANDOM) 
+        if (ghost->direction == UP || ghost->direction == DOWN) 
             ghost->x = ghost->x_cell_index * PIXELS_PER_CELL;
         
-        else if (ghost->direction == LEFT_RANDOM || ghost->direction == RIGHT_RANDOM) 
+        else if (ghost->direction == LEFT|| ghost->direction == RIGHT) 
         {
             ghost->y = ghost->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
         }

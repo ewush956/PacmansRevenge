@@ -90,9 +90,14 @@ typedef struct {
 	Ghost *awkward_ghost;
 	Ghost *moustache_ghost;
 	Ghost *cyclops_ghost;
-
 	Timer *timer;
 }Entities;
+
+typedef struct {
+
+	UCHAR8 direction;
+
+}Entity;
 
 void move_ghost (Ghost *ghost);
 void move_pacman (Pacman *pacman);

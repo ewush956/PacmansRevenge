@@ -28,5 +28,8 @@ void handle_collisions(Entities* entity, Xor *xor);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 
+void update_awkward_direction (Ghost *awkward );
+void update_crying_direction(Ghost *crying);
+
 
 #endif

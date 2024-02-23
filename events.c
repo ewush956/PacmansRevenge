@@ -57,13 +57,13 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
             ghost -> direction = LEFT_RANDOM;*/             /*add this back later*/
 
         if (possible_direction & 0x01)
-            ghost -> direction = UP_RANDOMN;
+            ghost -> direction = UP;
 
         else if(possible_direction & 0x08)
-            ghost -> direction = RIGHT_RANDOM;
+            ghost -> direction = RIGHT;
 
         else
-            ghost -> direction = DOWN_RANDOM;
+            ghost -> direction = DOWN;
     }
     
  
@@ -152,29 +152,8 @@ void handle_collisions(Entities* entity, Xor *xor) {
     }
     else
     {
-        if (cell_map[awkward->y_cell_index + 1][awkward->x_cell_index].open_path == TRUE)
-        {   
-            awkward->direction = DOWN_RANDOM;
-            move_ghost(awkward);
-        }
-         else if (cell_map[awkward->y_cell_index ][awkward->x_cell_index+1].open_path == TRUE)
-        {   
-            awkward->direction = RIGHT_RANDOM;
-            move_ghost(awkward);
-        }
-        else if (cell_map[awkward->y_cell_index ][awkward->x_cell_index-1].open_path == TRUE)
-        {   
-            awkward->direction = LEFT_RANDOM;
-            move_ghost(awkward);
-        }
-        else
-        {
-            awkward -> direction = DOWN_RANDOM;
-            move_ghost(awkward);
-        }
-
-
-
+        update_awkward_direction(awkward);
+        move_ghost(awkward);
     }
                 
     collision_type = check_collision(entity, moustache->y_cell_index, 
@@ -188,12 +167,12 @@ void handle_collisions(Entities* entity, Xor *xor) {
     {    
         if (cell_map[moustache->y_cell_index - 1][moustache->x_cell_index].open_path == TRUE)
         {   
-            moustache -> direction = UP_RANDOMN;
+            moustache -> direction = UP;
             move_ghost(moustache);
         }
         else if (cell_map[moustache->y_cell_index][moustache->x_cell_index+1].open_path == TRUE)
         {
-            moustache -> direction = RIGHT_RANDOM;
+            moustache -> direction = RIGHT;
             move_ghost(moustache);
         }
 
@@ -208,16 +187,14 @@ void handle_collisions(Entities* entity, Xor *xor) {
     if (collision_type != OPEN_PATH)
     {
         handle_ghost_collision(collision_type, crying, cell_map, xor);
-        /*printf("inside of crying ghost handle_collsi call\n");*/
+        
 
     }
     else   
     {    
-        if (cell_map[crying->y_cell_index][crying->x_cell_index +1].open_path == TRUE)
- 
-        {   crying -> direction = RIGHT_RANDOM;
-            move_ghost(moustache);
-        }
+        update_crying_direction(crying);
+        move_ghost(crying);
+
     }
 
     collision_type = check_collision(entity, cyclops->y_cell_index, 
@@ -236,7 +213,7 @@ void handle_collisions(Entities* entity, Xor *xor) {
     {
         if (cell_map[cyclops->y_cell_index][cyclops->x_cell_index - 1].open_path == TRUE)
         {   
-            cyclops -> direction = LEFT_RANDOM;
+            cyclops -> direction = LEFT;
             move_ghost(moustache);
         }
     }
@@ -293,3 +270,47 @@ void set_input(Pacman *pacman, char input)
 
 }
 
+
+void update_awkward_direction (Ghost *awkward )
+{
+
+        if (cell_map[awkward->y_cell_index +  1][awkward->x_cell_index].open_path == TRUE)
+        {   
+            awkward->direction = DOWN;
+            
+        }
+         else if (cell_map[awkward->y_cell_index ][awkward->x_cell_index+1].open_path == TRUE)
+        {   
+            awkward->direction = RIGHT;
+            
+        }
+        else if (cell_map[awkward->y_cell_index ][awkward->x_cell_index-1].open_path == TRUE)
+        {   
+            awkward->direction = LEFT;
+            
+        }
+        else
+        {
+            awkward -> direction = UP;
+                 
+        }
+
+}
+void update_crying_direction(Ghost *crying)
+{
+
+
+    if (cell_map[crying->y_cell_index][crying->x_cell_index +1].open_path == TRUE)
+         crying -> direction = RIGHT;
+    
+    else if (cell_map[crying->y_cell_index + 1][crying->x_cell_index].open_path == TRUE)
+         crying -> direction = DOWN;
+    
+    else if (cell_map[crying->y_cell_index - 1][crying->x_cell_index].open_path == TRUE)
+         crying -> direction = UP;
+    else
+        crying -> direction = LEFT;
+
+            
+        
+}
