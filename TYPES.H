@@ -10,6 +10,11 @@ typedef signed char bool;
 #define TRUE -1
 #define FALSE 0
 
+#define UP_RANDOMN ((UCHAR8)1)
+#define DOWN_RANDOM ((UCHAR8)2)
+#define LEFT_RANDOM ((UCHAR8)4)						
+#define RIGHT_RANDOM ((UCHAR8)8)  
+
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 400
 #define WALL_SIZE     16

@@ -12,8 +12,21 @@ Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 void move_pacman (Pacman *pacman)
 {
+    /*
+    if (entity->pacman->direction == UP || entity->pacman->direction == DOWN) 
+        pacman->x = pacman->x_cell_index * PIXELS_PER_CELL;
+    
+
+    /*put an else here? 
+    else if (entity->pacman->direction == LEFT || entity->pacman->direction == RIGHT) 
+        pacman->y = pacman->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
+    */
+    
     pacman -> x += pacman->delta_x;
     pacman -> y += pacman->delta_y;
+        
+
+
    /* update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->direction); */
 }
 /*************************************************************
@@ -27,38 +40,55 @@ void move_pacman (Pacman *pacman)
 void move_ghost (Ghost *ghost)
 {
 	UCHAR8 direction = ghost -> direction;
-
+    
+    /*
 	ghost -> delta_x = 0;
 	ghost -> delta_y = 0;
+    */
+
 	
 	if (ghost -> x > SCREEN_WIDTH - MAP_PIXEL_LENGTH && ghost -> x < MAP_PIXEL_LENGTH
 		&& ghost -> y + Y_PIXEL_OFFSET > SCREEN_HEIGHT - MAP_PIXEL_HEIGHT && ghost -> y < MAP_PIXEL_HEIGHT) 
-	
+        
 	{
 		switch(direction)
 		{
-			case UP:
-				ghost -> delta_y = -1;
+			case UP_RANDOMN:
+				ghost -> y_cell_index -= 1;
 				ghost -> delta_x = 0;
+                ghost ->delta_y = -1;
 				break;
 			
-			case DOWN:
-				ghost -> delta_y = 1;
+			case DOWN_RANDOM:
+				ghost -> y_cell_index += 1;
 				ghost -> delta_x = 0;
+                ghost ->delta_y = 1;
 				break;
 			
-			case RIGHT:
-				ghost -> delta_x = 1;
+			case RIGHT_RANDOM:
+				ghost -> x_cell_index += 1;
 				ghost -> delta_y = 0;
+                ghost ->delta_x = 1;
 				break;
 			
-			case LEFT:
-				ghost -> delta_x = -1;
+			case LEFT_RANDOM:
+				ghost -> x_cell_index -= 1;
 				ghost -> delta_y = 0;
+                ghost -> delta_x = -1;
 				break;
 		}
-	}
+	
+        if (ghost->direction == UP_RANDOMN || ghost->direction == DOWN_RANDOM) 
+            ghost->x = ghost->x_cell_index * PIXELS_PER_CELL;
+        
+        else if (ghost->direction == LEFT_RANDOM || ghost->direction == RIGHT_RANDOM) 
+        {
+            ghost->y = ghost->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
+        }
+    }
 
+    ghost-> x += ghost->delta_x;
+    ghost-> y += ghost->delta_y;
 }
 /*************************************************************
 * Function: check_collision
@@ -88,18 +118,20 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
     all_ghosts[3] = entity->moustache_ghost;
 
     for (i = 0; i < 4; i++){
-        /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
-        
-        if (all_ghosts[i]->type != curr_type) /* no collsiion with ghost itself only other objs*/
+
+        if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE)
+            return WALL;
+
+        if (all_ghosts[i]->type != curr_type) /* cant have collsiion with ghost itself only other objs*/
         {
             if ((all_ghosts[i]->x_cell_index == object_x_index + x_delta &&
                 all_ghosts[i]->y_cell_index == object_y_index + y_delta) ||
                 (all_ghosts[i]->x_cell_index == object_x_index && 
                 all_ghosts[i]->y_cell_index == object_y_index))
-                /* collision = OBJECT; */
                 collision = all_ghosts[i]->type;
         }
     }
+
     return collision;
 }    
 /*************************************************************
@@ -128,7 +160,7 @@ ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index,
             if (effective_y_position <= (UINT16)cell_map[object_y_index][object_x_index].y_position)
                 return WALL;
         }
-        if ((entity->pacman->direction == LEFT || entity->pacman->direction == RIGHT)) {
+        if ((entity->pacman->direction == LEFT || entity->pacman->direction == RIGHT)) {  
             effective_x_position = entity->pacman->x - COLLISION_THRESHOLD;
             if (effective_x_position <= (UINT16)cell_map[object_y_index][object_x_index].x_position)
                 return WALL;  
@@ -179,7 +211,7 @@ void update_cells(Entities* entity) {
     /*Pacmans state doesn't matter here, probably faster to pass in const value*/
 
     update_cell(&crying->x_cell_index, &crying->y_cell_index, crying->x, 
-                crying->y, crying->state);
+        crying->y, crying->state);
 
     update_cell(&moustache->x_cell_index, &moustache->y_cell_index, 
                 moustache->x, moustache->y, moustache->state);

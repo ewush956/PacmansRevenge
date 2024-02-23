@@ -1,0 +1,13 @@
+Feb 22 10pm (i chnaged the ghost movemrent a bit )
+-added random if statements within the handle all in events.c 
+
+also didnt make their deltas 0 when the collide
+
+some ghosts have different numbe rof if statements
+
+
+add in a pick_direction() function that picks a direction for a ghost based on where they can move 
+use if staments only as it can differ for each ghost (else ifs are also fine)
+
+this is only called while they are in a valid position and have not collised as then they can just
+take the next available path 

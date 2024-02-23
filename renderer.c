@@ -66,6 +66,7 @@ void render_pacman(ULONG32* base32, Pacman* pacman) {
     if (pacman->state == EVIL) {
         plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
     }
+    /*pacman->current_frame*/
     else {
         plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
     }    /* pacman->current_frame++; */

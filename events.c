@@ -27,34 +27,46 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
     UCHAR8 counter = 0;
     UCHAR8 prev_direction = ghost -> direction;
 
-  
     if (collision_type == WALL)
     {
-     
+        
         if (cell_map[ghost->y_cell_index][ghost -> x_cell_index + 1].open_path == TRUE )
+        {
             possible_direction |= RIGHT_RANDOM;
-
+          
+        }
         if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == TRUE)
+        {
             possible_direction |= LEFT_RANDOM;
-
+          
+        }
         if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == TRUE)
+        {
             possible_direction |= DOWN_RANDOM;
+          
+        }
 
         if (cell_map[ghost-> y_cell_index - 1][ghost->x_cell_index].open_path == TRUE)
+        {
             possible_direction |= UP_RANDOMN;
-     
+           
+        }
+
+        /* make an array of different possibilities.. to make it more random?
+         if(possible_direction & 0x04)
+            ghost -> direction = LEFT_RANDOM;*/             /*add this back later*/
+
         if (possible_direction & 0x01)
             ghost -> direction = UP_RANDOMN;
 
         else if(possible_direction & 0x08)
             ghost -> direction = RIGHT_RANDOM;
 
-        else if( possible_direction & 0x04)
-            ghost -> direction = LEFT_RANDOM;
-
         else
             ghost -> direction = DOWN_RANDOM;
     }
+    
+ 
 }
 /*************************************************************
  * Function: handle_pacman_collision
@@ -79,14 +91,14 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
             pacman->y = pacman->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
         }
         break;
-    case WALL:
 
+    case WALL:
         pacman->delta_y = 0;
         pacman->delta_x = 0;
         
         break;
     case GHOST_TYPE_CRYING:
-       /* kill_ghost(&entity->crying_ghost, cell_map);       */                     
+       /* kill_ghost(&entity->crying_ghost, cell_map);*/                     
         break;
 
     case GHOST_TYPE_AWKWARD:
@@ -123,6 +135,7 @@ void handle_collisions(Entities* entity, Xor *xor) {
     /*NOTE:
      currently handle_pacman_collision is handling all cases, thats why it's not in an if block
     we should change that at some point but my brain hurts and I no no wanna :(*/
+    
 
 
     collision_type = check_collision(entity, awkward->y_cell_index, 
@@ -130,10 +143,39 @@ void handle_collisions(Entities* entity, Xor *xor) {
                                     awkward->delta_y, 
                                     awkward->delta_x,
                                     awkward->type);
-
-    if (collision_type != OPEN_PATH)
-        handle_ghost_collision(collision_type, awkward, cell_map, xor);
     
+    if (collision_type != OPEN_PATH)
+    {
+        handle_ghost_collision(collision_type, awkward, cell_map, xor);
+         
+
+    }
+    else
+    {
+        if (cell_map[awkward->y_cell_index + 1][awkward->x_cell_index].open_path == TRUE)
+        {   
+            awkward->direction = DOWN_RANDOM;
+            move_ghost(awkward);
+        }
+         else if (cell_map[awkward->y_cell_index ][awkward->x_cell_index+1].open_path == TRUE)
+        {   
+            awkward->direction = RIGHT_RANDOM;
+            move_ghost(awkward);
+        }
+        else if (cell_map[awkward->y_cell_index ][awkward->x_cell_index-1].open_path == TRUE)
+        {   
+            awkward->direction = LEFT_RANDOM;
+            move_ghost(awkward);
+        }
+        else
+        {
+            awkward -> direction = DOWN_RANDOM;
+            move_ghost(awkward);
+        }
+
+
+
+    }
                 
     collision_type = check_collision(entity, moustache->y_cell_index, 
                                     moustache->x_cell_index, 
@@ -142,6 +184,20 @@ void handle_collisions(Entities* entity, Xor *xor) {
                                     moustache->type);
     if (collision_type != OPEN_PATH)
         handle_ghost_collision(collision_type, moustache, cell_map, xor);
+    else   
+    {    
+        if (cell_map[moustache->y_cell_index - 1][moustache->x_cell_index].open_path == TRUE)
+        {   
+            moustache -> direction = UP_RANDOMN;
+            move_ghost(moustache);
+        }
+        else if (cell_map[moustache->y_cell_index][moustache->x_cell_index+1].open_path == TRUE)
+        {
+            moustache -> direction = RIGHT_RANDOM;
+            move_ghost(moustache);
+        }
+
+    }
     
 
     collision_type = check_collision(entity, crying->y_cell_index, 
@@ -150,17 +206,41 @@ void handle_collisions(Entities* entity, Xor *xor) {
                                     crying->delta_x,
                                     crying->type);
     if (collision_type != OPEN_PATH)
+    {
         handle_ghost_collision(collision_type, crying, cell_map, xor);
+        /*printf("inside of crying ghost handle_collsi call\n");*/
+
+    }
+    else   
+    {    
+        if (cell_map[crying->y_cell_index][crying->x_cell_index +1].open_path == TRUE)
+ 
+        {   crying -> direction = RIGHT_RANDOM;
+            move_ghost(moustache);
+        }
+    }
 
     collision_type = check_collision(entity, cyclops->y_cell_index, 
                                     cyclops->x_cell_index, 
                                     cyclops->delta_y, 
                                     cyclops->delta_x,
                                     cyclops->type);
-    if (collision_type == OPEN_PATH)
+    if (collision_type != OPEN_PATH)
     {
+      
         handle_ghost_collision(collision_type, cyclops, cell_map, xor);
+        /*printf("cyclops ghost direction after %u\n",cyclops->direction);*/
+      
     }
+    else
+    {
+        if (cell_map[cyclops->y_cell_index][cyclops->x_cell_index - 1].open_path == TRUE)
+        {   
+            cyclops -> direction = LEFT_RANDOM;
+            move_ghost(moustache);
+        }
+    }
+
 }
 ULONG32 random_number_generator(Xor *xor)
 {
@@ -207,9 +287,7 @@ void set_input(Pacman *pacman, char input)
             pacman -> direction = RIGHT;
 			break;
 
-		default:
-            pacman-> delta_x = 0; 
-            pacman -> delta_y = 0; 		
+		default:	
 			break;
 	}
 

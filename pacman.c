@@ -36,7 +36,7 @@ Pacman pacman = {
 *************************************************************/
 Ghost crying_ghost = {
     PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
-    0,0,
+    1,0,
     0,
     LEFT,
     DEFAULT,
@@ -51,9 +51,9 @@ Ghost crying_ghost = {
 *************************************************************/
 Ghost cyclops_ghost = {
     PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
-    0,0,
+    1,1,
     0,
-    LEFT,
+    RIGHT,
     DEFAULT,
     12, 17,
     GHOST_TYPE_CYCLOPS
@@ -66,7 +66,7 @@ Ghost cyclops_ghost = {
 *************************************************************/
 Ghost moustache_ghost = {
     PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
-    0,0,
+    1,0,
     0,
     RIGHT,
     DEFAULT,
@@ -79,15 +79,18 @@ Ghost moustache_ghost = {
 *          starting position, movement displacement, state,
 *          direction, and cell index on the game map.
 *************************************************************/
+
+/*move this lads location near pacman for testing*/
 Ghost awkward_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
-    0,0,
+    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET, 
+    1,0,
     0,
     RIGHT,
     DEFAULT,
     12, 21,
     GHOST_TYPE_AWKWARD
 };
+
 /*************************************************************
 * Declaration: Timer timer
 * Purpose: Initializes the game timer with starting values
@@ -163,12 +166,17 @@ int main()
                 handle_collisions(&entity, &xor);       /*Checks and handles collisions*/
 
                 move_pacman(entity.pacman);
-                move_ghost(&moustache_ghost);
-                move_ghost(&crying_ghost);
-                move_ghost(&cyclops_ghost);
-                move_ghost(&awkward_ghost);
-                
 
+
+                move_ghost(entity.moustache_ghost);
+                move_ghost(entity.crying_ghost);
+                move_ghost(entity.awkward_ghost);
+                move_ghost(entity.cyclops_ghost);
+
+                render_frame(base32, &entity);
+
+                update_cells(&entity);
+                
                 debug_cells_pac(base8, &pacman);
 
             time_then = time_now;
