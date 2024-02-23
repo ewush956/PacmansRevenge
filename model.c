@@ -267,7 +267,13 @@ void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position,
     }
     *x_index = x_position >> 4; 
     *y_index = (y_position >> 4) - 1;
+
+    cell_map[*y_index][*x_index].occupied = TRUE;
+    cell_map[*y_index + 1][*x_index].occupied = TRUE;
+    cell_map[*y_index][*x_index + 1].occupied = TRUE;
+    cell_map[*y_index + 1][*x_index + 1].occupied = TRUE;
 }
+
 /*************************************************************
 * Function: kill_ghost
 * Purpose: Marks a ghost as dead and updates the map accordingly.
