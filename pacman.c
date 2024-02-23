@@ -182,7 +182,12 @@ int main()
 void update_pacman(int do_the_roar){
     move_pacman(&pacman);
     if (do_the_roar % 2 == 0) {
-         pacman.current_frame = ((pacman.current_frame) + 1) % 8;
+        if (pacman.state == DEFAULT) {
+            pacman.current_frame = ((pacman.current_frame) + 1) % 8;
+        }
+        else {
+        pacman.current_frame = ((pacman.current_frame) + 1) % 6;
+        }
     }
 }
 void update_ghosts(){

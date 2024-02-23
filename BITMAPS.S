@@ -751,21 +751,21 @@ _default_pacman_sprites:
 	dc.b	0,0,0,0
 	even
 _evil_pacman_sprites:
-	dc.l	_evil_pac_up_1,_evil_pac_up_2,_evil_pac_up_3,_evil_pac_up_4,_evil_pac_up_4
-	dc.l	_evil_pac_up_3,_evil_pac_up_2,_evil_pac_up_1
-	dc.b	0,0,0,0
+	dc.l	_evil_pac_up_1,_evil_pac_up_2,_evil_pac_up_3,_evil_pac_up_4,_evil_pac_up_3
+	dc.l	_evil_pac_up_2
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0
 	even
-	dc.l	_evil_pac_down_1,_evil_pac_down_2,_evil_pac_down_3,_evil_pac_down_4,_evil_pac_down_4
-	dc.l	_evil_pac_down_3,_evil_pac_down_2,_evil_pac_down_1
-	dc.b	0,0,0,0
+	dc.l	_evil_pac_down_1,_evil_pac_down_2,_evil_pac_down_3,_evil_pac_down_4,_evil_pac_down_3
+	dc.l	_evil_pac_down_2
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0
 	even
-	dc.l	_evil_pac_left_1,_evil_pac_left_2,_evil_pac_left_3,_evil_pac_left_4,_evil_pac_left_4
-	dc.l	_evil_pac_left_3,_evil_pac_left_2,_evil_pac_left_1
-	dc.b	0,0,0,0
+	dc.l	_evil_pac_left_1,_evil_pac_left_2,_evil_pac_left_3,_evil_pac_left_4,_evil_pac_left_3
+	dc.l	_evil_pac_left_2
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0
 	even
-	dc.l	_evil_pac_1,_evil_pac_2,_evil_pac_3,_evil_pac_4,_evil_pac_4
-	dc.l	_evil_pac_3,_evil_pac_2,_evil_pac_1
-	dc.b	0,0,0,0
+	dc.l	_evil_pac_1,_evil_pac_2,_evil_pac_3,_evil_pac_4,_evil_pac_3
+	dc.l	_evil_pac_2
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0
 	even
 _moustache_ghost_sprites:
 	dc.l	_moustache_ghost_up_1,_moustache_ghost_up_2,_moustache_ghost_down_1,_moustache_ghost_down_2,_moustache_ghost_left_1
