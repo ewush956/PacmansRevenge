@@ -106,14 +106,6 @@ Entities entity = {
     &cyclops_ghost,
 };
 
-/*
-Pacman *pac = entity.pacman;
-Ghost *moustache = entity.moustache_ghost;
-Ghost *crying = entity.crying_ghost;
-Ghost *cyclops = entity.cyclops_ghost;
-Ghost *awkward = entity.awkward_ghost;
-*/
-
 int main()
 {
 	char input;
@@ -179,6 +171,10 @@ int main()
 
 	return 0;
 }
+/*******************************************************************
+* Function: update_pacman
+* Purpose: Updates the position of the pacman
+*/
 void update_pacman(int do_the_roar){
     move_pacman(&pacman);
     if (do_the_roar % 2 == 0) {

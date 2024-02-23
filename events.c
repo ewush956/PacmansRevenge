@@ -20,7 +20,7 @@
 *   Note: This function is currently not functional due to a bug with random number generation
 *         and a logic error.
  *************************************************************************************/
-void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct) {
+void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost1, Ghost* ghost2) {
   
     UCHAR8 possible_direction = 0;
     ULONG32 random_number;
@@ -54,6 +54,11 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
 
         else
             ghost -> direction = DOWN_RANDOM;
+    }
+    else {
+        /*Ghost 1 and 2 colliding with eachother*/
+        ghost1 -> delta_x = -1 * ghost1 -> delta_x;
+        ghost2 -> delta_x = -1 * ghost2 -> delta_x;
     }
 }
 /*************************************************************
