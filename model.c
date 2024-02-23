@@ -12,8 +12,14 @@ Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 void move_pacman (Pacman *pacman)
 {
-    pacman -> x += pacman->delta_x;
-    pacman -> y += pacman->delta_y;
+    if (pacman -> state == DEFAULT) {
+    pacman -> x += (pacman->delta_x) * 2;
+    pacman -> y += (pacman->delta_y) * 2;
+    }
+    else {
+        pacman -> x += pacman->delta_x * 4;
+        pacman -> y += pacman->delta_y * 4;
+    }
    /* update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->direction); */
 }
 /*************************************************************
@@ -26,10 +32,12 @@ void move_pacman (Pacman *pacman)
 *************************************************************/
 void move_ghost (Ghost *ghost)
 {
+    
 	UCHAR8 direction = ghost -> direction;
 
-	ghost -> delta_x = 0;
+	/*ghost -> delta_x = 0;
 	ghost -> delta_y = 0;
+    */
 	
 	if (ghost -> x > SCREEN_WIDTH - MAP_PIXEL_LENGTH && ghost -> x < MAP_PIXEL_LENGTH
 		&& ghost -> y + Y_PIXEL_OFFSET > SCREEN_HEIGHT - MAP_PIXEL_HEIGHT && ghost -> y < MAP_PIXEL_HEIGHT) 
@@ -57,7 +65,7 @@ void move_ghost (Ghost *ghost)
 				ghost -> delta_y = 0;
 				break;
 		}
-	}
+    }
 
 }
 /*************************************************************
@@ -80,6 +88,7 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
     
     ObjectType collision = OPEN_PATH;
     int i;
+
 
     Ghost *all_ghosts[4];
     all_ghosts[0] = entity->crying_ghost;
@@ -118,9 +127,10 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
                                   UINT16 object_x_index, int y_delta, int x_delta) 
                                   {
+
     UINT16 effective_y_position;
     UINT16 effective_x_position;
-    UINT16 COLLISION_THRESHOLD = 1;
+    UINT16 COLLISION_THRESHOLD = 4;
 
     if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
         if ((entity->pacman->direction == UP || entity->pacman->direction == DOWN)) {
@@ -136,6 +146,65 @@ ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index,
     }
     return OPEN_PATH;
 }
+void check_proximity(Entities* entity) {
+    int ghostCountWithinRange = 0;
+    int i;
+    UINT16 pacman_x_index, pacman_y_index;
+    UINT16 ghost_x_index, ghost_y_index;
+    UINT16 x_distance, y_distance;
+
+    Ghost *ghosts[4];
+    ghosts[0] = entity->crying_ghost;
+    ghosts[1] = entity->awkward_ghost;
+    ghosts[2] = entity->cyclops_ghost;
+    ghosts[3] = entity->moustache_ghost;
+
+    pacman_x_index = entity->pacman->x_cell_index;
+    pacman_y_index = entity->pacman->y_cell_index;
+
+    for (i = 0; i < 4; i++) {
+        ghost_x_index = ghosts[i]->x_cell_index;
+        ghost_y_index = ghosts[i]->y_cell_index;
+
+        if (pacman_x_index > ghost_x_index) {
+            x_distance = pacman_x_index - ghost_x_index;
+        } else {
+            x_distance = ghost_x_index - pacman_x_index;
+        }
+
+        if (pacman_y_index > ghost_y_index) {
+            y_distance = pacman_y_index - ghost_y_index;
+        } else {
+            y_distance = ghost_y_index - pacman_y_index;
+        }
+
+        if (x_distance <= 4 && y_distance <= 4) {
+            ghostCountWithinRange++;
+            change_pacman_state(entity->pacman, EVIL); 
+            change_ghost_state(ghosts[i], RUNNING); 
+        }
+        else {
+            change_ghost_state(ghosts[i], DEFAULT);
+        }
+    }
+    if (ghostCountWithinRange == 0) {
+        change_pacman_state(entity->pacman, DEFAULT);
+    }
+    else if (ghostCountWithinRange >= 2) {
+        end_game();
+    }
+}
+
+void change_pacman_state(Pacman* pacman, UCHAR8 new_state) {
+    pacman->state = new_state;
+}
+void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
+    ghost->state = new_state;
+}
+void end_game() {
+    
+}
+
 /*************************************************************
 * Function: init_map_cells
 * Purpose: Initializes the cell map with positions and path openness based on the tile map.

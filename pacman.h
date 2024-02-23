@@ -22,7 +22,12 @@ typedef unsigned char GAME_STATE;
 
 ULONG32 get_time();
 GAME_STATE update_game_state(GAME_STATE new_state, char input);
-void debug_cells_pac(UCHAR8* base, Pacman* pacman);
 void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
+void debug_cells_pac(UCHAR8* base, Pacman* pacman);
+void update_pacman();
+void update_ghosts();
+void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity);
+void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost1, Ghost* ghost2, int stop);
+
 
 #endif

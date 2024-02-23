@@ -165,16 +165,15 @@ void refresh_screen(ULONG32* base32, Entities* entity) {
     clear_bitmap_32(base32, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SPRITE_HEIGHT);
 }
 void render_initial_timer(UCHAR8* base) {
-    int start_x = 240;
-    plot_letter(base, start_x, 0, font, 'T');
-    plot_letter(base, start_x+8, 0, font, 'i');
-    plot_letter(base, start_x+16,0,font, 'm');
-    plot_letter(base, start_x+24,0,font, 'e');
-    plot_letter(base, start_x+32,0,font, ':');
+    int start_x = 280;
+    int y = 4;
 
-    plot_letter(base, start_x+48,0,font, '0');
-    plot_letter(base, start_x+56,0,font, '0');
-    plot_letter(base, start_x+64,0,font, ':');
-    plot_letter(base, start_x+72,0,font, '0');
-    plot_letter(base, start_x+80,0,font, '0');
+    plot_string(base, start_x, y, font, "Time: 00:00");
+}
+void clear_entities(ULONG32* base32, Entities* entity) {
+                clear_bitmap_32(base32, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
+                clear_bitmap_32(base32, entity->crying_ghost->x, entity->crying_ghost->y, SPRITE_HEIGHT);
+                clear_bitmap_32(base32, entity->moustache_ghost->x, entity->moustache_ghost->y, SPRITE_HEIGHT);
+                clear_bitmap_32(base32, entity->awkward_ghost->x, entity->awkward_ghost->y, SPRITE_HEIGHT);
+                clear_bitmap_32(base32, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SPRITE_HEIGHT);
 }

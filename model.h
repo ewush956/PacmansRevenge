@@ -8,7 +8,8 @@
 #define DOWN ((UCHAR8)1)
 #define LEFT ((UCHAR8)2)
 #define RIGHT ((UCHAR8)3)
-#define STOP ((UCHAR8)4)
+
+#define MOVEMENT_MULTIPLIER 3 
 
 #define MAP_TILE_LENGTH 40        /* 1 tile = 16 pixels*/ 
 #define MAP_TILE_HEIGHT 24   
@@ -96,7 +97,7 @@ typedef struct {
 
 void move_ghost (Ghost *ghost);
 void move_pacman (Pacman *pacman);
-ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,int y_delta, int x_delta,
+ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index, int y_delta, int x_delta,
                            ObjectType curr_type);
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
                                   UINT16 object_x_index, int y_delta, int x_delta);
@@ -106,5 +107,10 @@ void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position,
 void update_cells(Entities* entity);
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
+
+void check_proximity(Entities* entity);
+void change_pacman_state(Pacman* pacman, UCHAR8 new_state);
+void change_ghost_state(Ghost* ghost, UCHAR8 new_state);
+void end_game();
 
 #endif

@@ -2639,29 +2639,29 @@ UINT16 tile_map[][MAP_TILE_LENGTH] = {
     {1, 1, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 0, 0, 0, 0, 0, 2, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1},
     {1, 2, 2, 2, 0, 2, 2, 0, 2, 1, 0, 2, 2, 0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 2, 2, 0, 2, 1, 0, 2, 2, 0, 2, 2, 2, 2, 1},
-    {1, 1, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 2, 2, 0, 2, 2, 2, 1, 1, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0, 2, 1, 1, 1, 1},
+    {1, 1, 1, 1, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0, 2, 1, 1, 2, 2, 0, 2, 2, 2, 1, 1, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0, 2, 1, 1, 1, 1},
     {1, 0, 2, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 0, 2, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1},
     {1, 0, 2, 2, 0, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 0, 2, 2, 0, 2, 1},
     {1, 0, 2, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 0, 2, 1},
     {1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1},
     {1, 0, 2, 1, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 1, 0, 2, 1},
-    {1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1},
+    {1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 0, 2, 1},/*20*/
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1},
     {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
-const ULONG32* default_pacman_sprites[4][7] = {
-    {pac_up_1, pac_up_2, pac_up_3, pac_up_4, pac_up_3, pac_up_2},   /*UP*/
-    {pac_down_1, pac_down_2, pac_down_3, pac_down_4, pac_down_3, pac_down_2},   /*DOWN*/
-    {pac_left_1, pac_left_2, pac_left_3, pac_left_4, pac_left_3, pac_left_2},   /*LEFT*/
-    {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2}    /*RIGHT*/
+const ULONG32* default_pacman_sprites[4][9] = {
+    {pac_up_1, pac_up_2, pac_up_3, pac_up_4, pac_up_4, pac_up_3, pac_up_2, pac_up_1},   /*UP*/
+    {pac_down_1, pac_down_2, pac_down_3, pac_down_4, pac_down_4, pac_down_3, pac_down_2, pac_down_1},   /*DOWN*/
+    {pac_left_1, pac_left_2, pac_left_3, pac_left_4, pac_left_4, pac_left_3, pac_left_2, pac_left_1},   /*LEFT*/
+    {pac_1, pac_2, pac_3, pac_4, pac_4, pac_3, pac_2, pac_1}    /*RIGHT*/
 };
-const ULONG32* evil_pacman_sprites[4][7] = {
-    {evil_pac_up_1, evil_pac_up_2, evil_pac_up_3, evil_pac_up_4, evil_pac_up_3, evil_pac_up_2},   /*UP*/
-    {evil_pac_down_1, evil_pac_down_2, evil_pac_down_3, evil_pac_down_4, evil_pac_down_3, evil_pac_down_2},   /*DOWN*/
-    {evil_pac_left_1, evil_pac_left_2, evil_pac_left_3, evil_pac_left_4, evil_pac_left_3, evil_pac_left_2},   /*LEFT*/
-    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2}    /*RIGHT*/
+const ULONG32* evil_pacman_sprites[4][9] = {
+    {evil_pac_up_1, evil_pac_up_2, evil_pac_up_3, evil_pac_up_4, evil_pac_up_4, evil_pac_up_3, evil_pac_up_2, evil_pac_up_1},   /*UP*/
+	{evil_pac_down_1, evil_pac_down_2, evil_pac_down_3, evil_pac_down_4, evil_pac_down_4, evil_pac_down_3, evil_pac_down_2, evil_pac_down_1},   /*DOWN*/
+	{evil_pac_left_1, evil_pac_left_2, evil_pac_left_3, evil_pac_left_4, evil_pac_left_4, evil_pac_left_3, evil_pac_left_2, evil_pac_left_1},   /*LEFT*/
+	{evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_4, evil_pac_3, evil_pac_2, evil_pac_1}    /*RIGHT*/
 };
 const ULONG32* moustache_ghost_sprites[][2] = {
     {moustache_ghost_up_1, moustache_ghost_up_2},   /*UP*/

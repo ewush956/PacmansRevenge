@@ -14,8 +14,8 @@ typedef signed char bool;
 
 
 
-extern const ULONG32* default_pacman_sprites[5 ][7];
-extern const ULONG32* evil_pacman_sprites[5 ][7];
+extern const ULONG32* default_pacman_sprites[5 ][9];
+extern const ULONG32* evil_pacman_sprites[5 ][9];
 extern const ULONG32* crying_ghost_sprites[5 ][2];
 extern const ULONG32* awkward_ghost_sprites[5 ][2];
 extern const ULONG32* cyclops_ghost_sprites[5 ][2];
@@ -2751,7 +2751,7 @@ UINT16 tile_map[][40 ] = {
     {1, 1, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 0, 0, 0, 0, 0, 2, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1},
     {1, 2, 2, 2, 0, 2, 2, 0, 2, 1, 0, 2, 2, 0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 2, 2, 0, 2, 1, 0, 2, 2, 0, 2, 2, 2, 2, 1},
-    {1, 1, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 2, 2, 0, 2, 2, 2, 1, 1, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0, 2, 1, 1, 1, 1},
+    {1, 1, 1, 1, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0, 2, 1, 1, 2, 2, 0, 2, 2, 2, 1, 1, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0, 2, 1, 1, 1, 1},
     {1, 0, 2, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 0, 2, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 0, 2, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1},
     {1, 0, 2, 2, 0, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 0, 2, 2, 0, 2, 1},
@@ -2763,17 +2763,17 @@ UINT16 tile_map[][40 ] = {
     {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
-const ULONG32* default_pacman_sprites[4][7] = {
-    {pac_up_1, pac_up_2, pac_up_3, pac_up_4, pac_up_3, pac_up_2},
-    {pac_down_1, pac_down_2, pac_down_3, pac_down_4, pac_down_3, pac_down_2},
-    {pac_left_1, pac_left_2, pac_left_3, pac_left_4, pac_left_3, pac_left_2},
-    {pac_1, pac_2, pac_3, pac_4, pac_3, pac_2}
+const ULONG32* default_pacman_sprites[4][9] = {
+    {pac_up_1, pac_up_2, pac_up_3, pac_up_4, pac_up_4, pac_up_3, pac_up_2, pac_up_1},
+    {pac_down_1, pac_down_2, pac_down_3, pac_down_4, pac_down_4, pac_down_3, pac_down_2, pac_down_1},
+    {pac_left_1, pac_left_2, pac_left_3, pac_left_4, pac_left_4, pac_left_3, pac_left_2, pac_left_1},
+    {pac_1, pac_2, pac_3, pac_4, pac_4, pac_3, pac_2, pac_1}
 };
-const ULONG32* evil_pacman_sprites[4][7] = {
-    {evil_pac_up_1, evil_pac_up_2, evil_pac_up_3, evil_pac_up_4, evil_pac_up_3, evil_pac_up_2},
-    {evil_pac_down_1, evil_pac_down_2, evil_pac_down_3, evil_pac_down_4, evil_pac_down_3, evil_pac_down_2},
-    {evil_pac_left_1, evil_pac_left_2, evil_pac_left_3, evil_pac_left_4, evil_pac_left_3, evil_pac_left_2},
-    {evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_3, evil_pac_2}
+const ULONG32* evil_pacman_sprites[4][9] = {
+    {evil_pac_up_1, evil_pac_up_2, evil_pac_up_3, evil_pac_up_4, evil_pac_up_4, evil_pac_up_3, evil_pac_up_2, evil_pac_up_1},
+	{evil_pac_down_1, evil_pac_down_2, evil_pac_down_3, evil_pac_down_4, evil_pac_down_4, evil_pac_down_3, evil_pac_down_2, evil_pac_down_1},
+	{evil_pac_left_1, evil_pac_left_2, evil_pac_left_3, evil_pac_left_4, evil_pac_left_4, evil_pac_left_3, evil_pac_left_2, evil_pac_left_1},
+	{evil_pac_1, evil_pac_2, evil_pac_3, evil_pac_4, evil_pac_4, evil_pac_3, evil_pac_2, evil_pac_1}
 };
 const ULONG32* moustache_ghost_sprites[][2] = {
     {moustache_ghost_up_1, moustache_ghost_up_2},

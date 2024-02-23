@@ -5,8 +5,8 @@
 
 #define DIRECTIONS 5 
 
-extern const ULONG32* default_pacman_sprites[DIRECTIONS][7];
-extern const ULONG32* evil_pacman_sprites[DIRECTIONS][7]; 
+extern const ULONG32* default_pacman_sprites[DIRECTIONS][9];
+extern const ULONG32* evil_pacman_sprites[DIRECTIONS][9]; 
 extern const ULONG32* crying_ghost_sprites[DIRECTIONS][2]; 
 extern const ULONG32* awkward_ghost_sprites[DIRECTIONS][2]; 
 extern const ULONG32* cyclops_ghost_sprites[DIRECTIONS][2]; 

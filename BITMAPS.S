@@ -679,7 +679,7 @@ _tile_map:
 	dc.w	2,0,2,2,0,2,1,0
 	dc.w	2,2,0,2,2,2,2,1
 	dc.w	1,1,1,1,0,2,1,0
-	dc.w	2,2,0,2,1,0,2,1
+	dc.w	0,0,0,2,1,0,2,1
 	dc.w	1,2,2,0,2,2,2,1
 	dc.w	1,0,2,1,0,0,0,0
 	dc.w	2,1,0,2,1,1,1,1
@@ -734,37 +734,37 @@ _tile_map:
 	dc.w	1,1,1,1,1,1,1,1
 	dc.w	1,1,1,1,1,1,1,1
 _default_pacman_sprites:
-	dc.l	_pac_up_1,_pac_up_2,_pac_up_3,_pac_up_4,_pac_up_3
-	dc.l	_pac_up_2
+	dc.l	_pac_up_1,_pac_up_2,_pac_up_3,_pac_up_4,_pac_up_4
+	dc.l	_pac_up_3,_pac_up_2,_pac_up_1
 	dc.b	0,0,0,0
 	even
-	dc.l	_pac_down_1,_pac_down_2,_pac_down_3,_pac_down_4,_pac_down_3
-	dc.l	_pac_down_2
+	dc.l	_pac_down_1,_pac_down_2,_pac_down_3,_pac_down_4,_pac_down_4
+	dc.l	_pac_down_3,_pac_down_2,_pac_down_1
 	dc.b	0,0,0,0
 	even
-	dc.l	_pac_left_1,_pac_left_2,_pac_left_3,_pac_left_4,_pac_left_3
-	dc.l	_pac_left_2
+	dc.l	_pac_left_1,_pac_left_2,_pac_left_3,_pac_left_4,_pac_left_4
+	dc.l	_pac_left_3,_pac_left_2,_pac_left_1
 	dc.b	0,0,0,0
 	even
-	dc.l	_pac_1,_pac_2,_pac_3,_pac_4,_pac_3
-	dc.l	_pac_2
+	dc.l	_pac_1,_pac_2,_pac_3,_pac_4,_pac_4
+	dc.l	_pac_3,_pac_2,_pac_1
 	dc.b	0,0,0,0
 	even
 _evil_pacman_sprites:
-	dc.l	_evil_pac_up_1,_evil_pac_up_2,_evil_pac_up_3,_evil_pac_up_4,_evil_pac_up_3
-	dc.l	_evil_pac_up_2
+	dc.l	_evil_pac_up_1,_evil_pac_up_2,_evil_pac_up_3,_evil_pac_up_4,_evil_pac_up_4
+	dc.l	_evil_pac_up_3,_evil_pac_up_2,_evil_pac_up_1
 	dc.b	0,0,0,0
 	even
-	dc.l	_evil_pac_down_1,_evil_pac_down_2,_evil_pac_down_3,_evil_pac_down_4,_evil_pac_down_3
-	dc.l	_evil_pac_down_2
+	dc.l	_evil_pac_down_1,_evil_pac_down_2,_evil_pac_down_3,_evil_pac_down_4,_evil_pac_down_4
+	dc.l	_evil_pac_down_3,_evil_pac_down_2,_evil_pac_down_1
 	dc.b	0,0,0,0
 	even
-	dc.l	_evil_pac_left_1,_evil_pac_left_2,_evil_pac_left_3,_evil_pac_left_4,_evil_pac_left_3
-	dc.l	_evil_pac_left_2
+	dc.l	_evil_pac_left_1,_evil_pac_left_2,_evil_pac_left_3,_evil_pac_left_4,_evil_pac_left_4
+	dc.l	_evil_pac_left_3,_evil_pac_left_2,_evil_pac_left_1
 	dc.b	0,0,0,0
 	even
-	dc.l	_evil_pac_1,_evil_pac_2,_evil_pac_3,_evil_pac_4,_evil_pac_3
-	dc.l	_evil_pac_2
+	dc.l	_evil_pac_1,_evil_pac_2,_evil_pac_3,_evil_pac_4,_evil_pac_4
+	dc.l	_evil_pac_3,_evil_pac_2,_evil_pac_1
 	dc.b	0,0,0,0
 	even
 _moustache_ghost_sprites:

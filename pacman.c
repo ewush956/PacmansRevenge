@@ -40,7 +40,7 @@ Ghost crying_ghost = {
     0,
     LEFT,
     DEFAULT,
-    (UINT16)10, (UINT16)17,
+    10, 17,
     GHOST_TYPE_CRYING
 };
 /*************************************************************
@@ -70,7 +70,7 @@ Ghost moustache_ghost = {
     0,
     RIGHT,
     DEFAULT,
-    (UINT16)10, (UINT16)21,
+    10, 21,
     GHOST_TYPE_MOUSTACHE
 };
 /*************************************************************
@@ -100,10 +100,10 @@ Timer timer = {
 
 Entities entity = {
     &pacman,
-    &moustache_ghost,
     &crying_ghost,
+    &awkward_ghost,
+    &moustache_ghost,
     &cyclops_ghost,
-    &awkward_ghost
 };
 
 /*
@@ -118,6 +118,7 @@ int main()
 {
 	char input;
 	int i,j,counter;
+    int ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = Physbase();
     UINT16* base16 = Physbase();
@@ -132,6 +133,8 @@ int main()
     clear_screen_q(base32); 
     render_map(base16, tile_map);
     render_frame(base32, &entity);
+    render_initial_timer(base8);
+    free_ghosts(base32, base8, &entity);
 	
 	if (Cconis())
 	{
@@ -143,34 +146,32 @@ int main()
         time_now = get_time();
         time_elapsed = time_now - time_then;
 
-        if (time_elapsed > 1) {
+        if (time_elapsed > 0) {
 
             if (Cconis())
             {
                 input = (char)Cnecin();
             }
-
-                render_frame(base32, &entity);
-
-                clear_bitmap_32(base32, pacman.x, pacman.y, SPRITE_HEIGHT); 
-                clear_bitmap_32(base32, crying_ghost.x, crying_ghost.y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, moustache_ghost.x, moustache_ghost.y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, awkward_ghost.x, awkward_ghost.y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, cyclops_ghost.x, cyclops_ghost.y, SPRITE_HEIGHT);
-                update_cells(&entity);
-
+                /*
+                if (ticks % 70 == 0) {
+                    ticks = 0;
+                }
+                ticks++;
+                */
+                
+                clear_entities(base32, &entity);
                 set_input(&pacman,input);
+
+                check_proximity(&entity);
                 handle_collisions(&entity, &xor);       /*Checks and handles collisions*/
 
-                move_pacman(entity.pacman);
-                move_ghost(&moustache_ghost);
-                move_ghost(&crying_ghost);
-                move_ghost(&cyclops_ghost);
-                move_ghost(&awkward_ghost);
-                
+                update_pacman(ticks);
+                update_ghosts();
+
+                render_frame(base32, &entity);
+                update_cells(&entity);
 
                 debug_cells_pac(base8, &pacman);
-
             time_then = time_now;
         }
         update_game_state(state, input);
@@ -178,7 +179,66 @@ int main()
 
 	return 0;
 }
+void update_pacman(int do_the_roar){
+    move_pacman(&pacman);
+    if (do_the_roar % 2 == 0) {
+         pacman.current_frame = ((pacman.current_frame) + 1) % 8;
+    }
+}
+void update_ghosts(){
+                move_ghost(&moustache_ghost);
+                move_ghost(&crying_ghost);
+                move_ghost(&cyclops_ghost);
+                move_ghost(&awkward_ghost);
+                /*update current frame of ghosties here*/
+}
+void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
+    crying_ghost.delta_x = 1;
+	crying_ghost.delta_y = 0;
+	crying_ghost.direction = RIGHT;
 
+
+    awkward_ghost.delta_x = -1;
+    awkward_ghost.delta_y = 0;
+    awkward_ghost.direction = LEFT;
+
+	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
+    
+	crying_ghost.delta_x = 0;
+	crying_ghost.delta_y = -1;
+	crying_ghost.direction = UP;
+
+    awkward_ghost.delta_x = 0;
+    awkward_ghost.delta_y = 1;
+    awkward_ghost.direction = DOWN;
+
+	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
+
+
+    awkward_ghost.delta_x = 0;
+}
+void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost1, Ghost* ghost2, int stop){
+    int i;
+
+	for (i=0; i < stop; i++) {
+		clear_bitmap_32(base, ghost1->x, ghost1->y, SPRITE_HEIGHT); 
+        clear_bitmap_32(base, ghost2->x, ghost2->y, SPRITE_HEIGHT);
+
+        ghost1 -> x += (ghost1 -> delta_x);
+        ghost1 -> y += (ghost1 -> delta_y);
+
+        ghost2 -> x += (ghost2 -> delta_x);
+        ghost2 -> y += (ghost2 -> delta_y);
+
+		update_cells(entity);
+
+		render_frame(base, entity);
+		if (i % 8 == 0) {
+			ghost1->current_frame = ((ghost1->current_frame) + 1) % 2;
+            ghost2->current_frame = ((ghost2->current_frame) + 1) % 2;
+		}
+	}
+}
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
     /*Do something that updates the gamestate*/
     GAME_STATE state;
