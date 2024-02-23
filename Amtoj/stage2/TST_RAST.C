@@ -320,11 +320,11 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 		
 	/* for now assume that the map will be 640x400 (chnage later once we figure out proper dimesn for map)*/
 	
-	if (!(ghost->x + new_x > SCREEN_WIDTH || ghost->x  + new_x < 0 ||
-		ghost->y + new_y > SCREEN_HEIGHT || ghost->y + new_y < 0))
+	if (!(ghost->move->x   + new_x > SCREEN_WIDTH || ghost->move->x    + new_x < 0 ||
+		ghost->move->y  + new_y > SCREEN_HEIGHT || ghost->move->y  + new_y < 0))
 	{
 			ghost-> x += new_x;
-			ghost->y += new_y;
+			ghost->move->y  += new_y;
 	}
 	
 	
@@ -340,8 +340,8 @@ void move_ghost_position (Ghost *ghost, int new_x, int new_y)
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
 	
-	ghost->delta_x = horizontal_velocity;
-	ghost->delta_y = vertical_velocity;
+	ghost->move->delta_x = horizontal_velocity;
+	ghost->move->delta_y  = vertical_velocity;
 		
 }
 
@@ -355,11 +355,11 @@ void move_pacman_position (Pacman *pacman, int new_x, int new_y)
 {
 	
 	
-	if (!(pacman->x + new_x > SCREEN_WIDTH || pacman->x  + new_x < 0 ||
-		pacman->y + new_y > SCREEN_HEIGHT || pacman->y + new_y < 0))
+	if (!(pacman->move->x + new_x > SCREEN_WIDTH || pacman->move->x  + new_x < 0 ||
+		pacman->move->y + new_y > SCREEN_HEIGHT || pacman->move->y + new_y < 0))
 	{
 			pacman-> x += new_x;
-			pacman->y += new_y;
+			pacman->move->y += new_y;
 	}
 	
 	

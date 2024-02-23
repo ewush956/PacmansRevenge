@@ -23,7 +23,7 @@ typedef struct
 
 void clock_tick_handle(UINT16* clock_count, Entities* entity);		/* calls move pacman calls all synch event handlers */
 void handle_pacman_collision(ObjectType object_type, Entities* entity);
-void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *random_int_struct);
+void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost1, Ghost* ghost2);
 void handle_collisions(Entities* entity, Xor *xor);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);

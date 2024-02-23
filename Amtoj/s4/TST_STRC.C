@@ -164,37 +164,37 @@ void next_test(UINT32* base) {
 void set_input(Pacman *pacman, char input)
 {
 
-	pacman -> delta_y = 0;
-    pacman -> delta_x = 0;              /* make this better? how to reset it everytime?*/
-    /*pacman -> direction = 0;*/
+	pacman -> move -> delta_y = 0;
+    pacman -> move -> delta_x = 0;              /* make this better? how to reset it everytime?*/
+    /*pacman -> move -> direction = 0;*/
 
 	switch(input)
 	{
 		case W_KEY: 
-			pacman -> delta_y = -1;   		/* UP 1*/
-            pacman -> direction = UP; 
+			pacman -> move -> delta_y = -1;   		/* UP 1*/
+            pacman -> move -> direction = UP; 
 			break;
 				
 		case A_KEY: 
-			pacman -> delta_x = -1;			/*Left 3*/
-            pacman -> direction = LEFT;
+			pacman -> move -> delta_x = -1;			/*Left 3*/
+            pacman -> move -> direction = LEFT;
 			break;
 				
 		case S_KEY: 
-			pacman -> delta_y = 1;			/*Down 2*/
-            pacman -> direction = DOWN;
+			pacman -> move -> delta_y = 1;			/*Down 2*/
+            pacman -> move -> direction = DOWN;
 			break;
 				
 		case D_KEY: 
-			pacman -> delta_x = 1;			/* Right 4*/
-            pacman -> direction = RIGHT;
+			pacman -> move -> delta_x = 1;			/* Right 4*/
+            pacman -> move -> direction = RIGHT;
 			break;
 
 		default:
 			printf("Invalid input\n");
             pacman-> delta_x = 0;
-            pacman -> delta_y = 0;
-			/*pacman -> direction = 0;*/
+            pacman -> move -> delta_y = 0;
+			/*pacman -> move -> direction = 0;*/
 			break;
 	}
 		

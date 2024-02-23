@@ -35,11 +35,11 @@ void render_pacman(Pacman *pacman, Ghost *ghost)
 void render_ghost(Ghost* ghost) {
     /*
     Amtoj
-    1) Figure out ghost->delta_x and y based on direction 
+    1) Figure out ghost->move->delta_x and y based on direction 
     2) call move_ghost_position and pass in new
     3) check return status -> if true, call handle_pacman_collision
     
-    Use check_next_cell(ghost->direction, ghost->x_cell_index, ghost->y_cell_index)*/
+    Use check_next_cell(ghost->move->direction, ghost->x_cell_index, ghost->y_cell_index)*/
 }
 void render_gameover() {
     /*

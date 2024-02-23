@@ -44,7 +44,7 @@ typedef struct
 
 	int x_cell_index, y_cell_index; 
 	/*Check things like this:		
-	if (pacman->direction == DOWN) {check cell_map[pacman->x_cell_index][pacman->y_cell_index + 1].open_path}
+	if (pacman->move->direction == DOWN) {check cell_map[pacman->x_cell_index][pacman->move->y_cell_index  + 1].open_path}
 	*/
 
 }Pacman;

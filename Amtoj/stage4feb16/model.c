@@ -67,14 +67,14 @@ Timer timer = {
 /* move by pixels in this NOT cells */
 void move_pacman (Pacman *pacman)
 {
-    pacman -> x += pacman->delta_x;
-    pacman -> y += pacman->delta_y;
+    pacman -> move -> x += pacman->delta_x;
+    pacman -> move -> y += pacman->delta_y;
 }
 
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
-	ghost->delta_x = horizontal_velocity;
-	ghost->delta_y = vertical_velocity;		
+	ghost->move->delta_x = horizontal_velocity;
+	ghost->move->delta_y  = vertical_velocity;		
 }
 
 void move_ghost (Ghost *ghost)

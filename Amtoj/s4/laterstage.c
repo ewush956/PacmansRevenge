@@ -1,11 +1,11 @@
 void render_pacman(Pacman *pacman, Ghost *ghost) {
     /*
     Amtoj
-    1) Figure out pacman->delta_x and y based on direction 
+    1) Figure out pacman->move->delta_x and y based on direction 
     2) call move_pacman_position and pass in new 
     3) check return status -> if true, call handle_pacman_collision
     
-    use check_next_cell(pacman->direction, pacman->x_cell_index, pacman->y_cell_index)*/
+    use check_next_cell(pacman->move->direction, pacman->x_cell_index, pacman->y_cell_index)*/
 
     /*later stage use this */
     UINT8 collision_type; 
@@ -22,8 +22,8 @@ void render_pacman(Pacman *pacman, Ghost *ghost) {
 
      /*
    bool collided = FALSE;
-    new_x_position = pacman->x + pacman->delta_x;
-	new_y_position = pacman->y + pacman->delta_y;
+    new_x_position = pacman->move->x + pacman->delta_x;
+	new_y_position = pacman->move->y + pacman->delta_y;
     collided = check_collision(new_x_position, new_y_position);
     */
 
@@ -31,12 +31,12 @@ void render_pacman(Pacman *pacman, Ghost *ghost) {
     if (collided == FALSE){
 
         /*handle_collsion()
-        pacman->x = new_x_position;
-		pacman->y = new_y_position;
+        pacman->move->x = new_x_position;
+		pacman->move->y = new_y_position;
         /*pacman->current_cell = &cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH]; 
         wefixed this so erpace with the updated code 
         
-        printf("Direction: %d\n",pacman->direction);
+        printf("Direction: %d\n",pacman->move->direction);
        
     }
     */

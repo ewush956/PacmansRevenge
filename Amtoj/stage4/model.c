@@ -59,14 +59,14 @@ Timer timer = {
 /* move by pixels in this NOT cells */
 void move_pacman (Pacman *pacman)
 {
-    pacman -> x += pacman->delta_x;
-    pacman -> y += pacman->delta_y;
+    pacman -> move -> x += pacman->delta_x;
+    pacman -> move -> y += pacman->delta_y;
 }
 
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
-	ghost->delta_x = horizontal_velocity;
-	ghost->delta_y = vertical_velocity;		
+	ghost->move->delta_x = horizontal_velocity;
+	ghost->move->delta_y  = vertical_velocity;		
 }
 
 void move_ghost (Ghost *ghost)
@@ -111,16 +111,16 @@ UCHAR8 check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_
     }
 
 /*
-    else if (entity->crying_ghost->x == entity->pacman->x && entity->crying_ghost->y == entity->pacman->y)
+    else if (entity->crying_ghost->move->x   == entity->pacman->move->x && entity->crying_ghost->move->y  == entity->pacman->y)
         collision = OBJECT;
     
-    else if (entity->moustache_ghost->x == entity->pacman-> x && entity->moustache_ghost->y == entity->pacman->y)
+    else if (entity->moustache_ghost->move->x   == entity->pacman-> x && entity->moustache_ghost->move->y  == entity->pacman->y)
         collision = OBJECT;
     
-    else if (entity->awkward_ghost->x == entity->pacman->x && entity->awkward_ghost->y == entity->pacman->y)
+    else if (entity->awkward_ghost->move->x   == entity->pacman->move->x && entity->awkward_ghost->move->y  == entity->pacman->y)
         collision = OBJECT;
 
-    else if (entity->cyclops_ghost->x == entity->pacman->x && entity->cyclops_ghost->y == entity->pacman->y)
+    else if (entity->cyclops_ghost->move->x   == entity->pacman->move->x && entity->cyclops_ghost->move->y  == entity->pacman->y)
         collision = OBJECT;
 */
   

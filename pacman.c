@@ -12,102 +12,126 @@
 #include <stdio.h>
 #include <linea.h>
 
-
 /*************************************************************
 * Declaration: Pacman pacman
 * Purpose: Initializes the player character, Pacman, with its
 *          starting position, movement displacement, state,
 *          direction, and cell index on the game map.
 *************************************************************/
-Pacman pacman = {
-    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,  
-    0,0,           /*Initial Displacement*/
-    0,             /*Initial state index*/
-    UP,            /*Initial direction*/
-    DEFAULT,       /*Initial state*/
-    21,19,          /*Cell index -> y, x*/
-    PACMAN
+Movement pacman_movement = {
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
+        0,0,        /*Initial Displacement*/
+        UP,
+        21,19          /*Cell index -> y, x*/
 };
+Pacman pacman = {
+    0,
+    UP,
+    PACMAN,
+    &pacman_movement
+};
+
+Movement crying_ghost_movement = {
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        0,0,
+        LEFT,
+        10, 17
+};
+Ghost crying_ghost = {
+    0,
+    DEFAULT,
+    GHOST_TYPE_CRYING,
+    &crying_ghost_movement
+};
+
+Movement cyclops_ghost_movement = {
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        0,0,
+        RIGHT,
+        12, 17
+};
+Ghost cyclops_ghost = {
+    0,
+    DEFAULT,
+    GHOST_TYPE_CYCLOPS,
+    &cyclops_ghost_movement
+};
+
+Movement moustache_ghost_movement = {
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        0,0,
+        LEFT,
+        10, 21
+};
+Ghost moustache_ghost = {
+    0,
+    DEFAULT,
+    GHOST_TYPE_MOUSTACHE,
+    &moustache_ghost_movement
+};
+
+Movement awkward_ghost_movement = {
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        0,0,
+        LEFT,
+        12, 21
+};
+Ghost awkward_ghost = {
+    0,
+    DEFAULT,
+    GHOST_TYPE_AWKWARD,
+    &awkward_ghost_movement
+};
+
+Timer timer = {
+    0,0,
+    20, 28, 44, 52
+};
+
 /*************************************************************
 * Declaration: Ghost crying_ghost
 * Purpose: Initializes the 'crying' ghost entity with its starting
 *          position, movement displacement, state, direction, 
 *          and cell index on the game map.
 *************************************************************/
-Ghost crying_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
-    0,0,
-    0,
-    LEFT,
-    DEFAULT,
-    10, 17,
-    GHOST_TYPE_CRYING
-};
+
 /*************************************************************
 * Declaration: Ghost cyclops_ghost
 * Purpose: Initializes the 'cyclops' ghost entity with its
 *          starting position, movement displacement, state,
 *          direction, and cell index on the game map.
 *************************************************************/
-Ghost cyclops_ghost = {
-    PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
-    0,0,
-    0,
-    LEFT,
-    DEFAULT,
-    12, 17,
-    GHOST_TYPE_CYCLOPS
-};
+
 /*************************************************************
 * Declaration: Ghost moustache_ghost
 * Purpose: Initializes the 'moustache' ghost entity with its
 *          starting position, movement displacement, state,
 *          direction, and cell index on the game map.
 *************************************************************/
-Ghost moustache_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
-    0,0,
-    0,
-    RIGHT,
-    DEFAULT,
-    10, 21,
-    GHOST_TYPE_MOUSTACHE
-};
+
 /*************************************************************
 * Declaration: Ghost awkward_ghost
 * Purpose: Initializes the 'awkward' ghost entity with its
 *          starting position, movement displacement, state,
 *          direction, and cell index on the game map.
 *************************************************************/
-Ghost awkward_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
-    0,0,
-    0,
-    RIGHT,
-    DEFAULT,
-    12, 21,
-    GHOST_TYPE_AWKWARD
-};
+
 /*************************************************************
 * Declaration: Timer timer
 * Purpose: Initializes the game timer with starting values
 *          and thresholds for various game events.
 *************************************************************/
-Timer timer = {
-    0,0,
-    20, 28, 44, 52
-};
 
-Entities entity = {
+int main()
+{
+    Entities entity = {
     &pacman,
     &crying_ghost,
     &awkward_ghost,
     &moustache_ghost,
     &cyclops_ghost,
-};
+    };
 
-int main()
-{
 	char input;
 	int i,j,counter;
     int ticks = 0;
@@ -126,7 +150,7 @@ int main()
     render_map(base16, tile_map);
     render_frame(base32, &entity);
     render_initial_timer(base8);
-    free_ghosts(base32, base8, &entity);
+    free_ghosts(base32, base8, &entity); 
 	
 	if (Cconis())
 	{
@@ -194,42 +218,41 @@ void update_ghosts(){
                 /*update current frame of ghosties here*/
 }
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
-    crying_ghost.delta_x = 1;
-	crying_ghost.delta_y = 0;
-	crying_ghost.direction = RIGHT;
+    crying_ghost.move->delta_x = 1;
+	crying_ghost.move->delta_y = 0;
+    crying_ghost.move->direction = RIGHT;
 
-
-    awkward_ghost.delta_x = -1;
-    awkward_ghost.delta_y = 0;
-    awkward_ghost.direction = LEFT;
+    awkward_ghost.move->delta_x = -1;
+    awkward_ghost.move->delta_y = 0;
+    awkward_ghost.move->direction = LEFT;
 
 	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
     
-	crying_ghost.delta_x = 0;
-	crying_ghost.delta_y = -1;
-	crying_ghost.direction = UP;
+	crying_ghost.move->delta_x = 0;
+	crying_ghost.move->delta_y = -1;
+	crying_ghost.move->direction = UP;
 
-    awkward_ghost.delta_x = 0;
-    awkward_ghost.delta_y = 1;
-    awkward_ghost.direction = DOWN;
+    awkward_ghost.move->delta_x = 0;
+    awkward_ghost.move->delta_y = 1;
+    awkward_ghost.move->direction = DOWN;
 
 	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
 
 
-    awkward_ghost.delta_x = 0;
+    awkward_ghost.move->delta_x = 0;
 }
 void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost1, Ghost* ghost2, int stop){
     int i;
 
 	for (i=0; i < stop; i++) {
-		clear_bitmap_32(base, ghost1->x, ghost1->y, SPRITE_HEIGHT); 
-        clear_bitmap_32(base, ghost2->x, ghost2->y, SPRITE_HEIGHT);
+		clear_bitmap_32(base, ghost1->move->x, ghost1->move->y, SPRITE_HEIGHT); 
+        clear_bitmap_32(base, ghost2->move->x, ghost2->move->y, SPRITE_HEIGHT);
 
-        ghost1 -> x += (ghost1 -> delta_x);
-        ghost1 -> y += (ghost1 -> delta_y);
+        ghost1 -> move-> x += (ghost1 -> move->delta_x);
+        ghost1 -> move-> y += (ghost1 -> move->delta_y);
 
-        ghost2 -> x += (ghost2 -> delta_x);
-        ghost2 -> y += (ghost2 -> delta_y);
+        ghost2 -> move-> x += (ghost2 -> move->delta_x);
+        ghost2 -> move-> y += (ghost2 -> move->delta_y);
 
 		update_cells(entity);
 
@@ -284,9 +307,9 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
 	}
 
     plot_string(base, 0, 0, font, strx);
-    debug_print(base, 4*LETTER_WIDTH, 0, pacman->x_cell_index);
+    debug_print(base, 4*LETTER_WIDTH, 0, pacman->move->x_cell_index);
     plot_string(base, 8*LETTER_WIDTH, 0, font, stry);
-    debug_print(base, 12*LETTER_WIDTH, 0, pacman->y_cell_index);
+    debug_print(base, 12*LETTER_WIDTH, 0, pacman->move->y_cell_index);
 }
 
 /*TODO:

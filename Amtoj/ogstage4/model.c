@@ -233,13 +233,13 @@ bool move_pacman_position(Pacman *pacman)
     bool can_move = FALSE;
 	UINT16 new_x_position, new_y_position;
     /*
-    pacman -> delta_y = 0;
-    pacman -> delta_x = 0;              /* make this better? how to reset it everytime?
-    pacman->direction = 0;
+    pacman -> move -> delta_y = 0;
+    pacman -> move -> delta_x = 0;              /* make this better? how to reset it everytime?
+    pacman->move->direction = 0;
      */
 
-	new_x_position = pacman->x + pacman->delta_x;
-	new_y_position = pacman->y + pacman->delta_y;
+	new_x_position = pacman->move->x + pacman->delta_x;
+	new_y_position = pacman->move->y + pacman->delta_y;
 
 
     
@@ -251,12 +251,12 @@ bool move_pacman_position(Pacman *pacman)
 /* below for the events that handle this*/
     if (can_move == FALSE)
     {
-        pacman->x = new_x_position;
-		pacman->y = new_y_position;
+        pacman->move->x = new_x_position;
+		pacman->move->y = new_y_position;
         /*pacman->current_cell = &cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH]; 
         wefixed this so erpace with the updated code */
         
-        printf("Direction: %d\n",pacman->direction);
+        printf("Direction: %d\n",pacman->move->direction);
        
     }
 
@@ -276,8 +276,8 @@ bool move_pacman_position(Pacman *pacman)
 void increase_ghost_velocity (Ghost *ghost, UINT16 vertical_velocity, UINT16 horizontal_velocity)
 {
 	
-	ghost->delta_x = horizontal_velocity;
-	ghost->delta_y = vertical_velocity;
+	ghost->move->delta_x = horizontal_velocity;
+	ghost->move->delta_y  = vertical_velocity;
 	
 }
 /* 
@@ -336,8 +336,8 @@ void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][MAP_TILE_LENGTH],Ce
 	bool can_move = FALSE;
     UINT16 new_x_position, new_y_position;
     
-    new_x_position = ghost->x += delta_x;
-    new_y_position = ghost->y += delta_y;
+    new_x_position = ghost->move->x   += delta_x;
+    new_y_position = ghost->move->y  += delta_y;
 
     can_move = check_collision(new_x_position,new_y_position);
         
@@ -347,17 +347,17 @@ void move_ghost_position (Ghost *ghost, UINT16* ghost_path[][MAP_TILE_LENGTH],Ce
 
 
     /*      use in events not here
-    if (pacman->direction == UP)
-        ghost->direction = DOWN;   
+    if (pacman->move->direction == UP)
+        ghost->move->direction = DOWN;   
 
-    if (pacman->direction == DOWN)
-        ghost->direction = UP;
+    if (pacman->move->direction == DOWN)
+        ghost->move->direction = UP;
 
-     if (pacman->direction == LEFT)
-        ghost->direction = RIGHT;   
+     if (pacman->move->direction == LEFT)
+        ghost->move->direction = RIGHT;   
 
-    if (pacman->direction == RIGHT)
-        ghost->direction = LEFT;   
+    if (pacman->move->direction == RIGHT)
+        ghost->move->direction = LEFT;   
     */
 
     
@@ -405,7 +405,7 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
             /*pacman-> has_collided = TRUE;
             printf(" collision \n");
             printf("This value is for collision is: %d\n",tile_map[object_y_position][object_x_position]);
-         /*   printf("Direction: %d\n", pacman->direction);
+         /*   printf("Direction: %d\n", pacman->move->direction);
             collision = 1;
 
         }
@@ -413,7 +413,7 @@ bool check_collision (Pacman* pacman, UINT16 object_x_position, UINT16 object_y_
         else{
 
             printf(" YOURE GOOD: %d\n",tile_map[object_y_position][object_x_position]);
-            printf("Direction: %u\n", pacman->direction);
+            printf("Direction: %u\n", pacman->move->direction);
         }
         /*
             pacman->has_collided = FALSE;

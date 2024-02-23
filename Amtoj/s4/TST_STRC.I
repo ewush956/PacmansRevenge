@@ -895,36 +895,36 @@ void next_test(UINT32* base) {
 void set_input(Pacman *pacman, char input)
 {
 
-	pacman -> delta_y = 0;
-    pacman -> delta_x = 0;
+	pacman -> move -> delta_y = 0;
+    pacman -> move -> delta_x = 0;
 
 
 	switch(input)
 	{
 		case 'w' :
-			pacman -> delta_y = -1;
-            pacman -> direction = 1 ;
+			pacman -> move -> delta_y = -1;
+            pacman -> move -> direction = 1 ;
 			break;
 
 		case 'a' :
-			pacman -> delta_x = -1;
-            pacman -> direction = 3 ;
+			pacman -> move -> delta_x = -1;
+            pacman -> move -> direction = 3 ;
 			break;
 
 		case 's' :
-			pacman -> delta_y = 1;
-            pacman -> direction = 2 ;
+			pacman -> move -> delta_y = 1;
+            pacman -> move -> direction = 2 ;
 			break;
 
 		case 'd' :
-			pacman -> delta_x = 1;
-            pacman -> direction = 4 ;
+			pacman -> move -> delta_x = 1;
+            pacman -> move -> direction = 4 ;
 			break;
 
 		default:
 			printf("Invalid input\n");
             pacman-> delta_x = 0;
-            pacman -> delta_y = 0;
+            pacman -> move -> delta_y = 0;
 
 			break;
 	}

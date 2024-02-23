@@ -43,31 +43,35 @@ typedef struct {
 	bool occupied;
 }Cell;
 
+
+typedef struct {
+    UINT16 x;
+    UINT16 y;
+    int delta_x;
+    int delta_y;
+    UCHAR8 direction;
+    UCHAR8 y_cell_index;
+    UCHAR8 x_cell_index;
+}Movement;
+
+extern Movement* move;
+
 typedef struct 
 {
-	UINT16 x, y;					/*positon */
-	int delta_x, delta_y; 		    /* displacement (horzontal or vertical) */
-
 	int current_frame;		        /* current sprite (state) index */
-	UCHAR8 direction;		        /*UP, DOWN, LEFT, RIGHT*/
 	UCHAR8 state;					/*DEFAULT OR EVIL*/
-
-	UINT16 y_cell_index, x_cell_index;
 	ObjectType type;
+
+	Movement* move;
 }Pacman;
 
 typedef struct
 {
-	UINT16 x,y;			
-	int delta_x,delta_y;
-
 	int current_frame;
-	UCHAR8 direction;
 	UCHAR8 state;		
-
-	UINT16 y_cell_index, x_cell_index;
 	ObjectType type;
 
+	Movement* move;
 }Ghost;
 
 typedef struct{
@@ -103,11 +107,12 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
                                   UINT16 object_x_index, int y_delta, int x_delta);
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
-void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, 
-                UINT16 y_position, UCHAR8 state);
+void update_cell(Movement* entity, UCHAR8 state);
 void update_cells(Entities* entity);
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
+
+ObjectType check_wall_collision(Movement* entity);
 
 void check_proximity(Entities* entity);
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state);

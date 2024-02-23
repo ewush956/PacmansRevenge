@@ -79,28 +79,28 @@ int main()
 	refresh_screen(base32, &entity);
 	test_pacman_movement(base32, base8, &entity, 15);
 
-	entity.pacman->direction = RIGHT;
-	entity.pacman->delta_x = 1;
-	entity.pacman->delta_y = 0;
+	entity.pacman->move->direction = RIGHT;
+	entity.pacman->move->delta_x = 1;
+	entity.pacman->move->delta_y = 0;
 
 	next_test(base32);
 	test_pacman_movement(base32, base8, &entity, 16 * 15);
 
-	entity.pacman->direction = UP;
-	entity.pacman->delta_x = 0;
-	entity.pacman->delta_y = -1;
+	entity.pacman->move->direction = UP;
+	entity.pacman->move->delta_x = 0;
+	entity.pacman->move->delta_y = -1;
 	test_pacman_movement(base32, base8, &entity, 32 + 16);
 	next_test(base32);
 	
-	entity.crying_ghost->delta_x = 1;
-	entity.crying_ghost->delta_y = 0;
-	entity.crying_ghost->direction = RIGHT;
+	entity.crying_ghost->move->delta_x = 1;
+	entity.crying_ghost->move->delta_y  = 0;
+	entity.crying_ghost->move->direction = RIGHT;
 
 	test_ghost_movement(base32, base8, &entity, entity.crying_ghost, 31);
 
-	entity.crying_ghost->delta_x = 0;
-	entity.crying_ghost->delta_y = -1;
-	entity.crying_ghost->direction = UP;
+	entity.crying_ghost->move->delta_x = 0;
+	entity.crying_ghost->move->delta_y  = -1;
+	entity.crying_ghost->move->direction = UP;
 	test_ghost_movement(base32, base8, &entity, entity.crying_ghost, 32+16);
 
 	kill_ghost(entity.moustache_ghost, cell_map);
@@ -114,19 +114,19 @@ int main()
 	
 
 /*
-	awkward->delta_x = -1;
-	awkward->delta_y = 0;
-	awkward->direction = LEFT;
+	awkward->move->delta_x = -1;
+	awkward->move->delta_y = 0;
+	awkward->move->direction = LEFT;
 	test_ghost_movement(base32, base8, &entity, awkward, 32);
 
-	moustache->delta_x = 0;
-	moustache->delta_y = -1;
-	moustache->direction = UP;
+	moustache->move->delta_x = 0;
+	moustache->move->delta_y = -1;
+	moustache->move->direction = UP;
 	test_ghost_movement(base32, base8, &entity, moustache, 16);
 
-	moustache->delta_x = 1;
-	moustache->delta_y = 0;
-	moustache->direction = RIGHT;
+	moustache->move->delta_x = 1;
+	moustache->move->delta_y = 0;
+	moustache->move->direction = RIGHT;
 	test_ghost_movement(base32, base8, &entity, moustache, 64);
 */
 	next_test(base32);
@@ -158,12 +158,12 @@ void test_pacman_movement(ULONG32* base, UCHAR8* base8, Entities* entity, int st
 			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
 		}
 		/*
-		if (entity->pacman->x_cell_index != cell_x) {
+		if (entity->pacman->move->x_cell_index != cell_x) {
 			next_test(base);
 			cell_x = entity->pacman->x_cell_index;
 		}
 		*/
-		if (entity->pacman->y_cell_index != cell_y && entity->pacman->delta_x == 0) {
+		if (entity->pacman->move->y_cell_index  != cell_y && entity->pacman->move->delta_x == 0) {
 			next_test(base);
 			cell_y = entity->pacman->y_cell_index;
 		}

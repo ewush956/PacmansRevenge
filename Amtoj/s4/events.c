@@ -18,7 +18,7 @@ void clock_tick_handle(UINT16* clock_count,Ghost* ghost, Pacman *pacman,Timer *t
     
     if (*clock_count % 4 == 0) {
 
-        pacman->direction = UP; /*get_input();*/
+        pacman->move->direction = UP; /*get_input();*/
         /*mod 4 because 70 ticks per second is very fast
         render_pacman(&pacman,&ghost);              /*added &ghost here
         update_cell(&pacman.x_cell_index, &pacman.y_cell_index);
@@ -62,8 +62,8 @@ void handle_pacman_collision(UINT8 collision_type,Pacman *pacman) {
     switch(collision_type)
     {
         case WALL:
-            pacman -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
-            pacman -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
+            pacman -> move -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
+            pacman -> move -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
             break;
         case OBJECT:                            /* ask evan  */
             break;

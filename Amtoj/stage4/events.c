@@ -26,10 +26,10 @@ void clock_tick_handle(UINT16* clock_count, Entites* entity) {
         Ghost* cyclops = entity->cyclops_ghost;
         Ghost* awkward = entity->awkward_ghost;
         
-        pac->direction = UP;
+        pac->move-> direction = UP;
         render_pacman(pac);
         render_ghosts()
-        update_cell(&pac->x_cell_index, &pacman->y_cell_index);
+        update_cell(&pac->move-> x_cell_index, &pacman->y_cell_index);
 
         update_cell(&crying_ghost->x_cell_index, &crying_ghost->y_cell_index);
 
@@ -63,19 +63,19 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
     
     if (collision_type == WALL)
     {
-        if (ghost->x_cell_index + 1 == TRUE )
+        if (ghost->move->x_cell_index  + 1 == TRUE )
         {
             possible_direction |= RIGHT;
             printf("right \n");
         }
 
-        if (ghost->x_cell_index - 1 == TRUE)
+        if (ghost->move->x_cell_index  - 1 == TRUE)
         {
             possible_direction |= LEFT;
             printf("left \n");
         }
 
-        if (ghost->y_cell_index + 1 == TRUE)
+        if (ghost->move->y_cell_index  + 1 == TRUE)
         {
             possible_direction |= DOWN;
             printf("down \n");
@@ -98,7 +98,7 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
            possible_direction = random_number % possible_direction;
            ghost -> direction = possible_direction;
 
-           printf("ghost direction: %u",ghost->direction);
+           printf("ghost direction: %u",ghost->move->direction);
     }
     else{
 
@@ -112,8 +112,8 @@ void handle_pacman_collision(UCHAR8 collision_type, Pacman *pacman) {
     /*if pacman collides w ghost call init_tombstone then de_render_ghost then render_tombstone*/
     
 
-    pacman->delta_y = 0;
-    pacman->delta_x = 0;
+    pacman->move->delta_y = 0;
+    pacman->move->delta_x = 0;
     switch(collision_type)
     {
     case WALL: 
@@ -135,17 +135,17 @@ void handle_pacman_collision(UCHAR8 collision_type, Pacman *pacman) {
 
 
 /*
-   if (pacman->direction == UP)
+   if (pacman->move->direction == UP)
             pacman ->delta_y = 0;
         else if (pacman ->direction == DOWN)
-            pacman->delta_y = 0;
-        else if(pacman -> direction == RIGHT)
-            pacman->delta_x = 0;
+            pacman->move->delta_y = 0;
+        else if(pacman -> move -> direction == RIGHT)
+            pacman->move->delta_x = 0;
         else
             pacman ->delta_x = 0;
 
-     /* pacman -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
-    /*  pacman -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
+     /* pacman -> move -> delta_x = 0;              /* do we want pacman to move while holding key or each press and he moves until collsion?*/
+    /*  pacman -> move -> delta_y = 0;              /* if want automatic then take out input reset in set_input and leave it here */
 }
 
 /* * * * * * * * * * * * *

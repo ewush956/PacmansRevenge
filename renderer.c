@@ -64,10 +64,10 @@ void render_frame(ULONG32* base, Entities* entity) {
 void render_pacman(ULONG32* base32, Pacman* pacman) {
 
     if (pacman->state == EVIL) {
-        plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, pacman->move->x, pacman->move->y, evil_pacman_sprites[pacman->move->direction][pacman->current_frame], SPRITE_HEIGHT);
     }
     else {
-        plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->direction][pacman->current_frame], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, pacman->move->x, pacman->move->y, default_pacman_sprites[pacman->move->direction][pacman->current_frame], SPRITE_HEIGHT);
     }    /* pacman->current_frame++; */
 }
 /*************************************************************
@@ -90,25 +90,25 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     /*THIS IS ALSO A TEST*/
     
     if (awkward->state == DEFAULT) {
-        plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->direction][awkward->current_frame], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, awkward->move->x, awkward->move->y, awkward_ghost_sprites[awkward->move->direction][awkward->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, awkward);
     }
 
     if (moustache->state == DEFAULT) {
-        plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->direction][moustache->current_frame], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, moustache->move->x, moustache->move->y, moustache_ghost_sprites[moustache->move->direction][moustache->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, moustache);
     }
 
     if (crying->state == DEFAULT) {
-        plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->direction][crying->current_frame], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, crying->move->x, crying->move->y, crying_ghost_sprites[crying->move->direction][crying->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, crying);
     }
 
     if (cyclops->state == DEFAULT) {
-        plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->direction][cyclops->current_frame], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, cyclops->move->x, cyclops->move->y, cyclops_ghost_sprites[cyclops->move->direction][cyclops->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, cyclops);
     }
@@ -124,10 +124,10 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
 *          cell position to indicate where it was caught or removed from the game.
 *************************************************************/
 void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
-    int tombstone_y = (ghost->y_cell_index * PIXELS_PER_CELL) + Y_PIXEL_OFFSET;
-    int tombstone_x = ghost->x_cell_index * PIXELS_PER_CELL;
+    int tombstone_y = (ghost->move->y_cell_index  * PIXELS_PER_CELL) + Y_PIXEL_OFFSET;
+    int tombstone_x = ghost->move->x_cell_index  * PIXELS_PER_CELL;
 
-    clear_bitmap_32(base32, ghost->x, ghost->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, ghost->move->x, ghost->move->y, SPRITE_HEIGHT);
     plot_bitmap_32(base32, tombstone_x, tombstone_y, tombstone, SPRITE_HEIGHT);
 }
 /*************************************************************
@@ -142,10 +142,10 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
 *************************************************************/
 void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
     if (ghost->state == RUNNING) {
-        plot_bitmap_32(base32, ghost->x, ghost->y, running_ghost_sprites[ghost->direction][ghost->current_frame], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, ghost->move->x, ghost->move->y, running_ghost_sprites[ghost->move->direction][ghost->current_frame], SPRITE_HEIGHT);
     }
     else if (ghost->state == FROZEN) {
-        plot_bitmap_32(base32, ghost->x, ghost->y, frozen_ghost_sprites[ghost->direction][ghost->current_frame], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, ghost->move->x, ghost->move->y, frozen_ghost_sprites[ghost->move->direction][ghost->current_frame], SPRITE_HEIGHT);
     }
 }
 /*BOTH FUNCTIONS BELOW ARE INCOMPLETE*/
@@ -158,11 +158,11 @@ void render_timer(Timer* timer) {
 }
 void refresh_screen(ULONG32* base32, Entities* entity) {
     /*removes all entities from the screen*/
-    clear_bitmap_32(base32, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT);    
-    clear_bitmap_32(base32, entity->crying_ghost->x, entity->crying_ghost->y, SPRITE_HEIGHT);    
-    clear_bitmap_32(base32, entity->moustache_ghost->x, entity->moustache_ghost->y, SPRITE_HEIGHT);    
-    clear_bitmap_32(base32, entity->awkward_ghost->x, entity->awkward_ghost->y, SPRITE_HEIGHT);    
-    clear_bitmap_32(base32, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, entity->pacman->move->x, entity->pacman->move->y, SPRITE_HEIGHT);    
+    clear_bitmap_32(base32, entity->crying_ghost->move->x, entity->crying_ghost->move->y, SPRITE_HEIGHT);    
+    clear_bitmap_32(base32, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);    
+    clear_bitmap_32(base32, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);    
+    clear_bitmap_32(base32, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, SPRITE_HEIGHT);
 }
 void render_initial_timer(UCHAR8* base) {
     int start_x = 280;
@@ -171,9 +171,9 @@ void render_initial_timer(UCHAR8* base) {
     plot_string(base, start_x, y, font, "Time: 00:00");
 }
 void clear_entities(ULONG32* base32, Entities* entity) {
-                clear_bitmap_32(base32, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
-                clear_bitmap_32(base32, entity->crying_ghost->x, entity->crying_ghost->y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, entity->moustache_ghost->x, entity->moustache_ghost->y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, entity->awkward_ghost->x, entity->awkward_ghost->y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, entity->cyclops_ghost->x, entity->cyclops_ghost->y, SPRITE_HEIGHT);
+                clear_bitmap_32(base32, entity->pacman->move->x, entity->pacman->move->y, SPRITE_HEIGHT); 
+                clear_bitmap_32(base32, entity->crying_ghost->move->x, entity->crying_ghost->move->y, SPRITE_HEIGHT);
+                clear_bitmap_32(base32, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);
+                clear_bitmap_32(base32, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);
+                clear_bitmap_32(base32, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, SPRITE_HEIGHT);
 }

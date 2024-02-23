@@ -99,8 +99,8 @@ Timer timer = {
 *************************************************************/
 void move_pacman (Pacman *pacman)
 {
-    pacman -> x += pacman->delta_x;
-    pacman -> y += pacman->delta_y;
+    pacman -> move -> x += pacman->delta_x;
+    pacman -> move -> y += pacman->delta_y;
 }
 /*************************************************************
 * Function: move_ghost

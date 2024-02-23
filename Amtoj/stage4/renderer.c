@@ -37,10 +37,10 @@ void render_frame(ULONG32* base, Entities* entity) {
 void render_pacman(ULONG32* base32, Pacman* pacman) {
 
     if (pacman->is_evil == TRUE) {
-        plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, pacman->x, pacman->y, evil_pacman_sprites[pacman->current_frame][pacman->move->direction], SPRITE_HEIGHT);
     }
     else {
-        plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->current_frame][pacman->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, pacman->x, pacman->y, default_pacman_sprites[pacman->current_frame][pacman->move->direction], SPRITE_HEIGHT);
     }    /* pacman->current_frame++; */
 }
 void render_ghosts(ULONG32* base32, Entities* entity) {
@@ -51,25 +51,25 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     Ghost* cyclops = entity->cyclops_ghost;
     
     if (awkward->state == DEFAULT) {
-        plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->current_frame][awkward->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, awkward->move->x, awkward->move->y, awkward_ghost_sprites[awkward->current_frame][awkward->move->direction], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, awkward);
     }
 
     if (moustache->state == DEFAULT) {
-        plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->current_frame][moustache->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->current_frame][moustache->move->direction], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, moustache);
     }
 
     if (crying->state == DEFAULT) {
-        plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->current_frame][crying->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, crying->move->x, crying->move->y, crying_ghost_sprites[crying->current_frame][crying->direction], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, crying);
     }
 
     if (cyclops->state == DEFAULT) {
-        plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->current_frame][cyclops->direction], SPRITE_HEIGHT);
+        plot_bitmap_32(base32, cyclops->move->x, cyclops->move->y, cyclops_ghost_sprites[cyclops->current_frame][cyclops->move->direction], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, cyclops);
     }

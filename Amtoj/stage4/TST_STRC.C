@@ -238,11 +238,11 @@ int main()
 				if (j % 3 == 0)
 					next_test(base);
 
-				ptr->pacman->x_cell_index += 1;
+				ptr->pacman->move->x_cell_index += 1;
 				counter++;
 			}
-			ptr->pacman -> y_cell_index += 1;
-			ptr->pacman -> x_cell_index =0; 
+			ptr->pacman -> move -> y_cell_index += 1;
+			ptr->pacman -> move -> x_cell_index =0; 
 		}
 
 
@@ -268,37 +268,37 @@ void next_test(ULONG32* base) {
 void set_input(Pacman *pacman, char input)
 {
 
-	pacman -> delta_y = 0;
-    pacman -> delta_x = 0;              /* make this better? how to reset it everytime?*/
-    /*pacman -> direction = 0;*/
+	pacman -> move -> delta_y = 0;
+    pacman -> move -> delta_x = 0;              /* make this better? how to reset it everytime?*/
+    /*pacman -> move -> direction = 0;*/
 
 	switch(input)
 	{
 		case W_KEY: 
-			pacman -> delta_y = -1;   		/* UP 1*/
-            pacman -> direction = UP; 
+			pacman -> move -> delta_y = -1;   		/* UP 1*/
+            pacman -> move -> direction = UP; 
 			break;
 				
 		case A_KEY: 
-			pacman -> delta_x = -1;			/*Left 3*/
-            pacman -> direction = LEFT;
+			pacman -> move -> delta_x = -1;			/*Left 3*/
+            pacman -> move -> direction = LEFT;
 			break;
 				
 		case S_KEY: 
-			pacman -> delta_y = 1;			/*Down 2*/
-            pacman -> direction = DOWN;
+			pacman -> move -> delta_y = 1;			/*Down 2*/
+            pacman -> move -> direction = DOWN;
 			break;
 				
 		case D_KEY: 
-			pacman -> delta_x = 1;			/* Right 4*/
-            pacman -> direction = RIGHT;
+			pacman -> move -> delta_x = 1;			/* Right 4*/
+            pacman -> move -> direction = RIGHT;
 			break;
 
 		default:
 			printf("Invalid input\n");
             pacman-> delta_x = 0;
-            pacman -> delta_y = 0;
-			/*pacman -> direction = 0;*/
+            pacman -> move -> delta_y = 0;
+			/*pacman -> move -> direction = 0;*/
 			break;
 	}
 
@@ -307,8 +307,8 @@ void set_input(Pacman *pacman, char input)
 void move_pacman_test(Pacman *pacman)
 {
 
-	pacman -> x_cell_index += pacman->delta_x;
-	pacman -> y_cell_index += pacman->delta_y;
+	pacman -> move -> x_cell_index += pacman->delta_x;
+	pacman -> move -> y_cell_index += pacman->delta_y;
 
 }
 
