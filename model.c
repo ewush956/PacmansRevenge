@@ -82,7 +82,7 @@ void move_ghost (Ghost *ghost)
 *          with any ghost is detected, and 0 if no collision is detected. The function
 *          also logs the collision location for ghost collisions.
 *************************************************************/
-ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index, int y_delta, int x_delta,
+ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x_index, int y_delta, int x_delta,
                            ObjectType curr_type)
 {  
     
@@ -91,10 +91,10 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
 
 
     Ghost *all_ghosts[4];
-    all_ghosts[0] = entity->crying_ghost;
-    all_ghosts[1] = entity->awkward_ghost;
-    all_ghosts[2] = entity->cyclops_ghost;
-    all_ghosts[3] = entity->moustache_ghost;
+    all_ghosts[0] = all->crying_ghost;
+    all_ghosts[1] = all->awkward_ghost;
+    all_ghosts[2] = all->cyclops_ghost;
+    all_ghosts[3] = all->moustache_ghost;
 
     for (i = 0; i < 4; i++){
         /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
