@@ -91,23 +91,24 @@ typedef struct {
 	Ghost *moustache_ghost;
 	Ghost *cyclops_ghost;
 	Timer *timer;
+	UCHAR8 direction;
 }Entities;
 
-typedef struct {
 
-	UCHAR8 direction;
-
-}Entity;
 
 void move_ghost (Ghost *ghost);
 void move_pacman (Pacman *pacman);
 ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index,int y_delta, int x_delta,
                            ObjectType curr_type);
+
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
                                   UINT16 object_x_index, int y_delta, int x_delta);
+
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
+
 void update_cell(UINT16* x_index, UINT16* y_index, UINT16 x_position, 
                 UINT16 y_position, UCHAR8 state);
+
 void update_cells(Entities* entity);
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);

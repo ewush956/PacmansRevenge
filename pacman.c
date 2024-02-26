@@ -82,12 +82,12 @@ Ghost moustache_ghost = {
 
 /*move this lads location near pacman for testing*/
 Ghost awkward_ghost = {
-    PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET, 
+    PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET, 
     1,0,
-    0,
+    0, 
     RIGHT,
     DEFAULT,
-    12, 21,
+    21, 19,
     GHOST_TYPE_AWKWARD
 };
 
@@ -176,8 +176,8 @@ int main()
                 render_frame(base32, &entity);
 
                 update_cells(&entity);
-                
-                debug_cells_pac(base8, &pacman);
+           
+                debug_cells_ghost(base8,&moustache_ghost);
 
             time_then = time_now;
         }
@@ -235,6 +235,23 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*LETTER_WIDTH, 0, font, stry);
     debug_print(base, 12*LETTER_WIDTH, 0, pacman->y_cell_index);
 }
+void debug_cells_ghost(UCHAR8* base, Ghost* ghost) {
+    int j;
+
+    const char strx[] = "X: ";
+	const char stry[] = "Y: ";	
+
+    for (j = 0; j < 14; j++) {
+    	clear_letter(base, j*LETTER_WIDTH, 0);
+	}
+
+    plot_string(base, 0, 0, font, strx);
+    debug_print(base, 4*LETTER_WIDTH, 0, ghost->x_cell_index);
+    plot_string(base, 8*LETTER_WIDTH, 0, font, stry);
+    debug_print(base, 12*LETTER_WIDTH, 0, ghost->y_cell_index);
+}
+
+
 
 /*TODO:
 1) Initialize cell map

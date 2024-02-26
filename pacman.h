@@ -24,5 +24,5 @@ ULONG32 get_time();
 GAME_STATE update_game_state(GAME_STATE new_state, char input);
 void debug_cells_pac(UCHAR8* base, Pacman* pacman);
 void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
-
+void debug_cells_ghost(UCHAR8* base, Ghost* ghost);
 #endif

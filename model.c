@@ -47,10 +47,10 @@ void move_ghost (Ghost *ghost)
     */
 
 	
-	if (ghost -> x > SCREEN_WIDTH - MAP_PIXEL_LENGTH && ghost -> x < MAP_PIXEL_LENGTH
+	/*if (ghost -> x > SCREEN_WIDTH - MAP_PIXEL_LENGTH && ghost -> x < MAP_PIXEL_LENGTH
 		&& ghost -> y + Y_PIXEL_OFFSET > SCREEN_HEIGHT - MAP_PIXEL_HEIGHT && ghost -> y < MAP_PIXEL_HEIGHT) 
         
-	{
+	{*/
 		switch(direction)
 		{
 			case UP:
@@ -85,10 +85,12 @@ void move_ghost (Ghost *ghost)
         {
             ghost->y = ghost->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
         }
-    }
 
-    ghost-> x += ghost->delta_x;
-    ghost-> y += ghost->delta_y;
+        ghost-> x += ghost->delta_x;
+        ghost-> y += ghost->delta_y;
+   /* }*/  
+
+   
 }
 /*************************************************************
 * Function: check_collision
@@ -107,6 +109,9 @@ void move_ghost (Ghost *ghost)
 ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index, int y_delta, int x_delta,
                            ObjectType curr_type)
 {  
+    UINT16 effective_y_position;
+    UINT16 effective_x_position;
+    UINT16 COLLISION_THRESHOLD = 1;
     
     ObjectType collision = OPEN_PATH;
     int i;
@@ -117,19 +122,47 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
     all_ghosts[2] = entity->cyclops_ghost;
     all_ghosts[3] = entity->moustache_ghost;
 
+
+
+    for (i = 0; i < 4; i++)
+    {
+
+      if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
+            if ((all_ghosts[i]->direction == UP || all_ghosts[i]->direction == DOWN)) {
+                effective_y_position = all_ghosts[i]->y - COLLISION_THRESHOLD;
+                if (effective_y_position <= (UINT16)cell_map[object_y_index][object_x_index].y_position)
+                    return WALL;
+            }
+            if ((all_ghosts[i]->direction == LEFT || all_ghosts[i]->direction == RIGHT)) {  
+                effective_x_position = all_ghosts[i]->x - COLLISION_THRESHOLD;
+                if (effective_x_position <= (UINT16)cell_map[object_y_index][object_x_index].x_position)
+                    return WALL;  
+            }
+        }
+        /*
+        else
+        {
+            if (all_ghosts[i]->x 
+
+
+
+        }*/
+    }
+
+
     for (i = 0; i < 4; i++){
 
         if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE)
             return WALL;
-
-        if (all_ghosts[i]->type != curr_type) /* cant have collsiion with ghost itself only other objs*/
+/*
+        if (all_ghosts[i]->type != curr_type) /* cant have collsiion with ghost itself only other objs
         {
             if ((all_ghosts[i]->x_cell_index == object_x_index + x_delta &&
                 all_ghosts[i]->y_cell_index == object_y_index + y_delta) ||
                 (all_ghosts[i]->x_cell_index == object_x_index && 
                 all_ghosts[i]->y_cell_index == object_y_index))
                 collision = all_ghosts[i]->type;
-        }
+        }*/
     }
 
     return collision;
@@ -148,24 +181,29 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
  *          is detected.
  *************************************************************/
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
-                                  UINT16 object_x_index, int y_delta, int x_delta) 
+                                  UINT16 object_x_index, int y_delta, int x_delta)
                                   {
+
+
     UINT16 effective_y_position;
     UINT16 effective_x_position;
     UINT16 COLLISION_THRESHOLD = 1;
 
-    if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
-        if ((entity->pacman->direction == UP || entity->pacman->direction == DOWN)) {
-            effective_y_position = entity->pacman->y - COLLISION_THRESHOLD;
-            if (effective_y_position <= (UINT16)cell_map[object_y_index][object_x_index].y_position)
-                return WALL;
+  
+        if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
+            if ((entity->pacman->direction == UP || entity->pacman->direction == DOWN)) {
+                effective_y_position = entity->pacman->y - COLLISION_THRESHOLD;
+                if (effective_y_position <= (UINT16)cell_map[object_y_index][object_x_index].y_position)
+                    return WALL;
+            }
+            if ((entity->pacman->direction == LEFT || entity->pacman->direction == RIGHT)) {  
+                effective_x_position = entity->pacman->x - COLLISION_THRESHOLD;
+                if (effective_x_position <= (UINT16)cell_map[object_y_index][object_x_index].x_position)
+                    return WALL;  
+            }
         }
-        if ((entity->pacman->direction == LEFT || entity->pacman->direction == RIGHT)) {  
-            effective_x_position = entity->pacman->x - COLLISION_THRESHOLD;
-            if (effective_x_position <= (UINT16)cell_map[object_y_index][object_x_index].x_position)
-                return WALL;  
-        }
-    }
+
+
     return OPEN_PATH;
 }
 /*************************************************************

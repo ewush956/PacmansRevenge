@@ -30,6 +30,7 @@ void set_input(Pacman *pacman, char input);
 
 void update_awkward_direction (Ghost *awkward );
 void update_crying_direction(Ghost *crying);
+void update_directions_ghosts(Ghost *ghost, UCHAR8 possible_direction);
 
 
 #endif

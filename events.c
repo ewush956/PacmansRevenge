@@ -22,7 +22,9 @@
  *************************************************************************************/
 void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH], Xor *xor_shift_struct) {
   
+
     UCHAR8 possible_direction = 0;
+    UCHAR8 random_direction;
     ULONG32 random_number;
     UCHAR8 counter = 0;
     UCHAR8 prev_direction = ghost -> direction;
@@ -33,38 +35,55 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost, Cell cell_map[]
         if (cell_map[ghost->y_cell_index][ghost -> x_cell_index + 1].open_path == TRUE )
         {
             possible_direction |= RIGHT_RANDOM;
+            counter++;
           
         }
         if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == TRUE)
         {
             possible_direction |= LEFT_RANDOM;
+            counter++;
+
           
         }
         if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == TRUE)
         {
             possible_direction |= DOWN_RANDOM;
+            counter++;
           
         }
 
         if (cell_map[ghost-> y_cell_index - 1][ghost->x_cell_index].open_path == TRUE)
         {
             possible_direction |= UP_RANDOMN;
+            counter++;
            
         }
 
-        /* make an array of different possibilities.. to make it more random?
-         if(possible_direction & 0x04)
-            ghost -> direction = LEFT_RANDOM;*/             /*add this back later*/
+        update_directions_ghosts(ghost,possible_direction);
 
-        if (possible_direction & 0x01)
+        /* make an array of different possibilities.. to make it more random?*/
+
+
+        /*
+        if(possible_direction & 0x04 && prev_direction != RIGHT)
+            ghost -> direction = LEFT;            
+
+        else if (possible_direction & 0x01 && prev_direction != UP)
             ghost -> direction = UP;
 
-        else if(possible_direction & 0x08)
+        else if(possible_direction & 0x08 && prev_direction != LEFT)
             ghost -> direction = RIGHT;
+        
+        /*
+        else if (possible_direction & 0x02 & prev_direction !=  UP)
 
         else
-            ghost -> direction = DOWN;
+            ghost -> direction = DOWN;*/
     }
+
+
+
+    
     
  
 }
@@ -147,13 +166,14 @@ void handle_collisions(Entities* entity, Xor *xor) {
     if (collision_type != OPEN_PATH)
     {
         handle_ghost_collision(collision_type, awkward, cell_map, xor);
-         
-
+        
     }
     else
     {
-        update_awkward_direction(awkward);
-        move_ghost(awkward);
+        
+        /*update_awkward_direction(awkward);
+        /*move_ghost(awkward);*/
+        
     }
                 
     collision_type = check_collision(entity, moustache->y_cell_index, 
@@ -164,17 +184,7 @@ void handle_collisions(Entities* entity, Xor *xor) {
     if (collision_type != OPEN_PATH)
         handle_ghost_collision(collision_type, moustache, cell_map, xor);
     else   
-    {    
-        if (cell_map[moustache->y_cell_index - 1][moustache->x_cell_index].open_path == TRUE)
-        {   
-            moustache -> direction = UP;
-            move_ghost(moustache);
-        }
-        else if (cell_map[moustache->y_cell_index][moustache->x_cell_index+1].open_path == TRUE)
-        {
-            moustache -> direction = RIGHT;
-            move_ghost(moustache);
-        }
+    {   
 
     }
     
@@ -192,9 +202,10 @@ void handle_collisions(Entities* entity, Xor *xor) {
     }
     else   
     {    
-        update_crying_direction(crying);
-        move_ghost(crying);
-
+        
+        /*update_crying_direction(crying);
+        /*move_ghost(crying);*/
+        
     }
 
     collision_type = check_collision(entity, cyclops->y_cell_index, 
@@ -206,16 +217,11 @@ void handle_collisions(Entities* entity, Xor *xor) {
     {
       
         handle_ghost_collision(collision_type, cyclops, cell_map, xor);
-        /*printf("cyclops ghost direction after %u\n",cyclops->direction);*/
+    
       
     }
     else
     {
-        if (cell_map[cyclops->y_cell_index][cyclops->x_cell_index - 1].open_path == TRUE)
-        {   
-            cyclops -> direction = LEFT;
-            move_ghost(moustache);
-        }
     }
 
 }
@@ -274,43 +280,118 @@ void set_input(Pacman *pacman, char input)
 void update_awkward_direction (Ghost *awkward )
 {
 
-        if (cell_map[awkward->y_cell_index +  1][awkward->x_cell_index].open_path == TRUE)
+        
+
+        if (cell_map[awkward->y_cell_index - 1][awkward->x_cell_index].open_path == TRUE && awkward -> direction != DOWN)
         {   
             awkward->direction = DOWN;
             
         }
-         else if (cell_map[awkward->y_cell_index ][awkward->x_cell_index+1].open_path == TRUE)
+        else if (cell_map[awkward->y_cell_index ][awkward->x_cell_index+1].open_path == TRUE && awkward-> direction != RIGHT)
         {   
             awkward->direction = RIGHT;
             
         }
-        else if (cell_map[awkward->y_cell_index ][awkward->x_cell_index-1].open_path == TRUE)
+        else if (cell_map[awkward->y_cell_index][awkward->x_cell_index - 1].open_path == TRUE && awkward -> direction != LEFT)
         {   
             awkward->direction = LEFT;
             
         }
+        
         else
         {
-            awkward -> direction = UP;
+            awkward -> direction = RIGHT;
                  
         }
+        
 
 }
 void update_crying_direction(Ghost *crying)
 {
 
 
-    if (cell_map[crying->y_cell_index][crying->x_cell_index +1].open_path == TRUE)
+    if (cell_map[crying->y_cell_index][crying->x_cell_index +1].open_path == TRUE && crying -> direction != RIGHT)
          crying -> direction = RIGHT;
     
-    else if (cell_map[crying->y_cell_index + 1][crying->x_cell_index].open_path == TRUE)
-         crying -> direction = DOWN;
+    else if (cell_map[crying->y_cell_index][crying->x_cell_index -1].open_path == TRUE  && crying -> direction != LEFT)
+         crying -> direction = LEFT;
     
-    else if (cell_map[crying->y_cell_index - 1][crying->x_cell_index].open_path == TRUE)
+    else if (cell_map[crying->y_cell_index - 1][crying->x_cell_index].open_path == TRUE  && crying -> direction != UP)
          crying -> direction = UP;
-    else
-        crying -> direction = LEFT;
+    
+    else if (cell_map[crying->y_cell_index + 1][crying->x_cell_index].open_path == TRUE  && crying -> direction != DOWN)
+         crying -> direction = DOWN;
 
             
         
+}
+
+
+void update_directions_ghosts(Ghost *ghost, UCHAR8 possible_direction)
+{
+
+    ObjectType type = ghost -> type;
+    UCHAR8 prev_direction = ghost -> direction;
+
+    switch(type)
+    {
+        case GHOST_TYPE_AWKWARD:
+            if (possible_direction & 0x01)
+                ghost -> direction = UP;
+            else if(possible_direction & 0x04)
+                ghost -> direction = LEFT;   
+
+            else if(possible_direction & 0x08)
+                ghost -> direction = RIGHT; 
+            else
+                ghost -> direction = DOWN;   
+    
+            break;
+
+        case GHOST_TYPE_CRYING:
+            if(possible_direction & 0x01)
+                ghost -> direction = UP;            
+
+            else if (possible_direction & 0x04)
+                ghost -> direction = LEFT;
+
+            else if(possible_direction & 0x02)
+                ghost -> direction = DOWN; 
+            else
+                ghost -> direction = RIGHT;   
+            break;
+
+        case GHOST_TYPE_CYCLOPS:
+            if(possible_direction & 0x04)
+                ghost -> direction = LEFT;            
+
+            else if (possible_direction & 0x01)
+                ghost -> direction = UP;
+
+            else if(possible_direction & 0x02)
+                ghost -> direction = DOWN; 
+            else
+                ghost -> direction = RIGHT;   
+                
+            break;
+
+        case GHOST_TYPE_MOUSTACHE:
+               if(possible_direction & 0x01)
+                ghost -> direction = UP;            
+
+            else if (possible_direction & 0x02 && prev_direction != UP)
+                ghost -> direction = DOWN;
+
+            else if(possible_direction & 0x08)
+                ghost -> direction = RIGHT; 
+            else
+                ghost -> direction = LEFT;   
+                
+            break;
+            
+
+
+    }
+
+
 }
