@@ -65,6 +65,16 @@ void move_ghost (Ghost *ghost)
 				ghost -> move ->delta_y = 0;
 				break;
 		}
+        if (ghost->move->direction == UP || ghost->move->direction == DOWN) 
+            ghost->move->x = ghost->move->x_cell_index * PIXELS_PER_CELL;
+        
+        else if (ghost->move->direction == LEFT|| ghost->move->direction == RIGHT) 
+        {
+            ghost->move->y = ghost->move->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
+        }
+
+        ghost->move-> x += ghost->move->delta_x;
+        ghost->move-> y += ghost->move->delta_y;
     }
 
 }
@@ -266,15 +276,19 @@ void update_cell(Movement* entity, UCHAR8 state) {
     int x_index = entity->x_cell_index;
     int y_index = entity->y_cell_index;
 
+    set_occupied(FALSE, y_index, x_index);
     if (state == DEAD) {
         return;
     }
     entity->x_cell_index = entity->x >> 4; 
     entity->y_cell_index = (entity->y >> 4) - 1;
-    cell_map[y_index][x_index].occupied = TRUE;
-    cell_map[y_index + 1][x_index].occupied = TRUE;
-    cell_map[y_index][x_index + 1].occupied = TRUE;
-    cell_map[y_index + 1][x_index + 1].occupied = TRUE;
+    set_occupied(TRUE, y_index, x_index);
+}
+void set_occupied(bool set, int y_index, int x_index) {
+    cell_map[y_index][x_index].occupied = set;
+    cell_map[y_index + 1][x_index].occupied = set;
+    cell_map[y_index][x_index + 1].occupied = set;
+    cell_map[y_index + 1][x_index + 1].occupied = set;
 }
 
 /*************************************************************
@@ -302,5 +316,13 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
 *************************************************************/
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index) {
    cell_map[y_cell_index][x_cell_index].open_path = FALSE;
+}
+void align_axis(Movement* entity) {
+        if (entity->direction == UP || entity->direction == DOWN) {
+            entity->x = entity->x_cell_index * PIXELS_PER_CELL;
+        }
+        else if (entity->direction == LEFT || entity->direction == RIGHT) {
+            entity->y = entity->y_cell_index  * PIXELS_PER_CELL + PIXELS_PER_CELL;
+        }
 }
 

@@ -108,6 +108,7 @@ ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index,
                                   UINT16 object_x_index, int y_delta, int x_delta);
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
 void update_cell(Movement* entity, UCHAR8 state);
+void set_occupied(bool set, int y_index, int x_index); 
 void update_cells(Entities* entity);
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
@@ -118,5 +119,7 @@ void check_proximity(Entities* entity);
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state);
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state);
 void end_game();
+
+void align_axis(Movement* entity);
 
 #endif

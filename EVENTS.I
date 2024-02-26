@@ -355,16 +355,17 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost1, Ghost* ghost2)
             possible_direction |= ((UCHAR8)1) ;
 
         if (possible_direction & 0x01)
-            ghost1 -> move->direction = ((UCHAR8)1) ;
+            ghost1 -> move->direction = ((UCHAR8)0) ;
 
         else if(possible_direction & 0x08)
-            ghost1 ->move-> direction = ((UCHAR8)8) ;
+            ghost1 ->move-> direction = ((UCHAR8)3) ;
 
         else if( possible_direction & 0x04)
-            ghost1 -> move->direction = ((UCHAR8)4) ;
+            ghost1 -> move->direction = ((UCHAR8)2) ;
 
         else
-            ghost1 -> move->direction = ((UCHAR8)2) ;
+            ghost1 -> move->direction = ((UCHAR8)1) ;
+
     }
     else {
 
@@ -372,7 +373,7 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost1, Ghost* ghost2)
         ghost2 -> move->delta_x = -1 * ghost2 -> move->delta_x;
     }
 }
-# 72 "events.c"
+# 73 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
 
@@ -408,19 +409,18 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         break;
     }
 }
-# 114 "events.c"
+# 115 "events.c"
 void handle_collisions(Entities* entity, Xor *xor) {
-
+    int i;
     ObjectType collision_type;
-    Pacman* pac = entity->pacman;
-    Ghost* moustache = entity->moustache_ghost;
-    Ghost* crying = entity->crying_ghost;
-    Ghost* cyclops = entity->cyclops_ghost;
-    Ghost* awkward = entity->awkward_ghost;
 
     collision_type = check_wall_collision(entity->pacman->move);
     handle_pacman_collision(collision_type, entity);
-# 167 "events.c"
+    collision_type = check_wall_collision(entity->awkward_ghost->move);
+    if (collision_type != OPEN_PATH) {
+        handle_ghost_collision(collision_type, entity->awkward_ghost, entity->pacman);
+    }
+# 166 "events.c"
 }
 ULONG32 random_number_generator(Xor *xor)
 {

@@ -44,16 +44,17 @@ void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost1, Ghost* ghost2)
             possible_direction |= UP_RANDOMN;
      
         if (possible_direction & 0x01)
-            ghost1 -> move->direction = UP_RANDOMN;
+            ghost1 -> move->direction = UP;
 
         else if(possible_direction & 0x08)
-            ghost1 ->move-> direction = RIGHT_RANDOM;
+            ghost1 ->move-> direction = RIGHT;
 
         else if( possible_direction & 0x04)
-            ghost1 -> move->direction = LEFT_RANDOM;
+            ghost1 -> move->direction = LEFT;
 
         else
-            ghost1 -> move->direction = DOWN_RANDOM;
+            ghost1 -> move->direction = DOWN;
+        
     }
     else {
         /*Ghost 1 and 2 colliding with eachother*/
@@ -77,13 +78,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
     switch(object_type)
     {
     case OPEN_PATH:
-        if (entity->pacman->move->direction == UP || entity->pacman->move->direction == DOWN) {
-            pacman->move->x = pacman->move->x_cell_index * PIXELS_PER_CELL;
-        }
-        else if (entity->pacman->move->direction == LEFT || entity->pacman->move->direction == RIGHT) {
-            pacman->move->y = pacman->move->y_cell_index  * PIXELS_PER_CELL + PIXELS_PER_CELL;
-        }
-        break;
+        align_axis(pacman->move);
     case WALL:
 
         pacman->move->delta_y = 0;
@@ -112,20 +107,22 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 *
 ***********************************************************/
 void handle_collisions(Entities* entity, Xor *xor) {
-
+    int i;
     ObjectType collision_type;
-    Pacman* pac = entity->pacman;
-    Ghost* moustache = entity->moustache_ghost;
-    Ghost* crying = entity->crying_ghost;
-    Ghost* cyclops = entity->cyclops_ghost;
-    Ghost* awkward = entity->awkward_ghost;
 
     collision_type = check_wall_collision(entity->pacman->move);
     handle_pacman_collision(collision_type, entity); 
+    collision_type = check_wall_collision(entity->awkward_ghost->move);
+    if (collision_type != OPEN_PATH) {
+        handle_ghost_collision(collision_type, entity->awkward_ghost, entity->pacman);
+    }
+    collision_type = check_wall_collision(entity->moustache_ghost->move);
+    if (collision_type != OPEN_PATH && ) {
+        handle_ghost_collision(collision_type, entity->moustache_ghost, entity->pacman);
+    }
     /*NOTE:
      currently handle_pacman_collision is handling all cases, thats why it's not in an if block
     we should change that at some point but my brain hurts and I no no wanna :(*/
-
 /*
     collision_type = check_collision(entity, awkward->move->y_cell_index, 
                                     awkward->move->x_cell_index, 
