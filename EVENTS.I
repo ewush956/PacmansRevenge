@@ -124,7 +124,8 @@ typedef enum {
 	PACMAN,
 	WALL,
 	OPEN_PATH,
-	INVISIBLE_WALL
+	INVISIBLE_WALL,
+	GHOST
 
 }ObjectType;
 
@@ -161,6 +162,7 @@ typedef struct
 	int current_frame;
 	UCHAR8 state;
 	ObjectType type;
+	bool has_collided;
 
 	Movement* move;
 }Ghost;
@@ -197,8 +199,13 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
                            ObjectType curr_type);
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index,
                                   UINT16 object_x_index, int y_delta, int x_delta);
+
+ObjectType process_ghost_collision(Entities* all);
+
 void init_map_cells(Cell cell_map[][40 ], UINT16 tile_map[][40 ]);
 void update_cell(Movement* entity, UCHAR8 state);
+void set_occupied(bool set, int y_index, int x_index);
+bool check_shared_occupied(Movement* ghost1_move, Movement* ghost2_move);
 void update_cells(Entities* entity);
 void kill_ghost(Ghost* ghost, Cell cell_map[][40 ]);
 void add_wall_to_map(Cell cell_map[24 ][40 ], int y_cell_index, int x_cell_index);
@@ -209,6 +216,9 @@ void check_proximity(Entities* entity);
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state);
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state);
 void end_game();
+
+void align_axis(Movement* entity);
+void flip_direction(Movement* ghost);
 # 3 "events.c" 2
 # 1 "./TYPES.H" 1
 # 4 "events.c" 2
@@ -218,6 +228,7 @@ void end_game();
 # 1 "./model.h" 1
 # 5 "./events.h" 2
 # 17 "./events.h"
+extern const UCHAR8 DIRECTION_ARRAY[4];
 typedef struct
 {
 
@@ -227,8 +238,11 @@ typedef struct
 
 void clock_tick_handle(UINT16* clock_count, Entities* entity);
 void handle_pacman_collision(ObjectType object_type, Entities* entity);
-void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost1, Ghost* ghost2);
+void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
+
+void handle_wall_collision(Movement* ghost, int ghost_identifier);
 void handle_collisions(Entities* entity, Xor *xor);
+ObjectType process_ghost_collision(Entities* all);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 # 5 "events.c" 2
@@ -330,97 +344,181 @@ extern	FILE	_iob[];
 # 192 "C:/c68/include/stdio.h"
  int	_filbuf	(FILE *) ;
 # 6 "events.c" 2
-# 23 "events.c"
-void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost1, Ghost* ghost2) {
-
-    UCHAR8 possible_direction = 0;
-    ULONG32 random_number;
-    UCHAR8 counter = 0;
-    UCHAR8 prev_direction = ghost1 -> move-> direction;
 
 
-    if (collision_type == WALL)
-    {
+const UCHAR8 DIRECTION_ARRAY[4] = {((UCHAR8)0) , ((UCHAR8)1) , ((UCHAR8)2) , ((UCHAR8)3) };
+# 25 "events.c"
+void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 
-        if (cell_map[ghost1->move->y_cell_index][ghost1 -> move -> x_cell_index + 1].open_path == -1  )
-            possible_direction |= ((UCHAR8)8) ;
-
-        if (cell_map[ghost1->move->y_cell_index][ghost1->move->x_cell_index  - 1].open_path == -1 )
-            possible_direction |= ((UCHAR8)4) ;
-
-        if (cell_map[ghost1->move->y_cell_index  + 1][ghost1-> move->x_cell_index].open_path == -1 )
-            possible_direction |= ((UCHAR8)2) ;
-
-        if (cell_map[ghost1->move-> y_cell_index - 1][ghost1-> move->x_cell_index].open_path == -1 )
-            possible_direction |= ((UCHAR8)1) ;
-
-        if (possible_direction & 0x01)
-            ghost1 -> move->direction = ((UCHAR8)0) ;
-
-        else if(possible_direction & 0x08)
-            ghost1 ->move-> direction = ((UCHAR8)3) ;
-
-        else if( possible_direction & 0x04)
-            ghost1 -> move->direction = ((UCHAR8)2) ;
-
-        else
-            ghost1 -> move->direction = ((UCHAR8)1) ;
-
-    }
-    else {
-
-        ghost1 ->move-> delta_x = -1 * ghost1 ->move-> delta_x;
-        ghost2 -> move->delta_x = -1 * ghost2 -> move->delta_x;
-    }
+    flip_direction(ghost1);
+    flip_direction(ghost2);
+# 44 "events.c"
 }
-# 73 "events.c"
+ObjectType process_ghost_collision(Entities* all)
+{
+
+    ObjectType collision = OPEN_PATH;
+    int i, n;
+
+
+    Movement *all_ghosts[4];
+    all_ghosts[0] = all->crying_ghost->move;
+    all_ghosts[1] = all->awkward_ghost->move;
+    all_ghosts[2] = all->cyclops_ghost->move;
+    all_ghosts[3] = all->moustache_ghost->move;
+
+    for (i = 0; i < 4; i++){
+        if (check_wall_collision(all_ghosts[i]) != OPEN_PATH) {
+
+            handle_wall_collision(all_ghosts[i], i);
+
+        }
+
+
+
+        else {
+            if (all_ghosts[i]->direction == ((UCHAR8)0)  || all_ghosts[i]->direction == ((UCHAR8)1) ) {
+                if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == -1 ) {
+                    if (i % 2 == 0)
+                        all_ghosts[i]->direction = ((UCHAR8)3) ;
+                }
+                else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index - 1].open_path == -1 ) {
+                    if (i % 2 == 1)
+                        all_ghosts[i]->direction = ((UCHAR8)2) ;
+                    else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == -1 )
+                    {
+                        if (i % 2 == 1)
+                            all_ghosts[i]->direction = ((UCHAR8)3) ;
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    for (i = 3; i > -1; i--){
+        for (n = 1; n <= i; n++){
+            if (check_shared_occupied(all_ghosts[i], all_ghosts[i-n]) == -1 ) {
+                handle_ghost_collision(all_ghosts[i], all_ghosts[i-n]);
+
+            }
+        }
+    }
+
+
+}
+
+void handle_wall_collision(Movement* ghost, int ghost_identifier) {
+
+    int i, direction;
+    direction = ghost->direction;
+    for (i = 0; i < 4; i++) {
+        direction++;
+        if (direction > 3)
+            direction = (direction % 3) - 1;
+        ghost -> direction = DIRECTION_ARRAY[direction];
+        switch(direction)
+		{
+			case ((UCHAR8)0) :
+				ghost->delta_y = -1;
+				ghost->delta_x = 0;
+				break;
+
+			case ((UCHAR8)1) :
+				ghost-> delta_y = 1;
+				ghost-> delta_x = 0;
+				break;
+
+			case ((UCHAR8)3) :
+				ghost ->delta_x = 1;
+				ghost ->delta_y = 0;
+				break;
+
+			case ((UCHAR8)2) :
+				ghost ->delta_x = -1;
+				ghost ->delta_y = 0;
+				break;
+		}
+        if (cell_map[ghost->y_cell_index + ghost->delta_y][ghost->x_cell_index + ghost->delta_x].open_path == -1 )
+            return;
+
+    }
+# 165 "events.c"
+}
+# 175 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
 
-    Pacman *pacman = entity->pacman;
+    Movement* pacman = entity->pacman->move;
 
     switch(object_type)
     {
     case OPEN_PATH:
-        if (entity->pacman->move->direction == ((UCHAR8)0)  || entity->pacman->move->direction == ((UCHAR8)1) ) {
-            pacman->move->x = pacman->move->x_cell_index * 16 ;
-        }
-        else if (entity->pacman->move->direction == ((UCHAR8)2)  || entity->pacman->move->direction == ((UCHAR8)3) ) {
-            pacman->move->y = pacman->move->y_cell_index  * 16  + 16 ;
-        }
+        align_axis(pacman);
         break;
     case WALL:
 
-        pacman->move->delta_y = 0;
-        pacman->move->delta_x = 0;
+        pacman->delta_y = 0;
+        pacman->delta_x = 0;
 
         break;
-    case GHOST_TYPE_CRYING:
+    case GHOST:
 
-        break;
+        switch (object_type)
+        {
+        case GHOST_TYPE_CRYING:
+            kill_ghost(entity->crying_ghost, cell_map);
+            break;
 
-    case GHOST_TYPE_AWKWARD:
-        break;
+        case GHOST_TYPE_AWKWARD:
+            kill_ghost(entity->awkward_ghost, cell_map);
 
-    case GHOST_TYPE_MOUSTACHE:
-        break;
+            break;
 
-    case GHOST_TYPE_CYCLOPS:
+        case GHOST_TYPE_MOUSTACHE:
+            kill_ghost(entity->moustache_ghost, cell_map);
+
+            break;
+
+        case GHOST_TYPE_CYCLOPS:
+            kill_ghost(entity->cyclops_ghost, cell_map);
+
+            break;
+
+        default:
+            break;
+        }
         break;
+# 232 "events.c"
     }
 }
-# 115 "events.c"
+# 241 "events.c"
 void handle_collisions(Entities* entity, Xor *xor) {
     int i;
-    ObjectType collision_type;
+    ObjectType collision_type = OPEN_PATH;
+    Movement* pacman = entity->pacman->move;
 
-    collision_type = check_wall_collision(entity->pacman->move);
+
+
+    process_ghost_collision(entity);
+
+
+    collision_type = check_wall_collision(pacman);
     handle_pacman_collision(collision_type, entity);
-    collision_type = check_wall_collision(entity->awkward_ghost->move);
-    if (collision_type != OPEN_PATH) {
-        handle_ghost_collision(collision_type, entity->awkward_ghost, entity->pacman);
-    }
-# 166 "events.c"
+
+    if (check_shared_occupied(pacman, entity->awkward_ghost->move) == -1 )
+        kill_ghost(entity->awkward_ghost, cell_map);
+
+    if (check_shared_occupied(pacman, entity->moustache_ghost->move) == -1 )
+        kill_ghost(entity->moustache_ghost, cell_map);
+
+    if (check_shared_occupied(pacman, entity->cyclops_ghost->move) == -1 )
+        kill_ghost(entity->cyclops_ghost, cell_map);
+
+    if (check_shared_occupied(pacman, entity->crying_ghost->move) == -1 )
+        kill_ghost(entity->crying_ghost, cell_map);
+# 329 "events.c"
 }
 ULONG32 random_number_generator(Xor *xor)
 {

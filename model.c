@@ -24,6 +24,7 @@ void move_pacman (Pacman *pacman)
 }
 /*************************************************************
 * Function: move_ghost
+* Module: model
 * Purpose: Updates a ghost's position based on its current velocity.
 * Parameters: Ghost* ghost - Pointer to the Ghost structure.
 * Details: Modifies the ghost's x and y coordinates by adding the current
@@ -38,11 +39,15 @@ void move_ghost (Ghost *ghost)
 	/*ghost -> delta_x = 0;
 	ghost -> delta_y = 0;
     */
-	
+	/*
 	if (ghost -> move ->x > SCREEN_WIDTH - MAP_PIXEL_LENGTH && ghost -> move-> x < MAP_PIXEL_LENGTH
 		&& ghost -> move -> y + Y_PIXEL_OFFSET > SCREEN_HEIGHT - MAP_PIXEL_HEIGHT && ghost -> move-> y < MAP_PIXEL_HEIGHT) 
-	
 	{
+	*/
+    if (ghost->state == DEAD)
+    {
+        return;
+    }
 		switch(direction)
 		{
 			case UP:
@@ -72,14 +77,15 @@ void move_ghost (Ghost *ghost)
         {
             ghost->move->y = ghost->move->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
         }
-
+        
         ghost->move-> x += ghost->move->delta_x;
         ghost->move-> y += ghost->move->delta_y;
-    }
+    
 
 }
 /*************************************************************
 * Function: check_collision
+* Module: model
 * Purpose: Checks for collisions between an object and ghosts or walls.
 * Parameters: Entities* entity - Pointer to the entities structure containing ghosts,
 *             UINT16 object_y_index - Y index of the object,
@@ -123,6 +129,7 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
 }    
 /*************************************************************
  * Function: check_pacman_collision
+ * Module: model
  * Purpose: Checks for collisions between an object and walls.
  * Parameters: Entities* entity - Pointer to the entities structure containing
  *              ghosts, UINT16 object_y_index - Y index of the object,
@@ -159,6 +166,12 @@ ObjectType check_wall_collision(Movement* entity) {
     }
     return OPEN_PATH;
 }
+/***************************************************
+ * Function: check_proximity
+ * Module: model
+ * Purpose: Checks if pacman and ghost are close, if they are it changes states
+ * Parameters: Entities* all - Pointer to the entities structure containing
+*******************************************************/
 void check_proximity(Entities* all) {
     int ghostCountWithinRange = 0;
     int i;
@@ -176,6 +189,9 @@ void check_proximity(Entities* all) {
     pacman_y_index = all->pacman->move->y_cell_index;
 
     for (i = 0; i < 4; i++) {
+        if (ghosts[i]->state == DEAD) {
+            continue;
+        }
         ghost_x_index = ghosts[i]->move->x_cell_index;
         ghost_y_index = ghosts[i]->move->y_cell_index;
 
@@ -290,7 +306,31 @@ void set_occupied(bool set, int y_index, int x_index) {
     cell_map[y_index][x_index + 1].occupied = set;
     cell_map[y_index + 1][x_index + 1].occupied = set;
 }
+/*Checks if two ghosts share an occupied region
+A ghost occupies 4 cells*/
+bool check_shared_occupied(Movement* entity1, Movement* entity2) {
+    int i, j, k, l;
+    int ghost1_y, ghost1_x, ghost2_y, ghost2_x;
 
+    for (i = 0; i < 2; ++i) {
+        for (j = 0; j < 2; ++j) {
+            ghost1_y = entity1->y_cell_index + i;
+            ghost1_x = entity1->x_cell_index + j;
+            for (k = 0; k < 2; ++k) {
+                for (l = 0; l < 2; ++l) {
+                    ghost2_y = entity2->y_cell_index + k;
+                    ghost2_x = entity2->x_cell_index + l;
+                    if (ghost1_y == ghost2_y && ghost1_x == ghost2_x && 
+                        cell_map[ghost1_y][ghost1_x].occupied == TRUE) {
+                        return TRUE;
+                    }
+                }
+            }
+        }
+    }
+    return FALSE;
+    
+}
 /*************************************************************
 * Function: kill_ghost
 * Purpose: Marks a ghost as dead and updates the map accordingly.
@@ -324,5 +364,18 @@ void align_axis(Movement* entity) {
         else if (entity->direction == LEFT || entity->direction == RIGHT) {
             entity->y = entity->y_cell_index  * PIXELS_PER_CELL + PIXELS_PER_CELL;
         }
+}
+void flip_direction(Movement* ghost) {
+    if (ghost->direction == UP)
+        ghost->direction = DOWN;
+
+    else if (ghost->direction == DOWN)
+        ghost->direction = UP;
+
+    else if (ghost->direction == LEFT)
+        ghost->direction = RIGHT;
+
+    else 
+        ghost->direction = LEFT;
 }
 

@@ -143,7 +143,8 @@ typedef enum {
 	PACMAN,
 	WALL,
 	OPEN_PATH,
-	INVISIBLE_WALL
+	INVISIBLE_WALL,
+	GHOST
 
 }ObjectType;
 
@@ -180,6 +181,7 @@ typedef struct
 	int current_frame;
 	UCHAR8 state;
 	ObjectType type;
+	bool has_collided;
 
 	Movement* move;
 }Ghost;
@@ -216,8 +218,13 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
                            ObjectType curr_type);
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index,
                                   UINT16 object_x_index, int y_delta, int x_delta);
+
+ObjectType process_ghost_collision(Entities* all);
+
 void init_map_cells(Cell cell_map[][40 ], UINT16 tile_map[][40 ]);
 void update_cell(Movement* entity, UCHAR8 state);
+void set_occupied(bool set, int y_index, int x_index);
+bool check_shared_occupied(Movement* ghost1_move, Movement* ghost2_move);
 void update_cells(Entities* entity);
 void kill_ghost(Ghost* ghost, Cell cell_map[][40 ]);
 void add_wall_to_map(Cell cell_map[24 ][40 ], int y_cell_index, int x_cell_index);
@@ -228,6 +235,9 @@ void check_proximity(Entities* entity);
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state);
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state);
 void end_game();
+
+void align_axis(Movement* entity);
+void flip_direction(Movement* ghost);
 # 5 "./pacman.h" 2
 # 1 "./renderer.h" 1
 # 1 "./model.h" 1
@@ -267,6 +277,7 @@ extern const UCHAR8 font[];
 # 1 "./model.h" 1
 # 5 "./events.h" 2
 # 17 "./events.h"
+extern const UCHAR8 DIRECTION_ARRAY[4];
 typedef struct
 {
 
@@ -276,8 +287,11 @@ typedef struct
 
 void clock_tick_handle(UINT16* clock_count, Entities* entity);
 void handle_pacman_collision(ObjectType object_type, Entities* entity);
-void handle_ghost_collision(UCHAR8 collision_type, Ghost* ghost1, Ghost* ghost2);
+void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
+
+void handle_wall_collision(Movement* ghost, int ghost_identifier);
 void handle_collisions(Entities* entity, Xor *xor);
+ObjectType process_ghost_collision(Entities* all);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 # 10 "./pacman.h" 2
@@ -913,6 +927,7 @@ Ghost crying_ghost = {
     0,
     ((UCHAR8)0) ,
     GHOST_TYPE_CRYING,
+    0 ,
     &crying_ghost_movement
 };
 
@@ -926,6 +941,7 @@ Ghost cyclops_ghost = {
     0,
     ((UCHAR8)0) ,
     GHOST_TYPE_CYCLOPS,
+    0 ,
     &cyclops_ghost_movement
 };
 
@@ -939,6 +955,7 @@ Ghost moustache_ghost = {
     0,
     ((UCHAR8)0) ,
     GHOST_TYPE_MOUSTACHE,
+    0 ,
     &moustache_ghost_movement
 };
 
@@ -952,6 +969,7 @@ Ghost awkward_ghost = {
     0,
     ((UCHAR8)0) ,
     GHOST_TYPE_AWKWARD,
+    0 ,
     &awkward_ghost_movement
 };
 
@@ -959,7 +977,7 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
-# 125 "pacman.c"
+# 129 "pacman.c"
 int main()
 {
     Entities entity = {
@@ -1006,7 +1024,7 @@ int main()
             {
                 input = (char)_trap_1_w((short)0x08) ;
             }
-# 178 "pacman.c"
+# 182 "pacman.c"
                 clear_entities(base32, &entity);
                 set_input(&pacman,input);
 
@@ -1068,7 +1086,17 @@ void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
 
-	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
+	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32+16);
+
+    crying_ghost.move->delta_x = 1;
+    crying_ghost.move->delta_y = 0;
+    crying_ghost.move->direction = ((UCHAR8)3) ;
+
+    awkward_ghost.move->delta_x = -1;
+    awkward_ghost.move->delta_y = 0;
+    awkward_ghost.move->direction = ((UCHAR8)2) ;
+
+    manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
 
 
     awkward_ghost.move->delta_x = 0;

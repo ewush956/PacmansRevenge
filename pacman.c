@@ -41,6 +41,7 @@ Ghost crying_ghost = {
     0,
     DEFAULT,
     GHOST_TYPE_CRYING,
+    FALSE,
     &crying_ghost_movement
 };
 
@@ -54,6 +55,7 @@ Ghost cyclops_ghost = {
     0,
     DEFAULT,
     GHOST_TYPE_CYCLOPS,
+    FALSE,
     &cyclops_ghost_movement
 };
 
@@ -67,6 +69,7 @@ Ghost moustache_ghost = {
     0,
     DEFAULT,
     GHOST_TYPE_MOUSTACHE,
+    FALSE,
     &moustache_ghost_movement
 };
 
@@ -80,6 +83,7 @@ Ghost awkward_ghost = {
     0,
     DEFAULT,
     GHOST_TYPE_AWKWARD,
+    FALSE,
     &awkward_ghost_movement
 };
 
@@ -236,7 +240,17 @@ void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = DOWN;
 
-	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
+	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32+16);
+
+    crying_ghost.move->delta_x = 1;
+    crying_ghost.move->delta_y = 0;
+    crying_ghost.move->direction = RIGHT;
+
+    awkward_ghost.move->delta_x = -1;
+    awkward_ghost.move->delta_y = 0;
+    awkward_ghost.move->direction = LEFT;
+
+    manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
 
 
     awkward_ghost.move->delta_x = 0;

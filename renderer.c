@@ -85,9 +85,6 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     Ghost* moustache = entity->moustache_ghost;
     Ghost* crying = entity->crying_ghost;
     Ghost* cyclops = entity->cyclops_ghost;
-
-    /*THIS IS A TEST*/
-    /*THIS IS ALSO A TEST*/
     
     if (awkward->state == DEFAULT) {
         plot_bitmap_32(base32, awkward->move->x, awkward->move->y, awkward_ghost_sprites[awkward->move->direction][awkward->current_frame], SPRITE_HEIGHT);
@@ -146,6 +143,9 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
     }
     else if (ghost->state == FROZEN) {
         plot_bitmap_32(base32, ghost->move->x, ghost->move->y, frozen_ghost_sprites[ghost->move->direction][ghost->current_frame], SPRITE_HEIGHT);
+    }
+    else {
+        plot_bitmap_32(base32, ghost->move->x, ghost->move->y, tombstone, SPRITE_HEIGHT);
     }
 }
 /*BOTH FUNCTIONS BELOW ARE INCOMPLETE*/

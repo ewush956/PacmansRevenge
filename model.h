@@ -33,7 +33,8 @@ typedef enum {
 	PACMAN,
 	WALL,
 	OPEN_PATH,
-	INVISIBLE_WALL
+	INVISIBLE_WALL,
+	GHOST
 	
 }ObjectType;
 
@@ -70,6 +71,7 @@ typedef struct
 	int current_frame;
 	UCHAR8 state;		
 	ObjectType type;
+	bool has_collided;
 
 	Movement* move;
 }Ghost;
@@ -106,9 +108,13 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
                            ObjectType curr_type);
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
                                   UINT16 object_x_index, int y_delta, int x_delta);
+
+ObjectType process_ghost_collision(Entities* all);
+
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
 void update_cell(Movement* entity, UCHAR8 state);
 void set_occupied(bool set, int y_index, int x_index); 
+bool check_shared_occupied(Movement* ghost1_move, Movement* ghost2_move);
 void update_cells(Entities* entity);
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
@@ -121,5 +127,6 @@ void change_ghost_state(Ghost* ghost, UCHAR8 new_state);
 void end_game();
 
 void align_axis(Movement* entity);
+void flip_direction(Movement* ghost);
 
 #endif
