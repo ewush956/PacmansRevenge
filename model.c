@@ -77,7 +77,7 @@ void move_ghost (Ghost *ghost)
         {
             ghost->move->y = ghost->move->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
         }
-        
+
         ghost->move-> x += ghost->move->delta_x;
         ghost->move-> y += ghost->move->delta_y;
     
@@ -342,6 +342,8 @@ bool check_shared_occupied(Movement* entity1, Movement* entity2) {
 *************************************************************/
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
    ghost->state = DEAD;
+   ghost->move->x = ghost->move->x_cell_index * PIXELS_PER_CELL;
+   ghost->move->y = ghost->move->y_cell_index * PIXELS_PER_CELL + Y_PIXEL_OFFSET;
    add_wall_to_map(cell_map, ghost->move->y, ghost->move->x);
 }
 /*************************************************************
@@ -356,6 +358,9 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
 *************************************************************/
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index) {
    cell_map[y_cell_index][x_cell_index].open_path = FALSE;
+   cell_map[y_cell_index+1][x_cell_index].open_path = FALSE;
+   cell_map[y_cell_index][x_cell_index+1].open_path = FALSE;
+   cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
 }
 void align_axis(Movement* entity) {
         if (entity->direction == UP || entity->direction == DOWN) {
