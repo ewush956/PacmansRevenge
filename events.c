@@ -42,7 +42,7 @@ void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 
     
 }
-ObjectType process_ghost_collision(Entities* all)
+ObjectType process_ghost_collision(Entities* all, int tick)
 {  
     
     ObjectType collision = OPEN_PATH;
@@ -58,8 +58,7 @@ ObjectType process_ghost_collision(Entities* all)
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH) {
             /*Handle collision with wall, only changes direction*/
-            handle_wall_collision(all_ghosts[i], i);
-            
+            handle_wall_collision(all_ghosts[i], i);   
         } 
         /*
         The stuff below is just fake randomness.
@@ -67,24 +66,40 @@ ObjectType process_ghost_collision(Entities* all)
         else {
             if (all_ghosts[i]->direction == UP || all_ghosts[i]->direction == DOWN) {
                 if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == TRUE) {
-                    if (i % 2 == 0)
+                    if (tick % 7+i == 0)
                         all_ghosts[i]->direction = RIGHT;
                 }
                 else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index - 1].open_path == TRUE) {
-                    if (i % 2 == 1)
+                    if (tick % 5 == i)
                         all_ghosts[i]->direction = LEFT;
                     else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == TRUE)
-                    {
-                        if (i % 2 == 1)
+                        if (tick % 3 == 0) {
                             all_ghosts[i]->direction = RIGHT;
-                    }
+                        }
                     
                 }
-            }
+            }   
+            
+                else {
+                    if (cell_map[all_ghosts[i]->y_cell_index + 1][all_ghosts[i]->x_cell_index].open_path == TRUE)
+                        if (tick+i % 17 == 0)
+                        {
+                            all_ghosts[i]->direction = DOWN;
+                        }
+                        /*
+                    else if (cell_map[all_ghosts[i]->y_cell_index - 1][all_ghosts[i]->x_cell_index].open_path == TRUE){
+                        if (tick % 3+i == 0)
+                            all_ghosts[i]->direction = UP;
+                    }
+                            
+                    else if (cell_map[all_ghosts[i]->y_cell_index + 1][all_ghosts[i]->x_cell_index].open_path == TRUE)
+                        if (tick % 11 == 0)
+                            all_ghosts[i]->direction = DOWN;
+                            */
+                }
+                
         }
-        
     }
-
     for (i = 3; i > -1; i--){
         for (n = 1; n <= i; n++){
             if (check_shared_occupied(all_ghosts[i], all_ghosts[i-n]) == TRUE) {
@@ -238,14 +253,14 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 *   @return 'state' this is the random number that is returned
 *
 ***********************************************************/
-void handle_collisions(Entities* entity, Xor *xor) {
+void handle_collisions(Entities* entity, int ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
     Movement* pacman = entity->pacman->move;
 
 
     /*collision_type = process_ghost_collision(entity);*/
-    process_ghost_collision(entity);
+    process_ghost_collision(entity, ticks);
 
 
     collision_type = check_wall_collision(pacman);

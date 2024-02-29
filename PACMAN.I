@@ -219,7 +219,9 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index,
                                   UINT16 object_x_index, int y_delta, int x_delta);
 
-ObjectType process_ghost_collision(Entities* all);
+
+
+
 
 void init_map_cells(Cell cell_map[][40 ], UINT16 tile_map[][40 ]);
 void update_cell(Movement* entity, UCHAR8 state);
@@ -291,8 +293,8 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 
 void handle_wall_collision(Movement* ghost, int ghost_identifier);
-void handle_collisions(Entities* entity, Xor *xor);
-ObjectType process_ghost_collision(Entities* all);
+void handle_collisions(Entities* entity, int ticks);
+ObjectType process_ghost_collision(Entities* all, int tick);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 # 10 "./pacman.h" 2
@@ -1025,14 +1027,14 @@ int main()
             {
                 input = (char)_trap_1_w((short)0x08) ;
             }
-# 182 "pacman.c"
+
                 clear_entities(base32, &entity);
                 set_input(&pacman,input);
 
                 check_proximity(&entity);
-                handle_collisions(&entity, &xor);
+                handle_collisions(&entity, ticks);
 
-                update_pacman(ticks);
+                update_pacman();
                 update_ghosts();
                 update_current_frame(&entity, ticks);
 
@@ -1040,6 +1042,10 @@ int main()
                 update_cells(&entity);
 
                 debug_cells_pac(base8, &pacman);
+            ticks++;
+            if (ticks > 60) {
+                ticks = 0;
+            }
             time_then = time_now;
         }
         update_game_state(state, input);
@@ -1051,11 +1057,10 @@ int main()
 
 
 
-void update_pacman(int clock){
+void update_pacman(){
     move_pacman(&pacman);
-# 218 "pacman.c"
 }
-void update_ghosts(int clock){
+void update_ghosts(){
     move_ghost(&moustache_ghost);
     move_ghost(&crying_ghost);
     move_ghost(&cyclops_ghost);
@@ -1079,30 +1084,26 @@ void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     moustache_ghost.move->delta_y = 1;
     moustache_ghost.move->direction = ((UCHAR8)1) ;
 
-	manually_move_ghost(base32, base8, entity, 32);
+	manually_move_ghost(base32, base8, entity, 16);
 
-	crying_ghost.move->delta_x = 0;
-	crying_ghost.move->delta_y = -1;
-	crying_ghost.move->direction = ((UCHAR8)0) ;
+    moustache_ghost.move->delta_x = 1;
+    moustache_ghost.move->delta_y = 0;
+    moustache_ghost.move->direction = ((UCHAR8)3) ;
+
+    cyclops_ghost.move->delta_x = -1;
+    cyclops_ghost.move->delta_y = 0;
+    cyclops_ghost.move->direction = ((UCHAR8)2) ;
+
+	manually_move_ghost(base32, base8, entity, 16);
+
+    crying_ghost.move->delta_x = 0;
+    crying_ghost.move->delta_y = -1;
+    crying_ghost.move->direction = ((UCHAR8)0) ;
 
     awkward_ghost.move->delta_x = 0;
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
-
-	manually_move_ghost(base32, base8, entity, 32+16);
-
-    crying_ghost.move->delta_x = 1;
-    crying_ghost.move->delta_y = 0;
-    crying_ghost.move->direction = ((UCHAR8)3) ;
-
-    awkward_ghost.move->delta_x = -1;
-    awkward_ghost.move->delta_y = 0;
-    awkward_ghost.move->direction = ((UCHAR8)2) ;
-
     manually_move_ghost(base32, base8, entity, 32);
-
-
-    awkward_ghost.move->delta_x = 0;
 }
 void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int stop){
     int i;

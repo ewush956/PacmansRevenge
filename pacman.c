@@ -172,20 +172,14 @@ int main()
             {
                 input = (char)Cnecin();
             }
-                /*
-                if (ticks % 70 == 0) {
-                    ticks = 0;
-                }
-                ticks++;
-                */
                 
                 clear_entities(base32, &entity);
                 set_input(&pacman,input);
 
                 check_proximity(&entity);
-                handle_collisions(&entity, &xor);       /*Checks and handles collisions*/
+                handle_collisions(&entity, ticks);       /*Checks and handles collisions*/
 
-                update_pacman(ticks);
+                update_pacman();
                 update_ghosts();
                 update_current_frame(&entity, ticks);
 
@@ -193,6 +187,10 @@ int main()
                 update_cells(&entity);
 
                 debug_cells_pac(base8, &pacman);
+            ticks++;
+            if (ticks > 60) {
+                ticks = 0;
+            }
             time_then = time_now;
         }
         update_game_state(state, input);
@@ -204,19 +202,10 @@ int main()
 * Function: update_pacman
 * Purpose: Updates the position of the pacman
 */
-void update_pacman(int clock){
+void update_pacman(){
     move_pacman(&pacman);
-    /*
-    if (clock % 2 == 0) {
-        if (pacman.state == DEFAULT) {
-            pacman.current_frame = ((pacman.current_frame) + 1) % 8;
-        }
-        else {
-        pacman.current_frame = ((pacman.current_frame) + 1) % 6;
-        }
-    */
 }
-void update_ghosts(int clock){
+void update_ghosts(){
     move_ghost(&moustache_ghost);
     move_ghost(&crying_ghost);
     move_ghost(&cyclops_ghost);
@@ -240,30 +229,26 @@ void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     moustache_ghost.move->delta_y = 1;
     moustache_ghost.move->direction = DOWN;
 
-	manually_move_ghost(base32, base8, entity, 32);
-    
-	crying_ghost.move->delta_x = 0;
-	crying_ghost.move->delta_y = -1;
-	crying_ghost.move->direction = UP;
+	manually_move_ghost(base32, base8, entity, 16);
+
+    moustache_ghost.move->delta_x = 1;
+    moustache_ghost.move->delta_y = 0;
+    moustache_ghost.move->direction = RIGHT;
+
+    cyclops_ghost.move->delta_x = -1;
+    cyclops_ghost.move->delta_y = 0;
+    cyclops_ghost.move->direction = LEFT;
+
+	manually_move_ghost(base32, base8, entity, 16);
+
+    crying_ghost.move->delta_x = 0;
+    crying_ghost.move->delta_y = -1;
+    crying_ghost.move->direction = UP;
 
     awkward_ghost.move->delta_x = 0;
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = DOWN;
-
-	manually_move_ghost(base32, base8, entity, 32+16);
-
-    crying_ghost.move->delta_x = 1;
-    crying_ghost.move->delta_y = 0;
-    crying_ghost.move->direction = RIGHT;
-
-    awkward_ghost.move->delta_x = -1;
-    awkward_ghost.move->delta_y = 0;
-    awkward_ghost.move->direction = LEFT;
-
     manually_move_ghost(base32, base8, entity, 32);
-
-
-    awkward_ghost.move->delta_x = 0;
 }
 void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int stop){
     int i;

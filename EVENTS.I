@@ -200,7 +200,9 @@ ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 objec
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index,
                                   UINT16 object_x_index, int y_delta, int x_delta);
 
-ObjectType process_ghost_collision(Entities* all);
+
+
+
 
 void init_map_cells(Cell cell_map[][40 ], UINT16 tile_map[][40 ]);
 void update_cell(Movement* entity, UCHAR8 state);
@@ -242,8 +244,8 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 
 void handle_wall_collision(Movement* ghost, int ghost_identifier);
-void handle_collisions(Entities* entity, Xor *xor);
-ObjectType process_ghost_collision(Entities* all);
+void handle_collisions(Entities* entity, int ticks);
+ObjectType process_ghost_collision(Entities* all, int tick);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 # 5 "events.c" 2
@@ -355,7 +357,7 @@ void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
     flip_direction(ghost2);
 # 44 "events.c"
 }
-ObjectType process_ghost_collision(Entities* all)
+ObjectType process_ghost_collision(Entities* all, int tick)
 {
 
     ObjectType collision = OPEN_PATH;
@@ -372,7 +374,6 @@ ObjectType process_ghost_collision(Entities* all)
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH) {
 
             handle_wall_collision(all_ghosts[i], i);
-
         }
 
 
@@ -380,24 +381,31 @@ ObjectType process_ghost_collision(Entities* all)
         else {
             if (all_ghosts[i]->direction == ((UCHAR8)0)  || all_ghosts[i]->direction == ((UCHAR8)1) ) {
                 if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == -1 ) {
-                    if (i % 2 == 0)
+                    if (tick % 7+i == 0)
                         all_ghosts[i]->direction = ((UCHAR8)3) ;
                 }
                 else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index - 1].open_path == -1 ) {
-                    if (i % 2 == 1)
+                    if (tick % 5 == i)
                         all_ghosts[i]->direction = ((UCHAR8)2) ;
                     else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == -1 )
-                    {
-                        if (i % 2 == 1)
+                        if (tick % 3 == 0) {
                             all_ghosts[i]->direction = ((UCHAR8)3) ;
-                    }
+                        }
 
                 }
             }
+
+                else {
+                    if (cell_map[all_ghosts[i]->y_cell_index + 1][all_ghosts[i]->x_cell_index].open_path == -1 )
+                        if (tick+i % 17 == 0)
+                        {
+                            all_ghosts[i]->direction = ((UCHAR8)1) ;
+                        }
+# 99 "events.c"
+                }
+
         }
-
     }
-
     for (i = 3; i > -1; i--){
         for (n = 1; n <= i; n++){
             if (check_shared_occupied(all_ghosts[i], all_ghosts[i-n]) == -1 ) {
@@ -445,9 +453,9 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
             return;
 
     }
-# 165 "events.c"
+# 180 "events.c"
 }
-# 175 "events.c"
+# 190 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
 
@@ -491,18 +499,18 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
             break;
         }
         break;
-# 232 "events.c"
+# 247 "events.c"
     }
 }
-# 241 "events.c"
-void handle_collisions(Entities* entity, Xor *xor) {
+# 256 "events.c"
+void handle_collisions(Entities* entity, int ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
     Movement* pacman = entity->pacman->move;
 
 
 
-    process_ghost_collision(entity);
+    process_ghost_collision(entity, ticks);
 
 
     collision_type = check_wall_collision(pacman);
@@ -519,7 +527,7 @@ void handle_collisions(Entities* entity, Xor *xor) {
 
     if (check_shared_occupied(pacman, entity->crying_ghost->move) == -1 )
         kill_ghost(entity->crying_ghost, cell_map);
-# 329 "events.c"
+# 344 "events.c"
 }
 ULONG32 random_number_generator(Xor *xor)
 {
