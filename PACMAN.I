@@ -293,10 +293,12 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 
 void handle_wall_collision(Movement* ghost, int ghost_identifier);
-void handle_collisions(Entities* entity, int ticks);
-ObjectType process_ghost_collision(Entities* all, int tick);
+void handle_collisions(Entities* entity, UINT16 ticks);
+ObjectType process_ghost_collision(Entities* all, UINT16 tick);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
+
+UCHAR8 get_valid_paths(Movement *ghost);
 # 10 "./pacman.h" 2
 # 1 "C:/c68/include/osbind.h" 1
 # 1 "C:/c68/include/compiler.h" 1
@@ -993,7 +995,7 @@ int main()
 
 	char input;
 	int i,j,counter;
-    int ticks = 0;
+    UINT16 ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = (void*)_trap_14_w((short)0x2) ;
     UINT16* base16 = (void*)_trap_14_w((short)0x2) ;
@@ -1028,24 +1030,20 @@ int main()
                 input = (char)_trap_1_w((short)0x08) ;
             }
 
-                clear_entities(base32, &entity);
-                set_input(&pacman,input);
+            clear_entities(base32, &entity);
+            set_input(&pacman,input);
 
-                check_proximity(&entity);
-                handle_collisions(&entity, ticks);
+            check_proximity(&entity);
+            handle_collisions(&entity, ticks);
 
-                update_pacman();
-                update_ghosts();
-                update_current_frame(&entity, ticks);
+            update_pacman();
+            update_ghosts();
+            update_current_frame(&entity, ticks);
 
-                render_frame(base32, &entity);
-                update_cells(&entity);
-
-                debug_cells_pac(base8, &pacman);
-            ticks++;
-            if (ticks > 60) {
-                ticks = 0;
-            }
+            render_frame(base32, &entity);
+            update_cells(&entity);
+# 196 "pacman.c"
+            ticks = (++ticks & 63);
             time_then = time_now;
         }
         update_game_state(state, input);

@@ -27,10 +27,10 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 /* void handle_wall_collision(Movement* entity); */
 void handle_wall_collision(Movement* ghost, int ghost_identifier);
-void handle_collisions(Entities* entity, int ticks);
-ObjectType process_ghost_collision(Entities* all, int tick);
+void handle_collisions(Entities* entity, UINT16 ticks);
+ObjectType process_ghost_collision(Entities* all, UINT16 tick);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 
-
+UCHAR8 get_valid_paths(Movement *ghost);
 #endif

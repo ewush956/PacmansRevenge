@@ -17,8 +17,8 @@ void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
     ULONG32* location = base + (y * LONGS_PER_ROW) + (x >> 5);
         for (row = 0; row < height; row++) {
             if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && dy >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT) ) {
-                *location |= bitmap[row] >> (x % SPRITE_WIDTH);
-                *(location + 1) |= bitmap[row] << (SPRITE_WIDTH - (x % SPRITE_WIDTH));
+                *location |= bitmap[row] >> (x & 31);
+                *(location + 1) |= bitmap[row] << (SPRITE_WIDTH - (x & 31));
             }
             location += LONGS_PER_ROW;
             dy++; /*For bounds checking*/
@@ -33,11 +33,16 @@ void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height) {
 
     for (row = 0; row < height; row++) {
         if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && y >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT)) {
+            /*
             mask1 = ~(0xFFFFFFFF >> (x % SPRITE_WIDTH));
             mask2 = ~(0xFFFFFFFF << (SPRITE_WIDTH - (x % SPRITE_WIDTH)));
-            
+            */
+            mask1 = ~(0xFFFFFFFF >> (x & 31));
+            mask2 = ~(0xFFFFFFFF << (SPRITE_WIDTH - (x & 31)));
+
+
             *location &= mask1;
-            if ((x % 32) + SPRITE_WIDTH > 32) {
+            if ((x & 31) + SPRITE_WIDTH > 32) {
                 *(location + 1) &= mask2;
             }
         }

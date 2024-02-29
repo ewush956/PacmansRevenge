@@ -12,6 +12,7 @@ Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 void move_pacman (Pacman *pacman)
 {
+    /*
     if (pacman -> state == DEFAULT) {
     pacman->move->x += (pacman->move->delta_x) * 2;
     pacman->move->y += (pacman->move->delta_y) * 2;
@@ -19,6 +20,15 @@ void move_pacman (Pacman *pacman)
     else {
         pacman->move->x += pacman->move->delta_x * 4;
         pacman->move->y += pacman->move->delta_y * 4;
+    }
+    */
+    if (pacman -> state == DEFAULT) {
+    pacman->move->x += (pacman->move->delta_x << 1);
+    pacman->move->y += (pacman->move->delta_y << 1);
+    }
+    else {
+        pacman->move->x += (pacman->move->delta_x << 2);
+        pacman->move->y += (pacman->move->delta_y << 2);
     }
    /* update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->move->direction); */
 }
@@ -33,7 +43,7 @@ void move_pacman (Pacman *pacman)
 *************************************************************/
 void move_ghost (Ghost *ghost)
 {
-    
+    Movement* ghost_movement = ghost->move;
 	UCHAR8 direction = ghost->move->direction;
 
 	/*ghost -> delta_x = 0;
@@ -51,35 +61,29 @@ void move_ghost (Ghost *ghost)
 		switch(direction)
 		{
 			case UP:
-				ghost->move->delta_y = -1;
-				ghost->move->delta_x = 0;
+				ghost_movement->delta_y = -1;
+				ghost_movement->delta_x = 0;
 				break;
 			
 			case DOWN:
-				ghost -> move-> delta_y = 1;
-				ghost -> move-> delta_x = 0;
+				ghost_movement->delta_y = 1;
+				ghost_movement->delta_x = 0;
 				break;
 			
 			case RIGHT:
-				ghost -> move ->delta_x = 1;
-				ghost -> move ->delta_y = 0;
+				ghost_movement->delta_x = 1;
+				ghost_movement->delta_y = 0;
 				break;
 			
 			case LEFT:
-				ghost -> move ->delta_x = -1;
-				ghost -> move ->delta_y = 0;
+				ghost_movement->delta_x = -1;
+				ghost_movement->delta_y = 0;
 				break;
 		}
-        if (ghost->move->direction == UP || ghost->move->direction == DOWN) 
-            ghost->move->x = ghost->move->x_cell_index * PIXELS_PER_CELL;
-        
-        else if (ghost->move->direction == LEFT|| ghost->move->direction == RIGHT) 
-        {
-            ghost->move->y = ghost->move->y_cell_index * PIXELS_PER_CELL + PIXELS_PER_CELL;
-        }
+        align_axis(ghost_movement);
 
-        ghost->move-> x += ghost->move->delta_x;
-        ghost->move-> y += ghost->move->delta_y;
+        ghost_movement-> x += ghost_movement->delta_x;
+        ghost_movement-> y += ghost_movement->delta_y;
     
 
 }
@@ -343,8 +347,12 @@ bool check_shared_occupied(Movement* entity1, Movement* entity2) {
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     int y_cell_index, x_cell_index;
     ghost->state = DEAD;
+    /*
     ghost->move->x = ghost->move->x_cell_index * PIXELS_PER_CELL;
     ghost->move->y = ghost->move->y_cell_index * PIXELS_PER_CELL + Y_PIXEL_OFFSET;
+    */
+    ghost->move->x = (ghost->move->x_cell_index << 4);
+    ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
 
     y_cell_index = ghost->move->y_cell_index;
     x_cell_index = ghost->move->x_cell_index;
@@ -371,12 +379,21 @@ void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell
    cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
 }
 void align_axis(Movement* entity) {
+        if (entity->direction == UP || entity->direction == DOWN) {        
+        entity->x = (entity->x_cell_index << 4);
+        }
+        else if (entity->direction == LEFT || entity->direction == RIGHT) {
+            entity->y = (entity->y_cell_index + 1) << 4;
+        }
+    /*
         if (entity->direction == UP || entity->direction == DOWN) {
+            
             entity->x = entity->x_cell_index * PIXELS_PER_CELL;
         }
         else if (entity->direction == LEFT || entity->direction == RIGHT) {
             entity->y = entity->y_cell_index  * PIXELS_PER_CELL + PIXELS_PER_CELL;
         }
+        */
 }
 void flip_direction(Movement* ghost) {
     if (ghost->direction == UP)
@@ -400,18 +417,34 @@ void update_current_frame(Entities* all, int clock) {
     ghosts[1] = all->awkward_ghost;
     ghosts[2] = all->cyclops_ghost;
     ghosts[3] = all->moustache_ghost;
-
+/*
     if (clock % 2 == 0) {
+        */
         if (pacman->state == DEFAULT) {
+            /*
             pacman->current_frame = ((pacman->current_frame) + 1) % 8;
+            */
+            pacman->current_frame = ((pacman->current_frame) + 1) & 7;
+
         }
         else {
+        /*
         pacman->current_frame = ((pacman->current_frame) + 1) % 6;
+        */
+        pacman->current_frame += 1;
+        if (pacman->current_frame > 5) 
+            pacman->current_frame -= 6;
         }
-    }
+    
     for (i = 0; i < 4; i++) {
+        /*
         if (ghosts[i]->state == DEFAULT && clock % 4 == 0) {
             ghosts[i]->current_frame = ((ghosts[i]->current_frame) + 1) % 2;
         }
+        */
+        if (ghosts[i]->state == DEFAULT && (clock & 3) == 0) {
+            ghosts[i]->current_frame = (ghosts[i]->current_frame + 1) & 1;
+}
+
     }
 }

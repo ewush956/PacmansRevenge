@@ -244,10 +244,12 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 
 void handle_wall_collision(Movement* ghost, int ghost_identifier);
-void handle_collisions(Entities* entity, int ticks);
-ObjectType process_ghost_collision(Entities* all, int tick);
+void handle_collisions(Entities* entity, UINT16 ticks);
+ObjectType process_ghost_collision(Entities* all, UINT16 tick);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
+
+UCHAR8 get_valid_paths(Movement *ghost);
 # 5 "events.c" 2
 # 1 "C:/c68/include/stdio.h" 1
 # 1 "C:/c68/include/compiler.h" 1
@@ -355,9 +357,9 @@ void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 
     flip_direction(ghost1);
     flip_direction(ghost2);
-# 44 "events.c"
+# 43 "events.c"
 }
-ObjectType process_ghost_collision(Entities* all, int tick)
+ObjectType process_ghost_collision(Entities* all, UINT16 tick)
 {
 
     ObjectType collision = OPEN_PATH;
@@ -381,29 +383,20 @@ ObjectType process_ghost_collision(Entities* all, int tick)
         else {
             if (all_ghosts[i]->direction == ((UCHAR8)0)  || all_ghosts[i]->direction == ((UCHAR8)1) ) {
                 if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == -1 ) {
-                    if (tick % 7+i == 0)
+                    if (i & 1 == 0)
                         all_ghosts[i]->direction = ((UCHAR8)3) ;
                 }
                 else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index - 1].open_path == -1 ) {
-                    if (tick % 5 == i)
+                    if (i & 3 == 0)
                         all_ghosts[i]->direction = ((UCHAR8)2) ;
                     else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == -1 )
-                        if (tick % 3 == 0) {
+                        if (i == 0 || i == 2) {
                             all_ghosts[i]->direction = ((UCHAR8)3) ;
                         }
 
                 }
             }
-
-                else {
-                    if (cell_map[all_ghosts[i]->y_cell_index + 1][all_ghosts[i]->x_cell_index].open_path == -1 )
-                        if (tick+i % 17 == 0)
-                        {
-                            all_ghosts[i]->direction = ((UCHAR8)1) ;
-                        }
-# 99 "events.c"
-                }
-
+# 101 "events.c"
         }
     }
     for (i = 3; i > -1; i--){
@@ -421,12 +414,16 @@ ObjectType process_ghost_collision(Entities* all, int tick)
 void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 
     int i, direction;
+    UCHAR8 possible_direction = 0;
+    UCHAR8 number_of_open_paths = get_valid_paths(ghost);
+
     direction = ghost->direction;
     for (i = 0; i < 4; i++) {
         direction++;
         if (direction > 3)
             direction = (direction % 3) - 1;
         ghost -> direction = DIRECTION_ARRAY[direction];
+
         switch(direction)
 		{
 			case ((UCHAR8)0) :
@@ -451,11 +448,10 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 		}
         if (cell_map[ghost->y_cell_index + ghost->delta_y][ghost->x_cell_index + ghost->delta_x].open_path == -1 )
             return;
-
     }
-# 180 "events.c"
+# 183 "events.c"
 }
-# 190 "events.c"
+# 193 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
 
@@ -499,11 +495,11 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
             break;
         }
         break;
-# 247 "events.c"
+# 250 "events.c"
     }
 }
-# 256 "events.c"
-void handle_collisions(Entities* entity, int ticks) {
+# 259 "events.c"
+void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
     Movement* pacman = entity->pacman->move;
@@ -527,7 +523,7 @@ void handle_collisions(Entities* entity, int ticks) {
 
     if (check_shared_occupied(pacman, entity->crying_ghost->move) == -1 )
         kill_ghost(entity->crying_ghost, cell_map);
-# 344 "events.c"
+# 347 "events.c"
 }
 ULONG32 random_number_generator(Xor *xor)
 {
@@ -580,4 +576,22 @@ void set_input(Pacman *pacman, char input)
 			break;
 	}
 
+}
+
+
+
+
+
+UCHAR8 get_valid_paths(Movement *ghost)
+{
+    UCHAR8 count = 0;
+    if (cell_map[ghost->y_cell_index - 1][ghost->x_cell_index].open_path == -1 )
+        count++;
+    if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == -1 )
+        count++;
+    if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == -1 )
+        count++;
+    if (cell_map[ghost->y_cell_index][ghost->x_cell_index + 1].open_path == -1 )
+        count++;
+    return count;
 }

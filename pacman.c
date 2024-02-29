@@ -138,7 +138,7 @@ int main()
 
 	char input;
 	int i,j,counter;
-    int ticks = 0;
+    UINT16 ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = Physbase();
     UINT16* base16 = Physbase();
@@ -173,24 +173,27 @@ int main()
                 input = (char)Cnecin();
             }
                 
-                clear_entities(base32, &entity);
-                set_input(&pacman,input);
+            clear_entities(base32, &entity);
+            set_input(&pacman,input);
 
-                check_proximity(&entity);
-                handle_collisions(&entity, ticks);       /*Checks and handles collisions*/
+            check_proximity(&entity);
+            handle_collisions(&entity, ticks);       /*Checks and handles collisions*/
 
-                update_pacman();
-                update_ghosts();
-                update_current_frame(&entity, ticks);
+            update_pacman();
+            update_ghosts();
+            update_current_frame(&entity, ticks);
 
-                render_frame(base32, &entity);
-                update_cells(&entity);
-
-                debug_cells_pac(base8, &pacman);
+            render_frame(base32, &entity);
+            update_cells(&entity);
+/*
+            debug_cells_pac(base8, &pacman);
+            
             ticks++;
-            if (ticks > 60) {
+            if (ticks > 64) {
                 ticks = 0;
             }
+            */
+            ticks = (++ticks & 63);
             time_then = time_now;
         }
         update_game_state(state, input);

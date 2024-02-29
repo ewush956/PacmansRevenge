@@ -25,8 +25,7 @@ const UCHAR8 DIRECTION_ARRAY[4] = {UP, DOWN, LEFT, RIGHT};
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
     
     flip_direction(ghost1);
-    flip_direction(ghost2);
-    
+    flip_direction(ghost2);    
     /*
 
         if (ghost1->direction == UP || ghost1->direction == DOWN) {
@@ -42,7 +41,7 @@ void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 
     
 }
-ObjectType process_ghost_collision(Entities* all, int tick)
+ObjectType process_ghost_collision(Entities* all, UINT16 tick)
 {  
     
     ObjectType collision = OPEN_PATH;
@@ -66,27 +65,27 @@ ObjectType process_ghost_collision(Entities* all, int tick)
         else {
             if (all_ghosts[i]->direction == UP || all_ghosts[i]->direction == DOWN) {
                 if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == TRUE) {
-                    if (tick % 7+i == 0)
+                    if (i & 1 == 0)
                         all_ghosts[i]->direction = RIGHT;
                 }
                 else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index - 1].open_path == TRUE) {
-                    if (tick % 5 == i)
+                    if (i & 3 == 0)
                         all_ghosts[i]->direction = LEFT;
                     else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == TRUE)
-                        if (tick % 3 == 0) {
+                        if (i == 0 || i == 2) {
                             all_ghosts[i]->direction = RIGHT;
                         }
                     
                 }
             }   
-            
-                else {
+            /*
+            else if (all_ghosts[i]->x % 32 == 0){
                     if (cell_map[all_ghosts[i]->y_cell_index + 1][all_ghosts[i]->x_cell_index].open_path == TRUE)
-                        if (tick+i % 17 == 0)
+                        if (tick % 2 == i)
                         {
                             all_ghosts[i]->direction = DOWN;
                         }
-                        /*
+                    
                     else if (cell_map[all_ghosts[i]->y_cell_index - 1][all_ghosts[i]->x_cell_index].open_path == TRUE){
                         if (tick % 3+i == 0)
                             all_ghosts[i]->direction = UP;
@@ -95,8 +94,9 @@ ObjectType process_ghost_collision(Entities* all, int tick)
                     else if (cell_map[all_ghosts[i]->y_cell_index + 1][all_ghosts[i]->x_cell_index].open_path == TRUE)
                         if (tick % 11 == 0)
                             all_ghosts[i]->direction = DOWN;
-                            */
+                          
                 }
+                */
                 
         }
     }
@@ -115,12 +115,16 @@ ObjectType process_ghost_collision(Entities* all, int tick)
 void handle_wall_collision(Movement* ghost, int ghost_identifier) {
     
     int i, direction;
+    UCHAR8 possible_direction = 0;
+    UCHAR8 number_of_open_paths = get_valid_paths(ghost);
+
     direction = ghost->direction;
     for (i = 0; i < 4; i++) {
         direction++;
         if (direction > 3) 
             direction = (direction % 3) - 1;
         ghost -> direction = DIRECTION_ARRAY[direction];
+        
         switch(direction)
 		{
 			case UP:
@@ -145,38 +149,37 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 		}
         if (cell_map[ghost->y_cell_index + ghost->delta_y][ghost->x_cell_index + ghost->delta_x].open_path == TRUE)
             return;
-        
     }
-   /*
 
-    UCHAR8 possible_direction = 0;
+    /*
 
-        if (cell_map[entity->y_cell_index][entity -> x_cell_index + 1].open_path == TRUE )
+        if (cell_map[ghost->y_cell_index][ghost->x_cell_index + 1].open_path == TRUE )
             possible_direction |= RIGHT_RANDOM;
 
-        if (cell_map[entity->y_cell_index][entity->x_cell_index  - 1].open_path == TRUE)
+        if (cell_map[ghost->y_cell_index][ghost->x_cell_index  - 1].open_path == TRUE)
             possible_direction |= LEFT_RANDOM;
 
-        if (cell_map[entity->y_cell_index  + 1][entity-> x_cell_index].open_path == TRUE)
+        if (cell_map[ghost->y_cell_index  + 1][ghost-> x_cell_index].open_path == TRUE)
             possible_direction |= DOWN_RANDOM;
 
-        if (cell_map[entity-> y_cell_index - 1][entity-> x_cell_index].open_path == TRUE)
+        if (cell_map[ghost->y_cell_index - 1][ghost-> x_cell_index].open_path == TRUE)
             possible_direction |= UP_RANDOMN;
      
-        if (possible_direction & 0x01)
-            entity -> direction = UP;
+        if (possible_direction = 0x01)
+            ghost -> direction = UP;
 
-        else if(possible_direction & 0x08)
-            entity ->direction = RIGHT;
+        else if(possible_direction = 0x08)
+            ghost ->direction = RIGHT;
 
-        else if( possible_direction & 0x04)
-            entity -> direction = LEFT;
+        else if( possible_direction = 0x04)
+            ghost -> direction = LEFT;
 
         else
-            entity -> direction = DOWN;
+            ghost -> direction = DOWN;
+            */
             
-    */
-            
+    
+           
 }
 /*************************************************************
  * Function: handle_pacman_collision
@@ -253,7 +256,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 *   @return 'state' this is the random number that is returned
 *
 ***********************************************************/
-void handle_collisions(Entities* entity, int ticks) {
+void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
     Movement* pacman = entity->pacman->move;
@@ -393,5 +396,23 @@ void set_input(Pacman *pacman, char input)
 			break;
 	}
 
+}
+/*******************************************
+ * Function: get_valid_paths
+ * Purpose: Returns the number of valid paths a ghost can take in a cell
+ * Parameters: Movement* ghost
+*/
+UCHAR8 get_valid_paths(Movement *ghost)
+{
+    UCHAR8 count = 0;
+    if (cell_map[ghost->y_cell_index - 1][ghost->x_cell_index].open_path == TRUE)
+        count++;
+    if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == TRUE)
+        count++;
+    if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == TRUE)
+        count++;
+    if (cell_map[ghost->y_cell_index][ghost->x_cell_index + 1].open_path == TRUE)
+        count++;
+    return count;
 }
 
