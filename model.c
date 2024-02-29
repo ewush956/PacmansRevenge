@@ -207,7 +207,7 @@ void check_proximity(Entities* all) {
             y_distance = ghost_y_index - pacman_y_index;
         }
 
-        if (x_distance <= 4 && y_distance <= 4) {
+        if (x_distance <= 5 && y_distance <= 5) {
             ghostCountWithinRange++;
             change_pacman_state(all->pacman, EVIL); 
             change_ghost_state(ghosts[i], RUNNING); 
@@ -391,4 +391,27 @@ void flip_direction(Movement* ghost) {
     else 
         ghost->direction = LEFT;
 }
+void update_current_frame(Entities* all, int clock) {
+    Pacman* pacman = all->pacman;
 
+    Ghost *ghosts[4];
+    int i;
+    ghosts[0] = all->crying_ghost;
+    ghosts[1] = all->awkward_ghost;
+    ghosts[2] = all->cyclops_ghost;
+    ghosts[3] = all->moustache_ghost;
+
+    if (clock % 2 == 0) {
+        if (pacman->state == DEFAULT) {
+            pacman->current_frame = ((pacman->current_frame) + 1) % 8;
+        }
+        else {
+        pacman->current_frame = ((pacman->current_frame) + 1) % 6;
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        if (ghosts[i]->state == DEFAULT && clock % 4 == 0) {
+            ghosts[i]->current_frame = ((ghosts[i]->current_frame) + 1) % 2;
+        }
+    }
+}

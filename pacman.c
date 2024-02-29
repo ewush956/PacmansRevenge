@@ -187,6 +187,7 @@ int main()
 
                 update_pacman(ticks);
                 update_ghosts();
+                update_current_frame(&entity, ticks);
 
                 render_frame(base32, &entity);
                 update_cells(&entity);
@@ -203,23 +204,24 @@ int main()
 * Function: update_pacman
 * Purpose: Updates the position of the pacman
 */
-void update_pacman(int do_the_roar){
+void update_pacman(int clock){
     move_pacman(&pacman);
-    if (do_the_roar % 2 == 0) {
+    /*
+    if (clock % 2 == 0) {
         if (pacman.state == DEFAULT) {
             pacman.current_frame = ((pacman.current_frame) + 1) % 8;
         }
         else {
         pacman.current_frame = ((pacman.current_frame) + 1) % 6;
         }
-    }
+    */
 }
-void update_ghosts(){
-                move_ghost(&moustache_ghost);
-                move_ghost(&crying_ghost);
-                move_ghost(&cyclops_ghost);
-                move_ghost(&awkward_ghost);
-                /*update current frame of ghosties here*/
+void update_ghosts(int clock){
+    move_ghost(&moustache_ghost);
+    move_ghost(&crying_ghost);
+    move_ghost(&cyclops_ghost);
+    move_ghost(&awkward_ghost);
+    /*update current frame of ghosties here*/
 }
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     crying_ghost.move->delta_x = 1;
@@ -230,7 +232,15 @@ void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     awkward_ghost.move->delta_y = 0;
     awkward_ghost.move->direction = LEFT;
 
-	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
+    cyclops_ghost.move->delta_x = 0;
+    cyclops_ghost.move->delta_y = -1;
+    cyclops_ghost.move->direction = UP;
+
+    moustache_ghost.move->delta_x = 0;
+    moustache_ghost.move->delta_y = 1;
+    moustache_ghost.move->direction = DOWN;
+
+	manually_move_ghost(base32, base8, entity, 32);
     
 	crying_ghost.move->delta_x = 0;
 	crying_ghost.move->delta_y = -1;
@@ -240,7 +250,7 @@ void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = DOWN;
 
-	manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32+16);
+	manually_move_ghost(base32, base8, entity, 32+16);
 
     crying_ghost.move->delta_x = 1;
     crying_ghost.move->delta_y = 0;
@@ -250,31 +260,30 @@ void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     awkward_ghost.move->delta_y = 0;
     awkward_ghost.move->direction = LEFT;
 
-    manually_move_ghost(base32, base8, entity, &crying_ghost, &awkward_ghost, 32);
+    manually_move_ghost(base32, base8, entity, 32);
 
 
     awkward_ghost.move->delta_x = 0;
 }
-void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost1, Ghost* ghost2, int stop){
+void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int stop){
     int i;
 
 	for (i=0; i < stop; i++) {
-		clear_bitmap_32(base, ghost1->move->x, ghost1->move->y, SPRITE_HEIGHT); 
-        clear_bitmap_32(base, ghost2->move->x, ghost2->move->y, SPRITE_HEIGHT);
+		clear_bitmap_32(base, entity->crying_ghost->move->x, entity->crying_ghost->move->y, SPRITE_HEIGHT);
+        clear_bitmap_32(base, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);
+        clear_bitmap_32(base, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);
+        clear_bitmap_32(base, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, SPRITE_HEIGHT); 
 
-        ghost1 -> move-> x += (ghost1 -> move->delta_x);
-        ghost1 -> move-> y += (ghost1 -> move->delta_y);
+        move_ghost(entity->crying_ghost);
+        move_ghost(entity->awkward_ghost);
+        move_ghost(entity->moustache_ghost);
+        move_ghost(entity->cyclops_ghost);
+        update_current_frame(entity, i);
 
-        ghost2 -> move-> x += (ghost2 -> move->delta_x);
-        ghost2 -> move-> y += (ghost2 -> move->delta_y);
 
 		update_cells(entity);
 
 		render_frame(base, entity);
-		if (i % 8 == 0) {
-			ghost1->current_frame = ((ghost1->current_frame) + 1) % 2;
-            ghost2->current_frame = ((ghost2->current_frame) + 1) % 2;
-		}
 	}
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {

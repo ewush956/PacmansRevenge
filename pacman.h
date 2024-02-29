@@ -27,7 +27,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman);
 void update_pacman();
 void update_ghosts();
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity);
-void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost1, Ghost* ghost2, int stop);
+void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int stop);
 
 
 #endif
