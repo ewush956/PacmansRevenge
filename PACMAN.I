@@ -908,7 +908,7 @@ void render_initial_timer(UCHAR8* base);
 # 12 "pacman.c" 2
 # 1 "C:/c68/include/linea.h" 1
 # 13 "pacman.c" 2
-# 21 "pacman.c"
+# 23 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
@@ -982,7 +982,7 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
-# 129 "pacman.c"
+# 131 "pacman.c"
 int main()
 {
     Entities entity = {
@@ -1042,7 +1042,7 @@ int main()
 
             render_frame(base32, &entity);
             update_cells(&entity);
-# 196 "pacman.c"
+# 198 "pacman.c"
             ticks = (++ticks & 63);
             time_then = time_now;
         }
@@ -1127,7 +1127,7 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
     GAME_STATE state;
-    if (input == '\033')
+    if (input == 27  )
         state = ((UCHAR8)0) ;
 
     state = new_state;

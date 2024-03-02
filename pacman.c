@@ -12,6 +12,19 @@
 #include <stdio.h>
 #include <linea.h>
 
+/* NOTE: the frame buffer is just an arbitrary region of RAM and 
+*  on the Atari and RAM starts at 0x00000 up to 3FFFFF 
+*/
+#define BUFFER_SIZE 32256                   
+#define BACK_BUFFER_SART 0x000000
+#define BACK_BUFFER_END 0x007E00            /* $7E00 is 32,256 in decimal */
+
+#define FRONT_BUFFER_START 0x00FC00         /* starts at 64,512 (32,256 bytes more than the back_buffer) */
+#define FRONT_BUFFER_END 0x017A00           /* 32,256 more than the start */
+
+/* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
+
+
 /*************************************************************
 * Declaration: Pacman pacman
 * Purpose: Initializes the player character, Pacman, with its
@@ -149,7 +162,7 @@ int main()
 
     Xor xor = {123457};
 
-	init_map_cells(cell_map,tile_map);				/* i added the paramters for the init_cell map function*/
+	init_map_cells(cell_map,tile_map);				
     clear_screen_q(base32); 
     render_map(base16, tile_map);
     render_frame(base32, &entity);
@@ -275,12 +288,15 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 	}
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
+
     /*Do something that updates the gamestate*/
     GAME_STATE state;
     if (input == '\033')
         state = QUIT;
     
     state = new_state;
+
+
 }
 ULONG32 get_time()
 {
