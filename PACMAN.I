@@ -908,7 +908,7 @@ void render_initial_timer(UCHAR8* base);
 # 12 "pacman.c" 2
 # 1 "C:/c68/include/linea.h" 1
 # 13 "pacman.c" 2
-# 23 "pacman.c"
+# 35 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
@@ -982,7 +982,7 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
-# 131 "pacman.c"
+# 143 "pacman.c"
 int main()
 {
     Entities entity = {
@@ -1001,6 +1001,13 @@ int main()
     UINT16* base16 = (void*)_trap_14_w((short)0x2) ;
     UCHAR8* base8 = (void*)_trap_14_w((short)0x2) ;
 
+
+    UCHAR8 front_buffer[32256 ];
+    UCHAR8* front_buff_ptr = (UCHAR8*)0x00FC0000 ;
+
+    UCHAR8* test_base8 = front_buffer;
+    UINT16* test_base16 = front_buff_ptr;
+
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = ((UCHAR8)1) ;
 
@@ -1008,7 +1015,7 @@ int main()
 
 	init_map_cells(cell_map,tile_map);
     clear_screen_q(base32);
-    render_map(base16, tile_map);
+    render_map(test_base16, tile_map);
     render_frame(base32, &entity);
     render_initial_timer(base8);
     free_ghosts(base32, base8, &entity);
@@ -1042,7 +1049,9 @@ int main()
 
             render_frame(base32, &entity);
             update_cells(&entity);
-# 198 "pacman.c"
+
+            debug_cells_pac(test_base8, &pacman);
+# 217 "pacman.c"
             ticks = (++ticks & 63);
             time_then = time_now;
         }
@@ -1126,11 +1135,14 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
+
     GAME_STATE state;
-    if (input == 27  )
+    if (input == '\033')
         state = ((UCHAR8)0) ;
 
     state = new_state;
+
+
 }
 ULONG32 get_time()
 {

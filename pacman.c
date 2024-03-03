@@ -13,14 +13,15 @@
 #include <linea.h>
 
 /* NOTE: the frame buffer is just an arbitrary region of RAM and 
-*  on the Atari and RAM starts at 0x00000 up to 3FFFFF 
+*  on the Atari and RAM starts at address $0x00000 up to $3FFFFF 
 */
-#define BUFFER_SIZE 32256                   
-#define BACK_BUFFER_SART 0x000000
+#define BUFFER_SIZE_BYTES 32256                   /*added extra 256*/ 
+#define BUFFER_SIZE_WORDS 16000             
+#define BACK_BUFFER_START 0x000000
 #define BACK_BUFFER_END 0x007E00            /* $7E00 is 32,256 in decimal */
 
-#define FRONT_BUFFER_START 0x00FC00         /* starts at 64,512 (32,256 bytes more than the back_buffer) */
-#define FRONT_BUFFER_END 0x017A00           /* 32,256 more than the start */
+#define FRONT_BUFFER_START 0x00FC0000         /* starts at 64,512 (+ 32,256 bytes more than the back_buffer) */
+#define FRONT_BUFFER_END 0x017A0000           /* 32,256 more than the start of front_buffer*/
 
 /* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
 
@@ -157,6 +158,13 @@ int main()
     UINT16* base16 = Physbase();
     UCHAR8* base8 = Physbase();
 
+
+    UCHAR8 front_buffer[BUFFER_SIZE_BYTES];                 /* frame buffer allocation */
+    UCHAR8* front_buff_ptr = (UCHAR8*)FRONT_BUFFER_START;
+
+    UCHAR8* test_base8 = front_buffer;                       /* points to the start of the front_buffer */
+    UINT16* test_base16 = front_buff_ptr;
+
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
 
@@ -164,7 +172,7 @@ int main()
 
 	init_map_cells(cell_map,tile_map);				
     clear_screen_q(base32); 
-    render_map(base16, tile_map);
+    render_map(test_base16, tile_map);
     render_frame(base32, &entity);
     render_initial_timer(base8);
     free_ghosts(base32, base8, &entity); 
@@ -198,9 +206,9 @@ int main()
 
             render_frame(base32, &entity);
             update_cells(&entity);
-/*
-            debug_cells_pac(base8, &pacman);
-            
+
+            debug_cells_pac(test_base8, &pacman);
+            /*
             ticks++;
             if (ticks > 64) {
                 ticks = 0;
