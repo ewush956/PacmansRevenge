@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <linea.h>
 
+
 /* NOTE: the frame buffer is just an arbitrary region of RAM and 
 *  on the Atari and RAM starts at address $0x00000 up to $3FFFFF 
 */
@@ -20,9 +21,26 @@
 #define BACK_BUFFER_START 0x000000
 #define BACK_BUFFER_END 0x007E00            /* $7E00 is 32,256 in decimal */
 
-#define FRONT_BUFFER_START 0x00FC0000         /* starts at 64,512 (+ 32,256 bytes more than the back_buffer) */
-#define FRONT_BUFFER_END 0x017A0000           /* 32,256 more than the start of front_buffer*/
+#define FRONT_BUFFER_START 0xFC0000         /* starts at 64,512 (+ 32,256 bytes more than the back_buffer) */
+#define FRONT_BUFFER_END 0x17A0000           /* 32,256 more than the start of front_buffer*/
 
+       
+#define VIDEO_REGISTER_HIGH 0xFFFF8201
+#define VIDEO_REGISTER_MID 0xFFFF8203
+#define VIDEO_REGISTER_LOW 0xFFFF820D
+
+/*
+#define VIDEO_ADDR_HIGH (*(volatile UCHAR8*)0xFF8201)
+#define VIDEO_ADDR_MID  (*(volatile UCHAR8*)0xFF8203)
+#define VIDEO_ADDR_LOW  (*(volatile UCHAR8*)0xFF820D)
+*/
+#define VIDEO_ADDR_HIGH  0xFF8201
+#define VIDEO_ADDR_MID  0xFF8203
+#define VIDEO_ADDR_LOW  0xFF820D
+
+
+void set_video_base_addr(ULONG32 address);
+ULONG32 get_base_address();
 /* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
 
 
@@ -158,21 +176,28 @@ int main()
     UINT16* base16 = Physbase();
     UCHAR8* base8 = Physbase();
 
-
     UCHAR8 front_buffer[BUFFER_SIZE_BYTES];                 /* frame buffer allocation */
     UCHAR8* front_buff_ptr = (UCHAR8*)FRONT_BUFFER_START;
+ 
 
     UCHAR8* test_base8 = front_buffer;                       /* points to the start of the front_buffer */
     UINT16* test_base16 = front_buff_ptr;
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
-
     Xor xor = {123457};
+   
+    /*
+    ULONG32 temp = get_base_address();
+    */
+    printf("%u",get_base_address());
+ 
 
 	init_map_cells(cell_map,tile_map);				
     clear_screen_q(base32); 
-    render_map(test_base16, tile_map);
+    
+    render_map(base16, tile_map);
+   
     render_frame(base32, &entity);
     render_initial_timer(base8);
     free_ghosts(base32, base8, &entity); 
@@ -207,8 +232,8 @@ int main()
             render_frame(base32, &entity);
             update_cells(&entity);
 
-            debug_cells_pac(test_base8, &pacman);
             /*
+            debug_cells_pac(base8, &pacman);
             ticks++;
             if (ticks > 64) {
                 ticks = 0;
@@ -346,6 +371,39 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*LETTER_WIDTH, 0, font, stry);
     debug_print(base, 12*LETTER_WIDTH, 0, pacman->move->y_cell_index);
 }
+
+
+void set_video_base_addr(ULONG32 address)
+{
+    return;
+/*
+    UCHAR8 high_byte = (address >> 16) & 0xFF;
+    UCHAR8 mid_byte = (address >> 8) & 0xFF;
+    UCHAR8 low_byte = address & 0xFF;
+
+    VIDEO_ADDR_HIGH = high_byte;
+    VIDEO_ADDR_MID = mid_byte;
+    VIDEO_ADDR_LOW = low_byte;
+*/
+       
+}
+
+ULONG32 get_base_address()
+{
+    /*ULONG32* base_address = (ULONG32*)VIDEO_ADDR_HIGH;*/
+    ULONG32* base_address = (VIDEO_ADDR_HIGH << 16) | (VIDEO_ADDR_MID < 8) | (VIDEO_ADDR_LOW) ;
+    ULONG32 old_ssp;
+    ULONG32 temp;
+    
+    old_ssp = Super(0);
+    temp = *base_address;
+    Super(old_ssp);
+
+    return temp;
+
+}
+
+
 
 /*TODO:
 1) Initialize cell map

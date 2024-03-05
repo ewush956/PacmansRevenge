@@ -236,6 +236,8 @@ void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
 }
 void end_game() {
     
+
+    
 }
 
 /*************************************************************

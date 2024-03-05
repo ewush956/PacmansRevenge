@@ -908,7 +908,10 @@ void render_initial_timer(UCHAR8* base);
 # 12 "pacman.c" 2
 # 1 "C:/c68/include/linea.h" 1
 # 13 "pacman.c" 2
-# 35 "pacman.c"
+# 42 "pacman.c"
+void set_video_base_addr(ULONG32 address);
+ULONG32 get_base_address();
+# 53 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
@@ -982,7 +985,7 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
-# 143 "pacman.c"
+# 161 "pacman.c"
 int main()
 {
     Entities entity = {
@@ -1001,21 +1004,28 @@ int main()
     UINT16* base16 = (void*)_trap_14_w((short)0x2) ;
     UCHAR8* base8 = (void*)_trap_14_w((short)0x2) ;
 
-
     UCHAR8 front_buffer[32256 ];
-    UCHAR8* front_buff_ptr = (UCHAR8*)0x00FC0000 ;
+    UCHAR8* front_buff_ptr = (UCHAR8*)0xFC0000 ;
+
 
     UCHAR8* test_base8 = front_buffer;
     UINT16* test_base16 = front_buff_ptr;
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = ((UCHAR8)1) ;
-
     Xor xor = {123457};
+
+
+
+
+    printf("%u",get_base_address());
+
 
 	init_map_cells(cell_map,tile_map);
     clear_screen_q(base32);
-    render_map(test_base16, tile_map);
+
+    render_map(base16, tile_map);
+
     render_frame(base32, &entity);
     render_initial_timer(base8);
     free_ghosts(base32, base8, &entity);
@@ -1049,9 +1059,7 @@ int main()
 
             render_frame(base32, &entity);
             update_cells(&entity);
-
-            debug_cells_pac(test_base8, &pacman);
-# 217 "pacman.c"
+# 242 "pacman.c"
             ticks = (++ticks & 63);
             time_then = time_now;
         }
@@ -1183,4 +1191,26 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     debug_print(base, 4*8 , 0, pacman->move->x_cell_index);
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
+}
+
+
+void set_video_base_addr(ULONG32 address)
+{
+    return;
+# 389 "pacman.c"
+}
+
+ULONG32 get_base_address()
+{
+
+    ULONG32* base_address = (0xFF8201  << 16) | (0xFF8203  < 8) | (0xFF820D ) ;
+    ULONG32 old_ssp;
+    ULONG32 temp;
+
+    old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
+    temp = *base_address;
+    _trap_1_wl((short)0x20,(long)(old_ssp)) ;
+
+    return temp;
+
 }
