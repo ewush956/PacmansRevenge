@@ -179,7 +179,7 @@ int main()
 	ULONG32* base32 = Physbase();
     UINT16* base16 = Physbase();
     UCHAR8* base8 = Physbase();
-    ULONG32 original = base32;
+    ULONG32 *original = Physbase();
 
     ULONG32* buffer_ptr;
 
@@ -225,15 +225,15 @@ int main()
             }
             else{
 
-                 render_to_buffer(base32,&entity,ticks,input);
-                 Setscreen(-1,base32,-1);
-                 base32 = original;
+                base32 = original;
+                render_to_buffer(base32,&entity,ticks,input);
+                Setscreen(-1,base32,-1);
                 is_front_buffer = TRUE;
                  
 
             }
-
             Vsync();
+
             /*(Setscreen(-1,buffer_ptr,-1);
             /*swap buffer() using set screen*/
 
@@ -248,9 +248,9 @@ int main()
             update_pacman();
             update_ghosts();
             update_current_frame(&entity, ticks);
-            render_frame(base32, &entity);*/
+            render_frame(base32, &entity);
             update_cells(&entity);
-            
+            */
 
             /*
             debug_cells_pac(base8, &pacman);
@@ -417,6 +417,8 @@ void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input
     update_ghosts();
     update_current_frame(entity, ticks);
     render_frame(base32, entity);
+    update_cells(entity);
+    
 
 
 }

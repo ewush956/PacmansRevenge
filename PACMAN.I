@@ -909,9 +909,11 @@ void render_initial_timer(UCHAR8* base);
 # 1 "C:/c68/include/linea.h" 1
 # 13 "pacman.c" 2
 # 42 "pacman.c"
-void set_video_base_addr(ULONG32 address);
-ULONG32 get_base_address();
-# 53 "pacman.c"
+void swap_buffers();
+void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
+
+ULONG32 back_buffer_array[8064 ];
+# 55 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
@@ -985,7 +987,7 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
-# 161 "pacman.c"
+# 164 "pacman.c"
 int main()
 {
     Entities entity = {
@@ -998,37 +1000,28 @@ int main()
 
 	char input;
 	int i,j,counter;
+    bool is_front_buffer = -1 ;
     UINT16 ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = (void*)_trap_14_w((short)0x2) ;
     UINT16* base16 = (void*)_trap_14_w((short)0x2) ;
     UCHAR8* base8 = (void*)_trap_14_w((short)0x2) ;
+    ULONG32 *original = (void*)_trap_14_w((short)0x2) ;
 
-    UCHAR8 front_buffer[32256 ];
-    UCHAR8* front_buff_ptr = (UCHAR8*)0xFC0000 ;
-
-
-    UCHAR8* test_base8 = front_buffer;
-    UINT16* test_base16 = front_buff_ptr;
+    ULONG32* buffer_ptr;
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = ((UCHAR8)1) ;
     Xor xor = {123457};
 
-
-
-
-    printf("%u",get_base_address());
-
-
 	init_map_cells(cell_map,tile_map);
     clear_screen_q(base32);
-
     render_map(base16, tile_map);
-
     render_frame(base32, &entity);
     render_initial_timer(base8);
     free_ghosts(base32, base8, &entity);
+
+
 
 	if ((short)_trap_1_w((short)0x0B) )
 	{
@@ -1039,6 +1032,7 @@ int main()
 
         time_now = get_time();
         time_elapsed = time_now - time_then;
+        ticks = 0;
 
         if (time_elapsed > 0) {
 
@@ -1047,19 +1041,26 @@ int main()
                 input = (char)_trap_1_w((short)0x08) ;
             }
 
-            clear_entities(base32, &entity);
-            set_input(&pacman,input);
 
-            check_proximity(&entity);
-            handle_collisions(&entity, ticks);
+            if (is_front_buffer == -1 )
+            {
+                render_to_buffer(base32,&entity,ticks,input);
+                (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
+                base32 = back_buffer_array;
+                is_front_buffer = 0 ;
 
-            update_pacman();
-            update_ghosts();
-            update_current_frame(&entity, ticks);
+            }
+            else{
 
-            render_frame(base32, &entity);
-            update_cells(&entity);
-# 242 "pacman.c"
+                base32 = original;
+                render_to_buffer(base32,&entity,ticks,input);
+                (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
+                is_front_buffer = -1 ;
+
+
+            }
+            (void)_trap_14_w((short)0x25) ;
+# 262 "pacman.c"
             ticks = (++ticks & 63);
             time_then = time_now;
         }
@@ -1194,23 +1195,32 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
 }
 
 
-void set_video_base_addr(ULONG32 address)
+void swap_buffers (ULONG32 address)
 {
-    return;
-# 389 "pacman.c"
+
+
+    (void)_trap_14_wllw((short)0x5,(long)(-1),(long)address,(short)(-1)) ;
+
+
 }
 
-ULONG32 get_base_address()
+
+
+
+
+void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input)
 {
 
-    ULONG32* base_address = (0xFF8201  << 16) | (0xFF8203  < 8) | (0xFF820D ) ;
-    ULONG32 old_ssp;
-    ULONG32 temp;
+    clear_entities(base32, entity);
+    set_input(entity->pacman,input);
+    check_proximity(entity);
+    handle_collisions(entity, ticks);
+    update_pacman();
+    update_ghosts();
+    update_current_frame(entity, ticks);
+    render_frame(base32, entity);
+    update_cells(entity);
 
-    old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
-    temp = *base_address;
-    _trap_1_wl((short)0x20,(long)(old_ssp)) ;
 
-    return temp;
 
 }
