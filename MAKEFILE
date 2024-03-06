@@ -29,13 +29,13 @@
 #rast_asm.o: rast_asm.s
 #	gen -D -L2 rast_asm.s
 
-all: tst_sound
+all: tst_snd
 
-tst_sound: tst_sound.o psg.o music.o effects.o
-	cc68x -g tst_sound.o psg.o music.o effects.o -o tst_sound
+tst_snd: tst_snd.o psg.o music.o effects.o
+	cc68x -g tst_snd.o psg.o music.o effects.o -o tst_snd
 
-tst_sound.o: tst_sound.c psg.h TYPES.H music.h effects.h
-	cc68x -g -c tst_sound.c
+tst_snd.o: tst_snd.c psg.h TYPES.H music.h effects.h
+	cc68x -g -c tst_snd.c
 
 psg.o: psg.c psg.h
 	cc68x -g -c psg.c

@@ -6,16 +6,26 @@
 #define CHANNEL_A 0
 #define CHANNEL_B 1
 #define CHANNEL_C 2
+#define MIXER_OFFSET 7
 #define VOLUME_OFFSET 8
 
 #define VOLUME_MASK 0x0F
 #define CHANNEL_MASK 0x03
+#define MIXER_MASK 0x38
+
+#define TONE_ON 1
+#define NOISE_ON 1
+
+#define TONE_OFF 0
+#define NOISE_OFF 0
 
 #define SELECT_REGISTER 0xFF8800
 #define WRITE_REGISTER 0xFF8802
 
 void set_note_frequency(int channel, float frequency);
+void set_tone(int channel, int tuning);
 void enable_channel(int channel, int toneOn, int noiseOn);
 void set_volume(int channel, unsigned char volume);
 void set_master_volume(unsigned char volume);
+void stop_sound();
 

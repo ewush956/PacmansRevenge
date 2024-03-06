@@ -3,6 +3,9 @@
 #include "TYPES.H"
 #include "osbind.h"
 
+/*Helper function*/
+void write_psg(int reg, UCHAR8 val);
+
 /******************************************
 * Function Name: set_note_frequency
 * Purpose: Sets the frequency of a note for a specified PSG channel. 
@@ -19,15 +22,25 @@ void set_note_frequency(int channel, float frequency) {
 
     volatile char *PSG_reg_select = SELECT_REGISTER;
     volatile char *PSG_reg_write  = WRITE_REGISTER;
-    /*long old_ssp = Super(0);*/
 
     unsigned int value = MASTER_CLOCK / (16 * frequency);
 
-    *PSG_reg_select = channel * 2;
-    *PSG_reg_write = value & 0xFF; 
+    write_psg(channel * 2, (value & 0x0F));
+    write_psg((channel * 2) + 1, (value >> 8) & 0x0F);
+}
+void set_tone(int channel, int tuning) {
 
-    *PSG_reg_select = (channel * 2) + 1; 
-    *PSG_reg_write = (value >> 8) & 0x0F; 
+    volatile char *PSG_reg_select = SELECT_REGISTER;
+    volatile char *PSG_reg_write  = WRITE_REGISTER;
+
+    int fineTuneRegister = channel * 2;    
+    int coarseTuneRegister = fineTuneRegister + 1; 
+
+    unsigned char fineTuneValue = tuning & 0xFF;         
+    unsigned char coarseTuneValue = (tuning >> 8) & 0x0F;
+
+    write_psg(fineTuneRegister, fineTuneValue);
+    write_psg(coarseTuneRegister, coarseTuneValue);
 }
 /******************************************
 * Function Name: set_volume 
@@ -48,8 +61,7 @@ void set_volume(int channel, unsigned char volume) {
     volatile char *PSG_reg_select = SELECT_REGISTER;
     volatile char *PSG_reg_write  = WRITE_REGISTER;
 
-    *PSG_reg_select = VOLUME_OFFSET + channel;
-    *PSG_reg_write = volume & 0x0F; 
+    write_psg(VOLUME_OFFSET + channel, (volume & 0x0F));
 }
 /******************************************
 * Function Name: enableChannel
@@ -71,24 +83,24 @@ void enable_channel(int channel, int toneOn, int noiseOn) {
 
     volatile char *PSG_reg_select = SELECT_REGISTER;
     volatile char *PSG_reg_write  = WRITE_REGISTER;
+    static unsigned char mixer = MIXER_MASK;
     
     int toneBit = 0 + channel; 
-    int noiseBit = 3 + channel; 
+    int noiseBit = 3 + channel;
 
-    if (toneOn) {
-        MIXER_MASK &= ~(1 << toneBit); 
+    if (toneOn == TONE_ON) {
+        mixer &= ~(1 << toneBit); 
     } else {
-        MIXER_MASK |= (1 << toneBit);
+        mixer |= (1 << toneBit);
     }
 
-    if (noiseOn) {
-        MIXER_MASK &= ~(1 << noiseBit); 
+    if (noiseOn == NOISE_ON) {
+        mixer &= ~(1 << noiseBit); 
     } else {
-        MIXER_MASK |= (1 << noiseBit); 
+        mixer |= (1 << noiseBit); 
     }
 
-    *PSG_reg_select = 7;
-    *PSG_reg_write = MIXER_MASK;
+    write_psg(MIXER_OFFSET, mixer);
 }
 /*************************************************************
  * Function Name: set_master_volume
@@ -112,14 +124,36 @@ void set_master_volume(unsigned char volume){
     volatile char *PSG_reg_select = SELECT_REGISTER;
     volatile char *PSG_reg_write  = WRITE_REGISTER;
 
-    *PSG_reg_select = VOLUME_OFFSET;
-    *PSG_reg_write = volume & 0x0F;
-
-    *PSG_reg_select = VOLUME_OFFSET + CHANNEL_B;
-    *PSG_reg_write = volume & 0x0F;
-
-    *PSG_reg_select = VOLUME_OFFSET + CHANNEL_C;
-    *PSG_reg_write = volume & 0x0F;
+    write_psg(VOLUME_OFFSET, volume);
+    write_psg(VOLUME_OFFSET + CHANNEL_B, volume);
+    write_psg(VOLUME_OFFSET + CHANNEL_C, volume);
 }
+/*****************************************************************
+ * Function Name: stop_sound
+ * Purpose: Stops the sound by setting the master volume to 0.
+ * Parameters: None
+ * @returns void
+ ******************************************************************/
+void stop_sound() {
+    set_master_volume(0);
+}
+/********************************************************
+ *              ~~~~ Helper function ~~~~
+ * Function Name: write_psg
+ * Writes a value to a specific register on the PSG.
+ * @param reg (int): The register to write to.
+ * @param val (UCHAR8): The value to write to the register.
+ * @returns void
+ *******************************************************/
+void write_psg(int reg, UCHAR8 val) {
 
+    volatile char *PSG_reg_select = SELECT_REGISTER;
+    volatile char *PSG_reg_write  = WRITE_REGISTER;
+
+    if (reg >= 0 && reg <= 15) {
+
+        *PSG_reg_select = reg;
+        *PSG_reg_write = val;
+    }
+}
 
