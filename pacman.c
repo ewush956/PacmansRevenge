@@ -263,6 +263,7 @@ int main()
             time_then = time_now;
         }
         update_game_state(state, input);
+        Setscreen(-1,original,-1);
     }
 
 	return 0;
