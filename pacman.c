@@ -1,4 +1,3 @@
-
 #include "pacman.h"
 #include "raster.h"
 #include "model.h"
@@ -11,6 +10,40 @@
 #include <osbind.h>
 #include <stdio.h>
 #include <linea.h>
+
+
+/* NOTE: the frame buffer is just an arbitrary region of RAM and 
+*  on the Atari and RAM starts at address $0x00000 up to $3FFFFF 
+*/
+#define BUFFER_SIZE_BYTES 32256                   /*added extra 256*/ 
+#define BUFFER_SIZE_WORDS 16000 
+#define BUFFER_SIZE_LONGS 8064            
+#define BACK_BUFFER_START 0x000000
+#define BACK_BUFFER_END 0x007E00            /* $7E00 is 32,256 in decimal */
+
+#define FRONT_BUFFER_START 0xFC0000         /* starts at 64,512 (+ 32,256 bytes more than the back_buffer) */
+#define FRONT_BUFFER_END 0x17A0000           /* 32,256 more than the start of front_buffer*/
+
+       
+#define VIDEO_REGISTER_HIGH 0xFFFF8201
+#define VIDEO_REGISTER_MID 0xFFFF8203
+#define VIDEO_REGISTER_LOW 0xFFFF820D
+
+/*
+#define VIDEO_ADDR_HIGH (*(volatile UCHAR8*)0xFF8201)
+#define VIDEO_ADDR_MID  (*(volatile UCHAR8*)0xFF8203)
+#define VIDEO_ADDR_LOW  (*(volatile UCHAR8*)0xFF820D)
+*/
+#define VIDEO_ADDR_HIGH  0xFF8201
+#define VIDEO_ADDR_MID  0xFF8203
+#define VIDEO_ADDR_LOW  0xFF820D
+
+void swap_buffers();
+void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
+
+ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];  
+/* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
+
 
 /*************************************************************
 * Declaration: Pacman pacman
@@ -91,6 +124,7 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
+ 
 
 /*************************************************************
 * Declaration: Ghost crying_ghost
@@ -138,23 +172,28 @@ int main()
 
 	char input;
 	int i,j,counter;
+    bool is_front_buffer = TRUE;
     UINT16 ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = Physbase();
     UINT16* base16 = Physbase();
     UCHAR8* base8 = Physbase();
+    ULONG32 *original = Physbase();
+
+    ULONG32* buffer_ptr;
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
-
     Xor xor = {123457};
 
-	init_map_cells(cell_map,tile_map);				/* i added the paramters for the init_cell map function*/
+	init_map_cells(cell_map,tile_map);				
     clear_screen_q(base32); 
     render_map(base16, tile_map);
     render_frame(base32, &entity);
     render_initial_timer(base8);
-    free_ghosts(base32, base8, &entity); 
+    free_ghosts(base32, base8, &entity);
+
+
 	
 	if (Cconis())
 	{
@@ -165,6 +204,7 @@ int main()
 
         time_now = get_time();
         time_elapsed = time_now - time_then;
+        ticks = 0;
 
         if (time_elapsed > 0) {
 
@@ -172,22 +212,47 @@ int main()
             {
                 input = (char)Cnecin();
             }
-                
+            
+            /*render_to_buffer(base32,&entity,ticks,input);       /*start from the front */
+            if (is_front_buffer == TRUE)
+            {
+                render_to_buffer(base32,&entity,ticks,input);
+                Setscreen(-1,base32,-1);
+                base32 = back_buffer_array;
+                is_front_buffer = FALSE;
+
+            }
+            else{
+
+                base32 = original;
+                render_to_buffer(base32,&entity,ticks,input);
+                Setscreen(-1,base32,-1);
+                is_front_buffer = TRUE;
+                 
+
+            }
+            Vsync();
+
+            /*(Setscreen(-1,buffer_ptr,-1);
+            /*swap buffer() using set screen*/
+
+            /*base32 = back_buffer_array;
+            /*render_to_buffer(base32,&entity,ticks,input);*/
+
+            /*
             clear_entities(base32, &entity);
             set_input(&pacman,input);
-
             check_proximity(&entity);
-            handle_collisions(&entity, ticks);       /*Checks and handles collisions*/
-
+            handle_collisions(&entity, ticks);      
             update_pacman();
             update_ghosts();
             update_current_frame(&entity, ticks);
-
             render_frame(base32, &entity);
             update_cells(&entity);
-/*
+            */
+
+            /*
             debug_cells_pac(base8, &pacman);
-            
             ticks++;
             if (ticks > 64) {
                 ticks = 0;
@@ -275,12 +340,15 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 	}
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
+
     /*Do something that updates the gamestate*/
     GAME_STATE state;
     if (input == '\033')
         state = QUIT;
     
     state = new_state;
+
+
 }
 ULONG32 get_time()
 {
@@ -322,6 +390,40 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*LETTER_WIDTH, 0, font, stry);
     debug_print(base, 12*LETTER_WIDTH, 0, pacman->move->y_cell_index);
 }
+
+
+void swap_buffers (ULONG32 address)
+{
+
+
+    Setscreen(-1,address,-1);
+
+
+}
+
+/* save updating stuff and leave that in main...?
+try to only render to the buffer in this function */
+/* render to back buffer - switch to back buffer - wait for VSync 
+ do the same for the front*/
+void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input)
+{
+
+    clear_entities(base32, entity);
+    set_input(entity->pacman,input);
+    check_proximity(entity);
+    handle_collisions(entity, ticks);          /*Checks and handles collisions*/
+    update_pacman();
+    update_ghosts();
+    update_current_frame(entity, ticks);
+    render_frame(base32, entity);
+    update_cells(entity);
+    
+
+
+}
+
+
+
 
 /*TODO:
 1) Initialize cell map

@@ -868,11 +868,11 @@ void update_pacman();
 void update_ghosts();
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int stop);
-# 2 "pacman.c" 2
+# 1 "pacman.c" 2
 # 1 "./raster.h" 1
-# 3 "pacman.c" 2
+# 2 "pacman.c" 2
 # 1 "./model.h" 1
-# 4 "pacman.c" 2
+# 3 "pacman.c" 2
 # 1 "./renderer.h" 1
 # 1 "./model.h" 1
 # 2 "./renderer.h" 2
@@ -893,22 +893,27 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][40 ]);
 void render_non_default_ghost(ULONG32* base32, Ghost* ghost);
 void refresh_screen(ULONG32* base32, Entities* entity);
 void render_initial_timer(UCHAR8* base);
-# 5 "pacman.c" 2
+# 4 "pacman.c" 2
 # 1 "./TYPES.H" 1
-# 6 "pacman.c" 2
+# 5 "pacman.c" 2
 # 1 "./font.h" 1
-# 7 "pacman.c" 2
+# 6 "pacman.c" 2
 # 1 "./bitmaps.h" 1
-# 8 "pacman.c" 2
+# 7 "pacman.c" 2
 # 1 "./events.h" 1
-# 9 "pacman.c" 2
+# 8 "pacman.c" 2
 # 1 "C:/c68/include/osbind.h" 1
-# 11 "pacman.c" 2
+# 10 "pacman.c" 2
 # 1 "C:/c68/include/stdio.h" 1
-# 12 "pacman.c" 2
+# 11 "pacman.c" 2
 # 1 "C:/c68/include/linea.h" 1
-# 13 "pacman.c" 2
-# 21 "pacman.c"
+# 12 "pacman.c" 2
+# 41 "pacman.c"
+void swap_buffers();
+void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
+
+ULONG32 back_buffer_array[8064 ];
+# 54 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
@@ -982,7 +987,7 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
-# 129 "pacman.c"
+# 163 "pacman.c"
 int main()
 {
     Entities entity = {
@@ -995,15 +1000,18 @@ int main()
 
 	char input;
 	int i,j,counter;
+    bool is_front_buffer = -1 ;
     UINT16 ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = (void*)_trap_14_w((short)0x2) ;
     UINT16* base16 = (void*)_trap_14_w((short)0x2) ;
     UCHAR8* base8 = (void*)_trap_14_w((short)0x2) ;
+    ULONG32 *original = (void*)_trap_14_w((short)0x2) ;
+
+    ULONG32* buffer_ptr;
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = ((UCHAR8)1) ;
-
     Xor xor = {123457};
 
 	init_map_cells(cell_map,tile_map);
@@ -1012,6 +1020,8 @@ int main()
     render_frame(base32, &entity);
     render_initial_timer(base8);
     free_ghosts(base32, base8, &entity);
+
+
 
 	if ((short)_trap_1_w((short)0x0B) )
 	{
@@ -1022,6 +1032,7 @@ int main()
 
         time_now = get_time();
         time_elapsed = time_now - time_then;
+        ticks = 0;
 
         if (time_elapsed > 0) {
 
@@ -1030,19 +1041,26 @@ int main()
                 input = (char)_trap_1_w((short)0x08) ;
             }
 
-            clear_entities(base32, &entity);
-            set_input(&pacman,input);
 
-            check_proximity(&entity);
-            handle_collisions(&entity, ticks);
+            if (is_front_buffer == -1 )
+            {
+                render_to_buffer(base32,&entity,ticks,input);
+                (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
+                base32 = back_buffer_array;
+                is_front_buffer = 0 ;
 
-            update_pacman();
-            update_ghosts();
-            update_current_frame(&entity, ticks);
+            }
+            else{
 
-            render_frame(base32, &entity);
-            update_cells(&entity);
-# 196 "pacman.c"
+                base32 = original;
+                render_to_buffer(base32,&entity,ticks,input);
+                (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
+                is_front_buffer = -1 ;
+
+
+            }
+            (void)_trap_14_w((short)0x25) ;
+# 261 "pacman.c"
             ticks = (++ticks & 63);
             time_then = time_now;
         }
@@ -1126,11 +1144,14 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
+
     GAME_STATE state;
     if (input == '\033')
         state = ((UCHAR8)0) ;
 
     state = new_state;
+
+
 }
 ULONG32 get_time()
 {
@@ -1171,4 +1192,35 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     debug_print(base, 4*8 , 0, pacman->move->x_cell_index);
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
+}
+
+
+void swap_buffers (ULONG32 address)
+{
+
+
+    (void)_trap_14_wllw((short)0x5,(long)(-1),(long)address,(short)(-1)) ;
+
+
+}
+
+
+
+
+
+void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input)
+{
+
+    clear_entities(base32, entity);
+    set_input(entity->pacman,input);
+    check_proximity(entity);
+    handle_collisions(entity, ticks);
+    update_pacman();
+    update_ghosts();
+    update_current_frame(entity, ticks);
+    render_frame(base32, entity);
+    update_cells(entity);
+
+
+
 }
