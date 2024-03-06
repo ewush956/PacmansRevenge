@@ -909,15 +909,17 @@ void render_initial_timer(UCHAR8* base);
 # 1 "C:/c68/include/linea.h" 1
 # 13 "pacman.c" 2
 # 42 "pacman.c"
-void swap_buffers();
+void swap_buffers(ULONG32* base32, ULONG32* back_buffer_ptr);
+void clear_buffer();
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 
-ULONG32 back_buffer_array[8064 ];
-# 55 "pacman.c"
+
+ULONG32 back_buffer_array[32256  ];
+# 61 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
-        ((UCHAR8)0) ,
+        ((UCHAR8)3) ,
         21,19
 };
 Pacman pacman = {
@@ -987,7 +989,7 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
-# 164 "pacman.c"
+# 170 "pacman.c"
 int main()
 {
     Entities entity = {
@@ -1001,14 +1003,16 @@ int main()
 	char input;
 	int i,j,counter;
     bool is_front_buffer = -1 ;
+
     UINT16 ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = (void*)_trap_14_w((short)0x2) ;
     UINT16* base16 = (void*)_trap_14_w((short)0x2) ;
     UCHAR8* base8 = (void*)_trap_14_w((short)0x2) ;
     ULONG32 *original = (void*)_trap_14_w((short)0x2) ;
+    ULONG32 *temp;
+    ULONG32 * back_buffer_ptr = back_buffer_array;
 
-    ULONG32* buffer_ptr;
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = ((UCHAR8)1) ;
@@ -1017,9 +1021,11 @@ int main()
 	init_map_cells(cell_map,tile_map);
     clear_screen_q(base32);
     render_map(base16, tile_map);
-    render_frame(base32, &entity);
     render_initial_timer(base8);
+    render_frame(base32, &entity);
     free_ghosts(base32, base8, &entity);
+
+
 
 
 
@@ -1032,7 +1038,8 @@ int main()
 
         time_now = get_time();
         time_elapsed = time_now - time_then;
-        ticks = 0;
+
+
 
         if (time_elapsed > 0) {
 
@@ -1042,31 +1049,40 @@ int main()
             }
 
 
+
+
+
             if (is_front_buffer == -1 )
             {
-                render_to_buffer(base32,&entity,ticks,input);
+                render_to_buffer(back_buffer_ptr,&entity,ticks,input);
                 (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
-                base32 = back_buffer_array;
-                is_front_buffer = 0 ;
+                swap_buffers(base32,back_buffer_ptr);
 
+                is_front_buffer = 0 ;
             }
             else{
 
-                base32 = original;
                 render_to_buffer(base32,&entity,ticks,input);
                 (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
+                swap_buffers(base32,back_buffer_ptr);
+
+
                 is_front_buffer = -1 ;
 
 
             }
+
             (void)_trap_14_w((short)0x25) ;
-# 262 "pacman.c"
+# 270 "pacman.c"
+            update_cells(&entity);
+# 279 "pacman.c"
             ticks = (++ticks & 63);
             time_then = time_now;
         }
         update_game_state(state, input);
-        (void)_trap_14_wllw((short)0x5,(long)(-1),(long)original,(short)(-1)) ;
+
     }
+    (void)_trap_14_wllw((short)0x5,(long)(-1),(long)original,(short)(-1)) ;
 
 	return 0;
 }
@@ -1126,10 +1142,13 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
     int i;
 
 	for (i=0; i < stop; i++) {
+
+
 		clear_bitmap_32(base, entity->crying_ghost->move->x, entity->crying_ghost->move->y, 32 );
         clear_bitmap_32(base, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, 32 );
         clear_bitmap_32(base, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, 32 );
         clear_bitmap_32(base, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, 32 );
+        clear_bitmap_32(base, entity->pacman->move->x, entity->pacman->move->y, 32 );
 
         move_ghost(entity->crying_ghost);
         move_ghost(entity->awkward_ghost);
@@ -1141,7 +1160,9 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 		update_cells(entity);
 
 		render_frame(base, entity);
+
 	}
+     (void)_trap_14_w((short)0x25) ;
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
@@ -1196,11 +1217,11 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
 }
 
 
-void swap_buffers (ULONG32 address)
+void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
 {
-
-
-    (void)_trap_14_wllw((short)0x5,(long)(-1),(long)address,(short)(-1)) ;
+    ULONG32* temp = base32;
+    base32 = back_buffer_ptr;
+    back_buffer_ptr = temp;
 
 
 }
@@ -1219,9 +1240,20 @@ void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input
     update_pacman();
     update_ghosts();
     update_current_frame(entity, ticks);
+
+
     render_frame(base32, entity);
+
     update_cells(entity);
 
+}
+
+void clear_buffer()
+{
+    int i;
+    for (i = 0; i < 8064 /2; i+=4){
+        back_buffer_array[i] = 0;
+    }
 
 
 }

@@ -39,10 +39,16 @@
 #define VIDEO_ADDR_MID  0xFF8203
 #define VIDEO_ADDR_LOW  0xFF820D
 
-void swap_buffers();
+void swap_buffers(ULONG32* base32, ULONG32* back_buffer_ptr);
+void clear_buffer();
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 
-ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];  
+
+ULONG32 back_buffer_array[BUFFER_SIZE_BYTES ];  
+
+/*
+UCHAR8 back_buffer_array[BUFFER_SIZE_BYTES];
+*/
 /* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
 
 
@@ -55,7 +61,7 @@ ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];
 Movement pacman_movement = {
         PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
         0,0,        /*Initial Displacement*/
-        UP,
+        RIGHT,
         21,19          /*Cell index -> y, x*/
 };
 Pacman pacman = {
@@ -174,14 +180,16 @@ int main()
 	char input;
 	int i,j,counter;
     bool is_front_buffer = TRUE;
+
     UINT16 ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = Physbase();
     UINT16* base16 = Physbase();
     UCHAR8* base8 = Physbase();
     ULONG32 *original = Physbase();
+    ULONG32 *temp;
+    ULONG32 * back_buffer_ptr = back_buffer_array;
 
-    ULONG32* buffer_ptr;
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
@@ -190,9 +198,11 @@ int main()
 	init_map_cells(cell_map,tile_map);				
     clear_screen_q(base32); 
     render_map(base16, tile_map);
-    render_frame(base32, &entity);
     render_initial_timer(base8);
+    render_frame(base32, &entity);
     free_ghosts(base32, base8, &entity);
+  
+    
 
 
 	
@@ -205,7 +215,8 @@ int main()
 
         time_now = get_time();
         time_elapsed = time_now - time_then;
-        ticks = 0;
+        
+      
 
         if (time_elapsed > 0) {
 
@@ -215,23 +226,29 @@ int main()
             }
             
             /*render_to_buffer(base32,&entity,ticks,input);       /*start from the front */
+        
+            
+                
             if (is_front_buffer == TRUE)
             {
-                render_to_buffer(base32,&entity,ticks,input);
+                render_to_buffer(back_buffer_ptr,&entity,ticks,input);      /*base32*/
                 Setscreen(-1,base32,-1);
-                base32 = back_buffer_array;
+                swap_buffers(base32,back_buffer_ptr);
+                
                 is_front_buffer = FALSE;
-
             }
             else{
-
-                base32 = original;
+                
                 render_to_buffer(base32,&entity,ticks,input);
-                Setscreen(-1,base32,-1);
+                Setscreen(-1,base32,-1); 
+                swap_buffers(base32,back_buffer_ptr);
+                /*clear_buffer();*/ 
+                
                 is_front_buffer = TRUE;
                  
 
             }
+           
             Vsync();
 
             /*(Setscreen(-1,buffer_ptr,-1);
@@ -249,8 +266,8 @@ int main()
             update_ghosts();
             update_current_frame(&entity, ticks);
             render_frame(base32, &entity);
-            update_cells(&entity);
             */
+            update_cells(&entity);
 
             /*
             debug_cells_pac(base8, &pacman);
@@ -263,8 +280,9 @@ int main()
             time_then = time_now;
         }
         update_game_state(state, input);
-        Setscreen(-1,original,-1);
+
     }
+    Setscreen(-1,original,-1);
 
 	return 0;
 }
@@ -280,7 +298,7 @@ void update_ghosts(){
     move_ghost(&crying_ghost);
     move_ghost(&cyclops_ghost);
     move_ghost(&awkward_ghost);
-    /*update current frame of ghosties here*/
+    /*update current frame of ghosts here*/
 }
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     crying_ghost.move->delta_x = 1;
@@ -324,10 +342,13 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
     int i;
 
 	for (i=0; i < stop; i++) {
+        
+       
 		clear_bitmap_32(base, entity->crying_ghost->move->x, entity->crying_ghost->move->y, SPRITE_HEIGHT);
         clear_bitmap_32(base, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);
         clear_bitmap_32(base, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);
         clear_bitmap_32(base, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, SPRITE_HEIGHT); 
+        clear_bitmap_32(base, entity->pacman->move->x, entity->pacman->move->y, SPRITE_HEIGHT);
 
         move_ghost(entity->crying_ghost);
         move_ghost(entity->awkward_ghost);
@@ -339,7 +360,9 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 		update_cells(entity);
 
 		render_frame(base, entity);
+       
 	}
+      Vsync();
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
@@ -394,12 +417,12 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
 }
 
 
-void swap_buffers (ULONG32 address)
+void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
 {
-
-
-    Setscreen(-1,address,-1);
-
+    ULONG32* temp = base32;
+    base32 = back_buffer_ptr;
+    back_buffer_ptr = temp;
+ 
 
 }
 
@@ -409,7 +432,7 @@ try to only render to the buffer in this function */
  do the same for the front*/
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input)
 {
-
+    
     clear_entities(base32, entity);
     set_input(entity->pacman,input);
     check_proximity(entity);
@@ -417,9 +440,20 @@ void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input
     update_pacman();
     update_ghosts();
     update_current_frame(entity, ticks);
+    
+
     render_frame(base32, entity);
+    
     update_cells(entity);
     
+}
+
+void clear_buffer()
+{
+    int i;
+    for (i = 0; i < BUFFER_SIZE_LONGS/2; i+=4){
+        back_buffer_array[i] = 0;
+    }
 
 
 }
