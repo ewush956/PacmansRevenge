@@ -232,32 +232,6 @@ int main()
 
             }
             Vsync();
-
-            /*(Setscreen(-1,buffer_ptr,-1);
-            /*swap buffer() using set screen*/
-
-            /*base32 = back_buffer_array;
-            /*render_to_buffer(base32,&entity,ticks,input);*/
-
-            /*
-            clear_entities(base32, &entity);
-            set_input(&pacman,input);
-            check_proximity(&entity);
-            handle_collisions(&entity, ticks);      
-            update_pacman();
-            update_ghosts();
-            update_current_frame(&entity, ticks);
-            render_frame(base32, &entity);
-            update_cells(&entity);
-            */
-
-            /*
-            debug_cells_pac(base8, &pacman);
-            ticks++;
-            if (ticks > 64) {
-                ticks = 0;
-            }
-            */
             ticks = (++ticks & 63);
             time_then = time_now;
         }

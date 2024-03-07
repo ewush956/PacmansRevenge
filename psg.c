@@ -28,6 +28,20 @@ void set_note_frequency(int channel, float frequency) {
     write_psg(channel * 2, (value & 0x0F));
     write_psg((channel * 2) + 1, (value >> 8) & 0x0F);
 }
+/******************************************
+* Function Name: set_tone
+* Purpose: Sets the tone for a specified PSG channel. This function calculates
+*          the appropriate register values based on the input frequency and
+*          updates the PSG registers to produce the desired tone.
+* Example Usage:  
+*          set_tone(0, frequency);
+* Parameters:
+*     - @param channel (int): The PSG channel to set the frequency for. Valid
+*       channels are 0 (Channel A), 1 (Channel B), and 2 (Channel C).
+*     - @param frequency (float): The frequency of the note in Hertz (Hz). This
+*       value is used to calculate the PSG register settings.
+* Returns: void 
+******************************************/
 void set_tone(int channel, int tuning) {
 
     volatile char *PSG_reg_select = SELECT_REGISTER;

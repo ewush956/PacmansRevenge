@@ -32,3 +32,6 @@ extern const Note notes[12];
 
 int generate_frequency(int base_note, UCHAR8 target_octave);
 void play_note(int channel, int base_note, UCHAR8 octave, int duration);
+void play_intro();
+void play_jaws_theme();
+void stop_music();

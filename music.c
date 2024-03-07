@@ -29,3 +29,18 @@ const Note notes[] = {
 int generate_frequency(int base_note, UCHAR8 target_octave) {
     return (base_note >> target_octave);
 }
+void start_music() {
+    
+}
+void update_music(ULONG32 time_elapsed) {
+    
+}
+void play_intro() {
+    /*mom pick me up i'm scared :( */
+}
+void play_jaws_theme() {
+
+}
+void stop_music() {
+    
+}
