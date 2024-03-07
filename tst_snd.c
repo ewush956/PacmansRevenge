@@ -15,11 +15,11 @@ int main() {
     int hex_frequencies[] = {0x1AC, 0x153, 0x11D};
     const char* notes[] = {"C4", "E4", "G4"}; /* Note names for display */
     unsigned char volume; /* Volume for the current channel */
-    int i;
+    int i = 0;
+    int test_frequency;
 
     /* Enter supervisor mode if necessary */
     old_ssp = Super(0);
-
     /* Test each channel sequentially with different notes and increasing volumes */
     for(channel = 0; channel < 3; channel++) {
 
@@ -27,9 +27,10 @@ int main() {
         volume = 15;
         printf("Testing Channel %d with Note %s at Volume %d\n", channel, notes[channel], volume);
 
-        /* Set the frequency for the current channel */
-        /*set_note_frequency(channel, frequencies[channel]); */
-        set_tone(channel, hex_frequencies[channel]);
+        test_frequency = generate_frequency(NOTE_C, FOURTH_OCTAVE + i);
+        i--;
+        set_tone(channel, test_frequency);
+        /*set_tone(channel, hex_frequencies[channel]); */
 
         /* Enable the current channel with tone only */
         set_volume(channel, volume);
