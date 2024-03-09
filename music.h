@@ -16,12 +16,12 @@ typedef struct {
 #define SEVENTH_OCTAVE 6
 #define EIGHTH_OCTAVE 7
 
-#define WHOLE_NOTE 0
-#define HALF_NOTE 1
-#define QUARTER_NOTE 2
-#define EIGHTH_NOTE 3
-#define SIXTEENTH_NOTE 4
-#define THIRTY_SECOND_NOTE 5
+#define WHOLE_NOTE 32
+#define HALF_NOTE 16
+#define QUARTER_NOTE 8
+#define EIGHTH_NOTE 4
+#define SIXTEENTH_NOTE 2
+#define THIRTY_SECOND_NOTE 1
 
 #define C1 0xD5D
 #define C1_SHARP 0xC9C
@@ -117,6 +117,7 @@ typedef struct {
 
 extern const Note notes[12];
 extern const Note pacman_intro_treble[34];
+extern const Note pacman_intro_bass[22];
 
 int generate_frequency(int base_note, UCHAR8 target_octave);
 void play_note(int channel, int tuning, unsigned char volume);
@@ -124,3 +125,6 @@ void play_intro();
 void play_jaws_theme();
 void stop_music();
 void update_music(int channel, const Note song[], int song_length);
+void update_song(int treble_channel, const Note treble_song[], int treble_song_length,
+                 int bass_channel, const Note bass_song[], int bass_song_length,
+                 int elapsed_time);

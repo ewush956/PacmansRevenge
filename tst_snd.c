@@ -14,51 +14,34 @@ ULONG32 get_time();
 GAME_STATE update_game_state(GAME_STATE new_state, char input);
 
 
-int main() 
-{
+int main() {
     long old_ssp; 
-    int channel; 
-    int hex_frequencies[] = {0x1AC, 0x153, 0x11D};
-    const char* notes[] = {"C4", "E4", "G4"}; 
-    unsigned char volume;
-    int i = 0;
-    int test_frequency;
     char input;
-    GAME_STATE state;
-    int ticks = 0;
-
-	ULONG32 time_then, time_now, time_elapsed;
+    GAME_STATE state = PLAYING;
+    ULONG32 time_then = get_time(), time_now;
+    ULONG32 time_elapsed;
 
     while (state != QUIT) {
-
         time_now = get_time();
-        time_elapsed = time_now - time_then;
-       /* if (time_elapsed > 0) { */
+        time_elapsed = time_now - time_then; 
 
-            if (Cconis())
-            {
+        if (time_elapsed >= 5) { 
+            time_then = time_now;
+            if (Cconis()) {
                 input = (char)Cnecin();
             }
-          
-            /*ticks = (++ticks & 63);*/
-            time_then = time_now;
-            ticks++;
-            printf("TICKS: %d\n", ticks);
-            /*if (ticks == 5) { */
-                printf("TICKS: %d\n", ticks);
-                old_ssp = Super(0);
-                update_music(CHANNEL_A, pacman_intro_treble, 34);
-                Super(old_ssp);
-                ticks = 0;
 
+            old_ssp = Super(0);
+            /*update_song(CHANNEL_A, pacman_intro_treble, 34, CHANNEL_B, pacman_intro_bass, 22, time_elapsed);*/
+            /*update_music(CHANNEL_B, pacman_intro_bass, 22);*/
+            update_music(CHANNEL_A, pacman_intro_treble, 43);
+            Super(old_ssp);
+        }
 
-        
-        /*state = update_game_state(PLAYING, input);*/
-        state = PLAYING;
     }
 
     set_master_volume(0);
-	return 0;
+    return 0;
 }
         /*
     for(channel = 0; channel < 3; channel++) {
