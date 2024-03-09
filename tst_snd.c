@@ -35,7 +35,7 @@ int main() {
         time_now = get_time();
         time_elapsed = time_now - time_then; 
 
-        if (time_elapsed >= 6) { 
+        if (time_elapsed >= 5) { 
             time_then = time_now;
             if (Cconis()) {
                 input = (char)Cnecin();
