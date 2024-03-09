@@ -5,6 +5,8 @@
 
 /*Helper function*/
 void write_psg(int reg, UCHAR8 val);
+unsigned char read_psg(int reg);
+
 
 /******************************************
 * Function Name: set_note_frequency
@@ -44,10 +46,7 @@ void set_note_frequency(int channel, float frequency) {
 ******************************************/
 void set_tone(int channel, int tuning) {
 
-    volatile char *PSG_reg_select = SELECT_REGISTER;
-    volatile char *PSG_reg_write  = WRITE_REGISTER;
-
-    int fineTuneRegister = channel * 2;    
+    int fineTuneRegister = channel << 1; /* channel * 2*/    
     int coarseTuneRegister = fineTuneRegister + 1; 
 
     unsigned char fineTuneValue = tuning & 0xFF;         
@@ -71,10 +70,6 @@ void set_tone(int channel, int tuning) {
 * Returns: void
 ******************************************/
 void set_volume(int channel, unsigned char volume) {
-
-    volatile char *PSG_reg_select = SELECT_REGISTER;
-    volatile char *PSG_reg_write  = WRITE_REGISTER;
-
     write_psg(VOLUME_OFFSET + channel, (volume & 0x0F));
 }
 /******************************************
@@ -95,10 +90,8 @@ void set_volume(int channel, unsigned char volume) {
 ******************************************/
 void enable_channel(int channel, int toneOn, int noiseOn) {
 
-    volatile char *PSG_reg_select = SELECT_REGISTER;
-    volatile char *PSG_reg_write  = WRITE_REGISTER;
-    static unsigned char mixer = MIXER_MASK;
-    
+    static unsigned char mixer = MIXER_MASK; 
+   /* unsigned char mixer = read_psg(MIXER_OFFSET); */
     int toneBit = 0 + channel; 
     int noiseBit = 3 + channel;
 
@@ -170,4 +163,15 @@ void write_psg(int reg, UCHAR8 val) {
         *PSG_reg_write = val;
     }
 }
+unsigned char read_psg(int reg) {
 
+    volatile char *PSG_reg_select = SELECT_REGISTER;
+    volatile char *PSG_reg_read  = WRITE_REGISTER;
+
+    if (reg >= 0 && reg <= 15) {
+
+        *PSG_reg_select = reg;
+        return *PSG_reg_read;
+    }
+    return 0;
+}

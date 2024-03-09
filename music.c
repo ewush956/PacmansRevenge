@@ -10,112 +10,129 @@
  *     - @param note (UCHAR8): The base note to shift.
  *     - @param octave (UCHAR8): The target octave.
  * *********************************************/
-const Note pacman_intro_treble[43] = {
+int bass_volume = 15;
+int treble_volume = 15;
+const Note pacman_intro_treble[38] = {
     
-    {B4, SIXTEENTH_NOTE, 15},
-    {B5, SIXTEENTH_NOTE, 15},
-    {F5_SHARP, SIXTEENTH_NOTE, 15},
-    {D5_SHARP, SIXTEENTH_NOTE, 15},
-    {B5, THIRTY_SECOND_NOTE, 15},
+    {B4, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {B5, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {F5_SHARP, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {D5_SHARP, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {B5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
 
-    /*Dotted 16th note 
-    {F5_SHARP, SIXTEENTH_NOTE, 15},
-    {F5_SHARP, THIRTY_SECOND_NOTE, 15},
-    */
+    /*Dotted 16th note */
+    {F5_SHARP, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {F5_SHARP, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    /*
     {F5_SHARP, THIRTY_SECOND_NOTE, 15},
     {F4_SHARP, THIRTY_SECOND_NOTE, 15},
-    {F5_SHARP, THIRTY_SECOND_NOTE, 15},
+    {F5_SHARP, THIRTY_SECOND_NOTE, 15}, */
 
 
 
 
-    {D5_SHARP, EIGHTH_NOTE, 15},
+    {D5_SHARP, EIGHTH_NOTE, TREBLE_VOLUME},
 
-    {C5, SIXTEENTH_NOTE, 15},
-    {C6, SIXTEENTH_NOTE, 15},
-    {G5, SIXTEENTH_NOTE, 15},
-    {E5, SIXTEENTH_NOTE, 15},
-    {C6, THIRTY_SECOND_NOTE, 15},
+    {C5, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {C6, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {G5, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {E5, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {C6, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
 
-    /*Dotted 16th note
+    /*Dotted 16th note */
     {G5, SIXTEENTH_NOTE, 15},
     {G5, THIRTY_SECOND_NOTE, 15},
+    /*
+    {G5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {G4, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {G5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+*/
+
+    {E5, EIGHTH_NOTE, TREBLE_VOLUME},
+
+    {B4, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {B5, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {F5_SHARP, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {D5_SHARP, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {B5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+
+    /*Dotted 16th note */
+    {F5_SHARP, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {F5_SHARP, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    
+    {D5_SHARP, SIXTEENTH_NOTE, TREBLE_VOLUME},
+    {D5_SHARP, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+
+    
+
+/*
+    {D5_SHARP, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {E5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {F5, SIXTEENTH_NOTE, TREBLE_VOLUME},
+*/
+    {D5_SHARP, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {E5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {F5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {F4, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+
+/*
+    {F5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {F5_SHARP, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {G5, SIXTEENTH_NOTE, TREBLE_VOLUME},
     */
-    {G5, THIRTY_SECOND_NOTE, 15},
-    {G4, THIRTY_SECOND_NOTE, 15},
-    {G5, THIRTY_SECOND_NOTE, 15},
+    {F5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {F5_SHARP, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {G5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {G4, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+
+/*
+    {G5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {G5_SHARP, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {A5, SIXTEENTH_NOTE, TREBLE_VOLUME},
+*/
+    {G5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {G5_SHARP, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {A5, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
+    {A4, THIRTY_SECOND_NOTE, TREBLE_VOLUME},
 
 
-    {E5, EIGHTH_NOTE, 15},
-
-    {B4, SIXTEENTH_NOTE, 15},
-    {B5, SIXTEENTH_NOTE, 15},
-    {F5_SHARP, SIXTEENTH_NOTE, 15},
-    {D5_SHARP, SIXTEENTH_NOTE, 15},
-    {B5, THIRTY_SECOND_NOTE, 15},
-
-    /*Dotted 16th note
-    {F5_SHARP, SIXTEENTH_NOTE, 15},
-    {F5_SHARP, THIRTY_SECOND_NOTE, 15},
-    */
-    {F5_SHARP, THIRTY_SECOND_NOTE, 15},
-    {F6_SHARP, THIRTY_SECOND_NOTE, 15},
-    {F5_SHARP, THIRTY_SECOND_NOTE, 15},
-
-    {D5_SHARP, THIRTY_SECOND_NOTE, 15},
-    {F5_SHARP, THIRTY_SECOND_NOTE, 15},
-    {D6_SHARP, THIRTY_SECOND_NOTE, 15},
-    {D4_SHARP, THIRTY_SECOND_NOTE, 15},
-
-    {D5_SHARP, THIRTY_SECOND_NOTE, 15},
-    {E5, THIRTY_SECOND_NOTE, 15},
-    {F5, SIXTEENTH_NOTE, 15},
-
-    {F5, THIRTY_SECOND_NOTE, 15},
-    {F5_SHARP, THIRTY_SECOND_NOTE, 15},
-    {G5, SIXTEENTH_NOTE, 15},
-
-    {G5, THIRTY_SECOND_NOTE, 15},
-    {G5_SHARP, THIRTY_SECOND_NOTE, 15},
-    {A5, SIXTEENTH_NOTE, 15},
-
-    {B5, EIGHTH_NOTE, 15}
+    {B5, EIGHTH_NOTE, TREBLE_VOLUME}
 };
 const Note pacman_intro_bass[22] = {
-    {B2, EIGHTH_NOTE, 13},
-    {B2, SIXTEENTH_NOTE, 13},
+    {B2, EIGHTH_NOTE, BASS_VOLUME},
+    {B2, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {B3, SIXTEENTH_NOTE, 13},
+    {B3, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {B2, EIGHTH_NOTE, 13},
-    {B2, SIXTEENTH_NOTE, 13},
+    {B2, EIGHTH_NOTE, BASS_VOLUME},
+    {B2, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {B3, SIXTEENTH_NOTE, 13},
+    {B3, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {C3, EIGHTH_NOTE, 13},
-    {C3, SIXTEENTH_NOTE, 13},
+    {C3, EIGHTH_NOTE, BASS_VOLUME},
+    {C3, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {C4, SIXTEENTH_NOTE, 13},
+    {C4, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {C3, EIGHTH_NOTE, 13},
-    {C3, SIXTEENTH_NOTE, 13},
+    {C3, EIGHTH_NOTE, BASS_VOLUME},
+    {C3, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {C4, SIXTEENTH_NOTE, 13},
+    {C4, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {B2, EIGHTH_NOTE, 13},
-    {B2, SIXTEENTH_NOTE, 13},
+    {B2, EIGHTH_NOTE, BASS_VOLUME},
+    {B2, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {B3, SIXTEENTH_NOTE, 13},
+    {B3, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {B2, EIGHTH_NOTE, 13},
-    {B2, SIXTEENTH_NOTE, 13},
+    {B2, EIGHTH_NOTE, BASS_VOLUME},
+    {B2, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {B3, SIXTEENTH_NOTE, 13},
+    {B3, SIXTEENTH_NOTE, BASS_VOLUME},
 
-    {F2_SHARP, EIGHTH_NOTE, 13},
-    {G2_SHARP, EIGHTH_NOTE, 13},
-    {A2_SHARP, EIGHTH_NOTE, 13},
-    {B2, EIGHTH_NOTE, 13}
+    {F2_SHARP, EIGHTH_NOTE, BASS_VOLUME},
+    {G2_SHARP, EIGHTH_NOTE, BASS_VOLUME},
+    {A2_SHARP, EIGHTH_NOTE, BASS_VOLUME},
+    {B2, EIGHTH_NOTE, BASS_VOLUME}
 
 };
 /**
@@ -129,7 +146,7 @@ void play_note(int channel, int tuning, unsigned char volume) {
 
     set_tone(channel, tuning);
     set_volume(channel, volume);
-    enable_channel(channel, TONE_ON, NOISE_OFF);
+    /*enable_channel(channel, TONE_ON, NOISE_OFF); */
 }
 
 int generate_frequency(int base_note, UCHAR8 target_octave) {
@@ -138,6 +155,7 @@ int generate_frequency(int base_note, UCHAR8 target_octave) {
 void start_music() {
     
 }
+/*
 void update_music(int channel, const Note song[], int song_length) {
     static int current_note_index = 0; 
     static int note_time_left = 0; 
@@ -163,6 +181,21 @@ void update_music(int channel, const Note song[], int song_length) {
             current_note_index = 0;
         }
     }
+}
+*/
+void update_music(int channel, const Note song[], int song_length, MusicState *state) {
+    if (state->note_time_left == 0) {
+        if (state->current_note_index < song_length) {
+            state->note_time_left = song[state->current_note_index].duration; 
+            play_note(channel, song[state->current_note_index].frequency, song[state->current_note_index].volume);
+            state->current_note_index++;
+        } else {
+            stop_sound(); 
+            state->current_note_index = 0;
+            return;
+        }
+    }
+    state->note_time_left -= 1; 
 }
 void update_song(int treble_channel, const Note treble_song[], int treble_song_length,
                  int bass_channel, const Note bass_song[], int bass_song_length,

@@ -20,21 +20,34 @@ int main() {
     GAME_STATE state = PLAYING;
     ULONG32 time_then = get_time(), time_now;
     ULONG32 time_elapsed;
+    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
+    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
+
+    MusicState trebleState = {0, 0};
+    MusicState bassState = {0, 0};
+
+    old_ssp = Super(0);
+    enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
+    enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
+    Super(old_ssp);
 
     while (state != QUIT) {
         time_now = get_time();
         time_elapsed = time_now - time_then; 
 
-        if (time_elapsed >= 5) { 
+        if (time_elapsed >= 6) { 
             time_then = time_now;
             if (Cconis()) {
                 input = (char)Cnecin();
             }
 
             old_ssp = Super(0);
-            /*update_song(CHANNEL_A, pacman_intro_treble, 34, CHANNEL_B, pacman_intro_bass, 22, time_elapsed);*/
-            /*update_music(CHANNEL_B, pacman_intro_bass, 22);*/
+            /*
             update_music(CHANNEL_A, pacman_intro_treble, 43);
+            update_music(CHANNEL_B, pacman_intro_bass, 22);
+            */
+            update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, &trebleState);
+            update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, &bassState); 
             Super(old_ssp);
         }
 
