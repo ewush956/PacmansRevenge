@@ -1,5 +1,4 @@
 
-
 #all: pacman
 #
 #pacman: pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o

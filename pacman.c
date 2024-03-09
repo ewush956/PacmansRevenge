@@ -41,7 +41,7 @@
 void swap_buffers();
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 
-ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];  
+ULONG32 back_buffer_array[BUFFER_SIZE_LONGS] = {0};  
 /* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
 
 
@@ -392,8 +392,6 @@ void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input
     render_frame(base32, entity);
     update_cells(entity);
     
-
-
 }
 
 

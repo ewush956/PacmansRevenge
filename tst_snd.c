@@ -5,56 +5,110 @@
 #include <stdio.h>
 #include <osbind.h>
 
-#include <osbind.h>
-#include <stdio.h>
+typedef unsigned char GAME_STATE;
 
-int main() {
-    long old_ssp; /* Store the original superuser stack pointer */
-    int channel; /* Channel iterator */
-    float frequencies[] = {261.63, 329.63, 392.00}; /* Frequencies for the C major chord: C4, E4, G4 */
+#define QUIT ((UCHAR8)0)
+#define PLAYING ((UCHAR8)1)
+
+ULONG32 get_time();
+GAME_STATE update_game_state(GAME_STATE new_state, char input);
+
+
+int main() 
+{
+    long old_ssp; 
+    int channel; 
     int hex_frequencies[] = {0x1AC, 0x153, 0x11D};
-    const char* notes[] = {"C4", "E4", "G4"}; /* Note names for display */
-    unsigned char volume; /* Volume for the current channel */
+    const char* notes[] = {"C4", "E4", "G4"}; 
+    unsigned char volume;
     int i = 0;
     int test_frequency;
+    char input;
+    GAME_STATE state;
+    int ticks = 0;
 
-    /* Enter supervisor mode if necessary */
-    old_ssp = Super(0);
-    /* Test each channel sequentially with different notes and increasing volumes */
+	ULONG32 time_then, time_now, time_elapsed;
+
+    while (state != QUIT) {
+
+        time_now = get_time();
+        time_elapsed = time_now - time_then;
+       /* if (time_elapsed > 0) { */
+
+            if (Cconis())
+            {
+                input = (char)Cnecin();
+            }
+          
+            /*ticks = (++ticks & 63);*/
+            time_then = time_now;
+            ticks++;
+            printf("TICKS: %d\n", ticks);
+            /*if (ticks == 5) { */
+                printf("TICKS: %d\n", ticks);
+                old_ssp = Super(0);
+                update_music(CHANNEL_A, pacman_intro_treble, 34);
+                Super(old_ssp);
+                ticks = 0;
+
+
+        
+        /*state = update_game_state(PLAYING, input);*/
+        state = PLAYING;
+    }
+
+    set_master_volume(0);
+	return 0;
+}
+        /*
     for(channel = 0; channel < 3; channel++) {
 
-        /*volume = 5 + (channel * 5); */
         volume = 15;
         printf("Testing Channel %d with Note %s at Volume %d\n", channel, notes[channel], volume);
 
-        test_frequency = generate_frequency(NOTE_C, FOURTH_OCTAVE + i);
-        i--;
-        set_tone(channel, test_frequency);
-        /*set_tone(channel, hex_frequencies[channel]); */
 
-        /* Enable the current channel with tone only */
+        i--;
+        set_tone(channel, C4);
+
         set_volume(channel, volume);
 
         enable_channel(channel, TONE_ON, NOISE_OFF);
-
-        /* Set the volume for the current channel */
-
-        /* Tone now playing, await key */
         while (!Cconis())
             ;
         
-        /* Optionally, add a brief message indicating the test is complete */
         printf("Test Complete for Channel %d. Press any key to continue...\n", channel);
         enable_channel(channel, TONE_OFF, NOISE_OFF);
-        /* Await keypress to proceed */
         Cnecin();
     }
     set_master_volume(0);
 
-    /* Reset volumes to 0 to silence the PSG after testing */
-    /* Return to original processor state */
     Super(old_ssp);
     return 0;
 }
+    */
+ULONG32 get_time()
+{
 
+	ULONG32 *timer = (ULONG32 *)0x462; 		/* address of longword auto-inc’ed 70 x per second */
+	ULONG32 timeNow;
+	ULONG32 old_ssp;
+	old_ssp = Super(0); 				/* enter privileged mode */
+	timeNow = *timer;
+	Super(old_ssp); 					/* exit privileged mode as soon as possible */
+
+	return timeNow;
+
+}
 /* Implementations for setNoteFrequency, setVolume, and enableChannel would go here */
+GAME_STATE update_game_state(GAME_STATE new_state, char input) {
+
+    /*Do something that updates the gamestate*/
+    GAME_STATE state;
+    if (input == '\033')
+        state = QUIT;
+    
+    state = new_state;
+    return state;
+
+
+}

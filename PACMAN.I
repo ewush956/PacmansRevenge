@@ -1060,7 +1060,6 @@ int main()
 
             }
             (void)_trap_14_w((short)0x25) ;
-# 261 "pacman.c"
             ticks = (++ticks & 63);
             time_then = time_now;
         }

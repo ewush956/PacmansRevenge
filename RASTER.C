@@ -33,10 +33,7 @@ void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height) {
 
     for (row = 0; row < height; row++) {
         if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && y >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT)) {
-            /*
-            mask1 = ~(0xFFFFFFFF >> (x % SPRITE_WIDTH));
-            mask2 = ~(0xFFFFFFFF << (SPRITE_WIDTH - (x % SPRITE_WIDTH)));
-            */
+
             mask1 = ~(0xFFFFFFFF >> (x & 31));
             mask2 = ~(0xFFFFFFFF << (SPRITE_WIDTH - (x & 31)));
 
