@@ -17,6 +17,7 @@ void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
 void clear_letter(UCHAR8* base, int x, int y);
 void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* str);
 void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height);
+void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int height);
 
 void plot_bitmap_32_quick(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
 void plot_bitmap_64(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
@@ -129,6 +130,7 @@ extern const ULONG32 null_sprite_16[];
 extern const ULONG32 null_sprite_32[];
 
 extern const ULONG32 test64[];
+extern const UCHAR8 pellet[8];
 
 extern const ULONG32* wall_map[][20];
 
@@ -152,6 +154,7 @@ typedef struct {
 	int x_position, y_position;
 	bool open_path;
 	bool occupied;
+	bool has_pellet;
 }Cell;
 
 
@@ -262,6 +265,7 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][40 ]);
 void render_non_default_ghost(ULONG32* base32, Ghost* ghost);
 void refresh_screen(ULONG32* base32, Entities* entity);
 void render_initial_timer(UCHAR8* base);
+void render_pellet(UCHAR8* base8, Movement* move);
 # 6 "./pacman.h" 2
 # 1 "./TYPES.H" 1
 # 7 "./pacman.h" 2
@@ -893,6 +897,7 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][40 ]);
 void render_non_default_ghost(ULONG32* base32, Ghost* ghost);
 void refresh_screen(ULONG32* base32, Entities* entity);
 void render_initial_timer(UCHAR8* base);
+void render_pellet(UCHAR8* base8, Movement* move);
 # 4 "pacman.c" 2
 # 1 "./TYPES.H" 1
 # 5 "pacman.c" 2
@@ -912,7 +917,7 @@ void render_initial_timer(UCHAR8* base);
 void swap_buffers();
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 
-ULONG32 back_buffer_array[8064 ];
+ULONG32 back_buffer_array[8064 ] = {0};
 # 54 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
@@ -1219,7 +1224,5 @@ void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input
     update_current_frame(entity, ticks);
     render_frame(base32, entity);
     update_cells(entity);
-
-
 
 }

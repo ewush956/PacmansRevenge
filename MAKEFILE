@@ -1,46 +1,46 @@
 
-#all: pacman
-#
-#pacman: pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o
-#	cc68x -g pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o -o pacman
-#
-#pacman.o: pacman.c pacman.h raster.h font.h bitmaps.h model.h events.h renderer.h
-#	cc68x -g -c pacman.c
-#
-#raster.o: raster.c raster.h
-#	cc68x -g -c raster.c
-#
-#events.o: events.c events.h
-#	cc68x -g -c events.c
-#
-#font.o: font.c font.h
-#	cc68x -g -c font.c
-#
-#bitmaps.o: bitmaps.c bitmaps.h
-#	cc68x -g -c bitmaps.c
-#
-#model.o: model.c model.h bitmaps.h events.h
-#	cc68x -g -c model.c
-#
-#renderer.o: renderer.c renderer.h
-#	cc68x -g -c renderer.c
-#
-#rast_asm.o: rast_asm.s
-#	gen -D -L2 rast_asm.s
+all: pacman
 
-all: tst_snd
+pacman: pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o
+	cc68x -g pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o -o pacman
 
-tst_snd: tst_snd.o psg.o music.o effects.o
-	cc68x -g tst_snd.o psg.o music.o effects.o -o tst_snd
+pacman.o: pacman.c pacman.h raster.h font.h bitmaps.h model.h events.h renderer.h
+	cc68x -g -c pacman.c
 
-tst_snd.o: tst_snd.c psg.h TYPES.H music.h effects.h
-	cc68x -g -c tst_snd.c
+raster.o: raster.c raster.h
+	cc68x -g -c raster.c
 
-psg.o: psg.c psg.h
-	cc68x -g -c psg.c
+events.o: events.c events.h
+	cc68x -g -c events.c
 
-music.o: music.c music.h
-	cc68x -g -c music.c
+font.o: font.c font.h
+	cc68x -g -c font.c
 
-effects.o: effects.c effects.h
-	cc68x -g -c effects.c
+bitmaps.o: bitmaps.c bitmaps.h
+	cc68x -g -c bitmaps.c
+
+model.o: model.c model.h bitmaps.h events.h
+	cc68x -g -c model.c
+
+renderer.o: renderer.c renderer.h
+	cc68x -g -c renderer.c
+
+rast_asm.o: rast_asm.s
+	gen -D -L2 rast_asm.s
+
+#all: tst_snd
+#
+#tst_snd: tst_snd.o psg.o music.o effects.o
+#	cc68x -g tst_snd.o psg.o music.o effects.o -o tst_snd
+#
+#tst_snd.o: tst_snd.c psg.h TYPES.H music.h effects.h
+#	cc68x -g -c tst_snd.c
+#
+#psg.o: psg.c psg.h
+#	cc68x -g -c psg.c
+#
+#music.o: music.c music.h
+#	cc68x -g -c music.c
+#
+#effects.o: effects.c effects.h
+#	cc68x -g -c effects.c

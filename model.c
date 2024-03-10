@@ -255,8 +255,10 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
             cell_map[i][j].y_position = Y_PIXEL_OFFSET + (i << 4);
             if (tile_map[i][j] == 0) {
                 cell_map[i][j].open_path = TRUE;
+                cell_map[i][j].has_pellet = TRUE;
             } else {
                 cell_map[i][j].open_path = FALSE;
+                cell_map[i][j].has_pellet = FALSE;
             }
         }
     }

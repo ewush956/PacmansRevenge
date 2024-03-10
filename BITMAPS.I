@@ -105,6 +105,7 @@ extern const ULONG32 null_sprite_16[];
 extern const ULONG32 null_sprite_32[];
 
 extern const ULONG32 test64[];
+extern const UCHAR8 pellet[8];
 
 extern const ULONG32* wall_map[][20];
 
@@ -2736,6 +2737,17 @@ const UINT16 wall_single_16[16] = {
 0xDEAB,
 0xBD55,
 0xFFFF
+};
+
+const UCHAR8 pellet[8] = {
+	0x00,
+	0x18,
+	0x24,
+	0x5A,
+	0x5A,
+	0x24,
+	0x18,
+	0x00
 };
 UINT16 tile_map[][40 ] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},

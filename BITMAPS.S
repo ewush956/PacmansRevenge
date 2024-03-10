@@ -612,6 +612,9 @@ _pac_down_3:
 _wall_single_16:
 	dc.w	-1,-21827,-10885,-5387,-2581,-17451,-24983,3504
 	dc.w	3504,-27015,-21539,-10321,-20649,-8533,-17067,-1
+_pellet:
+	dc.b	0,24,36,90,90,36,24,0
+	even
 _tile_map:
 	dc.w	1,1,1,1,1,1,1,1
 	dc.w	1,1,1,1,1,1,1,1
@@ -865,6 +868,7 @@ _frozen_ghost_sprites:
 	globl	_null_sprite_16
 	globl	_null_sprite_32
 	globl	_test64
+	globl	_pellet
 	globl	_tile_map
 	globl	_happy_ghost_right_1
 	globl	_happy_ghost_up_1

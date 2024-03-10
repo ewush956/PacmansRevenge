@@ -34,7 +34,7 @@ int main() {
     SoundState wakaNoise = {0, 0};
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~ PLAY SUPER BITCHIN PACMAN INTRO ~~~~~~~~~~~~~~~~~~~~~~ */
-/*
+
     old_ssp = Super(0);
     enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
     enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
@@ -56,7 +56,7 @@ int main() {
             Super(old_ssp);
         }
     }
-    */
+    
 /* ~~~~~~~~~~~~~~~~~~~~~~~~ PLAY WAKA WAKA SOUND ~~~~~~~~~~~~~~~~~~~~~*/
     old_ssp = Super(0);
     enable_channel(CHANNEL_A, TONE_ON, NOISE_ON);

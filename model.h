@@ -42,6 +42,7 @@ typedef struct {
 	int x_position, y_position;
 	bool open_path;
 	bool occupied;
+	bool has_pellet;
 }Cell;
 
 

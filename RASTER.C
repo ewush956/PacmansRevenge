@@ -88,6 +88,20 @@ void plot_bitmap_64(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
         }
     }
 }
+void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int height) {
+    int row;
+    int dx = x;
+    int dy = y;
+    UCHAR8* location = base + (y * BYTES_PER_ROW) + (x >> 3); 
+
+    for (row = 0; row < height; row++) {
+        if (x >= 0 && x < SCREEN_WIDTH && dy >= 0 && dy < SCREEN_HEIGHT) {
+            *location |= bitmap[row];
+        }
+        location += BYTES_PER_ROW; 
+        dy++; 
+    }
+}
 /**
  * Plots a letter on the screen at the specified (x,y) coordinates.
  *

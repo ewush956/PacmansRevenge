@@ -73,17 +73,17 @@ L5:
 	bne	L7
 L8:
 	;line	67
-	moveq	#6,d0
 	ext.l	d3
-	move.l	d3,d1
-	asl.l	#2,d1
-	move.l	0(a3,d1.l),a0
-	clr.w	d1
-	move.b	10(a0),d1
-	addq.w	#1,d1
-	muls	d1,d0
+	move.l	d3,d0
+	asl.l	#2,d0
+	move.l	0(a3,d0.l),a0
+	clr.w	d0
+	move.b	10(a0),d0
+	addq.w	#1,d0
+	ext.l	d0
+	asl.l	#3,d0
 	move.l	d0,a0
-	move.w	#240,d0
+	move.w	#320,d0
 	ext.l	d3
 	move.l	d3,d1
 	asl.l	#2,d1
@@ -111,17 +111,17 @@ L10:
 	bra	L11
 L9:
 	;line	71
-	moveq	#6,d0
 	ext.l	d3
-	move.l	d3,d1
-	asl.l	#2,d1
-	move.l	0(a3,d1.l),a0
-	clr.w	d1
-	move.b	10(a0),d1
-	subq.w	#1,d1
-	muls	d1,d0
+	move.l	d3,d0
+	asl.l	#2,d0
+	move.l	0(a3,d0.l),a0
+	clr.w	d0
+	move.b	10(a0),d0
+	subq.w	#1,d0
+	ext.l	d0
+	asl.l	#3,d0
 	move.l	d0,a0
-	move.w	#240,d0
+	move.w	#320,d0
 	ext.l	d3
 	move.l	d3,d1
 	asl.l	#2,d1
@@ -148,17 +148,17 @@ L9:
 	bra	L14
 L13:
 	;line	74
-	moveq	#6,d0
 	ext.l	d3
-	move.l	d3,d1
-	asl.l	#2,d1
-	move.l	0(a3,d1.l),a0
-	clr.w	d1
-	move.b	10(a0),d1
-	addq.w	#1,d1
-	muls	d1,d0
+	move.l	d3,d0
+	asl.l	#2,d0
+	move.l	0(a3,d0.l),a0
+	clr.w	d0
+	move.b	10(a0),d0
+	addq.w	#1,d0
+	ext.l	d0
+	asl.l	#3,d0
 	move.l	d0,a0
-	move.w	#240,d0
+	move.w	#320,d0
 	ext.l	d3
 	move.l	d3,d1
 	asl.l	#2,d1
@@ -322,18 +322,18 @@ L36:
 	clr.w	6(a3)
 L32:
 	;line	150
-	move.w	#240,d0
+	move.w	#320,d0
 	clr.w	d1
 	move.b	9(a3),d1
 	add.w	6(a3),d1
 	muls	d1,d0
 	move.l	d0,a0
 	add.l	#_cell_map,a0
-	moveq	#6,d0
-	clr.w	d1
-	move.b	10(a3),d1
-	add.w	4(a3),d1
-	muls	d1,d0
+	clr.w	d0
+	move.b	10(a3),d0
+	add.w	4(a3),d0
+	ext.l	d0
+	asl.l	#3,d0
 	add.l	d0,a0
 	move.b	4(a0),d0
 	ext.w	d0
@@ -632,13 +632,13 @@ _get_valid_paths:
 	move.l	8(a6),a3
 	moveq	#-1,d4
 	lea	_cell_map,a4
-	move.l	#240,d5
+	move.l	#320,d5
 	;line	408
 	moveq	#0,d3
 	;line	408
-	clr.w	d0
+	clr.l	d0
 	move.b	10(a3),d0
-	mulu	#6,d0
+	asl.l	#3,d0
 	move.l	d0,a0
 	move.l	a0,-(a7)
 	move.l	d5,-(a7)
@@ -659,9 +659,9 @@ _get_valid_paths:
 	addq.b	#1,d3
 L60:
 	;line	410
-	clr.w	d0
+	clr.l	d0
 	move.b	10(a3),d0
-	mulu	#6,d0
+	asl.l	#3,d0
 	move.l	d0,a0
 	move.l	a0,-(a7)
 	move.l	d5,-(a7)
@@ -682,11 +682,11 @@ L60:
 	addq.b	#1,d3
 L61:
 	;line	412
-	moveq	#6,d0
-	clr.w	d1
-	move.b	10(a3),d1
-	subq.w	#1,d1
-	muls	d1,d0
+	clr.w	d0
+	move.b	10(a3),d0
+	subq.w	#1,d0
+	ext.l	d0
+	asl.l	#3,d0
 	move.l	d0,a0
 	move.l	a0,-(a7)
 	move.l	d5,-(a7)
@@ -705,11 +705,11 @@ L61:
 	addq.b	#1,d3
 L62:
 	;line	414
-	moveq	#6,d0
-	clr.w	d1
-	move.b	10(a3),d1
-	addq.w	#1,d1
-	muls	d1,d0
+	clr.w	d0
+	move.b	10(a3),d0
+	addq.w	#1,d0
+	ext.l	d0
+	asl.l	#3,d0
 	move.l	d0,a0
 	move.l	a0,-(a7)
 	move.l	d5,-(a7)

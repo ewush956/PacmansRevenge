@@ -24,6 +24,7 @@ void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
 void clear_letter(UCHAR8* base, int x, int y);
 void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* str);
 void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height);
+void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int height);
 
 void plot_bitmap_32_quick(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
 void plot_bitmap_64(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);

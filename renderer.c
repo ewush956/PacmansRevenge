@@ -14,6 +14,7 @@
 *          This function is called once at the beginning of the game.
 *************************************************************/
 void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
+    UCHAR8* base8 = (UCHAR8*)base; 
     int i, j, x, y;
     x = X_PIXEL_OFFSET;
     y = Y_PIXEL_OFFSET;
@@ -23,6 +24,9 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
             switch (tile_map[i][j]) {
             case 1:
                 plot_bitmap_16(base, x, y, wall_single_16, WALL_SIZE);
+                break;
+            case 0: 
+                plot_8(base8, x + 12, y + 12, pellet, 8);
                 break;
             }
             x += WALL_SIZE;
@@ -193,4 +197,7 @@ void clear_entities(ULONG32* base32, Entities* entity) {
                 clear_bitmap_32(base32, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);
                 clear_bitmap_32(base32, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);
                 clear_bitmap_32(base32, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, SPRITE_HEIGHT);
+}
+void render_pellet(UCHAR8* base8, Movement* move) {
+    plot_8(base8, move->x + 12, move->y + 12, pellet, 8);
 }
