@@ -174,27 +174,98 @@ typedef struct
  long _trap_14_ 	(short,...) ;
  long _trap_13_ 	(short,...) ;
 # 2 "./psg.h" 2
-# 25 "./psg.h"
+# 133 "./psg.h"
 void set_note_frequency(int channel, float frequency);
 void set_tone(int channel, int tuning);
 void enable_channel(int channel, int toneOn, int noiseOn);
 void set_volume(int channel, unsigned char volume);
 void set_master_volume(unsigned char volume);
+void play_note(int channel, int tuning, unsigned char volume);
 void stop_sound();
 # 2 "./effects.h" 2
+
+
+
+
+typedef struct {
+    int frequency;
+    int volume;
+    int duration;
+}SoundCycle;
+
+typedef struct {
+    int current_sound_index;
+    int sound_time_left;
+}SoundState;
+
+extern const SoundCycle waka_sound_cycle[12 ];
+extern const SoundCycle waka_noise_cycle[12 ];
+
+bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state);
 # 1 "effects.c" 2
 # 1 "./psg.h" 1
 # 1 "./TYPES.H" 1
 # 1 "./psg.h" 2
 # 1 "C:/c68/include/osbind.h" 1
 # 2 "./psg.h" 2
-# 25 "./psg.h"
+# 133 "./psg.h"
 void set_note_frequency(int channel, float frequency);
 void set_tone(int channel, int tuning);
 void enable_channel(int channel, int toneOn, int noiseOn);
 void set_volume(int channel, unsigned char volume);
 void set_master_volume(unsigned char volume);
+void play_note(int channel, int tuning, unsigned char volume);
 void stop_sound();
 # 2 "effects.c" 2
 # 1 "./TYPES.H" 1
 # 3 "effects.c" 2
+
+
+
+const SoundCycle waka_sound_cycle[12 ] = {
+    {(0xA9B  >> 3 ) , 13 , 1 },
+    {(0x86B  >> 3 ) , 13 , 1 },
+    {(0xD5D  >> 4 ) , 13 , 1 },
+    {(0xB3C  >> 4 ) , 13 , 1 },
+    {(0x973  >> 4 ) , 13 , 1 },
+    {(0x780  >> 4 ) , 13 , 1 },
+    {(0x714  >> 4 ) , 13 , 1 },
+    {(0x8EB  >> 4 ) , 13 , 1 },
+    {(0xA9B  >> 4 ) , 13 , 1 },
+    {(0xC9C  >> 4 ) , 13 , 1 },
+    {(0x7F2  >> 3 ) , 13 , 1 },
+    {(0xA02  >> 3 ) , 13 , 1 }
+};
+const SoundCycle waka_noise_cycle[12 ] = {
+    {(0xA9B  >> 2 ) , 15, 1 },
+    {(0x86B  >> 2 ) , 15, 1 },
+    {(0xD5D  >> 3 ) , 15, 1 },
+    {(0xB3C  >> 3 ) , 15, 1 },
+    {(0x973  >> 3 ) , 15, 1 },
+    {(0x780  >> 3 ) , 15, 1 },
+    {(0x714  >> 3 ) , 15, 1 },
+    {(0x8EB  >> 3 ) , 15, 1 },
+    {(0xA9B  >> 3 ) , 15, 1 },
+    {(0xC9C  >> 3 ) , 15, 1 },
+    {(0x7F2  >> 2 ) , 15, 1 },
+    {(0xA02  >> 2 ) , 15, 1 }
+};
+
+bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state) {
+    int index = state->current_sound_index;
+    int* time_left = &state->sound_time_left;
+
+    if (*time_left == 0) {
+        if (index < cycle_length) {
+            *time_left = sound_cycle[index].duration;
+            play_note(channel, sound_cycle[index].frequency, sound_cycle[index].volume);
+            state->current_sound_index++;
+        } else {
+            stop_sound();
+            state->current_sound_index = 0;
+            return -1 ;
+        }
+    }
+    (*time_left)--;
+    return 0 ;
+}

@@ -22,16 +22,25 @@ int main() {
     ULONG32 time_elapsed;
     int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
     int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
+    bool song_finished = FALSE;
+
+    int waka_repetitions = 10; 
+    int current_index = 0;
+    int time_left = 0;
 
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
+    SoundState wakaState = {0, 0};
+    SoundState wakaNoise = {0, 0};
 
+/* ~~~~~~~~~~~~~~~~~~~~~~~ PLAY SUPER BITCHIN PACMAN INTRO ~~~~~~~~~~~~~~~~~~~~~~ */
+/*
     old_ssp = Super(0);
     enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
     enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
     Super(old_ssp);
 
-    while (state != QUIT) {
+    while (song_finished == FALSE) {
         time_now = get_time();
         time_elapsed = time_now - time_then; 
 
@@ -42,46 +51,49 @@ int main() {
             }
 
             old_ssp = Super(0);
-            /*
-            update_music(CHANNEL_A, pacman_intro_treble, 43);
-            update_music(CHANNEL_B, pacman_intro_bass, 22);
-            */
             update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, &trebleState);
-            update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, &bassState); 
+            song_finished = update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, &bassState); 
             Super(old_ssp);
         }
-
     }
-
-    set_master_volume(0);
-    return 0;
-}
-        /*
-    for(channel = 0; channel < 3; channel++) {
-
-        volume = 15;
-        printf("Testing Channel %d with Note %s at Volume %d\n", channel, notes[channel], volume);
-
-
-        i--;
-        set_tone(channel, C4);
-
-        set_volume(channel, volume);
-
-        enable_channel(channel, TONE_ON, NOISE_OFF);
-        while (!Cconis())
-            ;
-        
-        printf("Test Complete for Channel %d. Press any key to continue...\n", channel);
-        enable_channel(channel, TONE_OFF, NOISE_OFF);
-        Cnecin();
-    }
-    set_master_volume(0);
-
-    Super(old_ssp);
-    return 0;
-}
     */
+/* ~~~~~~~~~~~~~~~~~~~~~~~~ PLAY WAKA WAKA SOUND ~~~~~~~~~~~~~~~~~~~~~*/
+    old_ssp = Super(0);
+    enable_channel(CHANNEL_A, TONE_ON, NOISE_ON);
+    enable_channel(CHANNEL_B, TONE_ON, NOISE_ON);
+    Super(old_ssp);
+
+    while (waka_repetitions > 0) {
+        time_now = get_time();
+        time_elapsed = time_now - time_then;
+
+        if (time_elapsed >= 2) { 
+            time_then = time_now;
+
+            if (Cconis()) {
+                input = (char)Cnecin();
+            }
+
+            old_ssp = Super(0);
+            play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
+            play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
+            Super(old_ssp);
+
+            if (time_left <= 0) {
+                waka_repetitions--;
+
+                current_index = 0;
+                time_left = waka_sound_cycle[0].duration; 
+            }
+        }
+    }
+/* ~~~~~~~~~~~~~~~~~~~~~~~~ DONE TESTS ~~~~~~~~~~~~~~~~~~~~~~ */
+    old_ssp = Super(0);
+    set_master_volume(0);
+    Super(old_ssp);
+    printf("Done :)\n");
+    return 0;
+}
 ULONG32 get_time()
 {
 

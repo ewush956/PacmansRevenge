@@ -7,6 +7,17 @@
 void write_psg(int reg, UCHAR8 val);
 unsigned char read_psg(int reg);
 
+typedef struct {
+    int frequency;
+    int duration;
+    int volume;
+}Note;
+
+typedef struct {
+    int current_note_index;
+    int note_time_left;
+}MusicState;
+
 
 /******************************************
 * Function Name: set_note_frequency
@@ -25,7 +36,7 @@ void set_note_frequency(int channel, float frequency) {
     volatile char *PSG_reg_select = SELECT_REGISTER;
     volatile char *PSG_reg_write  = WRITE_REGISTER;
 
-    unsigned int value = MASTER_CLOCK / (16 * frequency);
+    unsigned int value = MASTER_CLOCK / (frequency * 16);
 
     write_psg(channel * 2, (value & 0x0F));
     write_psg((channel * 2) + 1, (value >> 8) & 0x0F);
@@ -135,6 +146,19 @@ void set_master_volume(unsigned char volume){
     write_psg(VOLUME_OFFSET + CHANNEL_B, volume);
     write_psg(VOLUME_OFFSET + CHANNEL_C, volume);
 }
+/*************************************************************************
+ * Plays a note on a specified channel with given tuning and volume.
+ * 
+ * @param channel The sound channel to play the note on. Valid channels depend on the hardware, typically 0, 1, or 2.
+ * @param tuning The frequency tuning value of the note. This value should be compatible with the `set_tone` function.
+ * @param volume The volume at which to play the note. Expected to be a value that `set_volume` can accept.
+ */
+void play_note(int channel, int tuning, unsigned char volume) {
+
+    set_tone(channel, tuning);
+    set_volume(channel, volume);
+    /*enable_channel(channel, TONE_ON, NOISE_OFF); */
+}
 /*****************************************************************
  * Function Name: stop_sound
  * Purpose: Stops the sound by setting the master volume to 0.
@@ -157,7 +181,7 @@ void write_psg(int reg, UCHAR8 val) {
     volatile char *PSG_reg_select = SELECT_REGISTER;
     volatile char *PSG_reg_write  = WRITE_REGISTER;
 
-    if (reg >= 0 && reg <= 15) {
+    if (reg > -1 && reg < 16) {
 
         *PSG_reg_select = reg;
         *PSG_reg_write = val;

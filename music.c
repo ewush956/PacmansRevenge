@@ -135,20 +135,6 @@ const Note pacman_intro_bass[22] = {
     {B2, EIGHTH_NOTE, BASS_VOLUME}
 
 };
-/**
- * Plays a note on a specified channel with given tuning and volume.
- * 
- * @param channel The sound channel to play the note on. Valid channels depend on the hardware, typically 0, 1, or 2.
- * @param tuning The frequency tuning value of the note. This value should be compatible with the `set_tone` function.
- * @param volume The volume at which to play the note. Expected to be a value that `set_volume` can accept.
- */
-void play_note(int channel, int tuning, unsigned char volume) {
-
-    set_tone(channel, tuning);
-    set_volume(channel, volume);
-    /*enable_channel(channel, TONE_ON, NOISE_OFF); */
-}
-
 int generate_frequency(int base_note, UCHAR8 target_octave) {
     return (base_note >> target_octave);
 }
@@ -183,19 +169,24 @@ void update_music(int channel, const Note song[], int song_length) {
     }
 }
 */
-void update_music(int channel, const Note song[], int song_length, MusicState *state) {
+/*Returns true when the song is finished*/
+bool update_music(int channel, const Note song[], int song_length, MusicState *state) {
+    int index = state->current_note_index;
+    int* time_left = &state->note_time_left;
+
     if (state->note_time_left == 0) {
-        if (state->current_note_index < song_length) {
-            state->note_time_left = song[state->current_note_index].duration; 
-            play_note(channel, song[state->current_note_index].frequency, song[state->current_note_index].volume);
+        if (index < song_length) {
+            state->note_time_left = song[index].duration; 
+            play_note(channel, song[index].frequency, song[index].volume);
             state->current_note_index++;
         } else {
             stop_sound(); 
             state->current_note_index = 0;
-            return;
+            return TRUE;
         }
     }
     state->note_time_left -= 1; 
+    return FALSE;
 }
 void update_song(int treble_channel, const Note treble_song[], int treble_song_length,
                  int bass_channel, const Note bass_song[], int bass_song_length,
