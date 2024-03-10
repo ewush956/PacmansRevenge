@@ -198,8 +198,8 @@ typedef struct {
     int sound_time_left;
 }SoundState;
 
-extern const SoundCycle waka_sound_cycle[12 ];
-extern const SoundCycle waka_noise_cycle[12 ];
+extern const SoundCycle waka_sound_cycle[14 ];
+extern const SoundCycle waka_noise_cycle[14 ];
 
 bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state);
 # 1 "effects.c" 2
@@ -222,33 +222,41 @@ void stop_sound();
 
 
 
-const SoundCycle waka_sound_cycle[12 ] = {
+const SoundCycle waka_sound_cycle[14 ] = {
     {(0xA9B  >> 3 ) , 13 , 1 },
     {(0x86B  >> 3 ) , 13 , 1 },
     {(0xD5D  >> 4 ) , 13 , 1 },
     {(0xB3C  >> 4 ) , 13 , 1 },
     {(0x973  >> 4 ) , 13 , 1 },
     {(0x780  >> 4 ) , 13 , 1 },
+
+    {0xA9B , 0, 2 },
+
     {(0x714  >> 4 ) , 13 , 1 },
     {(0x8EB  >> 4 ) , 13 , 1 },
     {(0xA9B  >> 4 ) , 13 , 1 },
     {(0xC9C  >> 4 ) , 13 , 1 },
     {(0x7F2  >> 3 ) , 13 , 1 },
-    {(0xA02  >> 3 ) , 13 , 1 }
+    {(0xA02  >> 3 ) , 13 , 1 },
+    {0xA9B , 0, 2 }
 };
-const SoundCycle waka_noise_cycle[12 ] = {
+const SoundCycle waka_noise_cycle[14 ] = {
     {(0xA9B  >> 2 ) , 15, 1 },
     {(0x86B  >> 2 ) , 15, 1 },
     {(0xD5D  >> 3 ) , 15, 1 },
     {(0xB3C  >> 3 ) , 15, 1 },
     {(0x973  >> 3 ) , 15, 1 },
     {(0x780  >> 3 ) , 15, 1 },
+
+    {0xA9B , 0, 2 },
+
     {(0x714  >> 3 ) , 15, 1 },
     {(0x8EB  >> 3 ) , 15, 1 },
     {(0xA9B  >> 3 ) , 15, 1 },
     {(0xC9C  >> 3 ) , 15, 1 },
     {(0x7F2  >> 2 ) , 15, 1 },
-    {(0xA02  >> 2 ) , 15, 1 }
+    {(0xA02  >> 2 ) , 15, 1 },
+    {0xA9B , 0, 2 }
 };
 
 bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state) {

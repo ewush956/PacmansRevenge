@@ -10,12 +10,16 @@ const SoundCycle waka_sound_cycle[WAKA_CYCLE_LENGTH] = {
     {D5_SHARP, waka_volume, THIRTY_SECOND_NOTE},
     {F5_SHARP, waka_volume, THIRTY_SECOND_NOTE},
     {A5_SHARP, waka_volume, THIRTY_SECOND_NOTE},
+
+    {E1, 0, SIXTEENTH_NOTE},
+
     {B5, waka_volume, THIRTY_SECOND_NOTE},
     {G5, waka_volume, THIRTY_SECOND_NOTE},
     {E5, waka_volume, THIRTY_SECOND_NOTE},
     {C5_SHARP, waka_volume, THIRTY_SECOND_NOTE},
     {A4, waka_volume, THIRTY_SECOND_NOTE},
-    {F4, waka_volume, THIRTY_SECOND_NOTE}
+    {F4, waka_volume, THIRTY_SECOND_NOTE},
+    {E1, 0, SIXTEENTH_NOTE}
 };
 const SoundCycle waka_noise_cycle[WAKA_CYCLE_LENGTH] = {
     {E3, 15, THIRTY_SECOND_NOTE},
@@ -24,12 +28,16 @@ const SoundCycle waka_noise_cycle[WAKA_CYCLE_LENGTH] = {
     {D4_SHARP, 15, THIRTY_SECOND_NOTE},
     {F4_SHARP, 15, THIRTY_SECOND_NOTE},
     {A4_SHARP, 15, THIRTY_SECOND_NOTE},
+
+    {E1, 0, SIXTEENTH_NOTE},
+
     {B4, 15, THIRTY_SECOND_NOTE},
     {G4, 15, THIRTY_SECOND_NOTE},
     {E4, 15, THIRTY_SECOND_NOTE},
     {C4_SHARP, 15, THIRTY_SECOND_NOTE},
     {A3, 15, THIRTY_SECOND_NOTE},
-    {F3, 15, THIRTY_SECOND_NOTE}
+    {F3, 15, THIRTY_SECOND_NOTE},
+    {E1, 0, SIXTEENTH_NOTE}
 };
 
 bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state) {

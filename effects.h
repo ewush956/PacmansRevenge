@@ -1,7 +1,7 @@
 #include "TYPES.H"
 #include "psg.h"
 
-#define WAKA_CYCLE_LENGTH 12
+#define WAKA_CYCLE_LENGTH 14
 
 typedef struct {
     int frequency;

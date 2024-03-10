@@ -67,7 +67,7 @@ int main() {
         time_now = get_time();
         time_elapsed = time_now - time_then;
 
-        if (time_elapsed >= 2) { 
+        if (time_elapsed >= 1) { 
             time_then = time_now;
 
             if (Cconis()) {
