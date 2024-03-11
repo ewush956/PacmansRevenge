@@ -146,6 +146,10 @@ typedef struct {
     UCHAR8 direction;
     UCHAR8 y_cell_index;
     UCHAR8 x_cell_index;
+
+	UINT16 last_x;
+	UINT16 last_y;
+
 }Movement;
 
 extern Movement* move;
@@ -252,6 +256,7 @@ ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 
 UCHAR8 get_valid_paths(Movement *ghost);
+void eat_pellet(Movement* pacman);
 # 5 "events.c" 2
 # 1 "C:/c68/include/stdio.h" 1
 # 1 "C:/c68/include/compiler.h" 1
@@ -596,4 +601,7 @@ UCHAR8 get_valid_paths(Movement *ghost)
     if (cell_map[ghost->y_cell_index][ghost->x_cell_index + 1].open_path == -1 )
         count++;
     return count;
+}
+void eat_pellet(Movement* pacman) {
+    cell_map[pacman->y_cell_index][pacman->x_cell_index].has_pellet = 0 ;
 }

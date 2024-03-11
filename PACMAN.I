@@ -166,6 +166,10 @@ typedef struct {
     UCHAR8 direction;
     UCHAR8 y_cell_index;
     UCHAR8 x_cell_index;
+
+	UINT16 last_x;
+	UINT16 last_y;
+
 }Movement;
 
 extern Movement* move;
@@ -254,7 +258,8 @@ void update_current_frame(Entities* all, int clock);
 # 4 "./renderer.h" 2
 
 
-void clear_entities(ULONG32* base32, Entities* entity);
+void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
+                    Movement* moustache, Movement* awkward, Movement* cyclops);
 void render_map(UINT16* base, UINT16 tile_map[][40 ]);
 void render_frame(ULONG32* base, Entities* entity);
 void render_pacman(ULONG32* base32, Pacman* pacman);
@@ -303,6 +308,7 @@ ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 
 UCHAR8 get_valid_paths(Movement *ghost);
+void eat_pellet(Movement* pacman);
 # 10 "./pacman.h" 2
 # 1 "C:/c68/include/osbind.h" 1
 # 1 "C:/c68/include/compiler.h" 1
@@ -886,7 +892,8 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 # 4 "./renderer.h" 2
 
 
-void clear_entities(ULONG32* base32, Entities* entity);
+void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
+                    Movement* moustache, Movement* awkward, Movement* cyclops);
 void render_map(UINT16* base, UINT16 tile_map[][40 ]);
 void render_frame(ULONG32* base, Entities* entity);
 void render_pacman(ULONG32* base32, Pacman* pacman);
@@ -1215,7 +1222,7 @@ void swap_buffers (ULONG32 address)
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input)
 {
 
-    clear_entities(base32, entity);
+
     set_input(entity->pacman,input);
     check_proximity(entity);
     handle_collisions(entity, ticks);

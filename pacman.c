@@ -382,7 +382,7 @@ try to only render to the buffer in this function */
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input)
 {
 
-    clear_entities(base32, entity);
+    /*clear_entities(base32, entity);*/
     set_input(entity->pacman,input);
     check_proximity(entity);
     handle_collisions(entity, ticks);          /*Checks and handles collisions*/

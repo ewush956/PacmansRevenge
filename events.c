@@ -415,4 +415,6 @@ UCHAR8 get_valid_paths(Movement *ghost)
         count++;
     return count;
 }
-
+void eat_pellet(Movement* pacman) {
+    cell_map[pacman->y_cell_index][pacman->x_cell_index].has_pellet = FALSE;
+}

@@ -3,7 +3,8 @@
 #include "bitmaps.h"
 #include "types.h"
 
-void clear_entities(ULONG32* base32, Entities* entity);
+void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
+                    Movement* moustache, Movement* awkward, Movement* cyclops);
 void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]);
 void render_frame(ULONG32* base, Entities* entity);
 void render_pacman(ULONG32* base32, Pacman* pacman);

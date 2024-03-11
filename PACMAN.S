@@ -2694,7 +2694,7 @@ _back_buffer_array:
 	even
 _pacman_movement:
 	dc.w	304,352,0,0
-	dc.b	0,21,19,0
+	dc.b	0,21,19,0,0,0,0,0
 	even
 _pacman:
 	dc.w	0
@@ -2704,7 +2704,7 @@ _pacman:
 	dc.l	_pacman_movement
 _crying_ghost_movement:
 	dc.w	272,176,0,0
-	dc.b	2,10,17,0
+	dc.b	2,10,17,0,0,0,0,0
 	even
 _crying_ghost:
 	dc.w	0
@@ -2716,7 +2716,7 @@ _crying_ghost:
 	dc.l	_crying_ghost_movement
 _cyclops_ghost_movement:
 	dc.w	272,208,0,0
-	dc.b	3,12,17,0
+	dc.b	3,12,17,0,0,0,0,0
 	even
 _cyclops_ghost:
 	dc.w	0
@@ -2728,7 +2728,7 @@ _cyclops_ghost:
 	dc.l	_cyclops_ghost_movement
 _moustache_ghost_movement:
 	dc.w	336,176,0,0
-	dc.b	2,10,21,0
+	dc.b	2,10,21,0,0,0,0,0
 	even
 _moustache_ghost:
 	dc.w	0
@@ -2740,7 +2740,7 @@ _moustache_ghost:
 	dc.l	_moustache_ghost_movement
 _awkward_ghost_movement:
 	dc.w	336,208,0,0
-	dc.b	2,12,21,0
+	dc.b	2,12,21,0,0,0,0,0
 	even
 _awkward_ghost:
 	dc.w	0
@@ -3359,11 +3359,6 @@ _render_to_buffer:
 	link	a6,#0
 	move.l	d3,-(a7)
 	move.l	12(a6),d3
-	;line	385
-	move.l	d3,-(a7)
-	move.l	8(a6),-(a7)
-	jsr	_clear_entities
-	addq.l	#8,a7
 	;line	386
 	move.b	19(a6),d0
 	ext.w	d0

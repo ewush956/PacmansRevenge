@@ -15,13 +15,13 @@ void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
     int dx = x;
     int dy = y;
     ULONG32* location = base + (y * LONGS_PER_ROW) + (x >> 5);
-        for (row = 0; row < height; row++) {
             if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && dy >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT) ) {
+        for (row = 0; row < height; row++) {
                 *location |= bitmap[row] >> (x & 31);
                 *(location + 1) |= bitmap[row] << (SPRITE_WIDTH - (x & 31));
-            }
             location += LONGS_PER_ROW;
             dy++; /*For bounds checking*/
+            }
             /* dx++; Can't get dx working :(*/
         }
 }
@@ -31,19 +31,18 @@ void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height) {
     ULONG32* location = base + (y * LONGS_PER_ROW) + (x >> 5);
     ULONG32 mask1, mask2;
 
-    for (row = 0; row < height; row++) {
-        if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && y >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT)) {
+    if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && y >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT)) {
+        for (row = 0; row < height; row++) {
 
             mask1 = ~(0xFFFFFFFF >> (x & 31));
             mask2 = ~(0xFFFFFFFF << (SPRITE_WIDTH - (x & 31)));
-
 
             *location &= mask1;
             if ((x & 31) + SPRITE_WIDTH > 32) {
                 *(location + 1) &= mask2;
             }
-        }
         location += LONGS_PER_ROW; 
+        }
         /*dy++; */
     }
 }
@@ -94,12 +93,12 @@ void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int heig
     int dy = y;
     UCHAR8* location = base + (y * BYTES_PER_ROW) + (x >> 3); 
 
-    for (row = 0; row < height; row++) {
-        if (x >= 0 && x < SCREEN_WIDTH && dy >= 0 && dy < SCREEN_HEIGHT) {
+    if (x >= 0 && x < SCREEN_WIDTH && dy >= 0 && dy < SCREEN_HEIGHT) {
+        for (row = 0; row < height; row++) {
             *location |= bitmap[row];
-        }
         location += BYTES_PER_ROW; 
         dy++; 
+        }
     }
 }
 /**

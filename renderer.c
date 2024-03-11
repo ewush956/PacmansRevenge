@@ -51,9 +51,25 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
 *************************************************************/
 void render_frame(ULONG32* base, Entities* entity) {
 
-    render_pacman(base, entity->pacman);
+    UCHAR8* base8 = (UCHAR8*)base;
+
+    Pacman* pacman = entity->pacman;
+    Movement* crying = entity->crying_ghost->move;
+    Movement* moustache = entity->moustache_ghost->move;
+    Movement* awkward = entity->awkward_ghost->move;
+    Movement* cyclops = entity->cyclops_ghost->move;
+
+    clear_entities(base, pacman->move, crying, moustache,
+                   awkward, cyclops);
+
+    render_pacman(base, pacman);
     render_ghosts(base, entity);
     render_timer(base, entity->timer);
+
+    render_pellet(base8, crying);
+    render_pellet(base8, moustache);
+    render_pellet(base8, awkward);
+    render_pellet(base8, cyclops);
 }
 /*************************************************************
 * Function: render_pacman
@@ -191,13 +207,49 @@ void render_initial_timer(UCHAR8* base) {
 
     plot_string(base, start_x, y, font, "Time: 00:00");
 }
-void clear_entities(ULONG32* base32, Entities* entity) {
-                clear_bitmap_32(base32, entity->pacman->move->x, entity->pacman->move->y, SPRITE_HEIGHT); 
-                clear_bitmap_32(base32, entity->crying_ghost->move->x, entity->crying_ghost->move->y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, SPRITE_HEIGHT);
+void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
+                    Movement* moustache, Movement* awkward, Movement* cyclops) {
+
+    clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
+
+    clear_bitmap_32(base32, crying->last_x, crying->last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, moustache->last_x, moustache->last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, awkward->last_x, awkward->last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, cyclops->last_x, cyclops->last_y, SPRITE_HEIGHT);
 }
 void render_pellet(UCHAR8* base8, Movement* move) {
-    plot_8(base8, move->x + 12, move->y + 12, pellet, 8);
+    int pellet_plot_x = (move->x_cell_index << 4) + 12;
+    int pellet_plot_y = (move->y_cell_index << 4) + 12 + Y_PIXEL_OFFSET;
+    if (move->direction == LEFT) {
+        if (cell_map[move->y_cell_index][move->x_cell_index - 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index + 1][move->x_cell_index - 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y, pellet + 16, 8);
+        }
+        if (cell_map[move->y_cell_index - 1][move->x_cell_index - 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet + 8, 8);
+        }
+    }
+    else if (move->direction == RIGHT) {
+        if (cell_map[move->y_cell_index][move->x_cell_index + 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index + 1][move->x_cell_index + 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 16, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index - 1][move->x_cell_index + 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet, 8);
+        }
+    }
+    else if (move->direction == UP) {
+        if (cell_map[move->y_cell_index - 1][move->x_cell_index].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x, pellet_plot_y, pellet, 8);
+        }
+    }
+    else if (move->direction == DOWN) {
+        if (cell_map[move->y_cell_index + 1][move->x_cell_index].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x, pellet_plot_y, pellet, 8);
+        }
+    }
 }

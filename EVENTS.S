@@ -733,6 +733,24 @@ L64:
 	movem.l	(a7)+,d3/d4/d5/a3/a4
 	unlk	a6
 	rts
+_eat_pellet:
+	link	a6,#0
+	;line	419
+	move.w	#320,d0
+	move.l	8(a6),a0
+	clr.w	d1
+	move.b	9(a0),d1
+	mulu	d1,d0
+	move.l	d0,a0
+	add.l	#_cell_map,a0
+	move.l	8(a6),a1
+	clr.l	d0
+	move.b	10(a1),d0
+	asl.l	#3,d0
+	add.l	d0,a0
+	clr.b	6(a0)
+	unlk	a6
+	rts
 	globl	_DIRECTION_ARRAY
 	globl	_handle_pacman_collision
 	globl	_handle_ghost_collision
@@ -742,3 +760,4 @@ L64:
 	globl	_random_number_generator
 	globl	_set_input
 	globl	_get_valid_paths
+	globl	_eat_pellet

@@ -22,13 +22,18 @@ void move_pacman (Pacman *pacman)
         pacman->move->y += pacman->move->delta_y * 4;
     }
     */
+   Movement* pacman_movement = pacman->move;
+
+    pacman_movement->last_x = pacman_movement->x;
+    pacman_movement->last_y = pacman_movement->y;
+    
     if (pacman -> state == DEFAULT) {
-    pacman->move->x += (pacman->move->delta_x << 1);
-    pacman->move->y += (pacman->move->delta_y << 1);
+    pacman_movement->x += (pacman_movement->delta_x << 1);
+    pacman_movement->y += (pacman_movement->delta_y << 1);
     }
     else {
-        pacman->move->x += (pacman->move->delta_x << 2);
-        pacman->move->y += (pacman->move->delta_y << 2);
+        pacman_movement->x += (pacman_movement->delta_x << 2);
+        pacman_movement->y += (pacman_movement->delta_y << 2);
     }
    /* update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->move->direction); */
 }
@@ -81,6 +86,9 @@ void move_ghost (Ghost *ghost)
 				break;
 		}
         align_axis(ghost_movement);
+
+        ghost_movement->last_x = ghost_movement->x;
+        ghost_movement->last_y = ghost_movement->y;
 
         ghost_movement-> x += ghost_movement->delta_x;
         ghost_movement-> y += ghost_movement->delta_y;
