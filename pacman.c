@@ -6,6 +6,8 @@
 #include "font.h"
 #include "bitmaps.h"
 #include "events.h"
+#include "music.h"
+#include "effects.h"
 
 #include <osbind.h>
 #include <stdio.h>
@@ -40,6 +42,7 @@
 
 void swap_buffers();
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
+void update_movement(Entities* entity, char input, UINT16 ticks);
 
 ULONG32 back_buffer_array[BUFFER_SIZE_LONGS] = {0};  
 /* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
@@ -170,6 +173,10 @@ int main()
     &cyclops_ghost,
     };
 
+    int first_frames = 0;
+    int second_frames = 0;
+    int third_frames = 0;
+
 	char input;
 	int i,j,counter;
     bool is_front_buffer = TRUE;
@@ -184,16 +191,111 @@ int main()
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
+
+    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
+    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
+    bool song_finished = FALSE;
+
+    int waka_repetitions = 10; 
+    int current_index = 0;
+    int time_left = 0;
+    long old_ssp; 
+    bool stop_ghosts = FALSE;
+
+    MusicState trebleState = {0, 0};
+    MusicState bassState = {0, 0};
+    SoundState wakaState = {0, 0};
+    SoundState wakaNoise = {0, 0};
     Xor xor = {123457};
 
-	init_map_cells(cell_map,tile_map);				
+    int initial_moves[5] = {0,1,2,3,4};
+    int moves_index = 0;
+    int intro_duration = 0;
+
+	init_map_cells(cell_map,tile_map);	
+
+    cell_map[10][17].has_pellet = FALSE;
+    cell_map[10][18].has_pellet = FALSE;
+
+    cell_map[10][20].has_pellet = FALSE;
+    cell_map[10][21].has_pellet = FALSE;
+
+    cell_map[12][17].has_pellet = FALSE;
+    cell_map[12][18].has_pellet = FALSE;
+
+    cell_map[12][20].has_pellet = FALSE;
+    cell_map[12][21].has_pellet = FALSE;
+
     clear_screen_q(base32); 
     render_map(base16, tile_map);
+    clear_bitmap_32(base32, entity.moustache_ghost->move->x, entity.moustache_ghost->move->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, entity.awkward_ghost->move->x, entity.awkward_ghost->move->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, entity.cyclops_ghost->move->x, entity.cyclops_ghost->move->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, entity.crying_ghost->move->x, entity.crying_ghost->move->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, entity.pacman->move->x, entity.pacman->move->y, SPRITE_HEIGHT);
+
     render_frame(base32, &entity);
     render_initial_timer(base8);
-    free_ghosts(base32, base8, &entity);
 
 
+    render_ghosts(base32, &entity);
+
+    set_first_movements(base32, base8, &entity);
+
+    old_ssp = Super(0);
+    enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
+    enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
+    Super(old_ssp);
+
+    time_then = get_time();
+    while (song_finished == FALSE) {
+        time_now = get_time();
+        time_elapsed = time_now - time_then; 
+
+        if (time_elapsed >= 5) { 
+            time_then = time_now;
+            if (Cconis()) {
+                input = (char)Cnecin();
+            }
+            
+            old_ssp = Super(0);
+            update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, &trebleState);
+            song_finished = update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, &bassState); 
+            Super(old_ssp);
+            intro_duration++;
+        }
+        if (intro_duration > 40) {
+        if (first_frames > FIRST_STOP - 1) {
+            switch (initial_moves[moves_index]) {
+                case 0:
+                    set_second_movements(base32, base8, &entity);
+                    moves_index++;
+                    break;
+                case 1:
+                    set_third_movements(base32, base8, &entity);
+                    moves_index++;
+                    break;
+                case 2:
+                    set_third_movements(base32, base8, &entity);
+                    moves_index++;
+                    break;
+                case 3:
+                    moves_index++;
+                    break;
+                case 4:
+                    stop_ghosts = TRUE;
+                    break;
+            }
+            first_frames = 0;
+            
+        }
+        if (stop_ghosts == FALSE) {
+            manually_move_ghost(base32, &entity, 1);
+        }
+        first_frames++;
+        }
+    }
+    /*free_ghosts(base32, base8, &entity);*/
 	
 	if (Cconis())
 	{
@@ -212,8 +314,7 @@ int main()
             {
                 input = (char)Cnecin();
             }
-            
-            /*render_to_buffer(base32,&entity,ticks,input);       /*start from the front */
+            update_movement(&entity, input, ticks);
             if (is_front_buffer == TRUE)
             {
                 render_to_buffer(base32,&entity,ticks,input);
@@ -231,10 +332,16 @@ int main()
                  
 
             }
-            Vsync();
+            /*Vsync(); */
             ticks = (++ticks & 63);
             time_then = time_now;
         }
+                /* --- sound ---*/
+        old_ssp = Super(0);
+        play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
+        play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
+        Super(old_ssp);
+        /* -------------*/
         update_game_state(state, input);
     }
 
@@ -254,6 +361,43 @@ void update_ghosts(){
     move_ghost(&awkward_ghost);
     /*update current frame of ghosties here*/
 }
+void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
+    crying_ghost.move->delta_x = 1;
+	crying_ghost.move->delta_y = 0;
+    crying_ghost.move->direction = RIGHT;
+
+    awkward_ghost.move->delta_x = -1;
+    awkward_ghost.move->delta_y = 0;
+    awkward_ghost.move->direction = LEFT;
+
+    cyclops_ghost.move->delta_x = 0;
+    cyclops_ghost.move->delta_y = -1;
+    cyclops_ghost.move->direction = UP;
+
+    moustache_ghost.move->delta_x = 0;
+    moustache_ghost.move->delta_y = 1;
+    moustache_ghost.move->direction = DOWN;
+}
+void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
+
+    moustache_ghost.move->delta_x = 1;
+    moustache_ghost.move->delta_y = 0;
+    moustache_ghost.move->direction = RIGHT;
+
+    cyclops_ghost.move->delta_x = -1;
+    cyclops_ghost.move->delta_y = 0;
+    cyclops_ghost.move->direction = LEFT;
+}
+void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
+    crying_ghost.move->delta_x = 0;
+    crying_ghost.move->delta_y = -1;
+    crying_ghost.move->direction = UP;
+
+    awkward_ghost.move->delta_x = 0;
+    awkward_ghost.move->delta_y = 1;
+    awkward_ghost.move->direction = DOWN;
+}
+/*
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
@@ -296,10 +440,6 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
     int i;
 
 	for (i=0; i < stop; i++) {
-		clear_bitmap_32(base, entity->crying_ghost->move->x, entity->crying_ghost->move->y, SPRITE_HEIGHT);
-        clear_bitmap_32(base, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);
-        clear_bitmap_32(base, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);
-        clear_bitmap_32(base, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, SPRITE_HEIGHT); 
 
         move_ghost(entity->crying_ghost);
         move_ghost(entity->awkward_ghost);
@@ -307,11 +447,22 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
         move_ghost(entity->cyclops_ghost);
         update_current_frame(entity, i);
 
-
 		update_cells(entity);
 
 		render_frame(base, entity);
 	}
+}
+*/
+void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
+    move_ghost(entity->crying_ghost);
+    move_ghost(entity->awkward_ghost);
+    move_ghost(entity->moustache_ghost);
+    move_ghost(entity->cyclops_ghost);
+    update_current_frame(entity, frame_index);
+
+	update_cells(entity);
+
+	render_frame(base, entity);
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
@@ -383,18 +534,20 @@ void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input
 {
 
     /*clear_entities(base32, entity);*/
+    update_current_frame(entity, ticks);
+    render_frame(base32, entity);
+    
+}
+void update_movement(Entities* entity, char input, UINT16 ticks) {
+    
     set_input(entity->pacman,input);
     check_proximity(entity);
     handle_collisions(entity, ticks);          /*Checks and handles collisions*/
     update_pacman();
     update_ghosts();
-    update_current_frame(entity, ticks);
-    render_frame(base32, entity);
     update_cells(entity);
-    
+
 }
-
-
 
 
 /*TODO:
