@@ -11,7 +11,6 @@
 #include <osbind.h>
 #include <stdio.h>
 #include <linea.h>
-
 typedef unsigned char GAME_STATE;
 
 #define QUIT ((UCHAR8)0)
@@ -19,6 +18,11 @@ typedef unsigned char GAME_STATE;
 #define PAUSE ((UCHAR8)2)
 #define GAMEOVER ((UCHAR8)3)
 #define WIN ((UCHAR8)4)
+
+#define BACK_BUFFER_START 0x00000
+#define BACK_BUFFER_END 0x39BFFF
+
+#define ALLIGNMENT 256
 
 #define FIRST_STOP 16
 #define SECOND_STOP 16
@@ -32,6 +36,8 @@ void update_pacman();
 void update_ghosts();
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index);
+ULONG32* byte_allign(ULONG32* array_address);
+
 
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);

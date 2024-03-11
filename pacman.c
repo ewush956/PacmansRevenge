@@ -186,8 +186,10 @@ int main()
     UINT16* base16 = Physbase();
     UCHAR8* base8 = Physbase();
     ULONG32 *original = Physbase();
+    ULONG32* back_buffer_ptr = byte_allign(back_buffer_array);
+    UINT16* back_ptr_16 = (UINT16*) back_buffer_ptr;
 
-    ULONG32* buffer_ptr;
+   /* ULONG32* buffer_ptr; */
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
@@ -228,6 +230,8 @@ int main()
 
     clear_screen_q(base32); 
     render_map(base16, tile_map);
+    render_map(back_ptr_16, tile_map);
+
     clear_bitmap_32(base32, entity.moustache_ghost->move->x, entity.moustache_ghost->move->y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, entity.awkward_ghost->move->x, entity.awkward_ghost->move->y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, entity.cyclops_ghost->move->x, entity.cyclops_ghost->move->y, SPRITE_HEIGHT);
@@ -314,25 +318,27 @@ int main()
             {
                 input = (char)Cnecin();
             }
-            update_movement(&entity, input, ticks);
             if (is_front_buffer == TRUE)
             {
-                render_to_buffer(base32,&entity,ticks,input);
+                render_to_buffer(base32,&entity,ticks,input);      
                 Setscreen(-1,base32,-1);
-                base32 = back_buffer_array;
+                /*swap_buffers(base32,back_buffer_ptr);*/
+               
+                
                 is_front_buffer = FALSE;
-
             }
             else{
-
-                base32 = original;
-                render_to_buffer(base32,&entity,ticks,input);
-                Setscreen(-1,base32,-1);
+                
+                render_to_buffer(back_buffer_ptr,&entity,ticks,input);
+                Setscreen(-1,base32,-1);        
+                /*swap_buffers(base32,back_buffer_ptr);*/
+              
                 is_front_buffer = TRUE;
-                 
-
             }
-            /*Vsync(); */
+            swap_buffers(base32,back_buffer_ptr);
+            Vsync(); 
+
+            update_movement(&entity, input, ticks);
             ticks = (++ticks & 63);
             time_then = time_now;
         }
@@ -517,13 +523,16 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
 }
 
 
-void swap_buffers (ULONG32 address)
+void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
 {
+    ULONG32* temp = base32;
+    base32 = back_buffer_ptr;
+    back_buffer_ptr = temp;
 
-
-    Setscreen(-1,address,-1);
-
-
+    /*   
+    printf("base 32 --> %p\n", (void *)base32);
+    printf("back_buffer_ptr --> %p\n", (void *)back_buffer_ptr);
+    */  
 }
 
 /* save updating stuff and leave that in main...?
@@ -541,22 +550,47 @@ void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input
 void update_movement(Entities* entity, char input, UINT16 ticks) {
     
     set_input(entity->pacman,input);
-    check_proximity(entity);
     handle_collisions(entity, ticks);          /*Checks and handles collisions*/
     update_pacman();
     update_ghosts();
+    check_proximity(entity);
     update_cells(entity);
 
 }
 
+ULONG32* byte_allign(ULONG32* array_address)
+{
+  
+    ULONG32 adjustment;
+    ULONG32 *aligned_start; 
+    ULONG32 address = (ULONG32)&array_address;
+    ULONG32 misalignment;
+    /*ULONG32 misalignment = address % ALLIGNMENT;*/
 
-/*TODO:
-1) Initialize cell map
-NOTES: init_map_cells could do without tile_map since it's included in bitmaps.h (globally accessable in renderer)
 
-2) initialize first frame (render map)
-3) make main game loop
-NOTES: need a QUIT sentenel, i'm thinking we make it -1 or something that isn't easily mixed up with our other typedefs.
-        while (state != QUIT) ...
-*/
+    if (address < (ULONG32)BACK_BUFFER_START)
+        address = (ULONG32)BACK_BUFFER_START;
+
+    else if (address > (ULONG32)BACK_BUFFER_END)
+        address = (ULONG32)BACK_BUFFER_END;
+
+    misalignment = address % ALLIGNMENT;
+   
+   
+    if (misalignment != 0) 
+    {
+        adjustment = ALLIGNMENT - misalignment;
+    }
+    else 
+    {
+        adjustment = 0;
+    }
+
+    aligned_start = (ULONG32 *)(address + adjustment);
+
+    printf("Aligned start address: %p\n", (void *)aligned_start);
+    
+    return aligned_start;
+
+}
 
