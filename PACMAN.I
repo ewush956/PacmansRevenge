@@ -1159,7 +1159,7 @@ int main()
 
     clear_screen_q(base32);
     render_map(base16, tile_map);
-    render_map(back_ptr_16, tile_map);
+
 
     clear_bitmap_32(base32, entity.moustache_ghost->move->x, entity.moustache_ghost->move->y, 32 );
     clear_bitmap_32(base32, entity.awkward_ghost->move->x, entity.awkward_ghost->move->y, 32 );
@@ -1247,24 +1247,13 @@ int main()
             {
                 input = (char)_trap_1_w((short)0x08) ;
             }
-            if (is_front_buffer == -1 )
-            {
-                render_to_buffer(base32,&entity,ticks,input);
-                (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
 
 
 
-                is_front_buffer = 0 ;
-            }
-            else{
-
-                render_to_buffer(back_buffer_ptr,&entity,ticks,input);
-                (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
-
-
-                is_front_buffer = -1 ;
-            }
+            render_to_buffer(base32,&entity,ticks,input);
             swap_buffers(base32,back_buffer_ptr);
+            (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
+# 347 "pacman.c"
             (void)_trap_14_w((short)0x25) ;
 
             update_movement(&entity, input, ticks);
@@ -1279,6 +1268,9 @@ int main()
 
         update_game_state(state, input);
     }
+
+
+
 
 	return 0;
 }
@@ -1332,7 +1324,7 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
 }
-# 462 "pacman.c"
+# 473 "pacman.c"
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
     move_ghost(entity->crying_ghost);
     move_ghost(entity->awkward_ghost);

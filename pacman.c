@@ -230,7 +230,7 @@ int main()
 
     clear_screen_q(base32); 
     render_map(base16, tile_map);
-    render_map(back_ptr_16, tile_map);
+    /*render_map(back_ptr_16, tile_map);*/
 
     clear_bitmap_32(base32, entity.moustache_ghost->move->x, entity.moustache_ghost->move->y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, entity.awkward_ghost->move->x, entity.awkward_ghost->move->y, SPRITE_HEIGHT);
@@ -318,11 +318,18 @@ int main()
             {
                 input = (char)Cnecin();
             }
+
+
+
+            render_to_buffer(base32,&entity,ticks,input);      
+            swap_buffers(base32,back_buffer_ptr);
+            Setscreen(-1,base32,-1);
+            /*
             if (is_front_buffer == TRUE)
             {
                 render_to_buffer(base32,&entity,ticks,input);      
+                swap_buffers(base32,back_buffer_ptr);
                 Setscreen(-1,base32,-1);
-                /*swap_buffers(base32,back_buffer_ptr);*/
                
                 
                 is_front_buffer = FALSE;
@@ -330,12 +337,13 @@ int main()
             else{
                 
                 render_to_buffer(back_buffer_ptr,&entity,ticks,input);
+                /*swap_buffers(base32,back_buffer_ptr);
                 Setscreen(-1,base32,-1);        
-                /*swap_buffers(base32,back_buffer_ptr);*/
               
                 is_front_buffer = TRUE;
-            }
-            swap_buffers(base32,back_buffer_ptr);
+            }*/
+
+         
             Vsync(); 
 
             update_movement(&entity, input, ticks);
@@ -350,6 +358,9 @@ int main()
         /* -------------*/
         update_game_state(state, input);
     }
+
+
+
 
 	return 0;
 }
