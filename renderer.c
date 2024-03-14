@@ -14,6 +14,7 @@
 *          This function is called once at the beginning of the game.
 *************************************************************/
 void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
+    UCHAR8* base8 = (UCHAR8*)base; 
     int i, j, x, y;
     x = X_PIXEL_OFFSET;
     y = Y_PIXEL_OFFSET;
@@ -23,6 +24,9 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
             switch (tile_map[i][j]) {
             case 1:
                 plot_bitmap_16(base, x, y, wall_single_16, WALL_SIZE);
+                break;
+            case 0: 
+                plot_8(base8, x + 12, y + 12, pellet, 8);
                 break;
             }
             x += WALL_SIZE;
@@ -47,9 +51,28 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
 *************************************************************/
 void render_frame(ULONG32* base, Entities* entity) {
 
-    render_pacman(base, entity->pacman);
+    UCHAR8* base8 = (UCHAR8*)base;
+
+    Pacman* pacman = entity->pacman;
+    Movement* crying = entity->crying_ghost->move;
+    Movement* moustache = entity->moustache_ghost->move;
+    Movement* awkward = entity->awkward_ghost->move;
+    Movement* cyclops = entity->cyclops_ghost->move;
+
+   /* clear_entities(base, pacman->move, crying, moustache,
+                   awkward, cyclops); */
+
+/*
+    render_pellet(base8, crying);
+    render_pellet(base8, moustache);
+    render_pellet(base8, awkward);
+    render_pellet(base8, cyclops);*/
+    
+    render_pacman(base, pacman);
     render_ghosts(base, entity);
+    
     render_timer(base, entity->timer);
+
 }
 /*************************************************************
 * Function: render_pacman
@@ -65,13 +88,20 @@ void render_pacman(ULONG32* base32, Pacman* pacman) {
     Movement* move = pacman->move;
     UINT16 x = move->x;
     UINT16 y = move->y;
+
+    UINT16 last_x = move->last_x;
+    UINT16 last_y = move->last_y;
     UCHAR8 frame = pacman->current_frame;
     UCHAR8 direction = move->direction;
 
     if (pacman->state == EVIL) {
+        clear_bitmap_32(base32, last_x, last_y, SPRITE_HEIGHT);
+        /*clear_bitmap_32(base32, x, y, SPRITE_HEIGHT);*/
         plot_bitmap_32(base32, x, y, evil_pacman_sprites[direction][frame], SPRITE_HEIGHT);
     }
     else {
+        /*clear_bitmap_32(base32, x, y, SPRITE_HEIGHT);*/
+        clear_bitmap_32(base32, last_x, last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, x, y, default_pacman_sprites[direction][frame], SPRITE_HEIGHT);
     }    /* pacman->current_frame++; */
 }
@@ -97,24 +127,31 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     Ghost* cyclops_g = entity->cyclops_ghost;
 
     if (entity->awkward_ghost->state == DEFAULT) {
+        clear_bitmap_32(base32, awkward->last_x, awkward->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->direction][awkward_g->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, awkward_g);
     }
 
     if (entity->moustache_ghost->state == DEFAULT) {
+        /*clear_bitmap_32(base32, moustache->x, moustache->y, SPRITE_HEIGHT);*/
+        clear_bitmap_32(base32, moustache->last_x, moustache->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->direction][moustache_g->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, moustache_g);
     }
 
     if (entity->crying_ghost->state == DEFAULT) {
+        /*clear_bitmap_32(base32, crying->x, crying->y, SPRITE_HEIGHT);*/
+        clear_bitmap_32(base32, crying->last_x, crying->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->direction][crying_g->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, crying_g);
     }
 
     if (entity->cyclops_ghost->state == DEFAULT) {
+       /* clear_bitmap_32(base32, cyclops->x, cyclops->y, SPRITE_HEIGHT);*/
+        clear_bitmap_32(base32, cyclops->last_x, cyclops->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->direction][cyclops_g->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, cyclops_g);
@@ -156,12 +193,19 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
     UCHAR8 frame = ghost->current_frame;
 
     if (ghost->state == RUNNING) {
+
+        /*clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);*/
+        clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, move->x, move->y, running_ghost_sprites[move->direction][frame], SPRITE_HEIGHT);
     }
     else if (ghost->state == FROZEN) {
+        /*clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);*/
+        clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, move->x, move->y, frozen_ghost_sprites[move->direction][frame], SPRITE_HEIGHT);
     }
     else {
+        /*clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);*/
+        clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, move->x, move->y, tombstone, SPRITE_HEIGHT);
     }
 }
@@ -187,10 +231,63 @@ void render_initial_timer(UCHAR8* base) {
 
     plot_string(base, start_x, y, font, "Time: 00:00");
 }
-void clear_entities(ULONG32* base32, Entities* entity) {
-                clear_bitmap_32(base32, entity->pacman->move->x, entity->pacman->move->y, SPRITE_HEIGHT); 
-                clear_bitmap_32(base32, entity->crying_ghost->move->x, entity->crying_ghost->move->y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);
-                clear_bitmap_32(base32, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, SPRITE_HEIGHT);
+void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
+                    Movement* moustache, Movement* awkward, Movement* cyclops) {
+
+    clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
+
+    clear_bitmap_32(base32, crying->last_x, crying->last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, moustache->last_x, moustache->last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, awkward->last_x, awkward->last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, cyclops->last_x, cyclops->last_y, SPRITE_HEIGHT);
+}
+void render_pellet(UCHAR8* base8, Movement* move) {
+
+    int pellet_plot_x = (move->x_cell_index << 4) + 12;
+    int pellet_plot_y = (move->y_cell_index << 4) + 12 + Y_PIXEL_OFFSET;
+
+    if (move->direction == LEFT) {
+        if (cell_map[move->y_cell_index][move->x_cell_index + 2].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x + 32, pellet_plot_y, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index + 1][move->x_cell_index + 2].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x + 32, pellet_plot_y, pellet + 16, 8);
+        }
+        if (cell_map[move->y_cell_index - 1][move->x_cell_index + 2].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x + 32, pellet_plot_y - 16, pellet + 8, 8);
+        }
+    }
+    else if (move->direction == RIGHT) {
+        if (cell_map[move->y_cell_index][move->x_cell_index - 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index + 1][move->x_cell_index - 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 16, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index - 1][move->x_cell_index - 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet, 8);
+        }
+    }
+    else if (move->direction == DOWN) {
+        if (cell_map[move->y_cell_index - 1][move->x_cell_index].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x, pellet_plot_y - 16, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index - 1][move->x_cell_index + 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x + 16, pellet_plot_y - 16, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index - 1][move->x_cell_index - 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet, 8);
+        }
+    }
+    else if (move->direction == UP) {
+        if (cell_map[move->y_cell_index + 2][move->x_cell_index].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x, pellet_plot_y + 32, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index + 2][move->x_cell_index + 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x + 16, pellet_plot_y + 32, pellet, 8);
+        }
+        if (cell_map[move->y_cell_index + 2][move->x_cell_index - 1].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 32, pellet, 8);
+        }
+    }
 }

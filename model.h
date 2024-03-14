@@ -42,6 +42,7 @@ typedef struct {
 	int x_position, y_position;
 	bool open_path;
 	bool occupied;
+	bool has_pellet;
 }Cell;
 
 
@@ -53,6 +54,10 @@ typedef struct {
     UCHAR8 direction;
     UCHAR8 y_cell_index;
     UCHAR8 x_cell_index;
+
+	UINT16 last_x;
+	UINT16 last_y;
+	
 }Movement;
 
 extern Movement* move;
@@ -131,5 +136,7 @@ void end_game();
 void align_axis(Movement* entity);
 void flip_direction(Movement* ghost);
 void update_current_frame(Entities* all, int clock);
+
+void set_prev_prev(Entities* entity);
 
 #endif
