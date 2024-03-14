@@ -267,6 +267,7 @@ int main()
             render_to_buffer(base32,&entity,ticks,input);      
             swap_buffers(base32,back_buffer_ptr);
             Setscreen(-1,base32,-1);
+            clear_screen_q(back_buffer_ptr);
             /*
             if (is_front_buffer == TRUE)
             {

@@ -1196,7 +1196,8 @@ int main()
             render_to_buffer(base32,&entity,ticks,input);
             swap_buffers(base32,back_buffer_ptr);
             (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
-# 290 "pacman.c"
+            clear_screen_q(back_buffer_ptr);
+# 291 "pacman.c"
             (void)_trap_14_w((short)0x25) ;
 
             update_movement(&entity, input, ticks);
@@ -1267,7 +1268,7 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
 }
-# 416 "pacman.c"
+# 417 "pacman.c"
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
     move_ghost(entity->crying_ghost);
     move_ghost(entity->awkward_ghost);
