@@ -68,10 +68,10 @@ Pacman pacman = {
 };
 
 Movement crying_ghost_movement = {
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        LEFT,
-        10, 17
+        DOWN,
+        10, 13
 };
 Ghost crying_ghost = {
     0,
@@ -82,10 +82,10 @@ Ghost crying_ghost = {
 };
 
 Movement cyclops_ghost_movement = {
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        RIGHT,
-        12, 17
+        UP,
+        12, 13
 };
 Ghost cyclops_ghost = {
     0,
@@ -96,10 +96,10 @@ Ghost cyclops_ghost = {
 };
 
 Movement moustache_ghost_movement = {
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        LEFT,
-        10, 21
+        DOWN,
+        10, 25
 };
 Ghost moustache_ghost = {
     0,
@@ -110,10 +110,10 @@ Ghost moustache_ghost = {
 };
 
 Movement awkward_ghost_movement = {
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 15 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
         LEFT,
-        12, 21
+        12, 25
 };
 Ghost awkward_ghost = {
     0,
@@ -243,63 +243,6 @@ int main()
 
 
     render_ghosts(base32, &entity);
-
-    set_first_movements(base32, base8, &entity);
-
-    old_ssp = Super(0);
-    enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
-    enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
-    Super(old_ssp);
-
-    time_then = get_time();
-    while (song_finished == FALSE) {
-        time_now = get_time();
-        time_elapsed = time_now - time_then; 
-
-        if (time_elapsed >= 5) { 
-            time_then = time_now;
-            if (Cconis()) {
-                input = (char)Cnecin();
-            }
-            
-            old_ssp = Super(0);
-            update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, &trebleState);
-            song_finished = update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, &bassState); 
-            Super(old_ssp);
-            intro_duration++;
-        }
-        if (intro_duration > 40) {
-        if (first_frames > FIRST_STOP - 1) {
-            switch (initial_moves[moves_index]) {
-                case 0:
-                    set_second_movements(base32, base8, &entity);
-                    moves_index++;
-                    break;
-                case 1:
-                    set_third_movements(base32, base8, &entity);
-                    moves_index++;
-                    break;
-                case 2:
-                    set_third_movements(base32, base8, &entity);
-                    moves_index++;
-                    break;
-                case 3:
-                    moves_index++;
-                    break;
-                case 4:
-                    stop_ghosts = TRUE;
-                    break;
-            }
-            first_frames = 0;
-            
-        }
-        if (stop_ghosts == FALSE) {
-            manually_move_ghost(base32, &entity, 1);
-        }
-        first_frames++;
-        }
-    }
-    /*free_ghosts(base32, base8, &entity);*/
 	
 	if (Cconis())
 	{

@@ -1,3 +1,3 @@
 Rm *.o
-Rm tst_rend
+Rm pacman
 make all

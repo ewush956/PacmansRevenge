@@ -62,7 +62,6 @@ void render_frame(ULONG32* base, Entities* entity) {
    /* clear_entities(base, pacman->move, crying, moustache,
                    awkward, cyclops); */
 
-
     render_pellet(base8, crying);
     render_pellet(base8, moustache);
     render_pellet(base8, awkward);
@@ -195,7 +194,7 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
 
     if (ghost->state == RUNNING) {
 
-        clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);*/
+        clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);
         clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, move->x, move->y, running_ghost_sprites[move->direction][frame], SPRITE_HEIGHT);
     }

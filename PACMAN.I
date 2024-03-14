@@ -1032,10 +1032,10 @@ Pacman pacman = {
 };
 
 Movement crying_ghost_movement = {
-        16  * 17, 16  * 10 + 16 ,
+        16  * 13, 16  * 10 + 16 ,
         0,0,
-        ((UCHAR8)2) ,
-        10, 17
+        ((UCHAR8)1) ,
+        10, 13
 };
 Ghost crying_ghost = {
     0,
@@ -1046,10 +1046,10 @@ Ghost crying_ghost = {
 };
 
 Movement cyclops_ghost_movement = {
-        16  * 17, 16  * 12 + 16 ,
+        16  * 13, 16  * 12 + 16 ,
         0,0,
-        ((UCHAR8)3) ,
-        12, 17
+        ((UCHAR8)0) ,
+        12, 13
 };
 Ghost cyclops_ghost = {
     0,
@@ -1060,10 +1060,10 @@ Ghost cyclops_ghost = {
 };
 
 Movement moustache_ghost_movement = {
-        16  * 21, 16  * 10 + 16 ,
+        16  * 25, 16  * 10 + 16 ,
         0,0,
-        ((UCHAR8)2) ,
-        10, 21
+        ((UCHAR8)1) ,
+        10, 25
 };
 Ghost moustache_ghost = {
     0,
@@ -1074,10 +1074,10 @@ Ghost moustache_ghost = {
 };
 
 Movement awkward_ghost_movement = {
-        16  * 21, 16  * 12 + 16 ,
+        16  * 21, 16  * 15 + 16 ,
         0,0,
         ((UCHAR8)2) ,
-        12, 21
+        12, 25
 };
 Ghost awkward_ghost = {
     0,
@@ -1173,63 +1173,6 @@ int main()
 
     render_ghosts(base32, &entity);
 
-    set_first_movements(base32, base8, &entity);
-
-    old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
-    enable_channel(1 , 1 , 0 );
-    enable_channel(0 , 1 , 0 );
-    _trap_1_wl((short)0x20,(long)(old_ssp)) ;
-
-    time_then = get_time();
-    while (song_finished == 0 ) {
-        time_now = get_time();
-        time_elapsed = time_now - time_then;
-
-        if (time_elapsed >= 5) {
-            time_then = time_now;
-            if ((short)_trap_1_w((short)0x0B) ) {
-                input = (char)_trap_1_w((short)0x08) ;
-            }
-
-            old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
-            update_music(0 , pacman_intro_treble, treble_song_length, &trebleState);
-            song_finished = update_music(1 , pacman_intro_bass, bass_song_length, &bassState);
-            _trap_1_wl((short)0x20,(long)(old_ssp)) ;
-            intro_duration++;
-        }
-        if (intro_duration > 40) {
-        if (first_frames > 16  - 1) {
-            switch (initial_moves[moves_index]) {
-                case 0:
-                    set_second_movements(base32, base8, &entity);
-                    moves_index++;
-                    break;
-                case 1:
-                    set_third_movements(base32, base8, &entity);
-                    moves_index++;
-                    break;
-                case 2:
-                    set_third_movements(base32, base8, &entity);
-                    moves_index++;
-                    break;
-                case 3:
-                    moves_index++;
-                    break;
-                case 4:
-                    stop_ghosts = -1 ;
-                    break;
-            }
-            first_frames = 0;
-
-        }
-        if (stop_ghosts == 0 ) {
-            manually_move_ghost(base32, &entity, 1);
-        }
-        first_frames++;
-        }
-    }
-
-
 	if ((short)_trap_1_w((short)0x0B) )
 	{
 		input = (char)_trap_1_w((short)0x08) ;
@@ -1253,7 +1196,7 @@ int main()
             render_to_buffer(base32,&entity,ticks,input);
             swap_buffers(base32,back_buffer_ptr);
             (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
-# 347 "pacman.c"
+# 290 "pacman.c"
             (void)_trap_14_w((short)0x25) ;
 
             update_movement(&entity, input, ticks);
@@ -1324,7 +1267,7 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
 }
-# 473 "pacman.c"
+# 416 "pacman.c"
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
     move_ghost(entity->crying_ghost);
     move_ghost(entity->awkward_ghost);
