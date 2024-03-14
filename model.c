@@ -3,6 +3,8 @@
 #include "bitmaps.h"
 #include <stdio.h>
 
+
+
 /*************************************************************
 * Declaration: Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH]
 * Purpose: Represents the game's map, storing the state of each
@@ -24,8 +26,9 @@ void move_pacman (Pacman *pacman)
     */
    Movement* pacman_movement = pacman->move;
 
+    /*
     pacman_movement->last_x = pacman_movement->x;
-    pacman_movement->last_y = pacman_movement->y;
+    pacman_movement->last_y = pacman_movement->y;*/
     
     if (pacman -> state == DEFAULT) {
     pacman_movement->x += (pacman_movement->delta_x << 1);
@@ -87,8 +90,9 @@ void move_ghost (Ghost *ghost)
 		}
         align_axis(ghost_movement);
 
+        /*
         ghost_movement->last_x = ghost_movement->x;
-        ghost_movement->last_y = ghost_movement->y;
+        ghost_movement->last_y = ghost_movement->y;*/
 
         ghost_movement-> x += ghost_movement->delta_x;
         ghost_movement-> y += ghost_movement->delta_y;
@@ -290,16 +294,14 @@ void update_cells(Entities* all) {
     Ghost* awkward = all->awkward_ghost;
     
 
-    update_cell(pacman->move, DEFAULT);
     /*Pacmans state doesn't matter here, probably faster to pass in const value*/
-
-    update_cell(crying->move, crying->state);
-
+    update_cell(awkward->move, awkward->state);
     update_cell(moustache->move, moustache->state);
-
+    update_cell(crying->move, crying->state);
     update_cell(cyclops->move, cyclops->state);
 
-    update_cell(awkward->move, awkward->state);
+    update_cell(pacman->move, DEFAULT);
+
 }
 void update_cell(Movement* entity, UCHAR8 state) {
 
@@ -457,4 +459,37 @@ void update_current_frame(Entities* all, int clock) {
 }
 
     }
+}
+
+/*
+*
+*   set position from 2 frames behind
+*
+*/
+void set_prev_prev(Entities* entity)
+{
+    Movement* pacman_movement = entity->pacman->move;
+    Movement* awkward_move = entity->awkward_ghost->move;
+    Movement* moustache_move = entity->moustache_ghost->move;
+    Movement* crying_move = entity->crying_ghost->move;
+    Movement* cyclops_move = entity->cyclops_ghost->move;
+
+    pacman_movement->last_x = pacman_movement->x;
+    pacman_movement->last_y = pacman_movement->y;
+    
+    moustache_move->last_x = moustache_move->x;
+    moustache_move->last_y = moustache_move->y;
+
+    crying_move->last_x = crying_move->x;
+    crying_move->last_y = crying_move->y;
+    
+    awkward_move->last_x = awkward_move->x;
+    awkward_move->last_y = awkward_move->y;
+    
+    cyclops_move->last_x = cyclops_move->x;
+    cyclops_move->last_y = cyclops_move->y;
+    
+    
+    
+
 }

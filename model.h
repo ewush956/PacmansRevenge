@@ -137,4 +137,6 @@ void align_axis(Movement* entity);
 void flip_direction(Movement* ghost);
 void update_current_frame(Entities* all, int clock);
 
+void set_prev_prev(Entities* entity);
+
 #endif

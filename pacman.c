@@ -187,9 +187,8 @@ int main()
     UCHAR8* base8 = Physbase();
     ULONG32 *original = Physbase();
     ULONG32* back_buffer_ptr = byte_allign(back_buffer_array);
-    UINT16* back_ptr_16 = (UINT16*) back_buffer_ptr;
+    
 
-   /* ULONG32* buffer_ptr; */
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
@@ -230,6 +229,7 @@ int main()
 
     clear_screen_q(base32); 
     render_map(base16, tile_map);
+
     /*render_map(back_ptr_16, tile_map);*/
 
     clear_bitmap_32(base32, entity.moustache_ghost->move->x, entity.moustache_ghost->move->y, SPRITE_HEIGHT);
@@ -240,10 +240,8 @@ int main()
 
     render_frame(base32, &entity);
     render_initial_timer(base8);
-
-
-    render_ghosts(base32, &entity);
-
+    
+    /*render_ghosts(base32, &entity);*/
     set_first_movements(base32, base8, &entity);
 
     old_ssp = Super(0);
@@ -312,41 +310,51 @@ int main()
         time_elapsed = time_now - time_then;
         ticks = 0;
 
-        if (time_elapsed > 0) {
+        if (time_elapsed > 1) {
 
             if (Cconis())
             {
                 input = (char)Cnecin();
             }
 
-
-
-            render_to_buffer(base32,&entity,ticks,input);      
-            swap_buffers(base32,back_buffer_ptr);
-            Setscreen(-1,base32,-1);
+           
             /*
             if (is_front_buffer == TRUE)
             {
-                render_to_buffer(base32,&entity,ticks,input);      
-                swap_buffers(base32,back_buffer_ptr);
+                render_to_buffer(back_buffer_ptr,&entity,ticks,input);      
                 Setscreen(-1,base32,-1);
+                swap_buffers(base32,back_buffer_ptr);
                
                 
                 is_front_buffer = FALSE;
             }
             else{
                 
-                render_to_buffer(back_buffer_ptr,&entity,ticks,input);
-                /*swap_buffers(base32,back_buffer_ptr);
+                render_to_buffer(base32,&entity,ticks,input);
                 Setscreen(-1,base32,-1);        
+                swap_buffers(base32,back_buffer_ptr);
               
                 is_front_buffer = TRUE;
-            }*/
-
-         
+            }
+            */
+            
+           
             Vsync(); 
+            render_to_buffer(base32,&entity,ticks,input);      
+            swap_buffers(base32,back_buffer_ptr);
+            Setscreen(-1,base32,-1);
+
+            /*tried removing from 2 frames before (idk if 140 ticks is correct)*/
+            if (time_elapsed > 1)
+            {
+                set_prev_prev(&entity);
+                
+
+            }
 
             update_movement(&entity, input, ticks);
+           
+
             ticks = (++ticks & 63);
             time_then = time_now;
         }
@@ -359,8 +367,9 @@ int main()
         update_game_state(state, input);
     }
 
+    /*if originAL dont do anythng otherwise checge to orignal buffer*/
 
-
+    Setscreen(-1,original,-1);
 
 	return 0;
 }
@@ -471,16 +480,17 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 }
 */
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
+    set_prev_prev(entity);
     move_ghost(entity->crying_ghost);
     move_ghost(entity->awkward_ghost);
     move_ghost(entity->moustache_ghost);
     move_ghost(entity->cyclops_ghost);
+	update_cells(entity);
     update_current_frame(entity, frame_index);
 
-	update_cells(entity);
-
 	render_frame(base, entity);
-}
+
+}   
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
     /*Do something that updates the gamestate*/
