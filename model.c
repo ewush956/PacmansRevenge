@@ -27,11 +27,12 @@ void move_pacman (Pacman *pacman)
    Movement* pacman_movement = pacman->move;
 
     
+    pacman_movement->last_last_x = pacman_movement->last_x;
+    pacman_movement->last_last_y = pacman_movement->last_y;
+
     pacman_movement->last_x = pacman_movement->x;
     pacman_movement->last_y = pacman_movement->y;
 
-    pacman_movement->last_last_x = pacman_movement->x;
-    pacman_movement->last_last_y = pacman_movement->y;
     
     if (pacman -> state == DEFAULT) {
     pacman_movement->x += (pacman_movement->delta_x << 1);
@@ -94,13 +95,12 @@ void move_ghost (Ghost *ghost)
 				break;
 		}
         align_axis(ghost_movement);
-
         
-        ghost_movement->last_x = ghost_movement->x;
-        ghost_movement->last_y = ghost_movement->y;
-
         ghost_movement->last_last_x = ghost_movement->last_x;
         ghost_movement->last_last_y = ghost_movement->last_y;
+
+        ghost_movement->last_x = ghost_movement->x;
+        ghost_movement->last_y = ghost_movement->y;
 
         ghost_movement-> x += ghost_movement->delta_x;
         ghost_movement-> y += ghost_movement->delta_y;
