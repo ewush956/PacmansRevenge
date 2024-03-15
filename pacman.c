@@ -43,13 +43,13 @@
 void swap_buffers();
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 void update_movement(Entities* entity, char input, UINT16 ticks);
-void wait_for_next_vblank(); 
-ULONG32 get_vblank_counter(); 
 
 
 
-ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];  
+/* ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];  */
 UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
+
+
 UCHAR8 background[BUFFER_SIZE_BYTES];
 /* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
 
@@ -192,9 +192,11 @@ int main()
     UINT16* base16 = Physbase();
     UCHAR8* base8 = Physbase();
     ULONG32 *original = Physbase();
-    /*ULONG32* back_buffer_ptr = byte_allign(back_buffer_array);*/
+
     int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256); 
+
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+
     ULONG32* background_ptr = (ULONG32*)(&background[0]);
 
     ULONG32* current_buffer = Physbase();
@@ -332,7 +334,7 @@ int main()
                 input = (char)Cnecin();
             }
             /*render_to_buffer(base32,&entity,ticks,input);     */ 
-            /*Vsync();*/ 
+            /*Vsync();*/
             update_movement(&entity, input, ticks);
 
             render_to_buffer(back_buffer_ptr, &entity, ticks, input);
@@ -340,9 +342,9 @@ int main()
             Setscreen(-1,base32,-1);  
 
             ticks = (++ticks & 63);
-            time_then = time_now;
+            time_then = get_time();
         }
-                /* --- sound ---*/
+        /* --- sound ---*/
         old_ssp = Super(0);
         play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
         play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
@@ -594,14 +596,3 @@ ULONG32* byte_allign(ULONG32* array_address)
     return aligned_start;
 
 }
-ULONG32 get_vblank_counter() 
-{
-    return *(ULONG32 *)0x462; 
-}
-void wait_for_next_vblank() 
-{
-    ULONG32 current_vblank = get_vblank_counter();
-    while (current_vblank == get_vblank_counter()) {
-    }
-}
-

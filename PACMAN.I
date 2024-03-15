@@ -1021,13 +1021,13 @@ bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_leng
 void swap_buffers();
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 void update_movement(Entities* entity, char input, UINT16 ticks);
-void wait_for_next_vblank();
-ULONG32 get_vblank_counter();
 
 
 
-ULONG32 back_buffer_array[8064 ];
+
 UCHAR8 screen_buffer[32256 ];
+
+
 UCHAR8 background[32256 ];
 # 63 "pacman.c"
 Movement pacman_movement = {
@@ -1129,7 +1129,9 @@ int main()
     ULONG32 *original = (void*)_trap_14_w((short)0x2) ;
 
     int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256);
+
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+
     ULONG32* background_ptr = (ULONG32*)(&background[0]);
 
     ULONG32* current_buffer = (void*)_trap_14_w((short)0x2) ;
@@ -1177,7 +1179,7 @@ int main()
 
     render_map(base32, tile_map);
     render_map(back_buffer_ptr, tile_map);
-# 319 "pacman.c"
+# 321 "pacman.c"
 	if ((short)_trap_1_w((short)0x0B) )
 	{
 		input = (char)_trap_1_w((short)0x08) ;
@@ -1202,7 +1204,7 @@ int main()
             (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
 
             ticks = (++ticks & 63);
-            time_then = time_now;
+            time_then = get_time();
         }
 
         old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
@@ -1265,7 +1267,7 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
 }
-# 462 "pacman.c"
+# 464 "pacman.c"
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 
     move_ghost(entity->crying_ghost);
@@ -1400,14 +1402,4 @@ ULONG32* byte_allign(ULONG32* array_address)
 
     return aligned_start;
 
-}
-ULONG32 get_vblank_counter()
-{
-    return *(ULONG32 *)0x462;
-}
-void wait_for_next_vblank()
-{
-    ULONG32 current_vblank = get_vblank_counter();
-    while (current_vblank == get_vblank_counter()) {
-    }
 }
