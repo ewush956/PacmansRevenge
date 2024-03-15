@@ -26,9 +26,12 @@ void move_pacman (Pacman *pacman)
     */
    Movement* pacman_movement = pacman->move;
 
-    /*
+    
     pacman_movement->last_x = pacman_movement->x;
-    pacman_movement->last_y = pacman_movement->y;*/
+    pacman_movement->last_y = pacman_movement->y;
+
+    pacman_movement->last_last_x = pacman_movement->x;
+    pacman_movement->last_last_y = pacman_movement->y;
     
     if (pacman -> state == DEFAULT) {
     pacman_movement->x += (pacman_movement->delta_x << 1);
@@ -38,6 +41,8 @@ void move_pacman (Pacman *pacman)
         pacman_movement->x += (pacman_movement->delta_x << 2);
         pacman_movement->y += (pacman_movement->delta_y << 2);
     }
+
+
    /* update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->move->direction); */
 }
 /*************************************************************
@@ -90,9 +95,12 @@ void move_ghost (Ghost *ghost)
 		}
         align_axis(ghost_movement);
 
-        /*
+        
         ghost_movement->last_x = ghost_movement->x;
-        ghost_movement->last_y = ghost_movement->y;*/
+        ghost_movement->last_y = ghost_movement->y;
+
+        ghost_movement->last_last_x = ghost_movement->last_x;
+        ghost_movement->last_last_y = ghost_movement->last_y;
 
         ghost_movement-> x += ghost_movement->delta_x;
         ghost_movement-> y += ghost_movement->delta_y;
@@ -466,7 +474,7 @@ void update_current_frame(Entities* all, int clock) {
 *   set position from 2 frames behind
 *
 */
-void set_prev_prev(Entities* entity)
+void set_prev(Entities* entity)
 {
     Movement* pacman_movement = entity->pacman->move;
     Movement* awkward_move = entity->awkward_ghost->move;
@@ -488,8 +496,27 @@ void set_prev_prev(Entities* entity)
     
     cyclops_move->last_x = cyclops_move->x;
     cyclops_move->last_y = cyclops_move->y;
-    
-    
-    
+}
+void set_prev_prev (Entities* entity) 
+{
+    Movement* pacman_movement = entity->pacman->move;
+    Movement* moustache_move = entity->moustache_ghost->move;
+    Movement* crying_move = entity->crying_ghost->move;
+    Movement* awkward_move = entity->awkward_ghost->move;
+    Movement* cyclops_move = entity->cyclops_ghost->move;
 
+    pacman_movement->last_last_x = pacman_movement->last_x;
+    pacman_movement->last_last_y = pacman_movement->last_y;
+
+    moustache_move->last_last_x = moustache_move->last_x;
+    moustache_move->last_last_y = moustache_move->last_y;
+
+    crying_move->last_last_x = crying_move->last_x;
+    crying_move->last_last_y = crying_move->last_y;
+
+    awkward_move->last_last_x = awkward_move->last_x;
+    awkward_move->last_last_y = awkward_move->last_y;
+
+    cyclops_move->last_last_x = cyclops_move->last_x;
+    cyclops_move->last_last_y = cyclops_move->last_y;
 }

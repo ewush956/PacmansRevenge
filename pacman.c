@@ -43,8 +43,14 @@
 void swap_buffers();
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 void update_movement(Entities* entity, char input, UINT16 ticks);
+void wait_for_next_vblank(); 
+ULONG32 get_vblank_counter(); 
 
-ULONG32 back_buffer_array[BUFFER_SIZE_LONGS] = {0};  
+
+
+ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];  
+UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
+UCHAR8 background[BUFFER_SIZE_BYTES];
 /* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
 
 
@@ -68,10 +74,10 @@ Pacman pacman = {
 };
 
 Movement crying_ghost_movement = {
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        LEFT,
-        10, 17
+        UP,
+        10, 13
 };
 Ghost crying_ghost = {
     0,
@@ -82,10 +88,10 @@ Ghost crying_ghost = {
 };
 
 Movement cyclops_ghost_movement = {
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        RIGHT,
-        12, 17
+        DOWN,
+        12, 13
 };
 Ghost cyclops_ghost = {
     0,
@@ -96,10 +102,10 @@ Ghost cyclops_ghost = {
 };
 
 Movement moustache_ghost_movement = {
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        LEFT,
-        10, 21
+        UP,
+        10, 25
 };
 Ghost moustache_ghost = {
     0,
@@ -110,10 +116,10 @@ Ghost moustache_ghost = {
 };
 
 Movement awkward_ghost_movement = {
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        LEFT,
-        12, 21
+        DOWN,
+        12, 25
 };
 Ghost awkward_ghost = {
     0,
@@ -186,10 +192,13 @@ int main()
     UINT16* base16 = Physbase();
     UCHAR8* base8 = Physbase();
     ULONG32 *original = Physbase();
-    ULONG32* back_buffer_ptr = byte_allign(back_buffer_array);
+    /*ULONG32* back_buffer_ptr = byte_allign(back_buffer_array);*/
+    int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256); 
+    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+    ULONG32* background_ptr = (ULONG32*)(&background[0]);
+
+    ULONG32* current_buffer = Physbase();
     
-
-
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
 
@@ -215,6 +224,8 @@ int main()
 
 	init_map_cells(cell_map,tile_map);	
 
+    
+
     cell_map[10][17].has_pellet = FALSE;
     cell_map[10][18].has_pellet = FALSE;
 
@@ -228,9 +239,15 @@ int main()
     cell_map[12][21].has_pellet = FALSE;
 
     clear_screen_q(base32); 
-    render_map(base16, tile_map);
 
-    /*render_map(back_ptr_16, tile_map);*/
+    render_map(base32, tile_map);
+    render_map(back_buffer_ptr, tile_map);
+/*
+    render_map(base16, tile_map);
+    render_map((UINT16*)back_buffer_ptr, tile_map);
+   /* render_map((UINT16*)background_ptr, tile_map);*/
+
+    /*
 
     clear_bitmap_32(base32, entity.moustache_ghost->move->x, entity.moustache_ghost->move->y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, entity.awkward_ghost->move->x, entity.awkward_ghost->move->y, SPRITE_HEIGHT);
@@ -241,7 +258,6 @@ int main()
     render_frame(base32, &entity);
     render_initial_timer(base8);
     
-    /*render_ghosts(base32, &entity);*/
     set_first_movements(base32, base8, &entity);
 
     old_ssp = Super(0);
@@ -297,6 +313,7 @@ int main()
         first_frames++;
         }
     }
+    */
     /*free_ghosts(base32, base8, &entity);*/
 	
 	if (Cconis())
@@ -309,51 +326,18 @@ int main()
         time_now = get_time();
         time_elapsed = time_now - time_then;
         ticks = 0;
-
-        if (time_elapsed > 1) {
-
+        if (time_elapsed > 0) {
             if (Cconis())
             {
                 input = (char)Cnecin();
             }
-
-           
-            /*
-            if (is_front_buffer == TRUE)
-            {
-                render_to_buffer(back_buffer_ptr,&entity,ticks,input);      
-                Setscreen(-1,base32,-1);
-                swap_buffers(base32,back_buffer_ptr);
-               
-                
-                is_front_buffer = FALSE;
-            }
-            else{
-                
-                render_to_buffer(base32,&entity,ticks,input);
-                Setscreen(-1,base32,-1);        
-                swap_buffers(base32,back_buffer_ptr);
-              
-                is_front_buffer = TRUE;
-            }
-            */
-            
-           
-            Vsync(); 
-            render_to_buffer(base32,&entity,ticks,input);      
-            swap_buffers(base32,back_buffer_ptr);
-            Setscreen(-1,base32,-1);
-
-            /*tried removing from 2 frames before (idk if 140 ticks is correct)*/
-            if (time_elapsed > 1)
-            {
-                set_prev_prev(&entity);
-                
-
-            }
-
+            /*render_to_buffer(base32,&entity,ticks,input);     */ 
+            /*Vsync();*/ 
             update_movement(&entity, input, ticks);
-           
+
+            render_to_buffer(back_buffer_ptr, &entity, ticks, input);
+            swap_buffers(&base32, &back_buffer_ptr);
+            Setscreen(-1,base32,-1);  
 
             ticks = (++ticks & 63);
             time_then = time_now;
@@ -366,10 +350,6 @@ int main()
         /* -------------*/
         update_game_state(state, input);
     }
-
-    /*if originAL dont do anythng otherwise checge to orignal buffer*/
-
-    Setscreen(-1,original,-1);
 
 	return 0;
 }
@@ -480,12 +460,14 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
 }
 */
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
-    set_prev_prev(entity);
+
     move_ghost(entity->crying_ghost);
     move_ghost(entity->awkward_ghost);
     move_ghost(entity->moustache_ghost);
     move_ghost(entity->cyclops_ghost);
 	update_cells(entity);
+
+
     update_current_frame(entity, frame_index);
 
 	render_frame(base, entity);
@@ -546,10 +528,9 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
 
 void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
 {
-    ULONG32* temp = base32;
-    base32 = back_buffer_ptr;
-    back_buffer_ptr = temp;
-
+    ULONG32 temp = *base32;
+    *base32 = *back_buffer_ptr;
+    *back_buffer_ptr = temp;
     /*   
     printf("base 32 --> %p\n", (void *)base32);
     printf("back_buffer_ptr --> %p\n", (void *)back_buffer_ptr);
@@ -563,7 +544,6 @@ try to only render to the buffer in this function */
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input)
 {
 
-    /*clear_entities(base32, entity);*/
     update_current_frame(entity, ticks);
     render_frame(base32, entity);
     
@@ -613,5 +593,15 @@ ULONG32* byte_allign(ULONG32* array_address)
     
     return aligned_start;
 
+}
+ULONG32 get_vblank_counter() 
+{
+    return *(ULONG32 *)0x462; 
+}
+void wait_for_next_vblank() 
+{
+    ULONG32 current_vblank = get_vblank_counter();
+    while (current_vblank == get_vblank_counter()) {
+    }
 }
 

@@ -150,6 +150,9 @@ typedef struct {
 	UINT16 last_x;
 	UINT16 last_y;
 
+	UINT16 last_last_x;
+	UINT16 last_last_y;
+
 }Movement;
 
 extern Movement* move;
@@ -228,6 +231,9 @@ void end_game();
 void align_axis(Movement* entity);
 void flip_direction(Movement* ghost);
 void update_current_frame(Entities* all, int clock);
+
+void set_prev_prev(Entities* entity);
+void set_prev(Entities* entity);
 # 3 "events.c" 2
 # 1 "./TYPES.H" 1
 # 4 "events.c" 2

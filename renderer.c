@@ -13,7 +13,8 @@
 * Details: Uses plot_bitmap_16 to render tiles based on tile_map.
 *          This function is called once at the beginning of the game.
 *************************************************************/
-void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
+void render_map(ULONG32* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
+    UINT16* base16 = (UINT16*)base;
     UCHAR8* base8 = (UCHAR8*)base; 
     int i, j, x, y;
     x = X_PIXEL_OFFSET;
@@ -23,7 +24,7 @@ void render_map(UINT16* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
         for(j = 0; j < MAP_TILE_LENGTH; j++) {
             switch (tile_map[i][j]) {
             case 1:
-                plot_bitmap_16(base, x, y, wall_single_16, WALL_SIZE);
+                plot_bitmap_16(base16, x, y, wall_single_16, WALL_SIZE);
                 break;
             case 0: 
                 plot_8(base8, x + 12, y + 12, pellet, 8);
@@ -59,14 +60,16 @@ void render_frame(ULONG32* base, Entities* entity) {
     Movement* awkward = entity->awkward_ghost->move;
     Movement* cyclops = entity->cyclops_ghost->move;
 
-   /* clear_entities(base, pacman->move, crying, moustache,
-                   awkward, cyclops); */
+
+    clear_entities(base, pacman->move, crying, moustache,
+                   awkward, cyclops); 
 
 /*
     render_pellet(base8, crying);
     render_pellet(base8, moustache);
     render_pellet(base8, awkward);
-    render_pellet(base8, cyclops);*/
+    render_pellet(base8, cyclops);
+    */
     
     render_pacman(base, pacman);
     render_ghosts(base, entity);
@@ -95,13 +98,9 @@ void render_pacman(ULONG32* base32, Pacman* pacman) {
     UCHAR8 direction = move->direction;
 
     if (pacman->state == EVIL) {
-        clear_bitmap_32(base32, last_x, last_y, SPRITE_HEIGHT);
-        /*clear_bitmap_32(base32, x, y, SPRITE_HEIGHT);*/
         plot_bitmap_32(base32, x, y, evil_pacman_sprites[direction][frame], SPRITE_HEIGHT);
     }
     else {
-        /*clear_bitmap_32(base32, x, y, SPRITE_HEIGHT);*/
-        clear_bitmap_32(base32, last_x, last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, x, y, default_pacman_sprites[direction][frame], SPRITE_HEIGHT);
     }    /* pacman->current_frame++; */
 }
@@ -127,31 +126,24 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     Ghost* cyclops_g = entity->cyclops_ghost;
 
     if (entity->awkward_ghost->state == DEFAULT) {
-        clear_bitmap_32(base32, awkward->last_x, awkward->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->direction][awkward_g->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, awkward_g);
     }
 
     if (entity->moustache_ghost->state == DEFAULT) {
-        /*clear_bitmap_32(base32, moustache->x, moustache->y, SPRITE_HEIGHT);*/
-        clear_bitmap_32(base32, moustache->last_x, moustache->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->direction][moustache_g->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, moustache_g);
     }
 
     if (entity->crying_ghost->state == DEFAULT) {
-        /*clear_bitmap_32(base32, crying->x, crying->y, SPRITE_HEIGHT);*/
-        clear_bitmap_32(base32, crying->last_x, crying->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->direction][crying_g->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, crying_g);
     }
 
     if (entity->cyclops_ghost->state == DEFAULT) {
-       /* clear_bitmap_32(base32, cyclops->x, cyclops->y, SPRITE_HEIGHT);*/
-        clear_bitmap_32(base32, cyclops->last_x, cyclops->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->direction][cyclops_g->current_frame], SPRITE_HEIGHT);
     } else {
         render_non_default_ghost(base32, cyclops_g);
@@ -193,19 +185,12 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
     UCHAR8 frame = ghost->current_frame;
 
     if (ghost->state == RUNNING) {
-
-        /*clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);*/
-        clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, move->x, move->y, running_ghost_sprites[move->direction][frame], SPRITE_HEIGHT);
     }
     else if (ghost->state == FROZEN) {
-        /*clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);*/
-        clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, move->x, move->y, frozen_ghost_sprites[move->direction][frame], SPRITE_HEIGHT);
     }
     else {
-        /*clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);*/
-        clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
         plot_bitmap_32(base32, move->x, move->y, tombstone, SPRITE_HEIGHT);
     }
 }
@@ -234,8 +219,14 @@ void render_initial_timer(UCHAR8* base) {
 void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
                     Movement* moustache, Movement* awkward, Movement* cyclops) {
 
-    clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
 
+    clear_bitmap_32(base32, pacman->last_last_x, pacman->last_last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, crying->last_last_x, crying->last_last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, moustache->last_last_x, moustache->last_last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, awkward->last_last_x, awkward->last_last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, cyclops->last_last_x, cyclops->last_last_y, SPRITE_HEIGHT);
+
+    clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, crying->last_x, crying->last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, moustache->last_x, moustache->last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, awkward->last_x, awkward->last_y, SPRITE_HEIGHT);
