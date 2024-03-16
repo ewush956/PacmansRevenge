@@ -74,12 +74,12 @@ Pacman pacman = {
 };
 
 Movement crying_ghost_movement = {
-        PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        UP,
-        10, 13,
-        13, 10,
-        13, 10
+        RIGHT,
+        10, 17,
+        17, 10,
+        17, 10
 };
 Ghost crying_ghost = {
     0,
@@ -90,12 +90,12 @@ Ghost crying_ghost = {
 };
 
 Movement cyclops_ghost_movement = {
-        PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        DOWN,
-        12, 13,
-        13, 12,
-        13, 12
+        LEFT,
+        12, 17,
+        17, 12,
+        17, 12
 };
 Ghost cyclops_ghost = {
     0,
@@ -106,12 +106,12 @@ Ghost cyclops_ghost = {
 };
 
 Movement moustache_ghost_movement = {
-        PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        UP,
-        10, 25,
-        25, 10,
-        25, 10
+        LEFT,
+        10, 21,
+        21, 10,
+        21, 10
 };
 Ghost moustache_ghost = {
     0,
@@ -122,12 +122,12 @@ Ghost moustache_ghost = {
 };
 
 Movement awkward_ghost_movement = {
-        PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
-        DOWN,
-        12, 25,
-        25, 12,
-        25, 12
+        LEFT,
+        12, 21,
+        21, 12,
+        21, 12
 };
 Ghost awkward_ghost = {
     0,
@@ -196,7 +196,6 @@ int main()
 
 	char input;
 	int i,j,counter;
-    bool is_front_buffer = TRUE;
     UINT16 ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = Physbase();
@@ -208,31 +207,30 @@ int main()
     int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256); 
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
 
-    ULONG32* background_ptr = (ULONG32*)(&background[0]);
+    ULONG32* background_ptr = (ULONG32*)(&background[0]); /*Not using at the moment*/
     
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
 
-    /*int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
-    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);*/
+    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
+    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
     bool song_finished = FALSE;
 
     int waka_repetitions = 10; 
     int current_index = 0;
     int time_left = 0;
-    long old_ssp; 
     bool stop_ghosts = FALSE;
 
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
     SoundState wakaState = {0, 0};
     SoundState wakaNoise = {0, 0};
-    Xor xor = {123457};
+
 
     int initial_moves[5] = {0,1,2,3,4};
     int moves_index = 0;
     int intro_duration = 0;
-    int i;
+    long old_ssp; 
 
 	init_map_cells(cell_map,tile_map);	
 
@@ -248,19 +246,10 @@ int main()
     cell_map[12][20].has_pellet = FALSE;
     cell_map[12][21].has_pellet = FALSE;
     
-
     clear_screen_q(base32);
 
     render_map(back_buffer_ptr, tile_map);
     render_map(base32, tile_map);
-
-
-/*
-    render_map(base16, tile_map);
-    render_map((UINT16*)back_buffer_ptr, tile_map);
-   /* render_map((UINT16*)background_ptr, tile_map);*/
-
-    /*
 
     clear_bitmap_32(base32, entity.moustache_ghost->move->x, entity.moustache_ghost->move->y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, entity.awkward_ghost->move->x, entity.awkward_ghost->move->y, SPRITE_HEIGHT);
@@ -326,9 +315,7 @@ int main()
         first_frames++;
         }
     }
-    */
-    /*free_ghosts(base32, base8, &entity);*/
-	
+    	
 	if (Cconis())
 	{
 		input = (char)Cnecin();
@@ -340,13 +327,11 @@ int main()
         time_elapsed = time_now - time_then;
         ticks = 0;
 
-            if (Cconis())
-            {
-                input = (char)Cnecin();
-            }
+        if (Cconis())
+        {
+            input = (char)Cnecin();
+        }
         if (time_elapsed > 0) {
-            /*render_to_buffer(base32,&entity,ticks,input);     */ 
-            /*Vsync();*/
 
             update_movement(&entity, input, ticks);
 
@@ -359,14 +344,13 @@ int main()
             ticks = (++ticks & 63);
             time_then = get_time();
 
-        old_ssp = Super(0);
-        play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
-        play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
-        Super(old_ssp);
-        /* -------------*/
+            old_ssp = Super(0);
+            play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
+            play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
+            Super(old_ssp);
+        
         }
-        /* --- sound ---*/
-       state = update_game_state(state, input);
+        state = update_game_state(state, input);
     }
     old_ssp = Super(0);
     stop_sound();

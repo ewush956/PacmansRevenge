@@ -27,8 +27,8 @@ void move_pacman (Pacman *pacman)
    Movement* pacman_movement = pacman->move;
 
     
-    /*pacman_movement->last_last_x = pacman_movement->last_x;
-    pacman_movement->last_last_y = pacman_movement->last_y;*/
+    pacman_movement->last_last_x = pacman_movement->last_x;
+    pacman_movement->last_last_y = pacman_movement->last_y;
 
     pacman_movement->last_x = pacman_movement->x;
     pacman_movement->last_y = pacman_movement->y;
@@ -487,7 +487,7 @@ void set_prev(Entities* entity)
     cyclops_move->last_y = cyclops_move->y;
 }
 void set_prev_prev (Entities* entity) 
-{
+{/*
     Movement* pacman_movement = entity->pacman->move;
     Movement* moustache_move = entity->moustache_ghost->move;
     Movement* crying_move = entity->crying_ghost->move;
@@ -508,4 +508,5 @@ void set_prev_prev (Entities* entity)
 
     cyclops_move->last_last_x = cyclops_move->last_x;
     cyclops_move->last_last_y = cyclops_move->last_y;
+    */
 }

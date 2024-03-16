@@ -1038,12 +1038,12 @@ Pacman pacman = {
 };
 
 Movement crying_ghost_movement = {
-        16  * 13, 16  * 10 + 16 ,
+        16  * 17, 16  * 10 + 16 ,
         0,0,
-        ((UCHAR8)0) ,
-        10, 13,
-        13, 10,
-        13, 10
+        ((UCHAR8)3) ,
+        10, 17,
+        17, 10,
+        17, 10
 };
 Ghost crying_ghost = {
     0,
@@ -1054,12 +1054,12 @@ Ghost crying_ghost = {
 };
 
 Movement cyclops_ghost_movement = {
-        16  * 13, 16  * 12 + 16 ,
+        16  * 17, 16  * 12 + 16 ,
         0,0,
-        ((UCHAR8)1) ,
-        12, 13,
-        13, 12,
-        13, 12
+        ((UCHAR8)2) ,
+        12, 17,
+        17, 12,
+        17, 12
 };
 Ghost cyclops_ghost = {
     0,
@@ -1070,12 +1070,12 @@ Ghost cyclops_ghost = {
 };
 
 Movement moustache_ghost_movement = {
-        16  * 25, 16  * 10 + 16 ,
+        16  * 21, 16  * 10 + 16 ,
         0,0,
-        ((UCHAR8)0) ,
-        10, 25,
-        25, 10,
-        25, 10
+        ((UCHAR8)2) ,
+        10, 21,
+        21, 10,
+        21, 10
 };
 Ghost moustache_ghost = {
     0,
@@ -1086,12 +1086,12 @@ Ghost moustache_ghost = {
 };
 
 Movement awkward_ghost_movement = {
-        16  * 25, 16  * 12 + 16 ,
+        16  * 21, 16  * 12 + 16 ,
         0,0,
-        ((UCHAR8)1) ,
-        12, 25,
-        25, 12,
-        25, 12
+        ((UCHAR8)2) ,
+        12, 21,
+        21, 12,
+        21, 12
 };
 Ghost awkward_ghost = {
     0,
@@ -1125,7 +1125,6 @@ int main()
 
 	char input;
 	int i,j,counter;
-    bool is_front_buffer = -1 ;
     UINT16 ticks = 0;
 	UCHAR8 collision_type = 0;
 	ULONG32* base32 = (void*)_trap_14_w((short)0x2) ;
@@ -1142,26 +1141,25 @@ int main()
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = ((UCHAR8)1) ;
 
-
-
+    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
+    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
     bool song_finished = 0 ;
 
     int waka_repetitions = 10;
     int current_index = 0;
     int time_left = 0;
-    long old_ssp;
     bool stop_ghosts = 0 ;
 
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
     SoundState wakaState = {0, 0};
     SoundState wakaNoise = {0, 0};
-    Xor xor = {123457};
+
 
     int initial_moves[5] = {0,1,2,3,4};
     int moves_index = 0;
     int intro_duration = 0;
-    int i;
+    long old_ssp;
 
 	init_map_cells(cell_map,tile_map);
 
@@ -1177,12 +1175,78 @@ int main()
     cell_map[12][20].has_pellet = 0 ;
     cell_map[12][21].has_pellet = 0 ;
 
-
     clear_screen_q(base32);
 
     render_map(back_buffer_ptr, tile_map);
     render_map(base32, tile_map);
-# 332 "pacman.c"
+# 262 "pacman.c"
+    clear_bitmap_32(base32, entity.moustache_ghost->move->x, entity.moustache_ghost->move->y, 32 );
+    clear_bitmap_32(base32, entity.awkward_ghost->move->x, entity.awkward_ghost->move->y, 32 );
+    clear_bitmap_32(base32, entity.cyclops_ghost->move->x, entity.cyclops_ghost->move->y, 32 );
+    clear_bitmap_32(base32, entity.crying_ghost->move->x, entity.crying_ghost->move->y, 32 );
+    clear_bitmap_32(base32, entity.pacman->move->x, entity.pacman->move->y, 32 );
+
+    render_frame(base32, &entity);
+    render_initial_timer(base8);
+
+    set_first_movements(base32, base8, &entity);
+
+    old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
+    enable_channel(1 , 1 , 0 );
+    enable_channel(0 , 1 , 0 );
+    _trap_1_wl((short)0x20,(long)(old_ssp)) ;
+
+    time_then = get_time();
+    while (song_finished == 0 ) {
+        time_now = get_time();
+        time_elapsed = time_now - time_then;
+
+        if (time_elapsed >= 5) {
+            time_then = time_now;
+            if ((short)_trap_1_w((short)0x0B) ) {
+                input = (char)_trap_1_w((short)0x08) ;
+            }
+
+            old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
+            update_music(0 , pacman_intro_treble, treble_song_length, &trebleState);
+            song_finished = update_music(1 , pacman_intro_bass, bass_song_length, &bassState);
+            _trap_1_wl((short)0x20,(long)(old_ssp)) ;
+            intro_duration++;
+        }
+        if (intro_duration > 40) {
+        if (first_frames > 16  - 1) {
+            switch (initial_moves[moves_index]) {
+                case 0:
+                    set_second_movements(base32, base8, &entity);
+                    moves_index++;
+                    break;
+                case 1:
+                    set_third_movements(base32, base8, &entity);
+                    moves_index++;
+                    break;
+                case 2:
+                    set_third_movements(base32, base8, &entity);
+                    moves_index++;
+                    break;
+                case 3:
+                    moves_index++;
+                    break;
+                case 4:
+                    stop_ghosts = -1 ;
+                    break;
+            }
+            first_frames = 0;
+
+        }
+        if (stop_ghosts == 0 ) {
+            manually_move_ghost(base32, &entity, 1);
+        }
+        first_frames++;
+        }
+    }
+
+
+
 	if ((short)_trap_1_w((short)0x0B) )
 	{
 		input = (char)_trap_1_w((short)0x08) ;
@@ -1217,8 +1281,6 @@ int main()
         play_waka_sound(0 , waka_sound_cycle, 14 , &wakaState);
         play_waka_sound(1 , waka_noise_cycle, 14 , &wakaNoise);
         _trap_1_wl((short)0x20,(long)(old_ssp)) ;
-
-        }
 
        state = update_game_state(state, input);
     }
@@ -1279,7 +1341,7 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
 }
-# 484 "pacman.c"
+# 479 "pacman.c"
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 
     move_ghost(entity->crying_ghost);
@@ -1288,14 +1350,12 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
     move_ghost(entity->cyclops_ghost);
 	update_cells(entity);
 
-
     update_current_frame(entity, frame_index);
 
 	render_frame(base, entity);
 
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
-
 
     GAME_STATE state;
     if (input == '\033')
