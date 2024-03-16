@@ -14,19 +14,13 @@ Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 void move_pacman (Pacman *pacman)
 {
-    /*
-    if (pacman -> state == DEFAULT) {
-    pacman->move->x += (pacman->move->delta_x) * 2;
-    pacman->move->y += (pacman->move->delta_y) * 2;
-    }
-    else {
-        pacman->move->x += pacman->move->delta_x * 4;
-        pacman->move->y += pacman->move->delta_y * 4;
-    }
-    */
    Movement* pacman_movement = pacman->move;
 
-    
+    if (pacman_movement->delta_x == 0 && pacman_movement->delta_y == 0) {
+        pacman_movement->last_last_x = pacman_movement->x;
+        pacman_movement->last_last_y = pacman_movement->y;
+        return;
+    }
     pacman_movement->last_last_x = pacman_movement->last_x;
     pacman_movement->last_last_y = pacman_movement->last_y;
 
@@ -42,9 +36,6 @@ void move_pacman (Pacman *pacman)
         pacman_movement->x += (pacman_movement->delta_x << 2);
         pacman_movement->y += (pacman_movement->delta_y << 2);
     }
-
-
-   /* update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->move->direction); */
 }
 /*************************************************************
 * Function: move_ghost
@@ -137,7 +128,6 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
     all_ghosts[3] = all->moustache_ghost;
 
     for (i = 0; i < 4; i++){
-        /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
         
         if (all_ghosts[i]->type != curr_type) /* no collsiion with ghost itself only other objs*/
         {
@@ -145,7 +135,6 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
                 all_ghosts[i]->move->y_cell_index == object_y_index + y_delta) ||
                 (all_ghosts[i]->move->x_cell_index == object_x_index && 
                 all_ghosts[i]->move->y_cell_index == object_y_index))
-                /* collision = OBJECT; */
                 collision = all_ghosts[i]->type;
         }
     }

@@ -28,12 +28,40 @@ typedef unsigned char GAME_STATE;
 #define SECOND_STOP 16
 #define THIRD_STOP 32
 
+
+#define BUFFER_SIZE_BYTES 32256                   /*added extra 256*/ 
+#define BUFFER_SIZE_WORDS 16000 
+#define BUFFER_SIZE_LONGS 8064            
+#define BACK_BUFFER_START 0x000000
+#define BACK_BUFFER_END 0x007E00            /* $7E00 is 32,256 in decimal */
+
+#define FRONT_BUFFER_START 0xFC0000         /* starts at 64,512 (+ 32,256 bytes more than the back_buffer) */
+#define FRONT_BUFFER_END 0x17A0000           /* 32,256 more than the start of front_buffer*/
+
+       
+#define VIDEO_REGISTER_HIGH 0xFFFF8201
+#define VIDEO_REGISTER_MID 0xFFFF8203
+#define VIDEO_REGISTER_LOW 0xFFFF820D
+
+/*
+#define VIDEO_ADDR_HIGH (*(volatile UCHAR8*)0xFF8201)
+#define VIDEO_ADDR_MID  (*(volatile UCHAR8*)0xFF8203)
+#define VIDEO_ADDR_LOW  (*(volatile UCHAR8*)0xFF820D)
+*/
+#define VIDEO_ADDR_HIGH  0xFF8201
+#define VIDEO_ADDR_MID  0xFF8203
+#define VIDEO_ADDR_LOW  0xFF820D
+
+void swap_buffers();
+void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
+void update_movement(Entities* entity, char input, UINT16 ticks);
+void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity);
+
 ULONG32 get_time();
 GAME_STATE update_game_state(GAME_STATE new_state, char input);
 void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
 void debug_cells_pac(UCHAR8* base, Pacman* pacman);
-void update_pacman();
-void update_ghosts();
+void update_entities();
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index);
 ULONG32* byte_allign(ULONG32* array_address);
@@ -42,6 +70,11 @@ ULONG32* byte_allign(ULONG32* array_address);
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
+
+extern UCHAR8 background[BUFFER_SIZE_BYTES];
+extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
+
+
 
 
 

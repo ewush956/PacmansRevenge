@@ -370,8 +370,11 @@ void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 
     flip_direction(ghost1);
     flip_direction(ghost2);
-# 43 "events.c"
 }
+
+
+
+
 ObjectType process_ghost_collision(Entities* all, UINT16 tick)
 {
 
@@ -387,7 +390,6 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
 
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH) {
-
             handle_wall_collision(all_ghosts[i], i);
         }
 
@@ -409,21 +411,17 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
 
                 }
             }
-# 101 "events.c"
         }
     }
     for (i = 3; i > -1; i--){
         for (n = 1; n <= i; n++){
             if (check_shared_occupied(all_ghosts[i], all_ghosts[i-n]) == -1 ) {
                 handle_ghost_collision(all_ghosts[i], all_ghosts[i-n]);
-
             }
         }
     }
 
-
 }
-
 void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 
     int i, direction;
@@ -462,11 +460,9 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
         if (cell_map[ghost->y_cell_index + ghost->delta_y][ghost->x_cell_index + ghost->delta_x].open_path == -1 )
             return;
     }
-# 183 "events.c"
 }
-# 193 "events.c"
+# 129 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
-
 
     Movement* pacman = entity->pacman->move;
 
@@ -491,27 +487,23 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
         case GHOST_TYPE_AWKWARD:
             kill_ghost(entity->awkward_ghost, cell_map);
-
             break;
 
         case GHOST_TYPE_MOUSTACHE:
             kill_ghost(entity->moustache_ghost, cell_map);
-
             break;
 
         case GHOST_TYPE_CYCLOPS:
             kill_ghost(entity->cyclops_ghost, cell_map);
-
             break;
 
         default:
             break;
         }
         break;
-# 250 "events.c"
     }
 }
-# 259 "events.c"
+# 177 "events.c"
 void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
@@ -536,26 +528,13 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 
     if (check_shared_occupied(pacman, entity->crying_ghost->move) == -1 )
         kill_ghost(entity->crying_ghost, cell_map);
-# 347 "events.c"
-}
-ULONG32 random_number_generator(Xor *xor)
-{
 
-    ULONG32 state = xor->value;
-
-	state ^= state << 13;
-	state ^= state >> 17;
-	state ^= state << 5;
-    xor->value = state;
-
-    return state;
 }
 void set_input(Pacman *pacman, char input)
 {
 
 	pacman -> move -> delta_y = 0;
     pacman -> move -> delta_x = 0;
-
 
 	switch(input)
 	{
@@ -586,6 +565,7 @@ void set_input(Pacman *pacman, char input)
 		default:
             pacman -> move -> delta_x = 0;
             pacman -> move -> delta_y = 0;
+
 			break;
 	}
 

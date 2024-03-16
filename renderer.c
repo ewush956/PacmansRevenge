@@ -64,12 +64,12 @@ void render_frame(ULONG32* base, Entities* entity) {
     clear_entities(base, pacman->move, crying, moustache,
                    awkward, cyclops); 
 
-/*
     render_pellet(base8, crying);
     render_pellet(base8, moustache);
     render_pellet(base8, awkward);
     render_pellet(base8, cyclops);
-    */
+    render_pellet(base8, pacman->move);
+    
     
     render_pacman(base, pacman);
     render_ghosts(base, entity);

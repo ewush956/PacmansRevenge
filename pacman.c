@@ -14,44 +14,22 @@
 #include <linea.h>
 
 
-/* NOTE: the frame buffer is just an arbitrary region of RAM and 
-*  on the Atari and RAM starts at address $0x00000 up to $3FFFFF 
-*/
-#define BUFFER_SIZE_BYTES 32256                   /*added extra 256*/ 
-#define BUFFER_SIZE_WORDS 16000 
-#define BUFFER_SIZE_LONGS 8064            
-#define BACK_BUFFER_START 0x000000
-#define BACK_BUFFER_END 0x007E00            /* $7E00 is 32,256 in decimal */
+/************************* KNOWN BUG ***************************
+ * Currently, there is a bug that does not render the top left portion 
+ * of the map from the back buffer. It appears to be in the correct memory 
+ * location as there are no address bombs and the double buffering for the entities 
+ * (pacman and ghosts) works. Pacman is also leaving behind pixel trails 
+ * when moving around at random. We suspect that the clear last last (2 frames before) 
+ * is not working for him only. The ghosts dont have this issue and render perfectly.
+ * With no trailing pixels. 
+ * 
+ * The double buffering seems to work as intented aside from the effected regions.
+ * 
+ * Pacman currently does not eat the pellets.
+ ***********************************************************/
 
-#define FRONT_BUFFER_START 0xFC0000         /* starts at 64,512 (+ 32,256 bytes more than the back_buffer) */
-#define FRONT_BUFFER_END 0x17A0000           /* 32,256 more than the start of front_buffer*/
-
-       
-#define VIDEO_REGISTER_HIGH 0xFFFF8201
-#define VIDEO_REGISTER_MID 0xFFFF8203
-#define VIDEO_REGISTER_LOW 0xFFFF820D
-
-/*
-#define VIDEO_ADDR_HIGH (*(volatile UCHAR8*)0xFF8201)
-#define VIDEO_ADDR_MID  (*(volatile UCHAR8*)0xFF8203)
-#define VIDEO_ADDR_LOW  (*(volatile UCHAR8*)0xFF820D)
-*/
-#define VIDEO_ADDR_HIGH  0xFF8201
-#define VIDEO_ADDR_MID  0xFF8203
-#define VIDEO_ADDR_LOW  0xFF820D
-
-void swap_buffers();
-void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
-void update_movement(Entities* entity, char input, UINT16 ticks);
-
-
-
-/* ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];  */
-
-
-/* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
-
-
+UCHAR8 background[BUFFER_SIZE_BYTES];
+UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 /*************************************************************
 * Declaration: Pacman pacman
 * Purpose: Initializes the player character, Pacman, with its
@@ -72,7 +50,12 @@ Pacman pacman = {
     PACMAN,
     &pacman_movement
 };
-
+/*************************************************************
+* Declaration: Ghost crying_ghost
+* Purpose: Initializes the 'crying' ghost entity with its starting
+*          position, movement displacement, state, direction, 
+*          and cell index on the game map.
+*************************************************************/
 Movement crying_ghost_movement = {
         PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
@@ -89,6 +72,12 @@ Ghost crying_ghost = {
     &crying_ghost_movement
 };
 
+/*************************************************************
+* Declaration: Ghost cyclops_ghost
+* Purpose: Initializes the 'cyclops' ghost entity with its
+*          starting position, movement displacement, state,
+*          direction, and cell index on the game map.
+*************************************************************/
 Movement cyclops_ghost_movement = {
         PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
@@ -104,7 +93,12 @@ Ghost cyclops_ghost = {
     FALSE,
     &cyclops_ghost_movement
 };
-
+/*************************************************************
+* Declaration: Ghost moustache_ghost
+* Purpose: Initializes the 'moustache' ghost entity with its
+*          starting position, movement displacement, state,
+*          direction, and cell index on the game map.
+*************************************************************/
 Movement moustache_ghost_movement = {
         PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
@@ -121,6 +115,12 @@ Ghost moustache_ghost = {
     &moustache_ghost_movement
 };
 
+/*************************************************************
+* Declaration: Ghost awkward_ghost
+* Purpose: Initializes the 'awkward' ghost entity with its
+*          starting position, movement displacement, state,
+*          direction, and cell index on the game map.
+*************************************************************/
 Movement awkward_ghost_movement = {
         PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
@@ -136,49 +136,15 @@ Ghost awkward_ghost = {
     FALSE,
     &awkward_ghost_movement
 };
-
-Timer timer = {
-    0,0,
-    20, 28, 44, 52
-};
-
-UCHAR8 background[BUFFER_SIZE_BYTES];
-UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
- 
-
-/*************************************************************
-* Declaration: Ghost crying_ghost
-* Purpose: Initializes the 'crying' ghost entity with its starting
-*          position, movement displacement, state, direction, 
-*          and cell index on the game map.
-*************************************************************/
-
-/*************************************************************
-* Declaration: Ghost cyclops_ghost
-* Purpose: Initializes the 'cyclops' ghost entity with its
-*          starting position, movement displacement, state,
-*          direction, and cell index on the game map.
-*************************************************************/
-
-/*************************************************************
-* Declaration: Ghost moustache_ghost
-* Purpose: Initializes the 'moustache' ghost entity with its
-*          starting position, movement displacement, state,
-*          direction, and cell index on the game map.
-*************************************************************/
-
-/*************************************************************
-* Declaration: Ghost awkward_ghost
-* Purpose: Initializes the 'awkward' ghost entity with its
-*          starting position, movement displacement, state,
-*          direction, and cell index on the game map.
-*************************************************************/
-
 /*************************************************************
 * Declaration: Timer timer
 * Purpose: Initializes the game timer with starting values
 *          and thresholds for various game events.
 *************************************************************/
+Timer timer = {
+    0,0,
+    20, 28, 44, 52
+};
 
 int main()
 {
@@ -190,132 +156,29 @@ int main()
         &cyclops_ghost,
     };
 
-    int first_frames = 0;
-    int second_frames = 0;
-    int third_frames = 0;
-
 	char input;
-	int i,j,counter;
-    UINT16 ticks = 0;
-	UCHAR8 collision_type = 0;
-	ULONG32* base32 = Physbase();
-    UINT16* base16 = Physbase();
-    UCHAR8* base8 = Physbase();
-    ULONG32 *original = Physbase();
-  
-
+    int waka_repetitions = 10; 
     int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256); 
-    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+    long old_ssp; 
 
+	UCHAR8 collision_type = 0;
+    UCHAR8* base8 = Physbase();
+
+    UINT16 ticks = 0;
+    UINT16* base16 = Physbase();
+
+	ULONG32* base32 = Physbase();
+    ULONG32 *original = Physbase();
+    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
     ULONG32* background_ptr = (ULONG32*)(&background[0]); /*Not using at the moment*/
-    
 	ULONG32 time_then, time_now, time_elapsed;
+  
     GAME_STATE state = PLAY;
 
-    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
-    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
-    bool song_finished = FALSE;
-
-    int waka_repetitions = 10; 
-    int current_index = 0;
-    int time_left = 0;
-    bool stop_ghosts = FALSE;
-
-    MusicState trebleState = {0, 0};
-    MusicState bassState = {0, 0};
     SoundState wakaState = {0, 0};
     SoundState wakaNoise = {0, 0};
 
-
-    int initial_moves[5] = {0,1,2,3,4};
-    int moves_index = 0;
-    int intro_duration = 0;
-    long old_ssp; 
-
-	init_map_cells(cell_map,tile_map);	
-
-    cell_map[10][17].has_pellet = FALSE;
-    cell_map[10][18].has_pellet = FALSE;
-
-    cell_map[10][20].has_pellet = FALSE;
-    cell_map[10][21].has_pellet = FALSE;
-
-    cell_map[12][17].has_pellet = FALSE;
-    cell_map[12][18].has_pellet = FALSE;
-
-    cell_map[12][20].has_pellet = FALSE;
-    cell_map[12][21].has_pellet = FALSE;
-    
-    clear_screen_q(base32);
-
-    render_map(back_buffer_ptr, tile_map);
-    render_map(base32, tile_map);
-
-    clear_bitmap_32(base32, entity.moustache_ghost->move->x, entity.moustache_ghost->move->y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, entity.awkward_ghost->move->x, entity.awkward_ghost->move->y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, entity.cyclops_ghost->move->x, entity.cyclops_ghost->move->y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, entity.crying_ghost->move->x, entity.crying_ghost->move->y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, entity.pacman->move->x, entity.pacman->move->y, SPRITE_HEIGHT);
-
-    render_frame(base32, &entity);
-    render_initial_timer(base8);
-    
-    set_first_movements(base32, base8, &entity);
-
-    old_ssp = Super(0);
-    enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
-    enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
-    Super(old_ssp);
-
-    time_then = get_time();
-    while (song_finished == FALSE) {
-        time_now = get_time();
-        time_elapsed = time_now - time_then; 
-
-        if (time_elapsed >= 5) { 
-            time_then = time_now;
-            if (Cconis()) {
-                input = (char)Cnecin();
-            }
-            
-            old_ssp = Super(0);
-            update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, &trebleState);
-            song_finished = update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, &bassState); 
-            Super(old_ssp);
-            intro_duration++;
-        }
-        if (intro_duration > 40) {
-        if (first_frames > FIRST_STOP - 1) {
-            switch (initial_moves[moves_index]) {
-                case 0:
-                    set_second_movements(base32, base8, &entity);
-                    moves_index++;
-                    break;
-                case 1:
-                    set_third_movements(base32, base8, &entity);
-                    moves_index++;
-                    break;
-                case 2:
-                    set_third_movements(base32, base8, &entity);
-                    moves_index++;
-                    break;
-                case 3:
-                    moves_index++;
-                    break;
-                case 4:
-                    stop_ghosts = TRUE;
-                    break;
-            }
-            first_frames = 0;
-            
-        }
-        if (stop_ghosts == FALSE) {
-            manually_move_ghost(base32, &entity, 1);
-        }
-        first_frames++;
-        }
-    }
-    	
+    initialize_game(base32, back_buffer_ptr, &entity);
 	if (Cconis())
 	{
 		input = (char)Cnecin();
@@ -359,20 +222,23 @@ int main()
 
 	return 0;
 }
-/*******************************************************************
-* Function: update_pacman
-* Purpose: Updates the position of the pacman
-*/
-void update_pacman(){
+/******************************************************************
+* Function: update_entities
+* Purpose: Updates the position of the ghosts and pacman
+*******************************************************************/
+void update_entities() {
     move_pacman(&pacman);
-}
-void update_ghosts(){
     move_ghost(&moustache_ghost);
     move_ghost(&crying_ghost);
     move_ghost(&cyclops_ghost);
     move_ghost(&awkward_ghost);
-    /*update current frame of ghosties here*/
 }
+/******************************************************************
+ * Function: set_first_movements
+ * Purpose: Sets the first movements of the ghosts
+ * Parameters: base32, base8, entity
+ * Returns: void
+ ******************************************************************/
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
@@ -409,62 +275,11 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = DOWN;
 }
-/*
-void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity) {
-    crying_ghost.move->delta_x = 1;
-	crying_ghost.move->delta_y = 0;
-    crying_ghost.move->direction = RIGHT;
-
-    awkward_ghost.move->delta_x = -1;
-    awkward_ghost.move->delta_y = 0;
-    awkward_ghost.move->direction = LEFT;
-
-    cyclops_ghost.move->delta_x = 0;
-    cyclops_ghost.move->delta_y = -1;
-    cyclops_ghost.move->direction = UP;
-
-    moustache_ghost.move->delta_x = 0;
-    moustache_ghost.move->delta_y = 1;
-    moustache_ghost.move->direction = DOWN;
-
-	manually_move_ghost(base32, base8, entity, 16);
-
-    moustache_ghost.move->delta_x = 1;
-    moustache_ghost.move->delta_y = 0;
-    moustache_ghost.move->direction = RIGHT;
-
-    cyclops_ghost.move->delta_x = -1;
-    cyclops_ghost.move->delta_y = 0;
-    cyclops_ghost.move->direction = LEFT;
-
-	manually_move_ghost(base32, base8, entity, 16);
-
-    crying_ghost.move->delta_x = 0;
-    crying_ghost.move->delta_y = -1;
-    crying_ghost.move->direction = UP;
-
-    awkward_ghost.move->delta_x = 0;
-    awkward_ghost.move->delta_y = 1;
-    awkward_ghost.move->direction = DOWN;
-    manually_move_ghost(base32, base8, entity, 32);
-}
-void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int stop){
-    int i;
-
-	for (i=0; i < stop; i++) {
-
-        move_ghost(entity->crying_ghost);
-        move_ghost(entity->awkward_ghost);
-        move_ghost(entity->moustache_ghost);
-        move_ghost(entity->cyclops_ghost);
-        update_current_frame(entity, i);
-
-		update_cells(entity);
-
-		render_frame(base, entity);
-	}
-}
-*/
+/*******************************************************************
+ * Function: manually_move_ghost
+ * Purpose: Manually moves the ghost
+ * Parameters: base, entity, frame_index
+ *******************************************************************/
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 
     move_ghost(entity->crying_ghost);
@@ -473,12 +288,17 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
     move_ghost(entity->cyclops_ghost);
 	update_cells(entity);
 
-
     update_current_frame(entity, frame_index);
 
 	render_frame(base, entity);
 
 }   
+/*******************************************************************
+ * Function: update_game_state
+ * Purpose: Updates the game state
+ * Parameters: new_state, input
+ * Returns: GAME_STATE
+ ******************************************************************/
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
     /*Do something that updates the gamestate*/
@@ -494,19 +314,30 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
    return state;
 
 }
+/*******************************************************************
+ * Function: get_time
+ * Purpose: Gets the current time
+ * Parameters: none
+ * Returns: time
+ * Note: time is in 70HZ
+ ******************************************************************/
 ULONG32 get_time()
 {
 
-	ULONG32 *timer = (ULONG32 *)0x462; 		/* address of longword auto-inc’ed 70 x per second */
+	ULONG32 *timer = (ULONG32 *)0x462; 		
 	ULONG32 timeNow;
 	ULONG32 old_ssp;
-	old_ssp = Super(0); 				/* enter privileged mode */
+	old_ssp = Super(0); 				
 	timeNow = *timer;
-	Super(old_ssp); 					/* exit privileged mode as soon as possible */
+	Super(old_ssp); 			
 
 	return timeNow;
 
 }
+/*******************************************************************
+ * Function: debug_print
+ * Purpose: Prints out an integer value using plot letter
+ *****************************************************************/
 void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
     UINT16 tens = value / 10;
     UINT16 ones = value % 10;
@@ -519,6 +350,10 @@ void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
     plot_letter(base, x , y, font, tens_char);
     plot_letter(base, x + LETTER_WIDTH, y, font, ones_char);
 }
+/*******************************************************************
+ * Function: debug_cells
+ * Purpose: Prints out pacmans current cell indeces
+ ******************************************************************/
 void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     int j;
 
@@ -534,21 +369,140 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*LETTER_WIDTH, 0, font, stry);
     debug_print(base, 12*LETTER_WIDTH, 0, pacman->move->y_cell_index);
 }
-
-
+/*******************************************************************
+ * Function: swap_buffers
+ * Purpose: Swaps the adress of the front and back buffers
+ * Parameters: base32, back_buffer_ptr
+ ******************************************************************/
 void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
 {
     ULONG32 temp = *base32;
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
+/*******************************************************************
+ * Function: update_movement
+ * Purpose: Super call to all movement functions
+ * 
+ * Parameters: entity, input, ticks
+ ******************************************************************/
 void update_movement(Entities* entity, char input, UINT16 ticks) {
     
+
     set_input(entity->pacman,input);
-    handle_collisions(entity, ticks);         
-    update_pacman();
-    update_ghosts();
+
+    handle_collisions(entity, ticks);   
+
+    update_entities();
     check_proximity(entity);
     update_cells(entity);
+    
 
+}
+void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) 
+{
+
+    MusicState trebleState = {0, 0};
+    MusicState bassState = {0, 0};
+    UCHAR8* base8 = (UCHAR8*)base32;
+    UCHAR8* back8 = (UCHAR8*)back_buffer_ptr;
+
+    ULONG32 time_then, time_now, time_elapsed;
+
+    long old_ssp; 
+
+    int initial_moves[5] = {0,1,2,3,4};
+    int moves_index = 0;
+    int intro_duration = 0;
+    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
+    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
+    int first_frames = 0;
+    int second_frames = 0;
+    int third_frames = 0;
+
+    bool song_finished = FALSE;
+    bool stop_ghosts = FALSE;
+    
+    
+    init_map_cells(cell_map,tile_map);	
+
+    cell_map[10][17].has_pellet = FALSE;
+    cell_map[10][18].has_pellet = FALSE;
+
+    cell_map[10][20].has_pellet = FALSE;
+    cell_map[10][21].has_pellet = FALSE;
+
+    cell_map[12][17].has_pellet = FALSE;
+    cell_map[12][18].has_pellet = FALSE;
+
+    cell_map[12][20].has_pellet = FALSE;
+    cell_map[12][21].has_pellet = FALSE;
+    
+    clear_screen_q(base32);
+
+    render_map(back_buffer_ptr, tile_map);
+    render_map(base32, tile_map);
+
+    clear_bitmap_32(base32, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, entity->crying_ghost->move->x, entity->crying_ghost->move->y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, entity->pacman->move->x, entity->pacman->move->y, SPRITE_HEIGHT);
+    
+    render_frame(base32, entity);
+    render_initial_timer(base8);
+    render_initial_timer(back8);
+    
+    set_first_movements(base32, base8, entity);
+
+    old_ssp = Super(0);
+    enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
+    enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
+    Super(old_ssp);
+
+    time_then = get_time();
+    while (song_finished == FALSE) {
+        time_now = get_time();
+        time_elapsed = time_now - time_then; 
+
+        if (time_elapsed >= 5) { 
+            time_then = time_now;
+            
+            old_ssp = Super(0);
+            update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, &trebleState);
+            song_finished = update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, &bassState); 
+            Super(old_ssp);
+            intro_duration++;
+        }
+        if (intro_duration > 40) {
+        if (first_frames > FIRST_STOP - 1) {
+            switch (initial_moves[moves_index]) {
+                case 0:
+                    set_second_movements(base32, base8, entity);
+                    moves_index++;
+                    break;
+                case 1:
+                    set_third_movements(base32, base8, entity);
+                    moves_index++;
+                    break;
+                case 2:
+                    set_third_movements(base32, base8, entity);
+                    moves_index++;
+                    break;
+                case 3:
+                    moves_index++;
+                    break;
+                case 4:
+                    stop_ghosts = TRUE;
+                    break;
+            }
+            first_frames = 0;
+            
+        }
+        if (stop_ghosts == FALSE) {
+            manually_move_ghost(base32, entity, 1);
+        }
+        first_frames++;
+        }
+    }
 }
