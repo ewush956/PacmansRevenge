@@ -1178,11 +1178,12 @@ int main()
     cell_map[12][21].has_pellet = 0 ;
 
 
+
     clear_screen_q(base32);
 
-    render_map(back_buffer_ptr, tile_map);
+    render_map(back_buffer_ptr++, tile_map);
     render_map(base32, tile_map);
-# 332 "pacman.c"
+# 333 "pacman.c"
 	if ((short)_trap_1_w((short)0x0B) )
 	{
 		input = (char)_trap_1_w((short)0x08) ;
@@ -1205,10 +1206,12 @@ int main()
             update_movement(&entity, input, ticks);
 
             update_current_frame(&entity, ticks);
-            render_frame(back_buffer_ptr, &entity);
 
+            render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
             (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
+
+
 
             ticks = (++ticks & 63);
             time_then = get_time();
@@ -1279,7 +1282,7 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
 }
-# 484 "pacman.c"
+# 487 "pacman.c"
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 
     move_ghost(entity->crying_ghost);
@@ -1295,7 +1298,6 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 
 }
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
-
 
     GAME_STATE state;
     if (input == '\033')

@@ -152,7 +152,7 @@ void set_master_volume(unsigned char volume){
  * @param channel The sound channel to play the note on. Valid channels depend on the hardware, typically 0, 1, or 2.
  * @param tuning The frequency tuning value of the note. This value should be compatible with the `set_tone` function.
  * @param volume The volume at which to play the note. Expected to be a value that `set_volume` can accept.
- */
+ ***************************************************************/
 void play_note(int channel, int tuning, unsigned char volume) {
 
     set_tone(channel, tuning);
@@ -187,6 +187,16 @@ void write_psg(int reg, UCHAR8 val) {
         *PSG_reg_write = val;
     }
 }
+/**********************************
+ * Function: read_psg
+ * -------------------
+ * Reads a byte of data from the specified Programmable Sound Generator (PSG) register.
+ *
+ * reg: The register number to read from (0 to 15).
+ *
+ * Returns: The value read from the specified register. If the register is out of range (not within 0 to 15), it returns 0.
+ *
+ *****************************************/
 unsigned char read_psg(int reg) {
 
     volatile char *PSG_reg_select = SELECT_REGISTER;

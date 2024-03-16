@@ -207,7 +207,7 @@ int main()
 
     int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256); 
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
-
+    
     ULONG32* background_ptr = (ULONG32*)(&background[0]);
     
 	ULONG32 time_then, time_now, time_elapsed;
@@ -249,11 +249,12 @@ int main()
     cell_map[12][21].has_pellet = FALSE;
     
 
+   
     clear_screen_q(base32);
 
     render_map(back_buffer_ptr, tile_map);
     render_map(base32, tile_map);
-
+    
 
 /*
     render_map(base16, tile_map);
@@ -351,11 +352,13 @@ int main()
             update_movement(&entity, input, ticks);
 
             update_current_frame(&entity, ticks);
-            render_frame(back_buffer_ptr, &entity);
 
+            render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
             Setscreen(-1,base32,-1);  
 
+
+     
             ticks = (++ticks & 63);
             time_then = get_time();
 
@@ -473,11 +476,12 @@ void manually_move_ghost(ULONG32* base, UCHAR8* base8, Entities* entity, int sto
         move_ghost(entity->awkward_ghost);
         move_ghost(entity->moustache_ghost);
         move_ghost(entity->cyclops_ghost);
-        update_current_frame(entity, i);
+        update_current_frame(entity, i); 
 
 		update_cells(entity);
 
 		render_frame(base, entity);
+        
 	}
 }
 */
@@ -497,7 +501,6 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 }   
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
-    /*Do something that updates the gamestate*/
     GAME_STATE state;
     if (input == '\033')
     {

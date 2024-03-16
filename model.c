@@ -27,8 +27,8 @@ void move_pacman (Pacman *pacman)
    Movement* pacman_movement = pacman->move;
 
     
-    /*pacman_movement->last_last_x = pacman_movement->last_x;
-    pacman_movement->last_last_y = pacman_movement->last_y;*/
+    pacman_movement->last_last_x = pacman_movement->last_x;
+    pacman_movement->last_last_y = pacman_movement->last_y;
 
     pacman_movement->last_x = pacman_movement->x;
     pacman_movement->last_y = pacman_movement->y;

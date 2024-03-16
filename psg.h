@@ -1,3 +1,10 @@
+
+
+/*************
+* This file contains the definitions used for generating the 8-bit music and sound effects
+*
+****************/
+
 #include "TYPES.H"
 #include <osbind.h>
 
