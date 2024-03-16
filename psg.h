@@ -32,6 +32,9 @@
 #define SEVENTH_OCTAVE 6
 #define EIGHTH_OCTAVE 7
 
+/* IMPORTANT NOTE
+ * All of these will be moved to music.h, I was having compile issues that's why they are here
+*/
 #define WHOLE_NOTE 32
 #define HALF_NOTE 16
 #define QUARTER_NOTE 8

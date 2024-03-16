@@ -198,7 +198,6 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
 void render_gameover() {
     /* Renderes game over screen, we arent sure how to do that yet.*/
 }
-/*This code is incomplete. No timer functionality has been added yet.*/
 void render_timer(Timer* timer) {
 
 }
@@ -208,6 +207,15 @@ void render_initial_timer(UCHAR8* base) {
 
     plot_string(base, start_x, y, font, "Time: 00:00");
 }
+/********************************************************************
+* Clears the previous positions of entities from the specified base buffer.**
+* @param base32   The base buffer to clear.
+* @param pacman   The movement data for Pacman.
+* @param crying   The movement data for the crying ghost.
+* @param moustache   The movement data for the moustache ghost.
+* @param awkward   The movement data for the awkward ghost.
+* @param cyclops   The movement data for the cyclops ghost.
+*******************************************************************/
 void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
                     Movement* moustache, Movement* awkward, Movement* cyclops) {
 

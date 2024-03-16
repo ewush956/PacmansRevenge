@@ -940,7 +940,7 @@ void render_pellet(UCHAR8* base8, Movement* move);
 # 1 "./psg.h" 2
 # 1 "C:/c68/include/osbind.h" 1
 # 2 "./psg.h" 2
-# 133 "./psg.h"
+# 136 "./psg.h"
 void set_note_frequency(int channel, float frequency);
 void set_tone(int channel, int tuning);
 void enable_channel(int channel, int toneOn, int noiseOn);
@@ -989,7 +989,7 @@ void update_song(int treble_channel, const Note treble_song[], int treble_song_l
 # 1 "./psg.h" 2
 # 1 "C:/c68/include/osbind.h" 1
 # 2 "./psg.h" 2
-# 133 "./psg.h"
+# 136 "./psg.h"
 void set_note_frequency(int channel, float frequency);
 void set_tone(int channel, int tuning);
 void enable_channel(int channel, int toneOn, int noiseOn);
@@ -1024,10 +1024,10 @@ bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_leng
 # 13 "pacman.c" 2
 # 1 "C:/c68/include/linea.h" 1
 # 14 "pacman.c" 2
-# 29 "pacman.c"
+# 31 "pacman.c"
 UCHAR8 background[32256 ];
 UCHAR8 screen_buffer[32256 ];
-# 37 "pacman.c"
+# 39 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
@@ -1042,7 +1042,7 @@ Pacman pacman = {
     PACMAN,
     &pacman_movement
 };
-# 57 "pacman.c"
+# 59 "pacman.c"
 Movement crying_ghost_movement = {
         16  * 17, 16  * 10 + 16 ,
         0,0,
@@ -1058,7 +1058,7 @@ Ghost crying_ghost = {
     0 ,
     &crying_ghost_movement
 };
-# 79 "pacman.c"
+# 81 "pacman.c"
 Movement cyclops_ghost_movement = {
         16  * 17, 16  * 12 + 16 ,
         0,0,
@@ -1074,7 +1074,7 @@ Ghost cyclops_ghost = {
     0 ,
     &cyclops_ghost_movement
 };
-# 100 "pacman.c"
+# 102 "pacman.c"
 Movement moustache_ghost_movement = {
         16  * 21, 16  * 10 + 16 ,
         0,0,
@@ -1090,7 +1090,7 @@ Ghost moustache_ghost = {
     0 ,
     &moustache_ghost_movement
 };
-# 122 "pacman.c"
+# 124 "pacman.c"
 Movement awkward_ghost_movement = {
         16  * 21, 16  * 12 + 16 ,
         0,0,
@@ -1177,11 +1177,12 @@ int main()
             ticks = (++ticks & 63);
             time_then = get_time();
 
-        }
-                    old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
+            old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
             play_waka_sound(0 , waka_sound_cycle, 14 , &wakaState);
             play_waka_sound(1 , waka_noise_cycle, 14 , &wakaNoise);
             _trap_1_wl((short)0x20,(long)(old_ssp)) ;
+
+        }
         state = update_game_state(state, input);
     }
     old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
@@ -1202,7 +1203,7 @@ void update_entities() {
     move_ghost(&cyclops_ghost);
     move_ghost(&awkward_ghost);
 }
-# 239 "pacman.c"
+# 242 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
@@ -1257,7 +1258,7 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 	render_frame(base, entity);
 
 }
-# 299 "pacman.c"
+# 302 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
 
@@ -1273,7 +1274,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
    return state;
 
 }
-# 321 "pacman.c"
+# 324 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1333,7 +1334,7 @@ void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
-# 386 "pacman.c"
+# 389 "pacman.c"
 void update_movement(Entities* entity, char input, UINT16 ticks) {
 
 

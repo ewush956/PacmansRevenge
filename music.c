@@ -141,34 +141,6 @@ int generate_frequency(int base_note, UCHAR8 target_octave) {
 void start_music() {
     
 }
-/*
-void update_music(int channel, const Note song[], int song_length) {
-    static int current_note_index = 0; 
-    static int note_time_left = 0; 
-
-    if (note_time_left == 0) {
-        if (current_note_index < song_length) {
-            note_time_left = song[current_note_index].duration; 
-            play_note(channel, song[current_note_index].frequency, song[current_note_index].volume);
-        } else {
-            stop_sound(); 
-            return;
-        }
-    }
-    note_time_left -= 1; 
-
-    if (note_time_left <= 0) {
-        current_note_index++;
-        if (current_note_index < song_length) {
-            note_time_left = song[current_note_index].duration;
-            play_note(channel, song[current_note_index].frequency, song[current_note_index].volume);
-        } else {
-            stop_sound();
-            current_note_index = 0;
-        }
-    }
-}
-*/
 /*Returns true when the song is finished*/
 bool update_music(int channel, const Note song[], int song_length, MusicState *state) {
     int index = state->current_note_index;

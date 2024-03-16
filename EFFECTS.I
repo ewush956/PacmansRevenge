@@ -174,7 +174,7 @@ typedef struct
  long _trap_14_ 	(short,...) ;
  long _trap_13_ 	(short,...) ;
 # 2 "./psg.h" 2
-# 133 "./psg.h"
+# 136 "./psg.h"
 void set_note_frequency(int channel, float frequency);
 void set_tone(int channel, int tuning);
 void enable_channel(int channel, int toneOn, int noiseOn);
@@ -208,7 +208,7 @@ bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_leng
 # 1 "./psg.h" 2
 # 1 "C:/c68/include/osbind.h" 1
 # 2 "./psg.h" 2
-# 133 "./psg.h"
+# 136 "./psg.h"
 void set_note_frequency(int channel, float frequency);
 void set_tone(int channel, int tuning);
 void enable_channel(int channel, int toneOn, int noiseOn);
