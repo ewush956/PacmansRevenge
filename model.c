@@ -27,8 +27,8 @@ void move_pacman (Pacman *pacman)
    Movement* pacman_movement = pacman->move;
 
     
-    pacman_movement->last_last_x = pacman_movement->last_x;
-    pacman_movement->last_last_y = pacman_movement->last_y;
+    /*pacman_movement->last_last_x = pacman_movement->last_x;
+    pacman_movement->last_last_y = pacman_movement->last_y;*/
 
     pacman_movement->last_x = pacman_movement->x;
     pacman_movement->last_y = pacman_movement->y;
@@ -437,31 +437,20 @@ void update_current_frame(Entities* all, int clock) {
     ghosts[1] = all->awkward_ghost;
     ghosts[2] = all->cyclops_ghost;
     ghosts[3] = all->moustache_ghost;
-/*
-    if (clock % 2 == 0) {
-        */
-        if (pacman->state == DEFAULT) {
-            /*
-            pacman->current_frame = ((pacman->current_frame) + 1) % 8;
-            */
-            pacman->current_frame = ((pacman->current_frame) + 1) & 7;
 
-        }
-        else {
-        /*
-        pacman->current_frame = ((pacman->current_frame) + 1) % 6;
-        */
+    if (pacman->state == DEFAULT) {
+
+        pacman->current_frame = ((pacman->current_frame) + 1) & 7;
+    }
+    else {
+
         pacman->current_frame += 1;
         if (pacman->current_frame > 5) 
             pacman->current_frame -= 6;
         }
     
     for (i = 0; i < 4; i++) {
-        /*
-        if (ghosts[i]->state == DEFAULT && clock % 4 == 0) {
-            ghosts[i]->current_frame = ((ghosts[i]->current_frame) + 1) % 2;
-        }
-        */
+
         if (ghosts[i]->state == DEFAULT && (clock & 3) == 0) {
             ghosts[i]->current_frame = (ghosts[i]->current_frame + 1) & 1;
 }

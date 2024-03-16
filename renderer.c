@@ -211,20 +211,21 @@ void render_initial_timer(UCHAR8* base) {
 void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
                     Movement* moustache, Movement* awkward, Movement* cyclops) {
 
-    clear_bitmap_32(base32, pacman->last_last_x, pacman->last_last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
-
-    clear_bitmap_32(base32, crying->last_last_x, crying->last_last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, cyclops->last_x, cyclops->last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, crying->last_x, crying->last_y, SPRITE_HEIGHT);
-
-    clear_bitmap_32(base32, moustache->last_last_x, moustache->last_last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, awkward->last_x, awkward->last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, moustache->last_x, moustache->last_y, SPRITE_HEIGHT);
+    
 
     clear_bitmap_32(base32, awkward->last_last_x, awkward->last_last_y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, awkward->last_x, awkward->last_y, SPRITE_HEIGHT);
-
+    clear_bitmap_32(base32, moustache->last_last_x, moustache->last_last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, crying->last_last_x, crying->last_last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, cyclops->last_last_x, cyclops->last_last_y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, cyclops->last_x, cyclops->last_y, SPRITE_HEIGHT);
+    
+    clear_bitmap_32(base32, pacman->last_last_x, pacman->last_last_y, SPRITE_HEIGHT);
+    
+    
 
 }
 void render_pellet(UCHAR8* base8, Movement* move) {

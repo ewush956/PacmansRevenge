@@ -1021,13 +1021,7 @@ bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_leng
 void swap_buffers();
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 void update_movement(Entities* entity, char input, UINT16 ticks);
-
-
-
-
-UCHAR8 background[32256 ];
-UCHAR8 screen_buffer[32256 ];
-# 63 "pacman.c"
+# 61 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
@@ -1111,7 +1105,10 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
-# 182 "pacman.c"
+
+UCHAR8 background[32256 ];
+UCHAR8 screen_buffer[32256 ];
+# 183 "pacman.c"
 int main()
 {
     Entities entity = {
@@ -1145,8 +1142,8 @@ int main()
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = ((UCHAR8)1) ;
 
-    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
-    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
+
+
     bool song_finished = 0 ;
 
     int waka_repetitions = 10;
@@ -1167,13 +1164,25 @@ int main()
     int i;
 
 	init_map_cells(cell_map,tile_map);
-# 252 "pacman.c"
+
+    cell_map[10][17].has_pellet = 0 ;
+    cell_map[10][18].has_pellet = 0 ;
+
+    cell_map[10][20].has_pellet = 0 ;
+    cell_map[10][21].has_pellet = 0 ;
+
+    cell_map[12][17].has_pellet = 0 ;
+    cell_map[12][18].has_pellet = 0 ;
+
+    cell_map[12][20].has_pellet = 0 ;
+    cell_map[12][21].has_pellet = 0 ;
+
+
     clear_screen_q(base32);
 
-    render_map(base32, tile_map);
-
     render_map(back_buffer_ptr, tile_map);
-# 333 "pacman.c"
+    render_map(base32, tile_map);
+# 332 "pacman.c"
 	if ((short)_trap_1_w((short)0x0B) )
 	{
 		input = (char)_trap_1_w((short)0x08) ;
@@ -1270,7 +1279,7 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
 }
-# 485 "pacman.c"
+# 484 "pacman.c"
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 
     move_ghost(entity->crying_ghost);

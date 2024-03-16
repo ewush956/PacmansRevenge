@@ -47,8 +47,6 @@ void update_movement(Entities* entity, char input, UINT16 ticks);
 
 
 /* ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];  */
-UCHAR8 background[BUFFER_SIZE_BYTES];
-UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 
 
 /* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
@@ -143,6 +141,9 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
+
+UCHAR8 background[BUFFER_SIZE_BYTES];
+UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
  
 
 /*************************************************************
@@ -212,8 +213,8 @@ int main()
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
 
-    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
-    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
+    /*int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
+    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);*/
     bool song_finished = FALSE;
 
     int waka_repetitions = 10; 
@@ -235,7 +236,6 @@ int main()
 
 	init_map_cells(cell_map,tile_map);	
 
-/*
     cell_map[10][17].has_pellet = FALSE;
     cell_map[10][18].has_pellet = FALSE;
 
@@ -247,13 +247,12 @@ int main()
 
     cell_map[12][20].has_pellet = FALSE;
     cell_map[12][21].has_pellet = FALSE;
-    */
+    
 
     clear_screen_q(base32);
 
-    render_map(base32, tile_map);
-
     render_map(back_buffer_ptr, tile_map);
+    render_map(base32, tile_map);
 
 
 /*
