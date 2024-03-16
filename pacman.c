@@ -47,10 +47,10 @@ void update_movement(Entities* entity, char input, UINT16 ticks);
 
 
 /* ULONG32 back_buffer_array[BUFFER_SIZE_LONGS];  */
+UCHAR8 background[BUFFER_SIZE_BYTES];
 UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 
 
-UCHAR8 background[BUFFER_SIZE_BYTES];
 /* the purpose is to simulate the Physbase() call as now we know the start address of the Buffers*/
 
 
@@ -64,7 +64,9 @@ Movement pacman_movement = {
         PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
         0,0,        /*Initial Displacement*/
         UP,
-        21,19          /*Cell index -> y, x*/
+        21,19,          /*Cell index -> y, x*/
+        19,21,
+        19,21
 };
 Pacman pacman = {
     0,
@@ -77,7 +79,9 @@ Movement crying_ghost_movement = {
         PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
         UP,
-        10, 13
+        10, 13,
+        13, 10,
+        13, 10
 };
 Ghost crying_ghost = {
     0,
@@ -91,7 +95,9 @@ Movement cyclops_ghost_movement = {
         PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
         DOWN,
-        12, 13
+        12, 13,
+        13, 12,
+        13, 12
 };
 Ghost cyclops_ghost = {
     0,
@@ -105,7 +111,9 @@ Movement moustache_ghost_movement = {
         PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
         UP,
-        10, 25
+        10, 25,
+        25, 10,
+        25, 10
 };
 Ghost moustache_ghost = {
     0,
@@ -119,7 +127,9 @@ Movement awkward_ghost_movement = {
         PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
         0,0,
         DOWN,
-        12, 25
+        12, 25,
+        25, 12,
+        25, 12
 };
 Ghost awkward_ghost = {
     0,
@@ -172,11 +182,11 @@ Timer timer = {
 int main()
 {
     Entities entity = {
-    &pacman,
-    &crying_ghost,
-    &awkward_ghost,
-    &moustache_ghost,
-    &cyclops_ghost,
+        &pacman,
+        &crying_ghost,
+        &awkward_ghost,
+        &moustache_ghost,
+        &cyclops_ghost,
     };
 
     int first_frames = 0;
@@ -192,14 +202,12 @@ int main()
     UINT16* base16 = Physbase();
     UCHAR8* base8 = Physbase();
     ULONG32 *original = Physbase();
+  
 
     int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256); 
-
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
 
     ULONG32* background_ptr = (ULONG32*)(&background[0]);
-
-    ULONG32* current_buffer = Physbase();
     
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = PLAY;
@@ -223,11 +231,11 @@ int main()
     int initial_moves[5] = {0,1,2,3,4};
     int moves_index = 0;
     int intro_duration = 0;
+    int i;
 
 	init_map_cells(cell_map,tile_map);	
 
-    
-
+/*
     cell_map[10][17].has_pellet = FALSE;
     cell_map[10][18].has_pellet = FALSE;
 
@@ -239,11 +247,15 @@ int main()
 
     cell_map[12][20].has_pellet = FALSE;
     cell_map[12][21].has_pellet = FALSE;
+    */
 
-    clear_screen_q(base32); 
+    clear_screen_q(base32);
 
     render_map(base32, tile_map);
+
     render_map(back_buffer_ptr, tile_map);
+
+
 /*
     render_map(base16, tile_map);
     render_map((UINT16*)back_buffer_ptr, tile_map);
@@ -328,30 +340,39 @@ int main()
         time_now = get_time();
         time_elapsed = time_now - time_then;
         ticks = 0;
-        if (time_elapsed > 0) {
+
             if (Cconis())
             {
                 input = (char)Cnecin();
             }
+        if (time_elapsed > 0) {
             /*render_to_buffer(base32,&entity,ticks,input);     */ 
             /*Vsync();*/
+
             update_movement(&entity, input, ticks);
 
-            render_to_buffer(back_buffer_ptr, &entity, ticks, input);
+            update_current_frame(&entity, ticks);
+            render_frame(back_buffer_ptr, &entity);
+
             swap_buffers(&base32, &back_buffer_ptr);
             Setscreen(-1,base32,-1);  
 
             ticks = (++ticks & 63);
             time_then = get_time();
-        }
-        /* --- sound ---*/
+
         old_ssp = Super(0);
         play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
         play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
         Super(old_ssp);
         /* -------------*/
-        update_game_state(state, input);
+        }
+        /* --- sound ---*/
+       state = update_game_state(state, input);
     }
+    old_ssp = Super(0);
+    stop_sound();
+    Super(old_ssp);
+    Setscreen(-1,original,-1);
 
 	return 0;
 }
@@ -480,10 +501,14 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
     /*Do something that updates the gamestate*/
     GAME_STATE state;
     if (input == '\033')
+    {
         state = QUIT;
-    
+        return state;
+    }
+
     state = new_state;
 
+   return state;
 
 }
 ULONG32 get_time()
@@ -533,66 +558,14 @@ void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
     ULONG32 temp = *base32;
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
-    /*   
-    printf("base 32 --> %p\n", (void *)base32);
-    printf("back_buffer_ptr --> %p\n", (void *)back_buffer_ptr);
-    */  
-}
-
-/* save updating stuff and leave that in main...?
-try to only render to the buffer in this function */
-/* render to back buffer - switch to back buffer - wait for VSync 
- do the same for the front*/
-void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input)
-{
-
-    update_current_frame(entity, ticks);
-    render_frame(base32, entity);
-    
 }
 void update_movement(Entities* entity, char input, UINT16 ticks) {
     
     set_input(entity->pacman,input);
-    handle_collisions(entity, ticks);          /*Checks and handles collisions*/
+    handle_collisions(entity, ticks);         
     update_pacman();
     update_ghosts();
     check_proximity(entity);
     update_cells(entity);
-
-}
-
-ULONG32* byte_allign(ULONG32* array_address)
-{
-  
-    ULONG32 adjustment;
-    ULONG32 *aligned_start; 
-    ULONG32 address = (ULONG32)&array_address;
-    ULONG32 misalignment;
-    /*ULONG32 misalignment = address % ALLIGNMENT;*/
-
-
-    if (address < (ULONG32)BACK_BUFFER_START)
-        address = (ULONG32)BACK_BUFFER_START;
-
-    else if (address > (ULONG32)BACK_BUFFER_END)
-        address = (ULONG32)BACK_BUFFER_END;
-
-    misalignment = address % ALLIGNMENT;
-   
-   
-    if (misalignment != 0) 
-    {
-        adjustment = ALLIGNMENT - misalignment;
-    }
-    else 
-    {
-        adjustment = 0;
-    }
-
-    aligned_start = (ULONG32 *)(address + adjustment);
-
-    printf("Aligned start address: %p\n", (void *)aligned_start);
-    
-    return aligned_start;
 
 }

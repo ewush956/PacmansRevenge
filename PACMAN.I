@@ -1025,16 +1025,16 @@ void update_movement(Entities* entity, char input, UINT16 ticks);
 
 
 
-UCHAR8 screen_buffer[32256 ];
-
-
 UCHAR8 background[32256 ];
+UCHAR8 screen_buffer[32256 ];
 # 63 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
         ((UCHAR8)0) ,
-        21,19
+        21,19,
+        19,21,
+        19,21
 };
 Pacman pacman = {
     0,
@@ -1047,7 +1047,9 @@ Movement crying_ghost_movement = {
         16  * 13, 16  * 10 + 16 ,
         0,0,
         ((UCHAR8)0) ,
-        10, 13
+        10, 13,
+        13, 10,
+        13, 10
 };
 Ghost crying_ghost = {
     0,
@@ -1061,7 +1063,9 @@ Movement cyclops_ghost_movement = {
         16  * 13, 16  * 12 + 16 ,
         0,0,
         ((UCHAR8)1) ,
-        12, 13
+        12, 13,
+        13, 12,
+        13, 12
 };
 Ghost cyclops_ghost = {
     0,
@@ -1075,7 +1079,9 @@ Movement moustache_ghost_movement = {
         16  * 25, 16  * 10 + 16 ,
         0,0,
         ((UCHAR8)0) ,
-        10, 25
+        10, 25,
+        25, 10,
+        25, 10
 };
 Ghost moustache_ghost = {
     0,
@@ -1089,7 +1095,9 @@ Movement awkward_ghost_movement = {
         16  * 25, 16  * 12 + 16 ,
         0,0,
         ((UCHAR8)1) ,
-        12, 25
+        12, 25,
+        25, 12,
+        25, 12
 };
 Ghost awkward_ghost = {
     0,
@@ -1103,15 +1111,15 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
-# 172 "pacman.c"
+# 182 "pacman.c"
 int main()
 {
     Entities entity = {
-    &pacman,
-    &crying_ghost,
-    &awkward_ghost,
-    &moustache_ghost,
-    &cyclops_ghost,
+        &pacman,
+        &crying_ghost,
+        &awkward_ghost,
+        &moustache_ghost,
+        &cyclops_ghost,
     };
 
     int first_frames = 0;
@@ -1128,13 +1136,11 @@ int main()
     UCHAR8* base8 = (void*)_trap_14_w((short)0x2) ;
     ULONG32 *original = (void*)_trap_14_w((short)0x2) ;
 
-    int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256);
 
+    int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256);
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
 
     ULONG32* background_ptr = (ULONG32*)(&background[0]);
-
-    ULONG32* current_buffer = (void*)_trap_14_w((short)0x2) ;
 
 	ULONG32 time_then, time_now, time_elapsed;
     GAME_STATE state = ((UCHAR8)1) ;
@@ -1158,28 +1164,16 @@ int main()
     int initial_moves[5] = {0,1,2,3,4};
     int moves_index = 0;
     int intro_duration = 0;
+    int i;
 
 	init_map_cells(cell_map,tile_map);
-
-
-
-    cell_map[10][17].has_pellet = 0 ;
-    cell_map[10][18].has_pellet = 0 ;
-
-    cell_map[10][20].has_pellet = 0 ;
-    cell_map[10][21].has_pellet = 0 ;
-
-    cell_map[12][17].has_pellet = 0 ;
-    cell_map[12][18].has_pellet = 0 ;
-
-    cell_map[12][20].has_pellet = 0 ;
-    cell_map[12][21].has_pellet = 0 ;
-
+# 252 "pacman.c"
     clear_screen_q(base32);
 
     render_map(base32, tile_map);
+
     render_map(back_buffer_ptr, tile_map);
-# 321 "pacman.c"
+# 333 "pacman.c"
 	if ((short)_trap_1_w((short)0x0B) )
 	{
 		input = (char)_trap_1_w((short)0x08) ;
@@ -1190,30 +1184,39 @@ int main()
         time_now = get_time();
         time_elapsed = time_now - time_then;
         ticks = 0;
-        if (time_elapsed > 0) {
+
             if ((short)_trap_1_w((short)0x0B) )
             {
                 input = (char)_trap_1_w((short)0x08) ;
             }
+        if (time_elapsed > 0) {
+
 
 
             update_movement(&entity, input, ticks);
 
-            render_to_buffer(back_buffer_ptr, &entity, ticks, input);
+            update_current_frame(&entity, ticks);
+            render_frame(back_buffer_ptr, &entity);
+
             swap_buffers(&base32, &back_buffer_ptr);
             (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
 
             ticks = (++ticks & 63);
             time_then = get_time();
-        }
 
         old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
         play_waka_sound(0 , waka_sound_cycle, 14 , &wakaState);
         play_waka_sound(1 , waka_noise_cycle, 14 , &wakaNoise);
         _trap_1_wl((short)0x20,(long)(old_ssp)) ;
 
-        update_game_state(state, input);
+        }
+
+       state = update_game_state(state, input);
     }
+    old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
+    stop_sound();
+    _trap_1_wl((short)0x20,(long)(old_ssp)) ;
+    (void)_trap_14_wllw((short)0x5,(long)(-1),(long)original,(short)(-1)) ;
 
 	return 0;
 }
@@ -1267,7 +1270,7 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = ((UCHAR8)1) ;
 }
-# 464 "pacman.c"
+# 485 "pacman.c"
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 
     move_ghost(entity->crying_ghost);
@@ -1287,10 +1290,14 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
     GAME_STATE state;
     if (input == '\033')
+    {
         state = ((UCHAR8)0) ;
+        return state;
+    }
 
     state = new_state;
 
+   return state;
 
 }
 ULONG32 get_time()
@@ -1340,22 +1347,6 @@ void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
     ULONG32 temp = *base32;
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
-
-
-
-
-}
-
-
-
-
-
-void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input)
-{
-
-    update_current_frame(entity, ticks);
-    render_frame(base32, entity);
-
 }
 void update_movement(Entities* entity, char input, UINT16 ticks) {
 
@@ -1365,41 +1356,5 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
     update_ghosts();
     check_proximity(entity);
     update_cells(entity);
-
-}
-
-ULONG32* byte_allign(ULONG32* array_address)
-{
-
-    ULONG32 adjustment;
-    ULONG32 *aligned_start;
-    ULONG32 address = (ULONG32)&array_address;
-    ULONG32 misalignment;
-
-
-
-    if (address < (ULONG32)0x000000 )
-        address = (ULONG32)0x000000 ;
-
-    else if (address > (ULONG32)0x007E00 )
-        address = (ULONG32)0x007E00 ;
-
-    misalignment = address % 256 ;
-
-
-    if (misalignment != 0)
-    {
-        adjustment = 256  - misalignment;
-    }
-    else
-    {
-        adjustment = 0;
-    }
-
-    aligned_start = (ULONG32 *)(address + adjustment);
-
-    printf("Aligned start address: %p\n", (void *)aligned_start);
-
-    return aligned_start;
 
 }
