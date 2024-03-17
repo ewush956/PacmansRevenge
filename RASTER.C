@@ -25,13 +25,17 @@ void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
             /* dx++; Can't get dx working :(*/
         }
 }
+/******************************************************************************
+ * Function: clear_bitmap
+ * does NOT clear outer walls
+******************************************************************************/
 void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height) {
     int row;
     int dy = y;
     ULONG32* location = base + (y * LONGS_PER_ROW) + (x >> 5);
     ULONG32 mask1, mask2;
 
-    if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && y >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT)) {
+    if (x >= 16 && x <= (SCREEN_WIDTH - SPRITE_WIDTH - 16) && y >= 16 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT - 16)) {
         for (row = 0; row < height; row++) {
 
             mask1 = ~(0xFFFFFFFF >> (x & 31));

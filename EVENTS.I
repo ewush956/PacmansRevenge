@@ -472,7 +472,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
     switch(object_type)
     {
     case OPEN_PATH:
-        align_axis(pacman);
+
         break;
     case WALL:
 

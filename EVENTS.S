@@ -371,9 +371,6 @@ _handle_pacman_collision:
 	beq	L42
 	bra	L39
 L40:
-	;line	137
-	move.l	a4,-(a7)
-	jsr	_align_axis
 	;line	138
 	bra	L39
 L41:

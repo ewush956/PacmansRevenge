@@ -30,6 +30,7 @@ void move_pacman (Pacman *pacman)
 
     pacman_movement->x += (pacman_movement->delta_x << 1);
     pacman_movement->y += (pacman_movement->delta_y << 1);
+    align_axis(pacman_movement);
 
     /*
     if (pacman -> state == DEFAULT) {

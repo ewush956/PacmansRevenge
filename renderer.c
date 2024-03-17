@@ -64,8 +64,8 @@ void render_frame(ULONG32* base, Entities* entity) {
                    awkward, cyclops); 
 
     render_pacman(base, pacman);
-    clear_pacman(base, pacman->move);
     render_ghosts(base, entity);
+    clear_pacman(base, pacman->move);
 
     render_pellet(base8, crying);
     render_pellet(base8, moustache);
@@ -289,18 +289,9 @@ void render_pellet(UCHAR8* base8, Movement* move) {
     }
 }
 void clear_pacman(ULONG32* base32, Movement* move) {
-    switch (move->direction) {
-        case LEFT:
-            clear_bitmap_32(base32, move->last_x + SPRITE_WIDTH - 16, move->last_y, SPRITE_HEIGHT);
-            break;
-        case RIGHT:
-            break;
-        case UP:
-            clear_bitmap_32(base32, move->last_x, move->last_y + SPRITE_HEIGHT - 16, 16);
-            break;
-        case DOWN:
-            break;
-    }
+    UCHAR8 direction = move->direction;
+    UCHAR8 y_index = move->y_cell_index;
+    UCHAR8 x_index = move->x_cell_index;
 
     if (move->changed_direction == TRUE) { 
         /*
@@ -312,6 +303,19 @@ void clear_pacman(ULONG32* base32, Movement* move) {
             clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_WIDTH);
         }
         */
+        switch (direction)
+        {
+        case DOWN:
+            if (cell_map[y_index][x_index+2].open_path == TRUE) {
+                
+            /*clear_bitmap_32(base32, move->last_x + SPRITE_WIDTH - 16, move->last_last_y, SPRITE_HEIGHT);*/
+                clear_bitmap_32(base32, (x_index+1) << 4, (y_index+1) << 4, SPRITE_HEIGHT);
+            }
+            break;
+        case UP:
+            clear_bitmap_32(base32, move->last_x, move->last_y + SPRITE_HEIGHT - 16, 16);
+            break;
+       }
     }
 }
 

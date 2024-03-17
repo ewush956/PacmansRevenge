@@ -46,13 +46,17 @@ void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
 
         }
 }
+
+
+
+
 void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height) {
     int row;
     int dy = y;
     ULONG32* location = base + (y * 20 ) + (x >> 5);
     ULONG32 mask1, mask2;
 
-    if (x >= 0 && x <= (640  - 32 ) && y >= 0 && y <= (400  - 32 )) {
+    if (x >= 16 && x <= (640  - 32  - 16) && y >= 16 && y <= (400  - 32  - 16)) {
         for (row = 0; row < height; row++) {
 
             mask1 = ~(0xFFFFFFFF >> (x & 31));
@@ -81,7 +85,7 @@ void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned 
         dy++;
     }
 }
-# 72 "raster.c"
+# 76 "raster.c"
 void plot_bitmap_64(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height) {
     int row;
     ULONG32* location = base + (y * 20 ) + (x >> 5);
@@ -113,7 +117,7 @@ void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int heig
         }
     }
 }
-# 112 "raster.c"
+# 116 "raster.c"
 void plot_letter(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int letter) {
     int row;
     int index = ((letter - ' ') << 3);
@@ -150,7 +154,7 @@ void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* 
         str++;
     }
 }
-# 154 "raster.c"
+# 158 "raster.c"
 void plot_screen(ULONG32* base, const ULONG32* bitmap) {
     return;
 }
