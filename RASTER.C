@@ -41,9 +41,8 @@ void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height) {
             if ((x & 31) + SPRITE_WIDTH > 32) {
                 *(location + 1) &= mask2;
             }
-        location += LONGS_PER_ROW; 
+            location += LONGS_PER_ROW; 
         }
-        /*dy++; */
     }
 }
 
@@ -95,13 +94,13 @@ void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int heig
 
     if (x >= 0 && x < SCREEN_WIDTH && dy >= 0 && dy < SCREEN_HEIGHT) {
         for (row = 0; row < height; row++) {
-            *location |= bitmap[row] >> (x % 8);     
-            *(location + 1) |= bitmap[row] << 8 - (x % 8);
+            *location |= bitmap[row] >> (x & 7);     
+            *(location + 1) |= bitmap[row] << 8 - (x & 7);
             location += BYTES_PER_ROW;     
         }
     }
 }
-/**
+/*****************************************************************************
  * Plots a letter on the screen at the specified (x,y) coordinates.
  *
  * @param base pointer to the base of the frame buffer

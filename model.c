@@ -21,6 +21,7 @@ void move_pacman (Pacman *pacman)
         pacman_movement->last_last_y = pacman_movement->y;
         return;
     }
+    
     pacman_movement->last_last_x = pacman_movement->last_x;
     pacman_movement->last_last_y = pacman_movement->last_y;
 
@@ -86,10 +87,9 @@ void move_ghost (Ghost *ghost)
 				break;
 		}
         align_axis(ghost_movement);
-        
         ghost_movement->last_last_x = ghost_movement->last_x;
         ghost_movement->last_last_y = ghost_movement->last_y;
-
+        
         ghost_movement->last_x = ghost_movement->x;
         ghost_movement->last_y = ghost_movement->y;
 
@@ -129,7 +129,7 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
 
     for (i = 0; i < 4; i++){
         
-        if (all_ghosts[i]->type != curr_type) /* no collsiion with ghost itself only other objs*/
+        if (all_ghosts[i]->type != curr_type) 
         {
             if ((all_ghosts[i]->move->x_cell_index == object_x_index + x_delta &&
                 all_ghosts[i]->move->y_cell_index == object_y_index + y_delta) ||
@@ -139,6 +139,7 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
         }
     }
     return collision;
+    
 }    
 /*************************************************************
  * Function: check_pacman_collision
@@ -186,6 +187,7 @@ ObjectType check_wall_collision(Movement* entity) {
  * Parameters: Entities* all - Pointer to the entities structure containing
 *******************************************************/
 void check_proximity(Entities* all) {
+    
     int ghostCountWithinRange = 0;
     int i;
     UINT16 pacman_x_index, pacman_y_index;
@@ -235,6 +237,7 @@ void check_proximity(Entities* all) {
     else if (ghostCountWithinRange >= 2) {
         end_game();
     }
+    
 }
 
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state) {
@@ -365,11 +368,13 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
 
     y_cell_index = ghost->move->y_cell_index;
     x_cell_index = ghost->move->x_cell_index;
+
+    add_wall_to_map(cell_map, y_cell_index, x_cell_index);
     
-    cell_map[y_cell_index][x_cell_index].open_path = FALSE;
+   /* cell_map[y_cell_index][x_cell_index].open_path = FALSE;
     cell_map[y_cell_index+1][x_cell_index].open_path = FALSE;
     cell_map[y_cell_index][x_cell_index+1].open_path = FALSE;
-    cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;*/
 }
 /*************************************************************
 * Function: add_wall_to_map
@@ -382,27 +387,28 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
 *          making it a wall. This is used to dynamically alter the map's layout.
 *************************************************************/
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index) {
-   cell_map[y_cell_index][x_cell_index].open_path = FALSE;
-   cell_map[y_cell_index+1][x_cell_index].open_path = FALSE;
-   cell_map[y_cell_index][x_cell_index+1].open_path = FALSE;
-   cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index].has_pellet = FALSE;
+
+    cell_map[y_cell_index+1][x_cell_index].open_path = FALSE;
+    cell_map[y_cell_index+1][x_cell_index].has_pellet = FALSE;
+
+    cell_map[y_cell_index][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index+1].has_pellet = FALSE;
+
+    cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index+1][x_cell_index+1].has_pellet = FALSE;
 }
 void align_axis(Movement* entity) {
+
+    entity->last_last_x = entity->last_x;
+    entity->last_last_y = entity->last_y;
         if (entity->direction == UP || entity->direction == DOWN) {        
         entity->x = (entity->x_cell_index << 4);
         }
         else if (entity->direction == LEFT || entity->direction == RIGHT) {
             entity->y = (entity->y_cell_index + 1) << 4;
         }
-    /*
-        if (entity->direction == UP || entity->direction == DOWN) {
-            
-            entity->x = entity->x_cell_index * PIXELS_PER_CELL;
-        }
-        else if (entity->direction == LEFT || entity->direction == RIGHT) {
-            entity->y = entity->y_cell_index  * PIXELS_PER_CELL + PIXELS_PER_CELL;
-        }
-        */
 }
 void flip_direction(Movement* ghost) {
     if (ghost->direction == UP)

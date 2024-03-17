@@ -60,7 +60,6 @@ void render_frame(ULONG32* base, Entities* entity) {
     Movement* awkward = entity->awkward_ghost->move;
     Movement* cyclops = entity->cyclops_ghost->move;
 
-
     clear_entities(base, pacman->move, crying, moustache,
                    awkward, cyclops); 
 
@@ -69,7 +68,6 @@ void render_frame(ULONG32* base, Entities* entity) {
     render_pellet(base8, awkward);
     render_pellet(base8, cyclops);
     render_pellet(base8, pacman->move);
-    
     
     render_pacman(base, pacman);
     render_ghosts(base, entity);
@@ -88,6 +86,7 @@ void render_frame(ULONG32* base, Entities* entity) {
 *          for rendering operations. 
 *************************************************************/
 void render_pacman(ULONG32* base32, Pacman* pacman) {
+
     Movement* move = pacman->move;
     UINT16 x = move->x;
     UINT16 y = move->y;
@@ -102,7 +101,8 @@ void render_pacman(ULONG32* base32, Pacman* pacman) {
     }
     else {
         plot_bitmap_32(base32, x, y, default_pacman_sprites[direction][frame], SPRITE_HEIGHT);
-    }    /* pacman->current_frame++; */
+    }    
+    
 }
 /*************************************************************
 * Function: render_ghosts
@@ -124,7 +124,7 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     Ghost* moustache_g = entity->moustache_ghost;
     Ghost* crying_g = entity->crying_ghost;
     Ghost* cyclops_g = entity->cyclops_ghost;
-
+    
     if (entity->awkward_ghost->state == DEFAULT) {
         plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->direction][awkward_g->current_frame], SPRITE_HEIGHT);
     } else {
@@ -148,6 +148,7 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     } else {
         render_non_default_ghost(base32, cyclops_g);
     }
+    
 }
 /*************************************************************
 * Function: de_render_ghost
@@ -219,12 +220,13 @@ void render_initial_timer(UCHAR8* base) {
 void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
                     Movement* moustache, Movement* awkward, Movement* cyclops) {
 
-    clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, cyclops->last_x, cyclops->last_y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, crying->last_x, crying->last_y, SPRITE_HEIGHT);
+    
     clear_bitmap_32(base32, awkward->last_x, awkward->last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, moustache->last_x, moustache->last_y, SPRITE_HEIGHT);
-    
+    clear_bitmap_32(base32, crying->last_x, crying->last_y, SPRITE_HEIGHT);
+    clear_bitmap_32(base32, cyclops->last_x, cyclops->last_y, SPRITE_HEIGHT);
+
+    clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
 
     clear_bitmap_32(base32, awkward->last_last_x, awkward->last_last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, moustache->last_last_x, moustache->last_last_y, SPRITE_HEIGHT);
@@ -232,7 +234,9 @@ void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
     clear_bitmap_32(base32, cyclops->last_last_x, cyclops->last_last_y, SPRITE_HEIGHT);
     
     clear_bitmap_32(base32, pacman->last_last_x, pacman->last_last_y, SPRITE_HEIGHT);
-    
+
+    /*clear_pacman(base32, pacman);*/
+    /*doesnt work lol ^^^*/
     
 
 }
@@ -284,5 +288,21 @@ void render_pellet(UCHAR8* base8, Movement* move) {
         if (cell_map[move->y_cell_index + 2][move->x_cell_index - 1].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 32, pellet, 8);
         }
+    }
+}
+void clear_pacman(ULONG32* base32, Movement* move) {
+    switch (move->direction) {
+        case LEFT:
+            clear_bitmap_32(base32, move->last_x + SPRITE_WIDTH - 16, move->last_y, SPRITE_HEIGHT);
+            break;
+        case RIGHT:
+            clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
+            break;
+        case UP:
+            clear_bitmap_32(base32, move->last_x, move->last_y + SPRITE_HEIGHT - 16, 16);
+            break;
+        case DOWN:
+            clear_bitmap_32(base32, move->last_x, move->last_y, 16);
+            break;
     }
 }

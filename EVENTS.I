@@ -412,6 +412,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
                 }
             }
         }
+
     }
     for (i = 3; i > -1; i--){
         for (n = 1; n <= i; n++){
@@ -461,7 +462,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
             return;
     }
 }
-# 129 "events.c"
+# 130 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     Movement* pacman = entity->pacman->move;
@@ -503,7 +504,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         break;
     }
 }
-# 177 "events.c"
+# 178 "events.c"
 void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;

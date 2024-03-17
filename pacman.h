@@ -65,6 +65,7 @@ void update_entities();
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index);
 ULONG32* byte_allign(ULONG32* array_address);
+void debug_pacman_movement(ULONG32* base32, Pacman* pacman);
 
 
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
@@ -73,6 +74,21 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
+
+extern Movement pacman_movements;
+extern Pacman pacman;
+
+extern Movement awkward_ghost_movement;
+extern Ghost awkward_ghost;
+
+extern Movement moustache_ghost_movement;
+extern Ghost moustache_ghost;
+
+extern Movement cyclops_ghost_movement;
+extern Ghost cyclops_ghost;
+
+extern Movement crying_ghost_movement;
+extern Ghost crying_ghost;
 
 
 

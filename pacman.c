@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <linea.h>
 
-
 /************************* KNOWN BUG ***************************
  * Currently, there is a bug that does not render the top left portion 
  * of the map from the back buffer. It appears to be in the correct memory 
@@ -28,8 +27,6 @@
  * Pacman currently does not eat the pellets.
  ***********************************************************/
 
-UCHAR8 background[BUFFER_SIZE_BYTES];
-UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 /*************************************************************
 * Declaration: Pacman pacman
 * Purpose: Initializes the player character, Pacman, with its
@@ -41,8 +38,8 @@ Movement pacman_movement = {
         0,0,        /*Initial Displacement*/
         UP,
         21,19,          /*Cell index -> y, x*/
-        19,21,
-        19,21
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET
 };
 Pacman pacman = {
     0,
@@ -79,12 +76,12 @@ Ghost crying_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Movement cyclops_ghost_movement = {
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      
         0,0,
         LEFT,
         12, 17,
-        17, 12,
-        17, 12
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET  
 };
 Ghost cyclops_ghost = {
     0,
@@ -100,12 +97,12 @@ Ghost cyclops_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Movement moustache_ghost_movement = {
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      
         0,0,
         LEFT,
         10, 21,
-        21, 10,
-        21, 10
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET   
 };
 Ghost moustache_ghost = {
     0,
@@ -126,8 +123,8 @@ Movement awkward_ghost_movement = {
         0,0,
         LEFT,
         12, 21,
-        21, 12,
-        21, 12
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET, 
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET
 };
 Ghost awkward_ghost = {
     0,
@@ -141,10 +138,14 @@ Ghost awkward_ghost = {
 * Purpose: Initializes the game timer with starting values
 *          and thresholds for various game events.
 *************************************************************/
+
 Timer timer = {
     0,0,
     20, 28, 44, 52
 };
+
+UCHAR8 background[BUFFER_SIZE_BYTES];
+UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 
 int main()
 {
@@ -158,7 +159,7 @@ int main()
 
 	char input;
     int waka_repetitions = 10; 
-    int buffer_offset = 256 - ((long)(&screen_buffer[0]) % 256); 
+    int buffer_offset = 256 - ((long)(screen_buffer) % 256); 
     long old_ssp; 
 
 	UCHAR8 collision_type = 0;
@@ -183,7 +184,7 @@ int main()
 	{
 		input = (char)Cnecin();
 	}
-
+    
     while (state != QUIT) {
 
         time_now = get_time();
@@ -201,6 +202,8 @@ int main()
             update_current_frame(&entity, ticks);
             render_frame(back_buffer_ptr, &entity);
 
+            debug_pacman_movement(base32, &pacman);
+
             swap_buffers(&base32, &back_buffer_ptr);
             Setscreen(-1,base32,-1);  
 
@@ -211,7 +214,6 @@ int main()
             play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
             play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
             Super(old_ssp);
-        
         }
         state = update_game_state(state, input);
     }
@@ -227,11 +229,13 @@ int main()
 * Purpose: Updates the position of the ghosts and pacman
 *******************************************************************/
 void update_entities() {
+
     move_pacman(&pacman);
     move_ghost(&moustache_ghost);
     move_ghost(&crying_ghost);
     move_ghost(&cyclops_ghost);
     move_ghost(&awkward_ghost);
+    
 }
 /******************************************************************
  * Function: set_first_movements
@@ -390,12 +394,12 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
     
 
     set_input(entity->pacman,input);
-
+    
     handle_collisions(entity, ticks);   
-
     update_entities();
-    check_proximity(entity);
+
     update_cells(entity);
+    check_proximity(entity);
     
 
 }
@@ -450,8 +454,10 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     clear_bitmap_32(base32, entity->pacman->move->x, entity->pacman->move->y, SPRITE_HEIGHT);
     
     render_frame(base32, entity);
+    /*
     render_initial_timer(base8);
     render_initial_timer(back8);
+    */
     
     set_first_movements(base32, base8, entity);
 
@@ -506,3 +512,58 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
         }
     }
 }
+/*******************************************************************
+ * Function: debug_pacman_movement
+ * Purpose: Prints out Pacman's movement coordinates for debugging
+ ******************************************************************/
+void debug_pacman_movement(ULONG32* base32, Pacman* pacman) 
+{
+    UCHAR8* base;
+    const char labels[6][5] = {"X: ", "Y: ", "LX: ", "LY: ", "LLX: ", "LLY: "};
+    UINT16 values[6];
+    UINT16 x_offset, y_offset;
+    UINT16 tens, ones, hundreds;
+    int i, j;
+
+    base = (UCHAR8*)base32;
+    
+    values[0] = pacman->move->x;
+    values[1] = pacman->move->y;
+    values[2] = pacman->move->last_x;
+    values[3] = pacman->move->last_y;
+    values[4] = pacman->move->last_last_x;
+    values[5] = pacman->move->last_last_y;
+
+    x_offset = 0;
+    y_offset = LETTER_HEIGHT * 2; 
+
+    for (i = 0; i < 6; ++i) {
+        for (j = 0; j < 10; ++j) { 
+            clear_letter(base, x_offset + j*LETTER_WIDTH, y_offset);
+        }
+
+        plot_string(base, x_offset, y_offset, font, labels[i]);
+        x_offset += 4*LETTER_WIDTH; 
+
+        if (values[i] >= 100) {
+            hundreds = values[i] / 100;
+            tens = (values[i] / 10) % 10;
+            ones = values[i] % 10;
+            debug_print(base, x_offset, y_offset, hundreds);
+            x_offset += 2*LETTER_WIDTH; 
+            debug_print(base, x_offset, y_offset, tens * 10 + ones);
+        } else {
+            tens = values[i] / 10;
+            ones = values[i] % 10;
+            debug_print(base, x_offset, y_offset, tens * 10 + ones);
+        }
+
+        x_offset += 4*LETTER_WIDTH; 
+
+        if (x_offset + 8*LETTER_WIDTH > SCREEN_WIDTH) {
+            x_offset = 0;
+            /*y_offset += LETTER_HEIGHT; */
+        }
+    }
+}
+

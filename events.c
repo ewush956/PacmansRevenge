@@ -68,6 +68,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
                 }
             }                   
         }
+        
     }
     for (i = 3; i > -1; i--){
         for (n = 1; n <= i; n++){
