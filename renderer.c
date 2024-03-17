@@ -63,14 +63,15 @@ void render_frame(ULONG32* base, Entities* entity) {
     clear_entities(base, pacman->move, crying, moustache,
                    awkward, cyclops); 
 
+    render_pacman(base, pacman);
+    clear_pacman(base, pacman->move);
+    render_ghosts(base, entity);
+
     render_pellet(base8, crying);
     render_pellet(base8, moustache);
     render_pellet(base8, awkward);
     render_pellet(base8, cyclops);
     render_pellet(base8, pacman->move);
-    
-    render_pacman(base, pacman);
-    render_ghosts(base, entity);
     
     render_timer(base, entity->timer);
 
@@ -234,8 +235,6 @@ void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
     clear_bitmap_32(base32, crying->last_last_x, crying->last_last_y, SPRITE_HEIGHT);
     
     clear_bitmap_32(base32, pacman->last_last_x, pacman->last_last_y, SPRITE_HEIGHT);
-    /*clear_pacman(base32, pacman);*/
-    /*doesnt work lol ^^^*/
     
 
 }
@@ -295,13 +294,24 @@ void clear_pacman(ULONG32* base32, Movement* move) {
             clear_bitmap_32(base32, move->last_x + SPRITE_WIDTH - 16, move->last_y, SPRITE_HEIGHT);
             break;
         case RIGHT:
-            clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
             break;
         case UP:
             clear_bitmap_32(base32, move->last_x, move->last_y + SPRITE_HEIGHT - 16, 16);
             break;
         case DOWN:
-            clear_bitmap_32(base32, move->last_x, move->last_y, 16);
             break;
     }
+
+    if (move->changed_direction == TRUE) { 
+        /*
+        if (move->previous_direction == LEFT || move->previous_direction == RIGHT) {
+            // Clear the entire height of the sprite vertically if the previous movement was horizontal.
+            clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
+        } else {
+            // Clear the entire width of the sprite horizontally if the previous movement was vertical.
+            clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_WIDTH);
+        }
+        */
+    }
 }
+

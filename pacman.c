@@ -39,7 +39,8 @@ Movement pacman_movement = {
         UP,
         21,19,          /*Cell index -> y, x*/
         PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,
-        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,
+        FALSE
 };
 Pacman pacman = {
     0,
@@ -59,7 +60,8 @@ Movement crying_ghost_movement = {
         RIGHT,
         10, 17,
         PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
+        FALSE
 };
 Ghost crying_ghost = {
     0,
@@ -81,7 +83,8 @@ Movement cyclops_ghost_movement = {
         LEFT,
         12, 17,
         PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET  
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+        FALSE
 };
 Ghost cyclops_ghost = {
     0,
@@ -102,7 +105,8 @@ Movement moustache_ghost_movement = {
         LEFT,
         10, 21,
         PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET   
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
+        FALSE
 };
 Ghost moustache_ghost = {
     0,
@@ -124,7 +128,8 @@ Movement awkward_ghost_movement = {
         LEFT,
         12, 21,
         PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET, 
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+        FALSE
 };
 Ghost awkward_ghost = {
     0,

@@ -203,32 +203,33 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 }
 void set_input(Pacman *pacman, char input)
 {
-
+    Movement* movement = pacman->move;
+    /*
 	pacman -> move -> delta_y = 0;
     pacman -> move -> delta_x = 0;
 
 	switch(input)
 	{
 		case W_KEY: 
-			pacman -> move -> delta_y = -1;   		/* UP 1*/
+			pacman -> move -> delta_y = -1;   		
             pacman -> move -> delta_x = 0;
             pacman -> move -> direction = UP; 
 			break;
 				
 		case A_KEY: 
-			pacman -> move -> delta_x = -1;			/*Left 3*/
+			pacman -> move -> delta_x = -1;			
             pacman -> move -> delta_y = 0;
             pacman -> move -> direction = LEFT;
 			break;
 				
 		case S_KEY: 
-			pacman -> move -> delta_y = 1;			/*Down 2*/
+			pacman -> move -> delta_y = 1;			
             pacman -> move -> delta_x = 0;
             pacman -> move -> direction = DOWN;
 			break;
 				
 		case D_KEY: 
-			pacman -> move -> delta_x = 1;			/* Right 4*/
+			pacman -> move -> delta_x = 1;			
             pacman -> move -> delta_y = 0;
             pacman -> move -> direction = RIGHT;
 			break;
@@ -236,6 +237,69 @@ void set_input(Pacman *pacman, char input)
 		default:
             pacman -> move -> delta_x = 0; 
             pacman -> move -> delta_y = 0;
+	
+			break;
+	}
+    */
+   /*
+   	movement -> delta_y = 0;
+    movement -> delta_x = 0;
+    */
+
+	switch(input)
+	{
+		case W_KEY: 
+            if (movement->direction != UP) {
+                movement->changed_direction = TRUE;
+                movement -> delta_y = -1;   		
+                movement -> delta_x = 0;
+                movement -> direction = UP; 
+            }
+            else {
+                movement->changed_direction = FALSE;
+            }
+			break;
+				
+		case A_KEY: 
+            if (movement->direction != LEFT) {
+                movement->changed_direction = TRUE;
+                movement -> delta_x = -1;			
+                movement -> delta_y = 0;
+                movement -> direction = LEFT;
+            }
+            else {
+                movement->changed_direction = FALSE;
+            }
+			break;
+				
+		case S_KEY: 
+            if (movement->direction != DOWN) {
+                movement->changed_direction = TRUE;
+                movement -> delta_y = 1;
+                movement -> delta_x = 0;
+                movement -> direction = DOWN;
+            }
+            else {
+                movement->changed_direction = FALSE;
+            }
+			break;
+				
+		case D_KEY: 
+            if (movement->direction != RIGHT) {
+                movement->changed_direction = TRUE;
+                movement -> delta_x = 1;
+                movement -> delta_y = 0;
+                movement -> direction = RIGHT;
+            }
+            else {
+                movement->changed_direction = FALSE;
+            }
+			break;
+
+		default:
+            movement->changed_direction = FALSE;
+            movement -> delta_x = 0; 
+            movement -> delta_y = 0;
 	
 			break;
 	}
@@ -261,4 +325,5 @@ UCHAR8 get_valid_paths(Movement *ghost)
 }
 void eat_pellet(Movement* pacman) {
     cell_map[pacman->y_cell_index][pacman->x_cell_index].has_pellet = FALSE;
+    
 }

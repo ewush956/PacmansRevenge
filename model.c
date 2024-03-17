@@ -28,7 +28,10 @@ void move_pacman (Pacman *pacman)
     pacman_movement->last_x = pacman_movement->x;
     pacman_movement->last_y = pacman_movement->y;
 
-    
+    pacman_movement->x += (pacman_movement->delta_x << 1);
+    pacman_movement->y += (pacman_movement->delta_y << 1);
+
+    /*
     if (pacman -> state == DEFAULT) {
     pacman_movement->x += (pacman_movement->delta_x << 1);
     pacman_movement->y += (pacman_movement->delta_y << 1);
@@ -37,6 +40,7 @@ void move_pacman (Pacman *pacman)
         pacman_movement->x += (pacman_movement->delta_x << 2);
         pacman_movement->y += (pacman_movement->delta_y << 2);
     }
+    */
 }
 /*************************************************************
 * Function: move_ghost
@@ -401,10 +405,8 @@ void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell
 }
 void align_axis(Movement* entity) {
 
-    entity->last_last_x = entity->last_x;
-    entity->last_last_y = entity->last_y;
-        if (entity->direction == UP || entity->direction == DOWN) {        
-        entity->x = (entity->x_cell_index << 4);
+        if (entity->direction == UP || entity->direction == DOWN) { 
+            entity->x = (entity->x_cell_index << 4);
         }
         else if (entity->direction == LEFT || entity->direction == RIGHT) {
             entity->y = (entity->y_cell_index + 1) << 4;

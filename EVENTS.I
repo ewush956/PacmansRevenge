@@ -153,6 +153,8 @@ typedef struct {
 	UINT16 last_last_x;
 	UINT16 last_last_y;
 
+	bool changed_direction;
+
 }Movement;
 
 extern Movement* move;
@@ -533,39 +535,62 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 }
 void set_input(Pacman *pacman, char input)
 {
-
-	pacman -> move -> delta_y = 0;
-    pacman -> move -> delta_x = 0;
-
+    Movement* movement = pacman->move;
+# 249 "events.c"
 	switch(input)
 	{
 		case 'w' :
-			pacman -> move -> delta_y = -1;
-            pacman -> move -> delta_x = 0;
-            pacman -> move -> direction = ((UCHAR8)0) ;
+            if (movement->direction != ((UCHAR8)0) ) {
+                movement->changed_direction = -1 ;
+                movement -> delta_y = -1;
+                movement -> delta_x = 0;
+                movement -> direction = ((UCHAR8)0) ;
+            }
+            else {
+                movement->changed_direction = 0 ;
+            }
 			break;
 
 		case 'a' :
-			pacman -> move -> delta_x = -1;
-            pacman -> move -> delta_y = 0;
-            pacman -> move -> direction = ((UCHAR8)2) ;
+            if (movement->direction != ((UCHAR8)2) ) {
+                movement->changed_direction = -1 ;
+                movement -> delta_x = -1;
+                movement -> delta_y = 0;
+                movement -> direction = ((UCHAR8)2) ;
+            }
+            else {
+                movement->changed_direction = 0 ;
+            }
 			break;
 
 		case 's' :
-			pacman -> move -> delta_y = 1;
-            pacman -> move -> delta_x = 0;
-            pacman -> move -> direction = ((UCHAR8)1) ;
+            if (movement->direction != ((UCHAR8)1) ) {
+                movement->changed_direction = -1 ;
+                movement -> delta_y = 1;
+                movement -> delta_x = 0;
+                movement -> direction = ((UCHAR8)1) ;
+            }
+            else {
+                movement->changed_direction = 0 ;
+            }
 			break;
 
 		case 'd' :
-			pacman -> move -> delta_x = 1;
-            pacman -> move -> delta_y = 0;
-            pacman -> move -> direction = ((UCHAR8)3) ;
+            if (movement->direction != ((UCHAR8)3) ) {
+                movement->changed_direction = -1 ;
+                movement -> delta_x = 1;
+                movement -> delta_y = 0;
+                movement -> direction = ((UCHAR8)3) ;
+            }
+            else {
+                movement->changed_direction = 0 ;
+            }
 			break;
 
 		default:
-            pacman -> move -> delta_x = 0;
-            pacman -> move -> delta_y = 0;
+            movement->changed_direction = 0 ;
+            movement -> delta_x = 0;
+            movement -> delta_y = 0;
 
 			break;
 	}
@@ -591,4 +616,5 @@ UCHAR8 get_valid_paths(Movement *ghost)
 }
 void eat_pellet(Movement* pacman) {
     cell_map[pacman->y_cell_index][pacman->x_cell_index].has_pellet = 0 ;
+
 }

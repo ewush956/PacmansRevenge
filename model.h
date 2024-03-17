@@ -60,6 +60,8 @@ typedef struct {
 
 	UINT16 last_last_x;
 	UINT16 last_last_y;
+
+	bool changed_direction;
 	
 }Movement;
 

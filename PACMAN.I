@@ -173,6 +173,8 @@ typedef struct {
 	UINT16 last_last_x;
 	UINT16 last_last_y;
 
+	bool changed_direction;
+
 }Movement;
 
 extern Movement* move;
@@ -1049,7 +1051,8 @@ Movement pacman_movement = {
         ((UCHAR8)0) ,
         21,19,
         16  * 19, 16  * 21 + 16 ,
-        16  * 19, 16  * 21 + 16 
+        16  * 19, 16  * 21 + 16 ,
+        0 
 };
 Pacman pacman = {
     0,
@@ -1057,14 +1060,15 @@ Pacman pacman = {
     PACMAN,
     &pacman_movement
 };
-# 56 "pacman.c"
+# 57 "pacman.c"
 Movement crying_ghost_movement = {
         16  * 17, 16  * 10 + 16 ,
         0,0,
         ((UCHAR8)3) ,
         10, 17,
         16  * 17, 16  * 10 + 16 ,
-        16  * 17, 16  * 10 + 16 
+        16  * 17, 16  * 10 + 16 ,
+        0 
 };
 Ghost crying_ghost = {
     0,
@@ -1073,14 +1077,15 @@ Ghost crying_ghost = {
     0 ,
     &crying_ghost_movement
 };
-# 78 "pacman.c"
+# 80 "pacman.c"
 Movement cyclops_ghost_movement = {
         16  * 17, 16  * 12 + 16 ,
         0,0,
         ((UCHAR8)2) ,
         12, 17,
         16  * 17, 16  * 12 + 16 ,
-        16  * 17, 16  * 12 + 16 
+        16  * 17, 16  * 12 + 16 ,
+        0 
 };
 Ghost cyclops_ghost = {
     0,
@@ -1089,14 +1094,15 @@ Ghost cyclops_ghost = {
     0 ,
     &cyclops_ghost_movement
 };
-# 99 "pacman.c"
+# 102 "pacman.c"
 Movement moustache_ghost_movement = {
         16  * 21, 16  * 10 + 16 ,
         0,0,
         ((UCHAR8)2) ,
         10, 21,
         16  * 21, 16  * 10 + 16 ,
-        16  * 21, 16  * 10 + 16 
+        16  * 21, 16  * 10 + 16 ,
+        0 
 };
 Ghost moustache_ghost = {
     0,
@@ -1105,14 +1111,15 @@ Ghost moustache_ghost = {
     0 ,
     &moustache_ghost_movement
 };
-# 121 "pacman.c"
+# 125 "pacman.c"
 Movement awkward_ghost_movement = {
         16  * 21, 16  * 12 + 16 ,
         0,0,
         ((UCHAR8)2) ,
         12, 21,
         16  * 21, 16  * 12 + 16 ,
-        16  * 21, 16  * 12 + 16 
+        16  * 21, 16  * 12 + 16 ,
+        0 
 };
 Ghost awkward_ghost = {
     0,
@@ -1121,7 +1128,7 @@ Ghost awkward_ghost = {
     0 ,
     &awkward_ghost_movement
 };
-# 142 "pacman.c"
+# 147 "pacman.c"
 Timer timer = {
     0,0,
     20, 28, 44, 52
@@ -1221,7 +1228,7 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 247 "pacman.c"
+# 252 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
@@ -1276,7 +1283,7 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 	render_frame(base, entity);
 
 }
-# 307 "pacman.c"
+# 312 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
 
@@ -1292,7 +1299,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
    return state;
 
 }
-# 329 "pacman.c"
+# 334 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1352,7 +1359,7 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
-# 394 "pacman.c"
+# 399 "pacman.c"
 void update_movement(Entities* entity, char input, UINT16 ticks) {
 
 
