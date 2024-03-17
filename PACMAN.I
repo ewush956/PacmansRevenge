@@ -875,8 +875,8 @@ extern short  (**__funcs) (void) ;
 # 13 "./pacman.h" 2
 
 typedef unsigned char GAME_STATE;
-# 55 "./pacman.h"
-void swap_buffers();
+# 56 "./pacman.h"
+void swap_buffers(ULONG32** base32, ULONG32** back_buffer_ptr);
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 void update_movement(Entities* entity, char input, UINT16 ticks);
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity);
@@ -1063,8 +1063,8 @@ Movement crying_ghost_movement = {
         0,0,
         ((UCHAR8)3) ,
         10, 17,
-        17, 10,
-        17, 10
+        16  * 17, 16  * 10 + 16 ,
+        16  * 17, 16  * 10 + 16 
 };
 Ghost crying_ghost = {
     0,
@@ -1130,6 +1130,7 @@ Timer timer = {
 UCHAR8 background[32256 ];
 UCHAR8 screen_buffer[32256 ];
 
+
 int main()
 {
     Entities entity = {
@@ -1149,11 +1150,12 @@ int main()
     UCHAR8* base8 = (void*)_trap_14_w((short)0x2) ;
 
     UINT16 ticks = 0;
-    UINT16* base16 = (void*)_trap_14_w((short)0x2) ;
+
 
 	ULONG32* base32 = (void*)_trap_14_w((short)0x2) ;
-    ULONG32 *original = (void*)_trap_14_w((short)0x2) ;
+    ULONG32* original = (void*)_trap_14_w((short)0x2) ;
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+
     ULONG32* background_ptr = (ULONG32*)(&background[0]);
 	ULONG32 time_then, time_now, time_elapsed;
 
@@ -1180,23 +1182,22 @@ int main()
         }
         if (time_elapsed > 0) {
 
-            update_movement(&entity, input, ticks);
-
-            update_current_frame(&entity, ticks);
-            render_frame(back_buffer_ptr, &entity);
-
-            debug_pacman_movement(base32, &pacman);
-
-            swap_buffers(&base32, &back_buffer_ptr);
-            (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
-
-            ticks = (++ticks & 63);
-            time_then = get_time();
-
             old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
             play_waka_sound(0 , waka_sound_cycle, 14 , &wakaState);
             play_waka_sound(1 , waka_noise_cycle, 14 , &wakaNoise);
             _trap_1_wl((short)0x20,(long)(old_ssp)) ;
+
+
+            update_movement(&entity, input, ticks);
+            update_current_frame(&entity, ticks);
+            render_frame(back_buffer_ptr, &entity);
+
+
+            swap_buffers(&base32, &back_buffer_ptr);
+            (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
+
+            time_then = get_time();
+            ticks = (++ticks & 63);
         }
         state = update_game_state(state, input);
     }
@@ -1220,7 +1221,7 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 246 "pacman.c"
+# 247 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
@@ -1275,7 +1276,7 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 	render_frame(base, entity);
 
 }
-# 306 "pacman.c"
+# 307 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
 
@@ -1291,7 +1292,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
    return state;
 
 }
-# 328 "pacman.c"
+# 329 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1345,13 +1346,13 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
 
 
 
-void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
+void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
 {
-    ULONG32 temp = *base32;
+    ULONG32* temp = *base32;
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
-# 393 "pacman.c"
+# 394 "pacman.c"
 void update_movement(Entities* entity, char input, UINT16 ticks) {
 
 
@@ -1404,10 +1405,11 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     cell_map[12][20].has_pellet = 0 ;
     cell_map[12][21].has_pellet = 0 ;
 
+
     clear_screen_q(base32);
+    render_map(base32, tile_map);
 
     render_map(back_buffer_ptr, tile_map);
-    render_map(base32, tile_map);
 
     clear_bitmap_32(base32, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, 32 );
     clear_bitmap_32(base32, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, 32 );
@@ -1415,13 +1417,13 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     clear_bitmap_32(base32, entity->crying_ghost->move->x, entity->crying_ghost->move->y, 32 );
     clear_bitmap_32(base32, entity->pacman->move->x, entity->pacman->move->y, 32 );
 
-    render_frame(base32, entity);
 
-
-
+    render_initial_timer(base8);
+    render_initial_timer(back8);
 
 
     set_first_movements(base32, base8, entity);
+    render_frame(base32, entity);
 
     old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
     enable_channel(1 , 1 , 0 );

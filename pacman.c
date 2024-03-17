@@ -34,7 +34,7 @@
 *          direction, and cell index on the game map.
 *************************************************************/
 Movement pacman_movement = {
-        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        /*Initial position, won't actually be 0,0*/
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        
         0,0,        /*Initial Displacement*/
         UP,
         21,19,          /*Cell index -> y, x*/
@@ -58,8 +58,8 @@ Movement crying_ghost_movement = {
         0,0,
         RIGHT,
         10, 17,
-        17, 10,
-        17, 10
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET
 };
 Ghost crying_ghost = {
     0,
@@ -147,6 +147,7 @@ Timer timer = {
 UCHAR8 background[BUFFER_SIZE_BYTES];
 UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 
+
 int main()
 {
     Entities entity = {
@@ -166,11 +167,12 @@ int main()
     UCHAR8* base8 = Physbase();
 
     UINT16 ticks = 0;
-    UINT16* base16 = Physbase();
+    /*UINT16* base16 = Physbase();*/
 
 	ULONG32* base32 = Physbase();
-    ULONG32 *original = Physbase();
+    ULONG32* original = Physbase();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+    
     ULONG32* background_ptr = (ULONG32*)(&background[0]); /*Not using at the moment*/
 	ULONG32 time_then, time_now, time_elapsed;
   
@@ -197,23 +199,22 @@ int main()
         }
         if (time_elapsed > 0) {
 
-            update_movement(&entity, input, ticks);
-
-            update_current_frame(&entity, ticks);
-            render_frame(back_buffer_ptr, &entity);
-
-            debug_pacman_movement(base32, &pacman);
-
-            swap_buffers(&base32, &back_buffer_ptr);
-            Setscreen(-1,base32,-1);  
-
-            ticks = (++ticks & 63);
-            time_then = get_time();
-
             old_ssp = Super(0);
             play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
             play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
             Super(old_ssp);
+
+
+            update_movement(&entity, input, ticks);
+            update_current_frame(&entity, ticks);
+            render_frame(back_buffer_ptr, &entity);
+            /*debug_pacman_movement(base32, &pacman);*/
+
+            swap_buffers(&base32, &back_buffer_ptr);
+            Setscreen(-1,base32,-1);  
+
+            time_then = get_time();
+            ticks = (++ticks & 63);
         }
         state = update_game_state(state, input);
     }
@@ -378,9 +379,9 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
  * Purpose: Swaps the adress of the front and back buffers
  * Parameters: base32, back_buffer_ptr
  ******************************************************************/
-void swap_buffers (ULONG32* base32, ULONG32* back_buffer_ptr)
+void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
 {
-    ULONG32 temp = *base32;
+    ULONG32* temp = *base32;
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
@@ -442,10 +443,11 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     cell_map[12][20].has_pellet = FALSE;
     cell_map[12][21].has_pellet = FALSE;
     
+
     clear_screen_q(base32);
+    render_map(base32, tile_map);
 
     render_map(back_buffer_ptr, tile_map);
-    render_map(base32, tile_map);
 
     clear_bitmap_32(base32, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, SPRITE_HEIGHT);
@@ -453,13 +455,13 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     clear_bitmap_32(base32, entity->crying_ghost->move->x, entity->crying_ghost->move->y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, entity->pacman->move->x, entity->pacman->move->y, SPRITE_HEIGHT);
     
-    render_frame(base32, entity);
-    /*
+    
     render_initial_timer(base8);
     render_initial_timer(back8);
-    */
+    
     
     set_first_movements(base32, base8, entity);
+    render_frame(base32, entity);
 
     old_ssp = Super(0);
     enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);

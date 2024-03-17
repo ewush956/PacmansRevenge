@@ -52,7 +52,8 @@ typedef unsigned char GAME_STATE;
 #define VIDEO_ADDR_MID  0xFF8203
 #define VIDEO_ADDR_LOW  0xFF820D
 
-void swap_buffers();
+/*void swap_buffers();*/
+void swap_buffers(ULONG32** base32, ULONG32** back_buffer_ptr);
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 void update_movement(Entities* entity, char input, UINT16 ticks);
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity);
