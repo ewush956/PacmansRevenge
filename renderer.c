@@ -65,7 +65,7 @@ void render_frame(ULONG32* base, Entities* entity) {
 
     render_pacman(base, pacman);
     render_ghosts(base, entity);
-    clear_pacman(base, pacman->move);
+    /*clear_pacman(base, pacman->move);*/
 
     render_pellet(base8, crying);
     render_pellet(base8, moustache);
