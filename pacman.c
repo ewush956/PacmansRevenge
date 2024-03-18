@@ -243,6 +243,24 @@ void update_entities() {
     move_ghost(&awkward_ghost);
     
 }
+/*******************************************************************
+ * Function: update_movement
+ * Purpose: Super call to all movement functions
+ * 
+ * Parameters: entity, input, ticks
+ ******************************************************************/
+void update_movement(Entities* entity, char input, UINT16 ticks) {
+    
+
+    set_input(entity->pacman,input);
+    handle_collisions(entity, ticks);   
+    update_entities();
+    eat_pellet(entity->pacman->move);
+    update_cells(entity);
+    check_proximity(entity);
+    
+
+}
 /******************************************************************
  * Function: set_first_movements
  * Purpose: Sets the first movements of the ghosts
@@ -389,25 +407,6 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
     ULONG32* temp = *base32;
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
-}
-/*******************************************************************
- * Function: update_movement
- * Purpose: Super call to all movement functions
- * 
- * Parameters: entity, input, ticks
- ******************************************************************/
-void update_movement(Entities* entity, char input, UINT16 ticks) {
-    
-
-    set_input(entity->pacman,input);
-    
-    handle_collisions(entity, ticks);   
-    update_entities();
-
-    update_cells(entity);
-    check_proximity(entity);
-    
-
 }
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) 
 {

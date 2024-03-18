@@ -1229,6 +1229,19 @@ void update_entities() {
 
 }
 # 252 "pacman.c"
+void update_movement(Entities* entity, char input, UINT16 ticks) {
+
+
+    set_input(entity->pacman,input);
+    handle_collisions(entity, ticks);
+    update_entities();
+    eat_pellet(entity->pacman->move);
+    update_cells(entity);
+    check_proximity(entity);
+
+
+}
+# 270 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
@@ -1283,7 +1296,7 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 	render_frame(base, entity);
 
 }
-# 312 "pacman.c"
+# 330 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
 
@@ -1299,7 +1312,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
    return state;
 
 }
-# 334 "pacman.c"
+# 352 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1358,20 +1371,6 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
     ULONG32* temp = *base32;
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
-}
-# 399 "pacman.c"
-void update_movement(Entities* entity, char input, UINT16 ticks) {
-
-
-    set_input(entity->pacman,input);
-
-    handle_collisions(entity, ticks);
-    update_entities();
-
-    update_cells(entity);
-    check_proximity(entity);
-
-
 }
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity)
 {

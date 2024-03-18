@@ -288,21 +288,11 @@ void clear_pacman(ULONG32* base32, Movement* move) {
     UCHAR8 x_index = move->x_cell_index;
 
     if (move->changed_direction == TRUE) { 
-        /*
-        if (move->previous_direction == LEFT || move->previous_direction == RIGHT) {
-            // Clear the entire height of the sprite vertically if the previous movement was horizontal.
-            clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);
-        } else {
-            // Clear the entire width of the sprite horizontally if the previous movement was vertical.
-            clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_WIDTH);
-        }
-        */
+        
         switch (direction)
         {
         case DOWN:
             if (cell_map[y_index][x_index+2].open_path == TRUE) {
-                
-            /*clear_bitmap_32(base32, move->last_x + SPRITE_WIDTH - 16, move->last_last_y, SPRITE_HEIGHT);*/
                 clear_bitmap_32(base32, (x_index+1) << 4, (y_index+1) << 4, SPRITE_HEIGHT);
             }
             break;
