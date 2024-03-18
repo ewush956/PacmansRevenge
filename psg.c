@@ -6,7 +6,7 @@
 /*Helper function*/
 void write_psg(int reg, UCHAR8 val);
 unsigned char read_psg(int reg);
-
+/*
 typedef struct {
     int frequency;
     int duration;
@@ -17,6 +17,7 @@ typedef struct {
     int current_note_index;
     int note_time_left;
 }MusicState;
+*/
 
 
 /******************************************

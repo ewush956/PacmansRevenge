@@ -1,3 +1,6 @@
+#ifndef EFFECTS_H
+#define EFFECTS_H
+
 #include "TYPES.H"
 #include "psg.h"
 
@@ -18,3 +21,5 @@ extern const SoundCycle waka_sound_cycle[WAKA_CYCLE_LENGTH];
 extern const SoundCycle waka_noise_cycle[WAKA_CYCLE_LENGTH];
 
 bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state);
+
+#endif

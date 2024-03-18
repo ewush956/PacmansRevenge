@@ -8,9 +8,13 @@
 #include "font.h"
 #include "bitmaps.h"
 #include "events.h"
+#include "psg.h"
+
+
 #include <osbind.h>
 #include <stdio.h>
 #include <linea.h>
+
 typedef unsigned char GAME_STATE;
 
 #define QUIT ((UCHAR8)0)
@@ -72,6 +76,13 @@ void debug_pacman_movement(ULONG32* base32, Pacman* pacman);
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
+
+void clear_and_render_entities(UCHAR8* base8, UCHAR8* back8, ULONG32* base32);
+void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr);
+
+void execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity);
+void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState);
+bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length);
 
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];

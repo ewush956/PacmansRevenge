@@ -9,10 +9,10 @@ typedef unsigned int  UINT16;
 typedef unsigned long ULONG32;
 
 typedef signed char bool;
-# 1 "./effects.h" 2
+# 4 "./effects.h" 2
 # 1 "./psg.h" 1
 # 1 "./TYPES.H" 1
-# 1 "./psg.h" 2
+# 4 "./psg.h" 2
 # 1 "C:/c68/include/osbind.h" 1
 # 1 "C:/c68/include/compiler.h" 1
 # 9 "C:/c68/include/osbind.h" 2
@@ -173,8 +173,19 @@ typedef struct
  long _trap_1_ 	(short,...) ;
  long _trap_14_ 	(short,...) ;
  long _trap_13_ 	(short,...) ;
-# 2 "./psg.h" 2
-# 136 "./psg.h"
+# 5 "./psg.h" 2
+# 28 "./psg.h"
+typedef struct {
+    int frequency;
+    int duration;
+    int volume;
+}Note;
+
+typedef struct {
+    int current_note_index;
+    int note_time_left;
+}MusicState;
+# 150 "./psg.h"
 void set_note_frequency(int channel, float frequency);
 void set_tone(int channel, int tuning);
 void enable_channel(int channel, int toneOn, int noiseOn);
@@ -182,7 +193,7 @@ void set_volume(int channel, unsigned char volume);
 void set_master_volume(unsigned char volume);
 void play_note(int channel, int tuning, unsigned char volume);
 void stop_sound();
-# 2 "./effects.h" 2
+# 5 "./effects.h" 2
 
 
 
@@ -204,18 +215,6 @@ extern const SoundCycle waka_noise_cycle[14 ];
 bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state);
 # 1 "effects.c" 2
 # 1 "./psg.h" 1
-# 1 "./TYPES.H" 1
-# 1 "./psg.h" 2
-# 1 "C:/c68/include/osbind.h" 1
-# 2 "./psg.h" 2
-# 136 "./psg.h"
-void set_note_frequency(int channel, float frequency);
-void set_tone(int channel, int tuning);
-void enable_channel(int channel, int toneOn, int noiseOn);
-void set_volume(int channel, unsigned char volume);
-void set_master_volume(unsigned char volume);
-void play_note(int channel, int tuning, unsigned char volume);
-void stop_sound();
 # 2 "effects.c" 2
 # 1 "./TYPES.H" 1
 # 3 "effects.c" 2

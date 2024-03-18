@@ -10,7 +10,7 @@ typedef unsigned long ULONG32;
 
 typedef signed char bool;
 # 4 "./raster.h" 2
-# 22 "./raster.h"
+# 25 "./raster.h"
 void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height);
 void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
 void clear_letter(UCHAR8* base, int x, int y);
@@ -23,6 +23,7 @@ void plot_bitmap_64(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
 void plot_letter(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int letter);
 void plot_screen(ULONG32* base, const ULONG32* bitmap);
 void clear_screen_q(ULONG32* base);
+void clear_8(UCHAR8* base, int x, int y, unsigned int height);
 
 
 
@@ -146,6 +147,19 @@ void clear_letter(UCHAR8* base, int x, int y) {
         }
     }
 }
+void clear_8(UCHAR8* base, int x, int y, unsigned int height) {
+    int row;
+    int dx = x;
+    int dy = y;
+    UCHAR8* location = base + (y * 80 ) + (x >> 3);
+    if (x >= 0 && x < 640  - 8 && dy >= 0 && dy < (400  - height)) {
+        for (row = 0; row < height; row++) {
+            *location = 0;
+            *(location + 1) = 0;
+            location += 80 ;
+        }
+    }
+}
 void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* str) {
     int current_x = x;
     while (*str != '\0') {
@@ -154,7 +168,7 @@ void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* 
         str++;
     }
 }
-# 158 "raster.c"
+# 171 "raster.c"
 void plot_screen(ULONG32* base, const ULONG32* bitmap) {
     return;
 }

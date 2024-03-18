@@ -1,3 +1,6 @@
+#ifndef PSG_H
+#define PSG_H
+
 #include "TYPES.H"
 #include <osbind.h>
 
@@ -21,6 +24,17 @@
 
 #define SELECT_REGISTER 0xFF8800
 #define WRITE_REGISTER 0xFF8802
+
+typedef struct {
+    int frequency;
+    int duration;
+    int volume;
+}Note;
+
+typedef struct {
+    int current_note_index;
+    int note_time_left;
+}MusicState;
 
 #define NUM_NOTES 12
 #define FIRST_OCTAVE 0
@@ -141,3 +155,4 @@ void set_master_volume(unsigned char volume);
 void play_note(int channel, int tuning, unsigned char volume);
 void stop_sound();
 
+#endif

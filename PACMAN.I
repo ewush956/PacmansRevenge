@@ -11,7 +11,7 @@ typedef unsigned long ULONG32;
 
 typedef signed char bool;
 # 4 "./raster.h" 2
-# 22 "./raster.h"
+# 25 "./raster.h"
 void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height);
 void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
 void clear_letter(UCHAR8* base, int x, int y);
@@ -24,6 +24,7 @@ void plot_bitmap_64(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
 void plot_letter(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int letter);
 void plot_screen(ULONG32* base, const ULONG32* bitmap);
 void clear_screen_q(ULONG32* base);
+void clear_8(UCHAR8* base, int x, int y, unsigned int height);
 
 
 
@@ -319,6 +320,9 @@ void set_input(Pacman *pacman, char input);
 UCHAR8 get_valid_paths(Movement *ghost);
 void eat_pellet(Movement* pacman);
 # 10 "./pacman.h" 2
+# 1 "./psg.h" 1
+# 1 "./TYPES.H" 1
+# 4 "./psg.h" 2
 # 1 "C:/c68/include/osbind.h" 1
 # 1 "C:/c68/include/compiler.h" 1
 # 9 "C:/c68/include/osbind.h" 2
@@ -479,7 +483,29 @@ typedef struct
  long _trap_1_ 	(short,...) ;
  long _trap_14_ 	(short,...) ;
  long _trap_13_ 	(short,...) ;
+# 5 "./psg.h" 2
+# 28 "./psg.h"
+typedef struct {
+    int frequency;
+    int duration;
+    int volume;
+}Note;
+
+typedef struct {
+    int current_note_index;
+    int note_time_left;
+}MusicState;
+# 150 "./psg.h"
+void set_note_frequency(int channel, float frequency);
+void set_tone(int channel, int tuning);
+void enable_channel(int channel, int toneOn, int noiseOn);
+void set_volume(int channel, unsigned char volume);
+void set_master_volume(unsigned char volume);
+void play_note(int channel, int tuning, unsigned char volume);
+void stop_sound();
 # 11 "./pacman.h" 2
+# 1 "C:/c68/include/osbind.h" 1
+# 14 "./pacman.h" 2
 # 1 "C:/c68/include/stdio.h" 1
 # 20 "C:/c68/include/stdio.h"
 typedef unsigned long  size_t;
@@ -575,7 +601,7 @@ extern	FILE	_iob[];
  void	_getbuf	(FILE *fp) ;
 # 192 "C:/c68/include/stdio.h"
  int	_filbuf	(FILE *) ;
-# 12 "./pacman.h" 2
+# 15 "./pacman.h" 2
 # 1 "C:/c68/include/linea.h" 1
 # 325 "C:/c68/include/linea.h"
 typedef struct {
@@ -874,10 +900,11 @@ extern short  (**__funcs) (void) ;
  void linead (int x, int y, SFORM *sd, void *ss) ;
  void lineae (void) ;
  void lineaf (void) ;
-# 13 "./pacman.h" 2
+# 16 "./pacman.h" 2
+
 
 typedef unsigned char GAME_STATE;
-# 56 "./pacman.h"
+# 60 "./pacman.h"
 void swap_buffers(ULONG32** base32, ULONG32** back_buffer_ptr);
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 void update_movement(Entities* entity, char input, UINT16 ticks);
@@ -897,6 +924,13 @@ void debug_pacman_movement(ULONG32* base32, Pacman* pacman);
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
+
+void clear_and_render_entities(UCHAR8* base8, UCHAR8* back8, ULONG32* base32);
+void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr);
+
+void execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity);
+void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState);
+bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length);
 
 extern UCHAR8 background[32256 ];
 extern UCHAR8 screen_buffer[32256 ];
@@ -954,37 +988,10 @@ void clear_pacman(ULONG32* base32, Movement* move);
 # 8 "pacman.c" 2
 # 1 "./music.h" 1
 # 1 "./TYPES.H" 1
-# 1 "./music.h" 2
+# 4 "./music.h" 2
 # 1 "./psg.h" 1
-# 1 "./TYPES.H" 1
-# 1 "./psg.h" 2
-# 1 "C:/c68/include/osbind.h" 1
-# 2 "./psg.h" 2
-# 136 "./psg.h"
-void set_note_frequency(int channel, float frequency);
-void set_tone(int channel, int tuning);
-void enable_channel(int channel, int toneOn, int noiseOn);
-void set_volume(int channel, unsigned char volume);
-void set_master_volume(unsigned char volume);
-void play_note(int channel, int tuning, unsigned char volume);
-void stop_sound();
-# 2 "./music.h" 2
-
-
-
-
-
-typedef struct {
-    int frequency;
-    int duration;
-    int volume;
-}Note;
-
-typedef struct {
-    int current_note_index;
-    int note_time_left;
-}MusicState;
-
+# 5 "./music.h" 2
+# 22 "./music.h"
 extern const Note notes[12];
 extern const Note pacman_intro_treble[38];
 extern const Note pacman_intro_bass[22];
@@ -1003,21 +1010,9 @@ void update_song(int treble_channel, const Note treble_song[], int treble_song_l
 # 9 "pacman.c" 2
 # 1 "./effects.h" 1
 # 1 "./TYPES.H" 1
-# 1 "./effects.h" 2
+# 4 "./effects.h" 2
 # 1 "./psg.h" 1
-# 1 "./TYPES.H" 1
-# 1 "./psg.h" 2
-# 1 "C:/c68/include/osbind.h" 1
-# 2 "./psg.h" 2
-# 136 "./psg.h"
-void set_note_frequency(int channel, float frequency);
-void set_tone(int channel, int tuning);
-void enable_channel(int channel, int toneOn, int noiseOn);
-void set_volume(int channel, unsigned char volume);
-void set_master_volume(unsigned char volume);
-void play_note(int channel, int tuning, unsigned char volume);
-void stop_sound();
-# 2 "./effects.h" 2
+# 5 "./effects.h" 2
 
 
 
@@ -1194,7 +1189,6 @@ int main()
             play_waka_sound(1 , waka_noise_cycle, 14 , &wakaNoise);
             _trap_1_wl((short)0x20,(long)(old_ssp)) ;
 
-
             update_movement(&entity, input, ticks);
             update_current_frame(&entity, ticks);
             render_frame(back_buffer_ptr, &entity);
@@ -1228,9 +1222,8 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 252 "pacman.c"
+# 251 "pacman.c"
 void update_movement(Entities* entity, char input, UINT16 ticks) {
-
 
     set_input(entity->pacman,input);
     handle_collisions(entity, ticks);
@@ -1240,43 +1233,6 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
     check_proximity(entity);
 
 
-}
-# 270 "pacman.c"
-void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
-    crying_ghost.move->delta_x = 1;
-	crying_ghost.move->delta_y = 0;
-    crying_ghost.move->direction = ((UCHAR8)3) ;
-
-    awkward_ghost.move->delta_x = -1;
-    awkward_ghost.move->delta_y = 0;
-    awkward_ghost.move->direction = ((UCHAR8)2) ;
-
-    cyclops_ghost.move->delta_x = 0;
-    cyclops_ghost.move->delta_y = -1;
-    cyclops_ghost.move->direction = ((UCHAR8)0) ;
-
-    moustache_ghost.move->delta_x = 0;
-    moustache_ghost.move->delta_y = 1;
-    moustache_ghost.move->direction = ((UCHAR8)1) ;
-}
-void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
-
-    moustache_ghost.move->delta_x = 1;
-    moustache_ghost.move->delta_y = 0;
-    moustache_ghost.move->direction = ((UCHAR8)3) ;
-
-    cyclops_ghost.move->delta_x = -1;
-    cyclops_ghost.move->delta_y = 0;
-    cyclops_ghost.move->direction = ((UCHAR8)2) ;
-}
-void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
-    crying_ghost.move->delta_x = 0;
-    crying_ghost.move->delta_y = -1;
-    crying_ghost.move->direction = ((UCHAR8)0) ;
-
-    awkward_ghost.move->delta_x = 0;
-    awkward_ghost.move->delta_y = 1;
-    awkward_ghost.move->direction = ((UCHAR8)1) ;
 }
 
 
@@ -1296,7 +1252,7 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 	render_frame(base, entity);
 
 }
-# 330 "pacman.c"
+# 286 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
 
@@ -1312,7 +1268,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
    return state;
 
 }
-# 352 "pacman.c"
+# 308 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1372,116 +1328,74 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
-void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity)
-{
-
+# 498 "pacman.c"
+void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
     UCHAR8* base8 = (UCHAR8*)base32;
     UCHAR8* back8 = (UCHAR8*)back_buffer_ptr;
 
-    ULONG32 time_then, time_now, time_elapsed;
-
+    ULONG32 time_then = get_time(), song_now;
     long old_ssp;
-
-    int initial_moves[5] = {0,1,2,3,4};
-    int moves_index = 0;
-    int intro_duration = 0;
     int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
     int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
-    int first_frames = 0;
-    int second_frames = 0;
-    int third_frames = 0;
-
     bool song_finished = 0 ;
-    bool stop_ghosts = 0 ;
 
+    init_map_cells(cell_map, tile_map);
+    clear_and_render_maps(base32, back_buffer_ptr);
+    clear_and_render_entities(base8, back8, base32);
+    execute_movements_and_render_frame(base32, base8, back8, entity);
+    initialize_sound(&old_ssp, &trebleState, &bassState);
 
-    init_map_cells(cell_map,tile_map);
-
-    cell_map[10][17].has_pellet = 0 ;
-    cell_map[10][18].has_pellet = 0 ;
-
-    cell_map[10][20].has_pellet = 0 ;
-    cell_map[10][21].has_pellet = 0 ;
-
-    cell_map[12][17].has_pellet = 0 ;
-    cell_map[12][18].has_pellet = 0 ;
-
-    cell_map[12][20].has_pellet = 0 ;
-    cell_map[12][21].has_pellet = 0 ;
-
-
+    while (!song_finished) {
+        song_finished = update_sound(&old_ssp, &time_then, &trebleState, &bassState, treble_song_length, bass_song_length);
+    }
+}
+void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr) {
     clear_screen_q(base32);
     render_map(base32, tile_map);
-
     render_map(back_buffer_ptr, tile_map);
+}
 
-    clear_bitmap_32(base32, entity->moustache_ghost->move->x, entity->moustache_ghost->move->y, 32 );
-    clear_bitmap_32(base32, entity->awkward_ghost->move->x, entity->awkward_ghost->move->y, 32 );
-    clear_bitmap_32(base32, entity->cyclops_ghost->move->x, entity->cyclops_ghost->move->y, 32 );
-    clear_bitmap_32(base32, entity->crying_ghost->move->x, entity->crying_ghost->move->y, 32 );
-    clear_bitmap_32(base32, entity->pacman->move->x, entity->pacman->move->y, 32 );
+void clear_and_render_entities(UCHAR8* base8, UCHAR8* back8, ULONG32* base32) {
+    clear_entities(base32, pacman.move, crying_ghost.move, moustache_ghost.move, awkward_ghost.move, cyclops_ghost.move);
 
+    render_pellet(back8, crying_ghost.move);
+    render_pellet(back8, moustache_ghost.move);
+    render_pellet(back8, awkward_ghost.move);
+    render_pellet(back8, cyclops_ghost.move);
 
     render_initial_timer(base8);
     render_initial_timer(back8);
+}
 
-
+void execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity) {
     set_first_movements(base32, base8, entity);
     render_frame(base32, entity);
-
-    old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
+}
+void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState) {
+    *old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
     enable_channel(1 , 1 , 0 );
     enable_channel(0 , 1 , 0 );
-    _trap_1_wl((short)0x20,(long)(old_ssp)) ;
-
-    time_then = get_time();
-    while (song_finished == 0 ) {
-        time_now = get_time();
-        time_elapsed = time_now - time_then;
-
-        if (time_elapsed >= 5) {
-            time_then = time_now;
-
-            old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
-            update_music(0 , pacman_intro_treble, treble_song_length, &trebleState);
-            song_finished = update_music(1 , pacman_intro_bass, bass_song_length, &bassState);
-            _trap_1_wl((short)0x20,(long)(old_ssp)) ;
-            intro_duration++;
-        }
-        if (intro_duration > 40) {
-        if (first_frames > 16  - 1) {
-            switch (initial_moves[moves_index]) {
-                case 0:
-                    set_second_movements(base32, base8, entity);
-                    moves_index++;
-                    break;
-                case 1:
-                    set_third_movements(base32, base8, entity);
-                    moves_index++;
-                    break;
-                case 2:
-                    set_third_movements(base32, base8, entity);
-                    moves_index++;
-                    break;
-                case 3:
-                    moves_index++;
-                    break;
-                case 4:
-                    stop_ghosts = -1 ;
-                    break;
-            }
-            first_frames = 0;
-
-        }
-        if (stop_ghosts == 0 ) {
-            manually_move_ghost(base32, entity, 1);
-        }
-        first_frames++;
-        }
-    }
+    _trap_1_wl((short)0x20,(long)(*old_ssp)) ;
 }
+bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length) {
+    ULONG32 time_now = get_time();
+    ULONG32 time_elapsed = time_now - *time_then;
+    bool song_finished;
+
+    if (time_elapsed >= 5) {
+        *time_then = time_now;
+
+        *old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
+        update_music(0 , pacman_intro_treble, treble_song_length, trebleState);
+        song_finished = update_music(1 , pacman_intro_bass, bass_song_length, bassState);
+        _trap_1_wl((short)0x20,(long)(*old_ssp)) ;
+        return song_finished;
+    }
+    return 0 ;
+}
+
 
 
 
@@ -1535,4 +1449,41 @@ void debug_pacman_movement(ULONG32* base32, Pacman* pacman)
 
         }
     }
+}
+# 625 "pacman.c"
+void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
+    crying_ghost.move->delta_x = 1;
+	crying_ghost.move->delta_y = 0;
+    crying_ghost.move->direction = ((UCHAR8)3) ;
+
+    awkward_ghost.move->delta_x = -1;
+    awkward_ghost.move->delta_y = 0;
+    awkward_ghost.move->direction = ((UCHAR8)2) ;
+
+    cyclops_ghost.move->delta_x = 0;
+    cyclops_ghost.move->delta_y = -1;
+    cyclops_ghost.move->direction = ((UCHAR8)0) ;
+
+    moustache_ghost.move->delta_x = 0;
+    moustache_ghost.move->delta_y = 1;
+    moustache_ghost.move->direction = ((UCHAR8)1) ;
+}
+void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
+
+    moustache_ghost.move->delta_x = 1;
+    moustache_ghost.move->delta_y = 0;
+    moustache_ghost.move->direction = ((UCHAR8)3) ;
+
+    cyclops_ghost.move->delta_x = -1;
+    cyclops_ghost.move->delta_y = 0;
+    cyclops_ghost.move->direction = ((UCHAR8)2) ;
+}
+void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
+    crying_ghost.move->delta_x = 0;
+    crying_ghost.move->delta_y = -1;
+    crying_ghost.move->direction = ((UCHAR8)0) ;
+
+    awkward_ghost.move->delta_x = 0;
+    awkward_ghost.move->delta_y = 1;
+    awkward_ghost.move->direction = ((UCHAR8)1) ;
 }

@@ -141,6 +141,19 @@ void clear_letter(UCHAR8* base, int x, int y) {
         }
     }
 }
+void clear_8(UCHAR8* base, int x, int y, unsigned int height) {
+    int row;
+    int dx = x;
+    int dy = y;
+    UCHAR8* location = base + (y * BYTES_PER_ROW) + (x >> 3); 
+    if (x >= 0 && x < SCREEN_WIDTH - 8 && dy >= 0 && dy < (SCREEN_HEIGHT - height)) {
+        for (row = 0; row < height; row++) {
+            *location = 0;    
+            *(location + 1) = 0;
+            location += BYTES_PER_ROW;     
+        }
+    }
+}
 void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* str) {
     int current_x = x;
     while (*str != '\0') {
