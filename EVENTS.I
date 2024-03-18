@@ -225,10 +225,12 @@ void add_wall_to_map(Cell cell_map[24 ][40 ], int y_cell_index, int x_cell_index
 
 ObjectType check_wall_collision(Movement* entity);
 
-void check_proximity(Entities* entity);
+void check_proximity(Entities* entity,UCHAR8* base8);
+
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state);
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state);
-void end_game();
+
+void end_game(UCHAR8 *base);
 
 void align_axis(Movement* entity);
 void flip_direction(Movement* ghost);
@@ -262,6 +264,8 @@ void handle_collisions(Entities* entity, UINT16 ticks);
 ObjectType process_ghost_collision(Entities* all, UINT16 tick);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
+
+
 
 UCHAR8 get_valid_paths(Movement *ghost);
 void eat_pellet(Movement* pacman);

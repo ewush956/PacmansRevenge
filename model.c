@@ -191,7 +191,7 @@ ObjectType check_wall_collision(Movement* entity) {
  * Purpose: Checks if pacman and ghost are close, if they are it changes states
  * Parameters: Entities* all - Pointer to the entities structure containing
 *******************************************************/
-void check_proximity(Entities* all) {
+void check_proximity(Entities* all, UCHAR8* base8) {
     
     int ghostCountWithinRange = 0;
     int i;
@@ -240,7 +240,7 @@ void check_proximity(Entities* all) {
         change_pacman_state(all->pacman, DEFAULT);
     }
     else if (ghostCountWithinRange >= 2) {
-        end_game();
+        end_game(base8);
     }
     
 }
@@ -251,9 +251,7 @@ void change_pacman_state(Pacman* pacman, UCHAR8 new_state) {
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
     ghost->state = new_state;
 }
-void end_game() {
-    
-}
+
 
 /*************************************************************
 * Function: init_map_cells
@@ -508,3 +506,13 @@ void set_prev_prev (Entities* entity)
     cyclops_move->last_last_y = cyclops_move->last_y;
     */
 }
+
+void end_game(UCHAR8 *base) {
+
+    int start_x = 280;
+    int y = 4;
+
+    plot_string(base, start_x, y, font, "You Lose!");
+    
+}
+

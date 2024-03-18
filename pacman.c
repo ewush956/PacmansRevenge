@@ -210,6 +210,9 @@ int main()
             Super(old_ssp);
 
             update_movement(&entity, input, ticks);
+            
+            check_proximity(&entity,base8);
+
             update_current_frame(&entity, ticks);
             render_frame(back_buffer_ptr, &entity);
             /*debug_pacman_movement(base32, &pacman);*/
@@ -255,7 +258,7 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
     update_entities();
     eat_pellet(entity->pacman->move);
     update_cells(entity);
-    check_proximity(entity);
+    /*check_proximity(entity);*/
     
 
 }

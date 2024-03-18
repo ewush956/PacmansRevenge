@@ -246,10 +246,12 @@ void add_wall_to_map(Cell cell_map[24 ][40 ], int y_cell_index, int x_cell_index
 
 ObjectType check_wall_collision(Movement* entity);
 
-void check_proximity(Entities* entity);
+void check_proximity(Entities* entity,UCHAR8* base8);
+
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state);
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state);
-void end_game();
+
+void end_game(UCHAR8 *base);
 
 void align_axis(Movement* entity);
 void flip_direction(Movement* ghost);
@@ -316,6 +318,8 @@ void handle_collisions(Entities* entity, UINT16 ticks);
 ObjectType process_ghost_collision(Entities* all, UINT16 tick);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
+
+
 
 UCHAR8 get_valid_paths(Movement *ghost);
 void eat_pellet(Movement* pacman);
@@ -1190,6 +1194,9 @@ int main()
             _trap_1_wl((short)0x20,(long)(old_ssp)) ;
 
             update_movement(&entity, input, ticks);
+
+            check_proximity(&entity,base8);
+
             update_current_frame(&entity, ticks);
             render_frame(back_buffer_ptr, &entity);
 
@@ -1222,7 +1229,7 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 251 "pacman.c"
+# 254 "pacman.c"
 void update_movement(Entities* entity, char input, UINT16 ticks) {
 
     set_input(entity->pacman,input);
@@ -1230,7 +1237,7 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
     update_entities();
     eat_pellet(entity->pacman->move);
     update_cells(entity);
-    check_proximity(entity);
+
 
 
 }
@@ -1252,7 +1259,7 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
 	render_frame(base, entity);
 
 }
-# 286 "pacman.c"
+# 289 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
 
@@ -1268,7 +1275,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
    return state;
 
 }
-# 308 "pacman.c"
+# 311 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1286,41 +1293,6 @@ ULONG32 get_time()
 
 
 
-void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
-    UINT16 tens = value / 10;
-    UINT16 ones = value % 10;
-
-    unsigned int tens_char = tens + '0';
-    unsigned int ones_char = ones + '0';
-
-	clear_letter(base, x, y);
-	clear_letter(base, x+8 , y);
-    plot_letter(base, x , y, font, tens_char);
-    plot_letter(base, x + 8 , y, font, ones_char);
-}
-
-
-
-
-void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
-    int j;
-
-    const char strx[] = "X: ";
-	const char stry[] = "Y: ";
-
-    for (j = 0; j < 14; j++) {
-    	clear_letter(base, j*8 , 0);
-	}
-
-    plot_string(base, 0, 0, font, strx);
-    debug_print(base, 4*8 , 0, pacman->move->x_cell_index);
-    plot_string(base, 8*8 , 0, font, stry);
-    debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
-}
-
-
-
-
 
 void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
 {
@@ -1328,7 +1300,6 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
-# 498 "pacman.c"
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
@@ -1351,6 +1322,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
         song_finished = update_sound(&old_ssp, &time_then, &trebleState, &bassState, treble_song_length, bass_song_length);
     }
 }
+# 487 "pacman.c"
 void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr) {
     clear_screen_q(base32);
     render_map(base32, tile_map);
@@ -1450,7 +1422,42 @@ void debug_pacman_movement(ULONG32* base32, Pacman* pacman)
         }
     }
 }
-# 625 "pacman.c"
+
+
+
+
+void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
+    UINT16 tens = value / 10;
+    UINT16 ones = value % 10;
+
+    unsigned int tens_char = tens + '0';
+    unsigned int ones_char = ones + '0';
+
+	clear_letter(base, x, y);
+	clear_letter(base, x+8 , y);
+    plot_letter(base, x , y, font, tens_char);
+    plot_letter(base, x + 8 , y, font, ones_char);
+}
+
+
+
+
+void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
+    int j;
+
+    const char strx[] = "X: ";
+	const char stry[] = "Y: ";
+
+    for (j = 0; j < 14; j++) {
+    	clear_letter(base, j*8 , 0);
+	}
+
+    plot_string(base, 0, 0, font, strx);
+    debug_print(base, 4*8 , 0, pacman->move->x_cell_index);
+    plot_string(base, 8*8 , 0, font, stry);
+    debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
+}
+# 627 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;

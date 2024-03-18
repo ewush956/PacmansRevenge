@@ -32,6 +32,8 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick);
 ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 
+/*void end_game(UCHAR8 *base);*/
+
 UCHAR8 get_valid_paths(Movement *ghost);
 void eat_pellet(Movement* pacman);
 #endif

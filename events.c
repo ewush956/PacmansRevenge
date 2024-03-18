@@ -327,3 +327,4 @@ void eat_pellet(Movement* pacman) {
     cell_map[pacman->y_cell_index][pacman->x_cell_index].has_pellet = FALSE;
     
 }
+
