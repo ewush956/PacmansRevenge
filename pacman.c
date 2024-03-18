@@ -335,23 +335,46 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     UCHAR8* base8 = (UCHAR8*)base32;
     UCHAR8* back8 = (UCHAR8*)back_buffer_ptr;
 
-    ULONG32 time_then = get_time(), song_now;
+    ULONG32 time_then = get_time(), song_now, song_then, time_elapsed;
     long old_ssp; 
     int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
     int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
+    int initial_moves[5] = {0,1,2,3,4};
+    int moves_index = 0;
+    int* indx_ptr = &moves_index;
     bool song_finished = FALSE;
+    bool stop_ghosts = FALSE;
+    int intro_duration = 0;
+    int* intro_duration_ptr = &intro_duration;
+    int first_frames = 0;
+
+    int time_now = get_time();
 
     init_map_cells(cell_map, tile_map);    
     clear_and_render_maps(base32, back_buffer_ptr);
-    clear_and_render_entities(base8, back8, base32);
-    execute_movements_and_render_frame(base32, base8, back8, entity);
+    clear_and_render_entities(base32, back_buffer_ptr, entity);
+    set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
 
     while (!song_finished) {
-        song_finished = update_sound(&old_ssp, &time_then, &trebleState, &bassState, treble_song_length, bass_song_length);
+        song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
+        if (*intro_duration_ptr > 40) {
+            if (first_frames > FIRST_STOP - 1) {
+                stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
+                first_frames = 0;
+            }
+            if (stop_ghosts == FALSE && time_now > 1) {
+                manually_move_ghost(base32, entity, 1);
+                swap_buffers(&base32, &back_buffer_ptr);
+                Setscreen(-1,base32,-1);  
+                /*time_now = get_time();*/
+                time_then = get_time();
+            }
+            first_frames++;
+        }
     }
 }
-/* 
+/*
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) 
 {
 
@@ -374,6 +397,10 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     bool song_finished = FALSE;
     bool stop_ghosts = FALSE;
+
+    int* indx_ptr = &moves_index;
+
+    int* intro_duration_ptr = &intro_duration;
     
     
     init_map_cells(cell_map,tile_map);	
@@ -419,41 +446,14 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     while (song_finished == FALSE) {
         song_now = get_time();
         time_elapsed = song_now - time_then; 
-
-        if (time_elapsed >= 5) { 
-            time_then = song_now;
-            
-            old_ssp = Super(0);
-            update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, &trebleState);
-            song_finished = update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, &bassState); 
-            Super(old_ssp);
-            intro_duration++;
-        }
+        song_finished = update_sound(&old_ssp, &time_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
         if (intro_duration > 40) {
-        if (first_frames > FIRST_STOP - 1) {
-            switch (initial_moves[moves_index]) {
-                case 0:
-                    set_second_movements(base32, base8, entity);
-                    moves_index++;
-                    break;
-                case 1:
-                    set_third_movements(base32, base8, entity);
-                    moves_index++;
-                    break;
-                case 2:
-                    set_third_movements(base32, base8, entity);
-                    moves_index++;
-                    break;
-                case 3:
-                    moves_index++;
-                    break;
-                case 4:
-                    stop_ghosts = TRUE;
-                    break;
-            }
-            first_frames = 0;
+            if (first_frames > FIRST_STOP - 1) {
+               stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
+
+                first_frames = 0;
             
-        }
+            }
         if (stop_ghosts == FALSE && time_now > 1) {
             manually_move_ghost(base32, entity, 1);
             swap_buffers(&base32, &back_buffer_ptr);
@@ -487,21 +487,43 @@ void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr) {
     render_map(back_buffer_ptr, tile_map);
 }
 
-void clear_and_render_entities(UCHAR8* base8, UCHAR8* back8, ULONG32* base32) {
+void clear_and_render_entities(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
     clear_entities(base32, pacman.move, crying_ghost.move, moustache_ghost.move, awkward_ghost.move, cyclops_ghost.move);
 
-    render_pellet(back8, crying_ghost.move);
-    render_pellet(back8, moustache_ghost.move);
-    render_pellet(back8, awkward_ghost.move);
-    render_pellet(back8, cyclops_ghost.move);
-
-    render_initial_timer(base8);
-    render_initial_timer(back8);
+    render_frame(base32, entity);
+    render_frame(back_buffer_ptr, entity);
 }
 
-void execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity) {
-    set_first_movements(base32, base8, entity);
-    render_frame(base32, entity);
+bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity, int* moves_index, int initial_moves[5]) {
+    bool stop_ghosts = FALSE;
+    switch (initial_moves[*moves_index])
+    {
+    case 0:
+        set_second_movements(base32, base8, entity);
+        (*moves_index)++;
+        break;
+
+    case 1:
+        set_third_movements(base32, base8, entity);
+        (*moves_index)++;
+        break;
+
+    case 2:
+        set_third_movements(base32, base8, entity);
+        (*moves_index)++;
+        break;
+
+    case 3:
+        (*moves_index)++;
+        break;
+
+    case 4:
+        stop_ghosts = TRUE;
+        break;
+    return stop_ghosts;
+    }
+    /*set_first_movements(base32, base8, entity);*/
+    /*render_frame(base32, entity);*/
 }
 void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState) {
     *old_ssp = Super(0);
@@ -509,7 +531,7 @@ void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassSt
     enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
     Super(*old_ssp);
 }
-bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length) {
+bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
     ULONG32 time_now = get_time();
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
@@ -521,6 +543,7 @@ bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, Mu
         update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, trebleState);
         song_finished = update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, bassState);
         Super(*old_ssp);
+        (*intro_duration)++;
         return song_finished;
     }
     return FALSE;

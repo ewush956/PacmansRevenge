@@ -279,6 +279,17 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
             }
         }
     }
+    cell_map[10][17].has_pellet = FALSE;
+    cell_map[10][18].has_pellet = FALSE;
+
+    cell_map[10][20].has_pellet = FALSE;
+    cell_map[10][21].has_pellet = FALSE;
+
+    cell_map[12][17].has_pellet = FALSE;
+    cell_map[12][18].has_pellet = FALSE;
+
+    cell_map[12][20].has_pellet = FALSE;
+    cell_map[12][21].has_pellet = FALSE;
 }
 /*************************************************************
 * Function: update_cells

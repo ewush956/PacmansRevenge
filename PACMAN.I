@@ -925,12 +925,12 @@ void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 
-void clear_and_render_entities(UCHAR8* base8, UCHAR8* back8, ULONG32* base32);
+void clear_and_render_entities(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity);
 void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr);
 
-void execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity);
+bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity, int* moves_index, int initial_moves[5]);
 void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState);
-bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length);
+bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
 
 extern UCHAR8 background[32256 ];
 extern UCHAR8 screen_buffer[32256 ];
@@ -1286,41 +1286,6 @@ ULONG32 get_time()
 
 
 
-void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
-    UINT16 tens = value / 10;
-    UINT16 ones = value % 10;
-
-    unsigned int tens_char = tens + '0';
-    unsigned int ones_char = ones + '0';
-
-	clear_letter(base, x, y);
-	clear_letter(base, x+8 , y);
-    plot_letter(base, x , y, font, tens_char);
-    plot_letter(base, x + 8 , y, font, ones_char);
-}
-
-
-
-
-void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
-    int j;
-
-    const char strx[] = "X: ";
-	const char stry[] = "Y: ";
-
-    for (j = 0; j < 14; j++) {
-    	clear_letter(base, j*8 , 0);
-	}
-
-    plot_string(base, 0, 0, font, strx);
-    debug_print(base, 4*8 , 0, pacman->move->x_cell_index);
-    plot_string(base, 8*8 , 0, font, stry);
-    debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
-}
-
-
-
-
 
 void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
 {
@@ -1328,50 +1293,95 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
-# 498 "pacman.c"
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
     UCHAR8* base8 = (UCHAR8*)base32;
     UCHAR8* back8 = (UCHAR8*)back_buffer_ptr;
 
-    ULONG32 time_then = get_time(), song_now;
+    ULONG32 time_then = get_time(), song_now, song_then, time_elapsed;
     long old_ssp;
     int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
     int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
+    int initial_moves[5] = {0,1,2,3,4};
+    int moves_index = 0;
+    int* indx_ptr = &moves_index;
     bool song_finished = 0 ;
+    bool stop_ghosts = 0 ;
+    int intro_duration = 0;
+    int* intro_duration_ptr = &intro_duration;
+    int first_frames = 0;
+
+    int time_now = get_time();
 
     init_map_cells(cell_map, tile_map);
     clear_and_render_maps(base32, back_buffer_ptr);
-    clear_and_render_entities(base8, back8, base32);
-    execute_movements_and_render_frame(base32, base8, back8, entity);
+    clear_and_render_entities(base32, back_buffer_ptr, entity);
+    set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
 
     while (!song_finished) {
-        song_finished = update_sound(&old_ssp, &time_then, &trebleState, &bassState, treble_song_length, bass_song_length);
+        song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
+        if (*intro_duration_ptr > 40) {
+            if (first_frames > 16  - 1) {
+                stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
+                first_frames = 0;
+            }
+            if (stop_ghosts == 0  && time_now > 1) {
+                manually_move_ghost(base32, entity, 1);
+                swap_buffers(&base32, &back_buffer_ptr);
+                (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
+
+                time_then = get_time();
+            }
+            first_frames++;
+        }
     }
 }
+# 484 "pacman.c"
 void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr) {
     clear_screen_q(base32);
     render_map(base32, tile_map);
     render_map(back_buffer_ptr, tile_map);
 }
 
-void clear_and_render_entities(UCHAR8* base8, UCHAR8* back8, ULONG32* base32) {
+void clear_and_render_entities(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
     clear_entities(base32, pacman.move, crying_ghost.move, moustache_ghost.move, awkward_ghost.move, cyclops_ghost.move);
 
-    render_pellet(back8, crying_ghost.move);
-    render_pellet(back8, moustache_ghost.move);
-    render_pellet(back8, awkward_ghost.move);
-    render_pellet(back8, cyclops_ghost.move);
-
-    render_initial_timer(base8);
-    render_initial_timer(back8);
+    render_frame(base32, entity);
+    render_frame(back_buffer_ptr, entity);
 }
 
-void execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity) {
-    set_first_movements(base32, base8, entity);
-    render_frame(base32, entity);
+bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity, int* moves_index, int initial_moves[5]) {
+    bool stop_ghosts = 0 ;
+    switch (initial_moves[*moves_index])
+    {
+    case 0:
+        set_second_movements(base32, base8, entity);
+        (*moves_index)++;
+        break;
+
+    case 1:
+        set_third_movements(base32, base8, entity);
+        (*moves_index)++;
+        break;
+
+    case 2:
+        set_third_movements(base32, base8, entity);
+        (*moves_index)++;
+        break;
+
+    case 3:
+        (*moves_index)++;
+        break;
+
+    case 4:
+        stop_ghosts = -1 ;
+        break;
+    return stop_ghosts;
+    }
+
+
 }
 void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState) {
     *old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
@@ -1379,7 +1389,7 @@ void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassSt
     enable_channel(0 , 1 , 0 );
     _trap_1_wl((short)0x20,(long)(*old_ssp)) ;
 }
-bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length) {
+bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
     ULONG32 time_now = get_time();
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
@@ -1391,6 +1401,7 @@ bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, Mu
         update_music(0 , pacman_intro_treble, treble_song_length, trebleState);
         song_finished = update_music(1 , pacman_intro_bass, bass_song_length, bassState);
         _trap_1_wl((short)0x20,(long)(*old_ssp)) ;
+        (*intro_duration)++;
         return song_finished;
     }
     return 0 ;
@@ -1450,7 +1461,42 @@ void debug_pacman_movement(ULONG32* base32, Pacman* pacman)
         }
     }
 }
-# 625 "pacman.c"
+
+
+
+
+void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
+    UINT16 tens = value / 10;
+    UINT16 ones = value % 10;
+
+    unsigned int tens_char = tens + '0';
+    unsigned int ones_char = ones + '0';
+
+	clear_letter(base, x, y);
+	clear_letter(base, x+8 , y);
+    plot_letter(base, x , y, font, tens_char);
+    plot_letter(base, x + 8 , y, font, ones_char);
+}
+
+
+
+
+void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
+    int j;
+
+    const char strx[] = "X: ";
+	const char stry[] = "Y: ";
+
+    for (j = 0; j < 14; j++) {
+    	clear_letter(base, j*8 , 0);
+	}
+
+    plot_string(base, 0, 0, font, strx);
+    debug_print(base, 4*8 , 0, pacman->move->x_cell_index);
+    plot_string(base, 8*8 , 0, font, stry);
+    debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
+}
+# 647 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
