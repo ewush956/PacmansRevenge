@@ -13,6 +13,11 @@
 #include <stdio.h>
 #include <linea.h>
 
+ULONG32 combined_address;
+volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
+volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_LOW;
+
+
 /************************* KNOWN BUGS ***************************
  * 1. Sometimes 3-4 pixels will plot right around a single pellet
  *    currently cause is unknown, might be due to bounds checking 
@@ -192,7 +197,9 @@ int main()
 	ULONG32 time_then, time_now, time_elapsed;
 
     UCHAR8* base8 = Physbase();
-	ULONG32* base32 = Physbase();
+	/*ULONG32* base32 = Physbase();*/
+    ULONG32* base32 = (ULONG32*)get_video_base();
+    
     ULONG32* original = Physbase();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
     ULONG32* background_ptr = (ULONG32*)(&background[0]); /*Not using at the moment*/
@@ -619,3 +626,27 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->direction = DOWN;
 }
 
+UINT16* get_video_base()
+{
+	ULONG32 old_ssp;
+    UINT16* video_base_ptr;
+    /*
+    UINT16 combined_address;
+    volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
+    volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_LOW;
+    */
+    UCHAR8 high_byte; 
+    UCHAR8 low_byte ;
+
+	old_ssp = Super(0); 				
+    high_byte = *ptr_to_highbyte;
+    low_byte = *ptr_to_lowbyte;
+    Super(old_ssp); 		
+    
+    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte << 8);
+    /*combined_address = (high_byte << 8) | low_byte;*/
+    /*video_base_ptr = &combined_address;*/
+ 
+    return (UINT16*)combined_address;
+
+}
