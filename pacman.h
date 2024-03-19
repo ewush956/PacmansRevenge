@@ -68,7 +68,7 @@ void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
 void debug_cells_pac(UCHAR8* base, Pacman* pacman);
 void update_entities();
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity);
-void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index);
+void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool enable);
 ULONG32* byte_allign(ULONG32* array_address);
 void debug_pacman_movement(ULONG32* base32, Pacman* pacman);
 

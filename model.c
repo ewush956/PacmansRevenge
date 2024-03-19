@@ -462,7 +462,8 @@ void update_current_frame(Entities* all, int clock) {
 
         if (ghosts[i]->state == DEFAULT && (clock & 3) == 0) {
             ghosts[i]->current_frame = (ghosts[i]->current_frame + 1) & 1;
-}
+
+        }
 
     }
 }

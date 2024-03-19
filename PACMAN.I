@@ -916,7 +916,7 @@ void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
 void debug_cells_pac(UCHAR8* base, Pacman* pacman);
 void update_entities();
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity);
-void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index);
+void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool enable);
 ULONG32* byte_allign(ULONG32* array_address);
 void debug_pacman_movement(ULONG32* base32, Pacman* pacman);
 
@@ -1039,7 +1039,7 @@ bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_leng
 # 13 "pacman.c" 2
 # 1 "C:/c68/include/linea.h" 1
 # 14 "pacman.c" 2
-# 36 "pacman.c"
+# 56 "pacman.c"
 Movement pacman_movement = {
         16  * 19, 16  * 21 + 16 ,
         0,0,
@@ -1055,7 +1055,7 @@ Pacman pacman = {
     PACMAN,
     &pacman_movement
 };
-# 57 "pacman.c"
+# 77 "pacman.c"
 Movement crying_ghost_movement = {
         16  * 17, 16  * 10 + 16 ,
         0,0,
@@ -1072,7 +1072,7 @@ Ghost crying_ghost = {
     0 ,
     &crying_ghost_movement
 };
-# 80 "pacman.c"
+# 100 "pacman.c"
 Movement cyclops_ghost_movement = {
         16  * 17, 16  * 12 + 16 ,
         0,0,
@@ -1089,7 +1089,7 @@ Ghost cyclops_ghost = {
     0 ,
     &cyclops_ghost_movement
 };
-# 102 "pacman.c"
+# 122 "pacman.c"
 Movement moustache_ghost_movement = {
         16  * 21, 16  * 10 + 16 ,
         0,0,
@@ -1106,7 +1106,7 @@ Ghost moustache_ghost = {
     0 ,
     &moustache_ghost_movement
 };
-# 125 "pacman.c"
+# 145 "pacman.c"
 Movement awkward_ghost_movement = {
         16  * 21, 16  * 12 + 16 ,
         0,0,
@@ -1123,7 +1123,7 @@ Ghost awkward_ghost = {
     0 ,
     &awkward_ghost_movement
 };
-# 147 "pacman.c"
+# 167 "pacman.c"
 Timer timer = {
     0,0,
     20, 28, 44, 52
@@ -1131,7 +1131,6 @@ Timer timer = {
 
 UCHAR8 background[32256 ];
 UCHAR8 screen_buffer[32256 ];
-
 
 int main()
 {
@@ -1149,17 +1148,14 @@ int main()
     long old_ssp;
 
 	UCHAR8 collision_type = 0;
-    UCHAR8* base8 = (void*)_trap_14_w((short)0x2) ;
-
     UINT16 ticks = 0;
+	ULONG32 time_then, time_now, time_elapsed;
 
-
+    UCHAR8* base8 = (void*)_trap_14_w((short)0x2) ;
 	ULONG32* base32 = (void*)_trap_14_w((short)0x2) ;
     ULONG32* original = (void*)_trap_14_w((short)0x2) ;
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
-
     ULONG32* background_ptr = (ULONG32*)(&background[0]);
-	ULONG32 time_then, time_now, time_elapsed;
 
     GAME_STATE state = ((UCHAR8)1) ;
 
@@ -1190,7 +1186,9 @@ int main()
             _trap_1_wl((short)0x20,(long)(old_ssp)) ;
 
             update_movement(&entity, input, ticks);
-            update_current_frame(&entity, ticks);
+            if ((ticks & 7) == 0) {
+                update_current_frame(&entity, ticks);
+            }
             render_frame(back_buffer_ptr, &entity);
 
 
@@ -1222,7 +1220,7 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 251 "pacman.c"
+# 269 "pacman.c"
 void update_movement(Entities* entity, char input, UINT16 ticks) {
 
     set_input(entity->pacman,input);
@@ -1232,24 +1230,6 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
     update_cells(entity);
     check_proximity(entity);
 
-
-}
-
-
-
-
-
-void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
-
-    move_ghost(entity->crying_ghost);
-    move_ghost(entity->awkward_ghost);
-    move_ghost(entity->moustache_ghost);
-    move_ghost(entity->cyclops_ghost);
-	update_cells(entity);
-
-    update_current_frame(entity, frame_index);
-
-	render_frame(base, entity);
 
 }
 # 286 "pacman.c"
@@ -1293,6 +1273,11 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
+
+
+
+
+
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
@@ -1311,6 +1296,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     int intro_duration = 0;
     int* intro_duration_ptr = &intro_duration;
     int first_frames = 0;
+    bool enable = -1 ;
 
     int time_now = get_time();
 
@@ -1322,13 +1308,15 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
-        if (*intro_duration_ptr > 40) {
+        if (*intro_duration_ptr > 43) {
+            time_now = get_time();
+            time_elapsed = time_now - time_then;
             if (first_frames > 16  - 1) {
                 stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
                 first_frames = 0;
             }
-            if (stop_ghosts == 0  && time_now > 1) {
-                manually_move_ghost(base32, entity, 1);
+            if (stop_ghosts == 0  && time_elapsed > 0) {
+                manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
                 swap_buffers(&base32, &back_buffer_ptr);
                 (void)_trap_14_wllw((short)0x5,(long)(-1),(long)base32,(short)(-1)) ;
 
@@ -1337,13 +1325,38 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
             first_frames++;
         }
     }
+    clear_and_render_entities(base32, back_buffer_ptr, entity);
 }
-# 484 "pacman.c"
+
+
+
+
+
+void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool enable) {
+
+    if (enable != -1 ) {
+        move_ghost(entity->crying_ghost);
+        move_ghost(entity->awkward_ghost);
+        move_ghost(entity->moustache_ghost);
+        move_ghost(entity->cyclops_ghost);
+	    update_cells(entity);
+    }
+        update_current_frame(entity, frame_index);
+	    render_frame(base, entity);
+
+}
+
+
+
+
 void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr) {
     clear_screen_q(base32);
     render_map(base32, tile_map);
     render_map(back_buffer_ptr, tile_map);
 }
+
+
+
 
 void clear_and_render_entities(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
     clear_entities(base32, pacman.move, crying_ghost.move, moustache_ghost.move, awkward_ghost.move, cyclops_ghost.move);
@@ -1351,6 +1364,10 @@ void clear_and_render_entities(ULONG32* base32, ULONG32* back_buffer_ptr, Entiti
     render_frame(base32, entity);
     render_frame(back_buffer_ptr, entity);
 }
+
+
+
+
 
 bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity, int* moves_index, int initial_moves[5]) {
     bool stop_ghosts = 0 ;
@@ -1380,21 +1397,29 @@ bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* 
         break;
     return stop_ghosts;
     }
-
-
 }
+
+
+
+
 void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState) {
     *old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
     enable_channel(1 , 1 , 0 );
     enable_channel(0 , 1 , 0 );
     _trap_1_wl((short)0x20,(long)(*old_ssp)) ;
 }
+
+
+
+
+
 bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
     ULONG32 time_now = get_time();
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
+    int tempo = 5;
 
-    if (time_elapsed >= 5) {
+    if (time_elapsed >= tempo) {
         *time_then = time_now;
 
         *old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
@@ -1406,7 +1431,6 @@ bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, Mu
     }
     return 0 ;
 }
-
 
 
 
@@ -1496,7 +1520,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 647 "pacman.c"
+# 585 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;

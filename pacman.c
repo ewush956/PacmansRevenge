@@ -13,21 +13,41 @@
 #include <stdio.h>
 #include <linea.h>
 
-/************************* KNOWN BUG ***************************
- * Currently, there is a bug that does not render the top left portion 
- * of the map from the back buffer. It appears to be in the correct memory 
- * location as there are no address bombs and the double buffering for the entities 
- * (pacman and ghosts) works. Pacman is also leaving behind pixel trails 
- * when moving around at random. We suspect that the clear last last (2 frames before) 
- * is not working for him only. The ghosts dont have this issue and render perfectly.
- * With no trailing pixels. 
+/************************* KNOWN BUGS ***************************
+ * 1. Sometimes 3-4 pixels will plot right around a single pellet
+ *    currently cause is unknown, might be due to bounds checking 
+ *    on raster function 
  * 
- * The double buffering seems to work as intented aside from the effected regions.
+ * 2. Occasionally ghost movement causes half of a pellet sprite
+ *    to render on either the back or the front buffer causing flickering
  * 
- * Pacman currently does not eat the pellets.
- ***********************************************************/
+ * 3. Pacman cannot initially move up(very first frame only), only left or right.
+ *    This is because of the input detection.
+ * 
+ * 4. There is still a little bit of flickering when freeing the ghosts initially
+ *    The double buffering appears to be solid in the main game loop, but it
+ *    is not applied correctly in the initialize_game function.
+ * 
+ * 5. The screen occasionaly flashes, not sure if it's an issue with steem or not,
+ *    seems to occur randomly.
+ * 
+ * 6. The cyclops ghost's eye is not properly centered in some of it's alternate frames
+ *    causing the movement to look jittery. This is an issue with it's bitmap.
+ * 
+ ************************* STILL INCOMPLETE ***************************
 
-/*************************************************************
+ * 1. Games win / loose condition. Proximity checking has been added,
+ *    we just need to implement the loosing / wining event
+ * 
+ * 2. Ghosts running from pacman
+ * 
+ * 3. Sound for eating a ghost / no sound when not eating a pellet.
+ *    (currently waka waka sound is not event triggered, 
+ *    it's just played in the main loop)
+ * 
+ *********************************************************************/
+
+/**************************************************************************
 * Declaration: Pacman pacman
 * Purpose: Initializes the player character, Pacman, with its
 *          starting position, movement displacement, state,
@@ -55,7 +75,7 @@ Pacman pacman = {
 *          and cell index on the game map.
 *************************************************************/
 Movement crying_ghost_movement = {
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
         0,0,
         RIGHT,
         10, 17,
@@ -123,7 +143,7 @@ Ghost moustache_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Movement awkward_ghost_movement = {
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      /*starts in [10][18]*/
+        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      
         0,0,
         LEFT,
         12, 21,
@@ -152,7 +172,6 @@ Timer timer = {
 UCHAR8 background[BUFFER_SIZE_BYTES];
 UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 
-
 int main()
 {
     Entities entity = {
@@ -169,17 +188,14 @@ int main()
     long old_ssp; 
 
 	UCHAR8 collision_type = 0;
-    UCHAR8* base8 = Physbase();
-
     UINT16 ticks = 0;
-    /*UINT16* base16 = Physbase();*/
+	ULONG32 time_then, time_now, time_elapsed;
 
+    UCHAR8* base8 = Physbase();
 	ULONG32* base32 = Physbase();
     ULONG32* original = Physbase();
-    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
-    
+    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
     ULONG32* background_ptr = (ULONG32*)(&background[0]); /*Not using at the moment*/
-	ULONG32 time_then, time_now, time_elapsed;
   
     GAME_STATE state = PLAY;
 
@@ -210,7 +226,9 @@ int main()
             Super(old_ssp);
 
             update_movement(&entity, input, ticks);
-            update_current_frame(&entity, ticks);
+            if ((ticks & 7) == 0) {
+                update_current_frame(&entity, ticks);   
+            }
             render_frame(back_buffer_ptr, &entity);
             /*debug_pacman_movement(base32, &pacman);*/
 
@@ -258,25 +276,7 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
     check_proximity(entity);
     
 
-}
-/*******************************************************************
- * Function: manually_move_ghost
- * Purpose: Manually moves the ghost
- * Parameters: base, entity, frame_index
- *******************************************************************/
-void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index){
-
-    move_ghost(entity->crying_ghost);
-    move_ghost(entity->awkward_ghost);
-    move_ghost(entity->moustache_ghost);
-    move_ghost(entity->cyclops_ghost);
-	update_cells(entity);
-
-    update_current_frame(entity, frame_index);
-
-	render_frame(base, entity);
-
-}   
+} 
 /*******************************************************************
  * Function: update_game_state
  * Purpose: Updates the game state
@@ -329,6 +329,11 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
     *base32 = *back_buffer_ptr;
     *back_buffer_ptr = temp;
 }
+/*******************************************************************
+ * Function: initialize_game
+ * Purpose: Initializes the game, manually moves the ghosts out of the center
+ *          and plays intro music
+ ******************************************************************/
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
@@ -347,6 +352,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     int intro_duration = 0;
     int* intro_duration_ptr = &intro_duration;
     int first_frames = 0;
+    bool enable = TRUE;
 
     int time_now = get_time();
 
@@ -358,13 +364,15 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
-        if (*intro_duration_ptr > 40) {
+        if (*intro_duration_ptr > 43) {
+            time_now = get_time();
+            time_elapsed = time_now - time_then;
             if (first_frames > FIRST_STOP - 1) {
                 stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
                 first_frames = 0;
             }
-            if (stop_ghosts == FALSE && time_now > 1) {
-                manually_move_ghost(base32, entity, 1);
+            if (stop_ghosts == FALSE && time_elapsed > 0) {
+                manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
                 swap_buffers(&base32, &back_buffer_ptr);
                 Setscreen(-1,base32,-1);  
                 /*time_now = get_time();*/
@@ -373,127 +381,50 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
             first_frames++;
         }
     }
+    clear_and_render_entities(base32, back_buffer_ptr, entity);
 }
-/*
-void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) 
-{
+/*******************************************************************
+ * Function: manually_move_ghost
+ * Purpose: Manually moves the ghost
+ * Parameters: base, entity, frame_index
+ *******************************************************************/
+void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool enable) {
 
-    MusicState trebleState = {0, 0};
-    MusicState bassState = {0, 0};
-    UCHAR8* base8 = (UCHAR8*)base32;
-    UCHAR8* back8 = (UCHAR8*)back_buffer_ptr;
-
-    ULONG32 time_then, time_now, time_elapsed, song_now;
-
-    long old_ssp; 
-    int initial_moves[5] = {0,1,2,3,4};
-    int moves_index = 0;
-    int intro_duration = 0;
-    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
-    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
-    int first_frames = 0;
-    int second_frames = 0;
-    int third_frames = 0;
-
-    bool song_finished = FALSE;
-    bool stop_ghosts = FALSE;
-
-    int* indx_ptr = &moves_index;
-
-    int* intro_duration_ptr = &intro_duration;
-    
-    
-    init_map_cells(cell_map,tile_map);	
-
-    cell_map[10][17].has_pellet = FALSE;
-    cell_map[10][18].has_pellet = FALSE;
-
-    cell_map[10][20].has_pellet = FALSE;
-    cell_map[10][21].has_pellet = FALSE;
-
-    cell_map[12][17].has_pellet = FALSE;
-    cell_map[12][18].has_pellet = FALSE;
-
-    cell_map[12][20].has_pellet = FALSE;
-    cell_map[12][21].has_pellet = FALSE;
-    
-
-    clear_screen_q(base32);
-    render_map(base32, tile_map);
-
-    render_map(back_buffer_ptr, tile_map);
-
-    clear_entities(base32, pacman.move, crying_ghost.move, moustache_ghost.move, awkward_ghost.move, cyclops_ghost.move);
-
-    render_pellet(back8, crying_ghost.move);
-    render_pellet(back8, moustache_ghost.move);
-    render_pellet(back8, awkward_ghost.move);
-    render_pellet(back8, cyclops_ghost.move);
-    
-    render_initial_timer(base8);
-    render_initial_timer(back8);
-    
-    
-    set_first_movements(base32, base8, entity);
-    render_frame(base32, entity);
-
-    old_ssp = Super(0);
-    enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
-    enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
-    Super(old_ssp);
-
-    time_then = get_time();
-    while (song_finished == FALSE) {
-        song_now = get_time();
-        time_elapsed = song_now - time_then; 
-        song_finished = update_sound(&old_ssp, &time_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
-        if (intro_duration > 40) {
-            if (first_frames > FIRST_STOP - 1) {
-               stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
-
-                first_frames = 0;
-            
-            }
-        if (stop_ghosts == FALSE && time_now > 1) {
-            manually_move_ghost(base32, entity, 1);
-            swap_buffers(&base32, &back_buffer_ptr);
-            Setscreen(-1,base32,-1);  
-            time_now = get_time();
-        }
-        first_frames++;
-        }
+    if (enable != TRUE) {
+        move_ghost(entity->crying_ghost);
+        move_ghost(entity->awkward_ghost);
+        move_ghost(entity->moustache_ghost);
+        move_ghost(entity->cyclops_ghost);
+	    update_cells(entity);
     }
-    clear_8(back8, 17*16 + PELLET_X_OFFSET, 10*16 + PELLET_Y_OFFSET, 8);
-    clear_8(back8, 18*16 + PELLET_X_OFFSET, 10*16 + PELLET_Y_OFFSET, 8);
+        update_current_frame(entity, frame_index);
+	    render_frame(base, entity);
 
-    clear_8(back8, 20*16 + PELLET_X_OFFSET, 10*16 + PELLET_Y_OFFSET, 8);
-    clear_8(back8, 21*16 + PELLET_X_OFFSET, 10*16 + PELLET_Y_OFFSET, 8);
-
-    clear_8(back8, 17*16 + PELLET_X_OFFSET, 12*16 + PELLET_Y_OFFSET, 8);
-    clear_8(back8, 18*16 + PELLET_X_OFFSET, 12*16 + PELLET_Y_OFFSET, 8);
-
-    clear_8(back8, 20*16 + PELLET_X_OFFSET, 12*16 + PELLET_Y_OFFSET, 8);
-    clear_8(back8, 21*16 + PELLET_X_OFFSET, 12*16 + PELLET_Y_OFFSET, 8);
-
-    render_pellet(back8, crying_ghost.move);
-    render_pellet(back8, moustache_ghost.move);
-    render_pellet(back8, awkward_ghost.move);
-    render_pellet(back8, cyclops_ghost.move);
-}
-*/
+}  
+/*******************************************************************
+ * Function: clear_and_render_maps
+ * Purpose: Clears and renders the map
+ ******************************************************************/
 void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr) {
     clear_screen_q(base32);
     render_map(base32, tile_map);
     render_map(back_buffer_ptr, tile_map);
 }
-
+/*******************************************************************
+ * Function: clear_and_render_entities
+ * Purpose: Clears and renders the entities
+ ******************************************************************/
 void clear_and_render_entities(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
     clear_entities(base32, pacman.move, crying_ghost.move, moustache_ghost.move, awkward_ghost.move, cyclops_ghost.move);
 
     render_frame(base32, entity);
     render_frame(back_buffer_ptr, entity);
 }
-
+/*******************************************************************
+ * Function: execute_movements_and_render_frame
+ * Purpose: Executes the predetermined initial movements and renders the frame.
+ *          Updates moves_index by refference.
+ ******************************************************************/
 bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity, int* moves_index, int initial_moves[5]) {
     bool stop_ghosts = FALSE;
     switch (initial_moves[*moves_index])
@@ -522,21 +453,29 @@ bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* 
         break;
     return stop_ghosts;
     }
-    /*set_first_movements(base32, base8, entity);*/
-    /*render_frame(base32, entity);*/
 }
+/******************************************************************
+ * Function: initialize_sound
+ * Purpose: Enables channels A and B for sound
+******************************************************************/
 void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState) {
     *old_ssp = Super(0);
     enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
     enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
     Super(*old_ssp);
 }
+/*******************************************************************
+ * Function: update_sound
+ * Purpose: Updates the the state of a song (note structure) 
+ *          returns TRUE if the song has finished.
+ *****************************************************************/
 bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
     ULONG32 time_now = get_time();
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
+    int tempo = 5;
 
-    if (time_elapsed >= 5) {
+    if (time_elapsed >= tempo) {
         *time_then = time_now;
 
         *old_ssp = Super(0);
@@ -548,7 +487,6 @@ bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, Mu
     }
     return FALSE;
 }
-
 /*******************************************************************
  * Function: debug_pacman_movement
  * Purpose: Prints out Pacman's movement coordinates for debugging
