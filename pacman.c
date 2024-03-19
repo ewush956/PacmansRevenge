@@ -219,12 +219,12 @@ int main()
             input = (char)Cnecin();
         }
         if (time_elapsed > 0) {
-
+/*
             old_ssp = Super(0);
             play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
             play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
             Super(old_ssp);
-
+*/
             update_movement(&entity, input, ticks);
             if ((ticks & 7) == 0) {
                 update_current_frame(&entity, ticks);   
