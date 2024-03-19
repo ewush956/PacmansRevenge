@@ -33,4 +33,5 @@ ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 
 UCHAR8 get_valid_paths(Movement *ghost);
+void eat_pellet(Movement* pacman);
 #endif

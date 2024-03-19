@@ -57,6 +57,11 @@ typedef struct {
 
 	UINT16 last_x;
 	UINT16 last_y;
+
+	UINT16 last_last_x;
+	UINT16 last_last_y;
+
+	bool changed_direction;
 	
 }Movement;
 
@@ -138,5 +143,6 @@ void flip_direction(Movement* ghost);
 void update_current_frame(Entities* all, int clock);
 
 void set_prev_prev(Entities* entity);
+void set_prev(Entities* entity);
 
 #endif

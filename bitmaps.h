@@ -96,6 +96,7 @@ extern const ULONG32 null_sprite_16[];
 extern const ULONG32 null_sprite_32[];
 
 extern const ULONG32 test64[];
+extern const UCHAR8 pellet[8];
 
 extern const ULONG32* wall_map[][20];
 

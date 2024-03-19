@@ -3,6 +3,8 @@
 #include "bitmaps.h"
 #include <stdio.h>
 
+
+
 /*************************************************************
 * Declaration: Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH]
 * Purpose: Represents the game's map, storing the state of each
@@ -12,25 +14,34 @@ Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];
 
 void move_pacman (Pacman *pacman)
 {
+   Movement* pacman_movement = pacman->move;
+
+    if (pacman_movement->delta_x == 0 && pacman_movement->delta_y == 0) {
+        pacman_movement->last_last_x = pacman_movement->x;
+        pacman_movement->last_last_y = pacman_movement->y;
+        return;
+    }
+    
+    pacman_movement->last_last_x = pacman_movement->last_x;
+    pacman_movement->last_last_y = pacman_movement->last_y;
+
+    pacman_movement->last_x = pacman_movement->x;
+    pacman_movement->last_y = pacman_movement->y;
+
+    pacman_movement->x += (pacman_movement->delta_x << 1);
+    pacman_movement->y += (pacman_movement->delta_y << 1);
+    align_axis(pacman_movement);
+
     /*
     if (pacman -> state == DEFAULT) {
-    pacman->move->x += (pacman->move->delta_x) * 2;
-    pacman->move->y += (pacman->move->delta_y) * 2;
+    pacman_movement->x += (pacman_movement->delta_x << 1);
+    pacman_movement->y += (pacman_movement->delta_y << 1);
     }
     else {
-        pacman->move->x += pacman->move->delta_x * 4;
-        pacman->move->y += pacman->move->delta_y * 4;
+        pacman_movement->x += (pacman_movement->delta_x << 2);
+        pacman_movement->y += (pacman_movement->delta_y << 2);
     }
     */
-    if (pacman -> state == DEFAULT) {
-    pacman->move->x += (pacman->move->delta_x << 1);
-    pacman->move->y += (pacman->move->delta_y << 1);
-    }
-    else {
-        pacman->move->x += (pacman->move->delta_x << 2);
-        pacman->move->y += (pacman->move->delta_y << 2);
-    }
-   /* update_cell(&pacman->x_cell_index, &pacman->y_cell_index, pacman->x, pacman->y, pacman->move->direction); */
 }
 /*************************************************************
 * Function: move_ghost
@@ -81,6 +92,11 @@ void move_ghost (Ghost *ghost)
 				break;
 		}
         align_axis(ghost_movement);
+        ghost_movement->last_last_x = ghost_movement->last_x;
+        ghost_movement->last_last_y = ghost_movement->last_y;
+        
+        ghost_movement->last_x = ghost_movement->x;
+        ghost_movement->last_y = ghost_movement->y;
 
         ghost_movement-> x += ghost_movement->delta_x;
         ghost_movement-> y += ghost_movement->delta_y;
@@ -117,19 +133,18 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
     all_ghosts[3] = all->moustache_ghost;
 
     for (i = 0; i < 4; i++){
-        /*printf("OBJECTS occupy these locations (%u,%u)",all_ghosts[i]->y_cell_index,all_ghosts[i]->x_cell_index);*/
         
-        if (all_ghosts[i]->type != curr_type) /* no collsiion with ghost itself only other objs*/
+        if (all_ghosts[i]->type != curr_type) 
         {
             if ((all_ghosts[i]->move->x_cell_index == object_x_index + x_delta &&
                 all_ghosts[i]->move->y_cell_index == object_y_index + y_delta) ||
                 (all_ghosts[i]->move->x_cell_index == object_x_index && 
                 all_ghosts[i]->move->y_cell_index == object_y_index))
-                /* collision = OBJECT; */
                 collision = all_ghosts[i]->type;
         }
     }
     return collision;
+    
 }    
 /*************************************************************
  * Function: check_pacman_collision
@@ -177,6 +192,7 @@ ObjectType check_wall_collision(Movement* entity) {
  * Parameters: Entities* all - Pointer to the entities structure containing
 *******************************************************/
 void check_proximity(Entities* all) {
+    
     int ghostCountWithinRange = 0;
     int i;
     UINT16 pacman_x_index, pacman_y_index;
@@ -226,6 +242,7 @@ void check_proximity(Entities* all) {
     else if (ghostCountWithinRange >= 2) {
         end_game();
     }
+    
 }
 
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state) {
@@ -255,11 +272,24 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
             cell_map[i][j].y_position = Y_PIXEL_OFFSET + (i << 4);
             if (tile_map[i][j] == 0) {
                 cell_map[i][j].open_path = TRUE;
+                cell_map[i][j].has_pellet = TRUE;
             } else {
                 cell_map[i][j].open_path = FALSE;
+                cell_map[i][j].has_pellet = FALSE;
             }
         }
     }
+    cell_map[10][17].has_pellet = FALSE;
+    cell_map[10][18].has_pellet = FALSE;
+
+    cell_map[10][20].has_pellet = FALSE;
+    cell_map[10][21].has_pellet = FALSE;
+
+    cell_map[12][17].has_pellet = FALSE;
+    cell_map[12][18].has_pellet = FALSE;
+
+    cell_map[12][20].has_pellet = FALSE;
+    cell_map[12][21].has_pellet = FALSE;
 }
 /*************************************************************
 * Function: update_cells
@@ -280,16 +310,14 @@ void update_cells(Entities* all) {
     Ghost* awkward = all->awkward_ghost;
     
 
-    update_cell(pacman->move, DEFAULT);
     /*Pacmans state doesn't matter here, probably faster to pass in const value*/
-
-    update_cell(crying->move, crying->state);
-
+    update_cell(awkward->move, awkward->state);
     update_cell(moustache->move, moustache->state);
-
+    update_cell(crying->move, crying->state);
     update_cell(cyclops->move, cyclops->state);
 
-    update_cell(awkward->move, awkward->state);
+    update_cell(pacman->move, DEFAULT);
+
 }
 void update_cell(Movement* entity, UCHAR8 state) {
 
@@ -356,11 +384,13 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
 
     y_cell_index = ghost->move->y_cell_index;
     x_cell_index = ghost->move->x_cell_index;
+
+    add_wall_to_map(cell_map, y_cell_index, x_cell_index);
     
-    cell_map[y_cell_index][x_cell_index].open_path = FALSE;
+   /* cell_map[y_cell_index][x_cell_index].open_path = FALSE;
     cell_map[y_cell_index+1][x_cell_index].open_path = FALSE;
     cell_map[y_cell_index][x_cell_index+1].open_path = FALSE;
-    cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;*/
 }
 /*************************************************************
 * Function: add_wall_to_map
@@ -373,27 +403,26 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
 *          making it a wall. This is used to dynamically alter the map's layout.
 *************************************************************/
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index) {
-   cell_map[y_cell_index][x_cell_index].open_path = FALSE;
-   cell_map[y_cell_index+1][x_cell_index].open_path = FALSE;
-   cell_map[y_cell_index][x_cell_index+1].open_path = FALSE;
-   cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index].has_pellet = FALSE;
+
+    cell_map[y_cell_index+1][x_cell_index].open_path = FALSE;
+    cell_map[y_cell_index+1][x_cell_index].has_pellet = FALSE;
+
+    cell_map[y_cell_index][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index+1].has_pellet = FALSE;
+
+    cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index+1][x_cell_index+1].has_pellet = FALSE;
 }
 void align_axis(Movement* entity) {
-        if (entity->direction == UP || entity->direction == DOWN) {        
-        entity->x = (entity->x_cell_index << 4);
+
+        if (entity->direction == UP || entity->direction == DOWN) { 
+            entity->x = (entity->x_cell_index << 4);
         }
         else if (entity->direction == LEFT || entity->direction == RIGHT) {
             entity->y = (entity->y_cell_index + 1) << 4;
         }
-    /*
-        if (entity->direction == UP || entity->direction == DOWN) {
-            
-            entity->x = entity->x_cell_index * PIXELS_PER_CELL;
-        }
-        else if (entity->direction == LEFT || entity->direction == RIGHT) {
-            entity->y = entity->y_cell_index  * PIXELS_PER_CELL + PIXELS_PER_CELL;
-        }
-        */
 }
 void flip_direction(Movement* ghost) {
     if (ghost->direction == UP)
@@ -417,34 +446,77 @@ void update_current_frame(Entities* all, int clock) {
     ghosts[1] = all->awkward_ghost;
     ghosts[2] = all->cyclops_ghost;
     ghosts[3] = all->moustache_ghost;
-/*
-    if (clock % 2 == 0) {
-        */
-        if (pacman->state == DEFAULT) {
-            /*
-            pacman->current_frame = ((pacman->current_frame) + 1) % 8;
-            */
-            pacman->current_frame = ((pacman->current_frame) + 1) & 7;
 
-        }
-        else {
-        /*
-        pacman->current_frame = ((pacman->current_frame) + 1) % 6;
-        */
+    if (pacman->state == DEFAULT) {
+
+        pacman->current_frame = ((pacman->current_frame) + 1) & 7;
+    }
+    else {
+
         pacman->current_frame += 1;
         if (pacman->current_frame > 5) 
             pacman->current_frame -= 6;
         }
     
     for (i = 0; i < 4; i++) {
-        /*
-        if (ghosts[i]->state == DEFAULT && clock % 4 == 0) {
-            ghosts[i]->current_frame = ((ghosts[i]->current_frame) + 1) % 2;
-        }
-        */
+
         if (ghosts[i]->state == DEFAULT && (clock & 3) == 0) {
             ghosts[i]->current_frame = (ghosts[i]->current_frame + 1) & 1;
-}
+
+        }
 
     }
+}
+
+/*
+*
+*   set position from 2 frames behind
+*
+*/
+void set_prev(Entities* entity)
+{
+    Movement* pacman_movement = entity->pacman->move;
+    Movement* awkward_move = entity->awkward_ghost->move;
+    Movement* moustache_move = entity->moustache_ghost->move;
+    Movement* crying_move = entity->crying_ghost->move;
+    Movement* cyclops_move = entity->cyclops_ghost->move;
+
+    pacman_movement->last_x = pacman_movement->x;
+    pacman_movement->last_y = pacman_movement->y;
+    
+    moustache_move->last_x = moustache_move->x;
+    moustache_move->last_y = moustache_move->y;
+
+    crying_move->last_x = crying_move->x;
+    crying_move->last_y = crying_move->y;
+    
+    awkward_move->last_x = awkward_move->x;
+    awkward_move->last_y = awkward_move->y;
+    
+    cyclops_move->last_x = cyclops_move->x;
+    cyclops_move->last_y = cyclops_move->y;
+}
+void set_prev_prev (Entities* entity) 
+{/*
+    Movement* pacman_movement = entity->pacman->move;
+    Movement* moustache_move = entity->moustache_ghost->move;
+    Movement* crying_move = entity->crying_ghost->move;
+    Movement* awkward_move = entity->awkward_ghost->move;
+    Movement* cyclops_move = entity->cyclops_ghost->move;
+
+    pacman_movement->last_last_x = pacman_movement->last_x;
+    pacman_movement->last_last_y = pacman_movement->last_y;
+
+    moustache_move->last_last_x = moustache_move->last_x;
+    moustache_move->last_last_y = moustache_move->last_y;
+
+    crying_move->last_last_x = crying_move->last_x;
+    crying_move->last_last_y = crying_move->last_y;
+
+    awkward_move->last_last_x = awkward_move->last_x;
+    awkward_move->last_last_y = awkward_move->last_y;
+
+    cyclops_move->last_last_x = cyclops_move->last_x;
+    cyclops_move->last_last_y = cyclops_move->last_y;
+    */
 }

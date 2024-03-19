@@ -15,39 +15,38 @@ void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
     int dx = x;
     int dy = y;
     ULONG32* location = base + (y * LONGS_PER_ROW) + (x >> 5);
-        for (row = 0; row < height; row++) {
             if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && dy >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT) ) {
+        for (row = 0; row < height; row++) {
                 *location |= bitmap[row] >> (x & 31);
                 *(location + 1) |= bitmap[row] << (SPRITE_WIDTH - (x & 31));
-            }
             location += LONGS_PER_ROW;
             dy++; /*For bounds checking*/
+            }
             /* dx++; Can't get dx working :(*/
         }
 }
+/******************************************************************************
+ * Function: clear_bitmap
+ * does NOT clear outer walls
+******************************************************************************/
 void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height) {
     int row;
     int dy = y;
     ULONG32* location = base + (y * LONGS_PER_ROW) + (x >> 5);
     ULONG32 mask1, mask2;
 
-    for (row = 0; row < height; row++) {
-        if (x >= 0 && x <= (SCREEN_WIDTH - SPRITE_WIDTH) && y >= 0 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT)) {
-            /*
-            mask1 = ~(0xFFFFFFFF >> (x % SPRITE_WIDTH));
-            mask2 = ~(0xFFFFFFFF << (SPRITE_WIDTH - (x % SPRITE_WIDTH)));
-            */
+    if (x >= 16 && x <= (SCREEN_WIDTH - SPRITE_WIDTH - 16) && y >= 16 && y <= (SCREEN_HEIGHT - SPRITE_HEIGHT - 16)) {
+        for (row = 0; row < height; row++) {
+
             mask1 = ~(0xFFFFFFFF >> (x & 31));
             mask2 = ~(0xFFFFFFFF << (SPRITE_WIDTH - (x & 31)));
-
 
             *location &= mask1;
             if ((x & 31) + SPRITE_WIDTH > 32) {
                 *(location + 1) &= mask2;
             }
+            location += LONGS_PER_ROW; 
         }
-        location += LONGS_PER_ROW; 
-        /*dy++; */
     }
 }
 
@@ -91,7 +90,21 @@ void plot_bitmap_64(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigne
         }
     }
 }
-/**
+void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int height) {
+    int row;
+    int dx = x;
+    int dy = y;
+    UCHAR8* location = base + (y * BYTES_PER_ROW) + (x >> 3); 
+
+    if (x >= 0 && x < SCREEN_WIDTH && dy >= 0 && dy < SCREEN_HEIGHT) {
+        for (row = 0; row < height; row++) {
+            *location |= bitmap[row] >> (x & 7);     
+            *(location + 1) |= bitmap[row] << 8 - (x & 7);
+            location += BYTES_PER_ROW;     
+        }
+    }
+}
+/*****************************************************************************
  * Plots a letter on the screen at the specified (x,y) coordinates.
  *
  * @param base pointer to the base of the frame buffer
@@ -125,6 +138,19 @@ void clear_letter(UCHAR8* base, int x, int y) {
             *location = 0;    
             *(location + 1) = 0;
             location += BYTES_PER_ROW;       
+        }
+    }
+}
+void clear_8(UCHAR8* base, int x, int y, unsigned int height) {
+    int row;
+    int dx = x;
+    int dy = y;
+    UCHAR8* location = base + (y * BYTES_PER_ROW) + (x >> 3); 
+    if (x >= 0 && x < SCREEN_WIDTH - 8 && dy >= 0 && dy < (SCREEN_HEIGHT - height)) {
+        for (row = 0; row < height; row++) {
+            *location = 0;    
+            *(location + 1) = 0;
+            location += BYTES_PER_ROW;     
         }
     }
 }

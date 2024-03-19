@@ -105,6 +105,7 @@ extern const ULONG32 null_sprite_16[];
 extern const ULONG32 null_sprite_32[];
 
 extern const ULONG32 test64[];
+extern const UCHAR8 pellet[8];
 
 extern const ULONG32* wall_map[][20];
 
@@ -133,6 +134,7 @@ typedef struct {
 	int x_position, y_position;
 	bool open_path;
 	bool occupied;
+	bool has_pellet;
 }Cell;
 
 
@@ -144,6 +146,15 @@ typedef struct {
     UCHAR8 direction;
     UCHAR8 y_cell_index;
     UCHAR8 x_cell_index;
+
+	UINT16 last_x;
+	UINT16 last_y;
+
+	UINT16 last_last_x;
+	UINT16 last_last_y;
+
+	bool changed_direction;
+
 }Movement;
 
 extern Movement* move;
@@ -222,6 +233,9 @@ void end_game();
 void align_axis(Movement* entity);
 void flip_direction(Movement* ghost);
 void update_current_frame(Entities* all, int clock);
+
+void set_prev_prev(Entities* entity);
+void set_prev(Entities* entity);
 # 3 "events.c" 2
 # 1 "./TYPES.H" 1
 # 4 "events.c" 2
@@ -250,6 +264,7 @@ ULONG32 random_number_generator(Xor *xor);
 void set_input(Pacman *pacman, char input);
 
 UCHAR8 get_valid_paths(Movement *ghost);
+void eat_pellet(Movement* pacman);
 # 5 "events.c" 2
 # 1 "C:/c68/include/stdio.h" 1
 # 1 "C:/c68/include/compiler.h" 1
@@ -357,8 +372,11 @@ void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 
     flip_direction(ghost1);
     flip_direction(ghost2);
-# 43 "events.c"
 }
+
+
+
+
 ObjectType process_ghost_collision(Entities* all, UINT16 tick)
 {
 
@@ -374,7 +392,6 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
 
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH) {
-
             handle_wall_collision(all_ghosts[i], i);
         }
 
@@ -396,21 +413,18 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
 
                 }
             }
-# 101 "events.c"
         }
+
     }
     for (i = 3; i > -1; i--){
         for (n = 1; n <= i; n++){
             if (check_shared_occupied(all_ghosts[i], all_ghosts[i-n]) == -1 ) {
                 handle_ghost_collision(all_ghosts[i], all_ghosts[i-n]);
-
             }
         }
     }
 
-
 }
-
 void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 
     int i, direction;
@@ -449,18 +463,16 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
         if (cell_map[ghost->y_cell_index + ghost->delta_y][ghost->x_cell_index + ghost->delta_x].open_path == -1 )
             return;
     }
-# 183 "events.c"
 }
-# 193 "events.c"
+# 130 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
-
 
     Movement* pacman = entity->pacman->move;
 
     switch(object_type)
     {
     case OPEN_PATH:
-        align_axis(pacman);
+
         break;
     case WALL:
 
@@ -478,27 +490,23 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
         case GHOST_TYPE_AWKWARD:
             kill_ghost(entity->awkward_ghost, cell_map);
-
             break;
 
         case GHOST_TYPE_MOUSTACHE:
             kill_ghost(entity->moustache_ghost, cell_map);
-
             break;
 
         case GHOST_TYPE_CYCLOPS:
             kill_ghost(entity->cyclops_ghost, cell_map);
-
             break;
 
         default:
             break;
         }
         break;
-# 250 "events.c"
     }
 }
-# 259 "events.c"
+# 178 "events.c"
 void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
@@ -523,56 +531,67 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 
     if (check_shared_occupied(pacman, entity->crying_ghost->move) == -1 )
         kill_ghost(entity->crying_ghost, cell_map);
-# 347 "events.c"
-}
-ULONG32 random_number_generator(Xor *xor)
-{
 
-    ULONG32 state = xor->value;
-
-	state ^= state << 13;
-	state ^= state >> 17;
-	state ^= state << 5;
-    xor->value = state;
-
-    return state;
 }
 void set_input(Pacman *pacman, char input)
 {
-
-	pacman -> move -> delta_y = 0;
-    pacman -> move -> delta_x = 0;
-
-
+    Movement* movement = pacman->move;
+# 249 "events.c"
 	switch(input)
 	{
 		case 'w' :
-			pacman -> move -> delta_y = -1;
-            pacman -> move -> delta_x = 0;
-            pacman -> move -> direction = ((UCHAR8)0) ;
+            if (movement->direction != ((UCHAR8)0) ) {
+                movement->changed_direction = -1 ;
+                movement -> delta_y = -1;
+                movement -> delta_x = 0;
+                movement -> direction = ((UCHAR8)0) ;
+            }
+            else {
+                movement->changed_direction = 0 ;
+            }
 			break;
 
 		case 'a' :
-			pacman -> move -> delta_x = -1;
-            pacman -> move -> delta_y = 0;
-            pacman -> move -> direction = ((UCHAR8)2) ;
+            if (movement->direction != ((UCHAR8)2) ) {
+                movement->changed_direction = -1 ;
+                movement -> delta_x = -1;
+                movement -> delta_y = 0;
+                movement -> direction = ((UCHAR8)2) ;
+            }
+            else {
+                movement->changed_direction = 0 ;
+            }
 			break;
 
 		case 's' :
-			pacman -> move -> delta_y = 1;
-            pacman -> move -> delta_x = 0;
-            pacman -> move -> direction = ((UCHAR8)1) ;
+            if (movement->direction != ((UCHAR8)1) ) {
+                movement->changed_direction = -1 ;
+                movement -> delta_y = 1;
+                movement -> delta_x = 0;
+                movement -> direction = ((UCHAR8)1) ;
+            }
+            else {
+                movement->changed_direction = 0 ;
+            }
 			break;
 
 		case 'd' :
-			pacman -> move -> delta_x = 1;
-            pacman -> move -> delta_y = 0;
-            pacman -> move -> direction = ((UCHAR8)3) ;
+            if (movement->direction != ((UCHAR8)3) ) {
+                movement->changed_direction = -1 ;
+                movement -> delta_x = 1;
+                movement -> delta_y = 0;
+                movement -> direction = ((UCHAR8)3) ;
+            }
+            else {
+                movement->changed_direction = 0 ;
+            }
 			break;
 
 		default:
-            pacman -> move -> delta_x = 0;
-            pacman -> move -> delta_y = 0;
+            movement->changed_direction = 0 ;
+            movement -> delta_x = 0;
+            movement -> delta_y = 0;
+
 			break;
 	}
 
@@ -594,4 +613,8 @@ UCHAR8 get_valid_paths(Movement *ghost)
     if (cell_map[ghost->y_cell_index][ghost->x_cell_index + 1].open_path == -1 )
         count++;
     return count;
+}
+void eat_pellet(Movement* pacman) {
+    cell_map[pacman->y_cell_index][pacman->x_cell_index].has_pellet = 0 ;
+
 }
