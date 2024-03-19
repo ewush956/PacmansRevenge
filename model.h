@@ -133,8 +133,11 @@ void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell
 
 ObjectType check_wall_collision(Movement* entity);
 
-void check_proximity(Entities* entity,UCHAR8* base8); 	/*added uchar8 base*/
-void end_game(UCHAR8 *base);
+void check_proximity(Entities* entity); 	/*added uchar8 base*/
+
+/*void end_game(UCHAR8 *base);*/
+
+void end_game();
 
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state);
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state);

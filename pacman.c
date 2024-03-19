@@ -13,6 +13,13 @@
 #include <stdio.h>
 #include <linea.h>
 
+    /*---------- */
+    UINT16 combined_address;
+    volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
+    volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_LOW;
+    
+    /*-------- */
+
 /************************* KNOWN BUG ***************************
  * Currently, there is a bug that does not render the top left portion 
  * of the map from the back buffer. It appears to be in the correct memory 
@@ -174,7 +181,11 @@ int main()
     UINT16 ticks = 0;
     /*UINT16* base16 = Physbase();*/
 
-	ULONG32* base32 = Physbase();
+	/*ULONG32* base32 = Physbase();*/
+
+    ULONG32* base32 = (ULONG32*)get_video_base();
+
+
     ULONG32* original = Physbase();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
     
@@ -211,7 +222,7 @@ int main()
 
             update_movement(&entity, input, ticks);
             
-            check_proximity(&entity,base8);
+            check_proximity(&entity);
 
             update_current_frame(&entity, ticks);
             render_frame(back_buffer_ptr, &entity);
@@ -661,3 +672,28 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->direction = DOWN;
 }
 
+UINT16* get_video_base()
+{
+   
+	ULONG32 old_ssp;
+    UINT16* video_base_ptr;
+    /*
+    UINT16 combined_address;
+    volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
+    volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_LOW;
+    */
+    UCHAR8 high_byte; 
+    UCHAR8 low_byte ;
+
+    high_byte = *ptr_to_highbyte;
+    low_byte = *ptr_to_lowbyte;
+    
+	old_ssp = Super(0); 				
+    combined_address = ((UINT16)high_byte << 8) | low_byte;
+    video_base_ptr = &combined_address;
+ 
+    Super(old_ssp); 			
+ 
+    return video_base_ptr;
+
+}
