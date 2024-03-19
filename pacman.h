@@ -54,7 +54,7 @@ typedef unsigned char GAME_STATE;
 */
 #define VIDEO_ADDR_HIGH  0xFF8201
 #define VIDEO_ADDR_MID  0xFF8203
-#define VIDEO_ADDR_LOW  0xFF820D
+
 
 /*void swap_buffers();*/
 void swap_buffers(ULONG32** base32, ULONG32** back_buffer_ptr);
@@ -72,6 +72,7 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool 
 ULONG32* byte_allign(ULONG32* array_address);
 void debug_pacman_movement(ULONG32* base32, Pacman* pacman);
 
+ULONG32* get_video_base();
 
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
