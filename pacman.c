@@ -14,7 +14,7 @@
 #include <linea.h>
 
     /*---------- */
-    UINT16 combined_address;
+    ULONG32 combined_address;
     volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
     volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_LOW;
     
@@ -179,10 +179,10 @@ int main()
     UCHAR8* base8 = Physbase();
 
     UINT16 ticks = 0;
-    /*UINT16* base16 = Physbase();*/
+    UINT16* base16 = (UINT16*)get_video_base();
 
 	/*ULONG32* base32 = Physbase();*/
-
+     
     ULONG32* base32 = (ULONG32*)get_video_base();
 
 
@@ -674,7 +674,6 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
 
 UINT16* get_video_base()
 {
-   
 	ULONG32 old_ssp;
     UINT16* video_base_ptr;
     /*
@@ -685,15 +684,20 @@ UINT16* get_video_base()
     UCHAR8 high_byte; 
     UCHAR8 low_byte ;
 
+	old_ssp = Super(0); 				
     high_byte = *ptr_to_highbyte;
     low_byte = *ptr_to_lowbyte;
+    Super(old_ssp); 		
+
     
-	old_ssp = Super(0); 				
-    combined_address = ((UINT16)high_byte << 8) | low_byte;
-    video_base_ptr = &combined_address;
+    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte << 8);
+    /*combined_address = (high_byte << 8) | low_byte;*/
+    
+
+    /*video_base_ptr = &combined_address;*/
  
-    Super(old_ssp); 			
+
  
-    return video_base_ptr;
+    return (UINT16*)combined_address;
 
 }
