@@ -89,6 +89,7 @@ extern const ULONG32 cyclops_ghost_down_1[];
 extern const ULONG32 tombstone[];
 extern const ULONG32 ghost_run_1[];
 extern const ULONG32 ghost_freeze_1[];
+extern const ULONG32 splash[8000];
 
 extern const UINT16 wall_single_16[];
 
@@ -101,4 +102,5 @@ extern const UCHAR8 pellet[8];
 extern const ULONG32* wall_map[][20];
 
 extern UINT16 tile_map[][MAP_TILE_LENGTH];
+
 #endif 

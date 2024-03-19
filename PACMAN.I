@@ -124,6 +124,7 @@ extern const ULONG32 cyclops_ghost_down_1[];
 extern const ULONG32 tombstone[];
 extern const ULONG32 ghost_run_1[];
 extern const ULONG32 ghost_freeze_1[];
+extern const ULONG32 splash[8000];
 
 extern const UINT16 wall_single_16[];
 
@@ -1169,6 +1170,9 @@ int main()
     SoundState wakaState = {0, 0};
     SoundState wakaNoise = {0, 0};
 
+    plot_screen(base32, splash);
+    while (!(short)_trap_1_w((short)0x0B) );
+
     initialize_game(base32, back_buffer_ptr, &entity);
 	if ((short)_trap_1_w((short)0x0B) )
 	{
@@ -1186,7 +1190,7 @@ int main()
             input = (char)_trap_1_w((short)0x08) ;
         }
         if (time_elapsed > 0) {
-# 234 "pacman.c"
+# 237 "pacman.c"
             update_movement(&entity, input, ticks);
             if ((ticks & 7) == 0) {
                 update_current_frame(&entity, ticks);
@@ -1223,7 +1227,7 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 276 "pacman.c"
+# 279 "pacman.c"
 void update_movement(Entities* entity, char input, UINT16 ticks) {
 
     set_input(entity->pacman,input);
@@ -1235,7 +1239,7 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
 
 
 }
-# 293 "pacman.c"
+# 296 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
 
@@ -1251,7 +1255,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
    return state;
 
 }
-# 315 "pacman.c"
+# 318 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1523,7 +1527,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 592 "pacman.c"
+# 595 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;

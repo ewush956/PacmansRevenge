@@ -414,6 +414,14 @@ void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell
 
     cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
     cell_map[y_cell_index+1][x_cell_index+1].has_pellet = FALSE;
+
+    cell_map[y_cell_index-1][x_cell_index].occupied = FALSE;
+    cell_map[y_cell_index-1][x_cell_index+1].occupied = FALSE;
+
+    cell_map[y_cell_index][x_cell_index-1].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index-1].has_pellet = FALSE;
+
+
 }
 void align_axis(Movement* entity) {
 

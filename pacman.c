@@ -208,6 +208,9 @@ int main()
     SoundState wakaState = {0, 0};
     SoundState wakaNoise = {0, 0};
 
+    plot_screen(base32, splash);
+    while (!Cconis());
+
     initialize_game(base32, back_buffer_ptr, &entity);
 	if (Cconis())
 	{
