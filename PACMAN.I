@@ -157,6 +157,11 @@ typedef struct {
 	bool open_path;
 	bool occupied;
 	bool has_pellet;
+
+	bool can_go_up;
+	bool can_go_down;
+	bool can_go_left;
+	bool can_go_right;
 }Cell;
 
 
@@ -238,10 +243,12 @@ ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index,
 
 
 void init_map_cells(Cell cell_map[][40 ], UINT16 tile_map[][40 ]);
-void update_cell(Movement* entity, UCHAR8 state);
+bool update_cell(Movement* entity, UCHAR8 state);
 void set_occupied(bool set, int y_index, int x_index);
 bool check_shared_occupied(Movement* ghost1_move, Movement* ghost2_move);
 void update_cells(Entities* entity);
+void update_ghost_direction(Ghost* ghost, Pacman* pacman);
+bool check_valid_path(Movement* movement);
 void kill_ghost(Ghost* ghost, Cell cell_map[][40 ]);
 void add_wall_to_map(Cell cell_map[24 ][40 ], int y_cell_index, int x_cell_index);
 
@@ -1340,16 +1347,25 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
 
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool enable) {
+    Movement* moustache_ghost = entity->moustache_ghost->move;
+    Movement* awkward_ghost = entity->awkward_ghost->move;
+    Movement* crying_ghost = entity->crying_ghost->move;
+    Movement* cyclops_ghost = entity->cyclops_ghost->move;
 
     if (enable != -1 ) {
         move_ghost(entity->crying_ghost);
         move_ghost(entity->awkward_ghost);
         move_ghost(entity->moustache_ghost);
         move_ghost(entity->cyclops_ghost);
-	    update_cells(entity);
-    }
+
+        update_cell(awkward_ghost, entity->awkward_ghost->state);
+        update_cell(moustache_ghost, entity->moustache_ghost->state);
+        update_cell(crying_ghost, entity->crying_ghost->state);
+        update_cell(cyclops_ghost, entity->cyclops_ghost->state);
+
         update_current_frame(entity, frame_index);
 	    render_frame(base, entity);
+    }
 
 }
 
@@ -1527,7 +1543,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 595 "pacman.c"
+# 604 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;

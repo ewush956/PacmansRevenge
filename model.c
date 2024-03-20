@@ -252,7 +252,7 @@ void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
     ghost->state = new_state;
 }
 void end_game() {
-    
+    printf("GAME OVER\n");
 }
 
 /*************************************************************
@@ -276,6 +276,29 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
             } else {
                 cell_map[i][j].open_path = FALSE;
                 cell_map[i][j].has_pellet = FALSE;
+            }
+            if (tile_map[i+1][j] == 0 && i < MAP_PIXEL_HEIGHT - 1) {
+                cell_map[i][j].can_go_down = TRUE;
+            } else {
+                cell_map[i][j].can_go_down = FALSE;
+            }
+
+            if (tile_map[i][j+1] == 0 && j < MAP_PIXEL_LENGTH - 1) {
+                cell_map[i][j].can_go_right = TRUE;
+            } else {
+                cell_map[i][j].can_go_right = FALSE;
+            }
+
+            if (tile_map[i-1][j] == 0 && i > 0) {
+                cell_map[i][j].can_go_up = TRUE;
+            } else {
+                cell_map[i][j].can_go_up = FALSE;
+            }
+
+            if (tile_map[i][j-1] == 0 && j > 0) {
+                cell_map[i][j].can_go_left = TRUE;
+            } else {
+                cell_map[i][j].can_go_left = FALSE;
             }
         }
     }
@@ -309,28 +332,113 @@ void update_cells(Entities* all) {
     Ghost* cyclops = all->cyclops_ghost;
     Ghost* awkward = all->awkward_ghost;
     
-
-    /*Pacmans state doesn't matter here, probably faster to pass in const value*/
-    update_cell(awkward->move, awkward->state);
-    update_cell(moustache->move, moustache->state);
-    update_cell(crying->move, crying->state);
-    update_cell(cyclops->move, cyclops->state);
+    if (update_cell(awkward->move, awkward->state) == TRUE) {
+        update_ghost_direction(awkward, pacman);
+    };
+    if (update_cell(moustache->move, moustache->state) == TRUE) {
+        update_ghost_direction(moustache, pacman);
+    }
+    if (update_cell(crying->move, crying->state) == TRUE) {
+        update_ghost_direction(crying, pacman);
+    }
+    if (update_cell(cyclops->move, cyclops->state) == TRUE) {
+        update_ghost_direction(cyclops, pacman);
+    }
 
     update_cell(pacman->move, DEFAULT);
 
 }
-void update_cell(Movement* entity, UCHAR8 state) {
+/*Returns true if entity has entered a new cell*/
+bool update_cell(Movement* entity, UCHAR8 state) {
 
     int x_index = entity->x_cell_index;
     int y_index = entity->y_cell_index;
 
     set_occupied(FALSE, y_index, x_index);
     if (state == DEAD) {
-        return;
+        return FALSE;
     }
     entity->x_cell_index = entity->x >> 4; 
     entity->y_cell_index = (entity->y >> 4) - 1;
     set_occupied(TRUE, y_index, x_index);
+
+    if (entity->x_cell_index != x_index || entity->y_cell_index != y_index) {
+        return TRUE;
+    }
+    return FALSE;
+}
+void update_ghost_direction(Ghost* ghost, Pacman* pacman) 
+{
+    Movement* ghost_movement = ghost->move;
+    Movement* pacman_movement = pacman->move;
+    if (ghost->state == DEAD) {
+        return;
+    }
+    if (ghost->state == RUNNING) {
+        if (check_valid_path(ghost_movement) == TRUE) {
+            ghost_movement->direction = pacman_movement->direction;
+        }
+        return;
+    }
+    switch (ghost_movement->direction) {
+        case RIGHT:
+            if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_right) {
+                ghost_movement->direction = RIGHT;
+            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_up) {
+                ghost_movement->direction = UP;
+            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_down) {
+                ghost_movement->direction = DOWN;
+            } else {
+                ghost_movement->direction = LEFT;
+            }
+            break;
+        case LEFT:
+            if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_left) {
+                ghost_movement->direction = LEFT;
+            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_up) {
+                ghost_movement->direction = UP;
+            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_down) {
+                ghost_movement->direction = DOWN;
+            } else {
+                ghost_movement->direction = RIGHT;
+            }
+            break;
+        case UP:
+            if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_up) {
+                ghost_movement->direction = UP;
+            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_right) {
+                ghost_movement->direction = RIGHT;
+            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_left) {
+                ghost_movement->direction = LEFT;
+            } else {
+                ghost_movement->direction = DOWN;
+            }
+            break;
+        case DOWN:
+            if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_down) {
+                ghost_movement->direction = DOWN;
+            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_right) {
+                ghost_movement->direction = RIGHT;
+            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_left) {
+                ghost_movement->direction = LEFT;
+            } else {
+                ghost_movement->direction = UP;
+            }
+            break;
+    }
+
+}
+bool check_valid_path(Movement* movement) {
+    switch (movement->direction) {
+        case UP:
+            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up;
+        case DOWN:
+            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down;
+        case LEFT:
+            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left;
+        case RIGHT:
+            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right;
+    }
 }
 void set_occupied(bool set, int y_index, int x_index) {
     cell_map[y_index][x_index].occupied = set;

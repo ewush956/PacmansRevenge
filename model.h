@@ -43,6 +43,11 @@ typedef struct {
 	bool open_path;
 	bool occupied;
 	bool has_pellet;
+
+	bool can_go_up;
+	bool can_go_down;
+	bool can_go_left;
+	bool can_go_right;
 }Cell;
 
 
@@ -124,10 +129,12 @@ ObjectType process_ghost_collision(Entities* all);
 */
 
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
-void update_cell(Movement* entity, UCHAR8 state);
+bool update_cell(Movement* entity, UCHAR8 state);
 void set_occupied(bool set, int y_index, int x_index); 
 bool check_shared_occupied(Movement* ghost1_move, Movement* ghost2_move);
 void update_cells(Entities* entity);
+void update_ghost_direction(Ghost* ghost, Pacman* pacman);
+bool check_valid_path(Movement* movement);
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
 

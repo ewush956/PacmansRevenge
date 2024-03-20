@@ -37,6 +37,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
     ObjectType collision = OPEN_PATH;
     int i, n;
 
+    Ghost* ghost_array[4];
 
     Movement *all_ghosts[4];
     all_ghosts[0] = all->crying_ghost->move;
@@ -44,13 +45,22 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
     all_ghosts[2] = all->cyclops_ghost->move;
     all_ghosts[3] = all->moustache_ghost->move;
 
+    ghost_array[0] = all->crying_ghost;
+    ghost_array[1] = all->awkward_ghost;
+    ghost_array[2] = all->cyclops_ghost;
+    ghost_array[3] = all->moustache_ghost;
+
+
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH) {
-            handle_wall_collision(all_ghosts[i], i);   
+            /*handle_wall_collision(all_ghosts[i], i);   */
+            update_ghost_direction(ghost_array[i], all->pacman);
+            return;
         } 
         /*
         The stuff below is just fake randomness.
         */
+       /*
         else {
             if (all_ghosts[i]->direction == UP || all_ghosts[i]->direction == DOWN) {
                 if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == TRUE) {
@@ -68,6 +78,8 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
                 }
             }                   
         }
+        */
+        
         
     }
     for (i = 3; i > -1; i--){
@@ -303,6 +315,7 @@ void set_input(Pacman *pacman, char input)
 	
 			break;
 	}
+    
 
 }
 /*******************************************

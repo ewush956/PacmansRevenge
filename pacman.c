@@ -399,16 +399,25 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
  * Parameters: base, entity, frame_index
  *******************************************************************/
 void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool enable) {
+    Movement* moustache_ghost = entity->moustache_ghost->move;
+    Movement* awkward_ghost = entity->awkward_ghost->move;
+    Movement* crying_ghost = entity->crying_ghost->move;
+    Movement* cyclops_ghost = entity->cyclops_ghost->move;
 
     if (enable != TRUE) {
         move_ghost(entity->crying_ghost);
         move_ghost(entity->awkward_ghost);
         move_ghost(entity->moustache_ghost);
         move_ghost(entity->cyclops_ghost);
-	    update_cells(entity);
-    }
+	    /*update_cells(entity);*/
+        update_cell(awkward_ghost, entity->awkward_ghost->state);
+        update_cell(moustache_ghost, entity->moustache_ghost->state);
+        update_cell(crying_ghost, entity->crying_ghost->state);
+        update_cell(cyclops_ghost, entity->cyclops_ghost->state);
+
         update_current_frame(entity, frame_index);
 	    render_frame(base, entity);
+    }
 
 }  
 /*******************************************************************
