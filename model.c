@@ -411,8 +411,8 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
         return;
     }
     if (ghost->state == RUNNING) {
-        ghost_movement->direction = pacman_movement->direction;
-        if (check_valid_path(ghost_movement) == TRUE) {
+        /*ghost_movement->direction = pacman_movement->direction;*/
+        if (check_valid_path(ghost_movement, pacman_movement->direction) == TRUE) {
             ghost_movement->direction = pacman_movement->direction;
             return;
         }
@@ -471,8 +471,8 @@ UCHAR8 get_optimal_direction(Movement* movement) {
             return LEFT;
     }
 }
-bool check_valid_path(Movement* movement) {
-    switch (movement->direction) {
+bool check_valid_path(Movement* movement, UCHAR8 direction) {
+    switch (direction) {
         
         case UP:
             return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up;

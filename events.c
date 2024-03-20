@@ -113,7 +113,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 				    ghost->delta_x = 0;
                 }
                 else {
-                    ghost->direction = get_optimal_direction(ghost);
+                    /*ghost->direction = get_optimal_direction(ghost);*/
                     ghost->delta_y = 0;
 				    ghost->delta_x = 0;
                 }
@@ -123,7 +123,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
     				ghost->delta_y = 1;
                     ghost->delta_x = 0;
                 } else {
-                    ghost->direction = get_optimal_direction(ghost);
+                    /*ghost->direction = get_optimal_direction(ghost);*/
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
                 }
@@ -134,8 +134,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                     ghost->delta_x = 1;
                 }
                 else {
-                                        ghost->direction = get_optimal_direction(ghost);
-
+                                      /*  ghost->direction = get_optimal_direction(ghost);*/
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
                 }
@@ -219,8 +218,7 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 
 
     /*collision_type = process_ghost_collision(entity);*/
-    collision_type = process_ghost_collision(entity, ticks);
-
+    process_ghost_collision(entity, ticks);
 
     collision_type = check_wall_collision(pacman);
     handle_pacman_collision(collision_type, entity); 

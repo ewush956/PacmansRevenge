@@ -197,10 +197,6 @@ L16:
 	clr.w	4(a3)
 	bra	L21
 L20:
-	;line	116
-	move.l	a3,-(a7)
-	jsr	_get_optimal_direction
-	move.b	d0,8(a3)
 	;line	117
 	clr.w	6(a3)
 	;line	118
@@ -235,10 +231,6 @@ L17:
 	clr.w	4(a3)
 	bra	L23
 L22:
-	;line	126
-	move.l	a3,-(a7)
-	jsr	_get_optimal_direction
-	move.b	d0,8(a3)
 	;line	127
 	clr.w	6(a3)
 	;line	128
@@ -273,19 +265,15 @@ L18:
 	move.w	#1,4(a3)
 	bra	L25
 L24:
-	;line	137
-	move.l	a3,-(a7)
-	jsr	_get_optimal_direction
-	move.b	d0,8(a3)
-	;line	139
+	;line	138
 	clr.w	6(a3)
-	;line	140
+	;line	139
 	clr.w	4(a3)
 L25:
-	;line	142
+	;line	141
 	bra	L15
 L19:
-	;line	144
+	;line	143
 	moveq	#12,d0
 	clr.w	d1
 	move.b	10(a3),d1
@@ -305,15 +293,15 @@ L19:
 	ext.w	d0
 	cmp.w	d0,d3
 	bne	L26
-	;line	145
+	;line	144
 	clr.w	6(a3)
-	;line	146
+	;line	145
 	move.w	d3,4(a3)
 	bra	L27
 L26:
-	;line	149
+	;line	148
 	clr.w	6(a3)
-	;line	150
+	;line	149
 	clr.w	4(a3)
 L27:
 L15:
@@ -326,10 +314,10 @@ _handle_pacman_collision:
 	move.l	10(a6),a3
 	move.l	#_cell_map,d3
 	lea	_kill_ghost,a5
-	;line	171
+	;line	170
 	move.l	(a3),a0
 	move.l	6(a0),a4
-	;line	171
+	;line	170
 	move.w	8(a6),d0
 	subq.w	#6,d0
 	beq	L29
@@ -339,17 +327,17 @@ _handle_pacman_collision:
 	beq	L31
 	bra	L28
 L29:
-	;line	175
+	;line	174
 	bra	L28
 L30:
-	;line	178
+	;line	177
 	clr.w	6(a4)
-	;line	179
+	;line	178
 	clr.w	4(a4)
-	;line	181
+	;line	180
 	bra	L28
 L31:
-	;line	184
+	;line	183
 	move.w	8(a6),d0
 	sub.w	#0,d0
 	beq	L34
@@ -361,35 +349,35 @@ L31:
 	beq	L37
 	bra	L33
 L34:
-	;line	187
+	;line	186
 	move.l	d3,-(a7)
 	move.l	4(a3),-(a7)
 	jsr	(a5)
-	;line	188
+	;line	187
 	bra	L32
 L35:
-	;line	191
+	;line	190
 	move.l	d3,-(a7)
 	move.l	8(a3),-(a7)
 	jsr	(a5)
-	;line	192
+	;line	191
 	bra	L32
 L36:
-	;line	195
+	;line	194
 	move.l	d3,-(a7)
 	move.l	12(a3),-(a7)
 	jsr	(a5)
-	;line	196
+	;line	195
 	bra	L32
 L37:
-	;line	199
+	;line	198
 	move.l	d3,-(a7)
 	move.l	16(a3),-(a7)
 	jsr	(a5)
 L33:
 L32:
 L28:
-	;line	205
+	;line	204
 	movem.l	-20(a6),d3/a3/a4/a5
 	unlk	a6
 	rts
@@ -401,27 +389,26 @@ _handle_collisions:
 	lea	_kill_ghost,a4
 	moveq	#-1,d6
 	lea	_check_shared_occupied,a5
-	;line	222
+	;line	221
 	moveq	#6,d4
 	move.l	(a3),a0
 	move.l	6(a0),d3
-	;line	222
+	;line	221
 	move.w	12(a6),-(a7)
 	move.l	a3,-(a7)
 	jsr	_process_ghost_collision
 	addq.l	#6,a7
-	move.w	d0,d4
-	;line	225
+	;line	223
 	move.l	d3,-(a7)
 	jsr	_check_wall_collision
 	addq.l	#4,a7
 	move.w	d0,d4
-	;line	226
+	;line	224
 	move.l	a3,-(a7)
 	move.w	d4,-(a7)
 	jsr	_handle_pacman_collision
 	addq.l	#6,a7
-	;line	228
+	;line	226
 	move.l	8(a3),a0
 	move.l	8(a0),-(a7)
 	move.l	d3,-(a7)
@@ -430,13 +417,13 @@ _handle_collisions:
 	ext.w	d0
 	cmp.w	d0,d6
 	bne	L38
-	;line	229
+	;line	227
 	move.l	d5,-(a7)
 	move.l	8(a3),-(a7)
 	jsr	(a4)
 	addq.l	#8,a7
 L38:
-	;line	231
+	;line	229
 	move.l	12(a3),a0
 	move.l	8(a0),-(a7)
 	move.l	d3,-(a7)
@@ -445,13 +432,13 @@ L38:
 	ext.w	d0
 	cmp.w	d0,d6
 	bne	L39
-	;line	232
+	;line	230
 	move.l	d5,-(a7)
 	move.l	12(a3),-(a7)
 	jsr	(a4)
 	addq.l	#8,a7
 L39:
-	;line	234
+	;line	232
 	move.l	16(a3),a0
 	move.l	8(a0),-(a7)
 	move.l	d3,-(a7)
@@ -460,13 +447,13 @@ L39:
 	ext.w	d0
 	cmp.w	d0,d6
 	bne	L40
-	;line	235
+	;line	233
 	move.l	d5,-(a7)
 	move.l	16(a3),-(a7)
 	jsr	(a4)
 	addq.l	#8,a7
 L40:
-	;line	237
+	;line	235
 	move.l	4(a3),a0
 	move.l	8(a0),-(a7)
 	move.l	d3,-(a7)
@@ -475,7 +462,7 @@ L40:
 	ext.w	d0
 	cmp.w	d0,d6
 	bne	L41
-	;line	238
+	;line	236
 	move.l	d5,-(a7)
 	move.l	4(a3),-(a7)
 	jsr	(a4)
@@ -488,10 +475,10 @@ _set_input:
 	movem.l	d3/d4/a3,-(a7)
 	moveq	#20,d3
 	moveq	#-1,d4
-	;line	286
+	;line	284
 	move.l	8(a6),a0
 	move.l	6(a0),a3
-	;line	286
+	;line	284
 	move.b	13(a6),d0
 	sub.b	#119,d0
 	beq	L44
@@ -503,90 +490,90 @@ _set_input:
 	beq	L47
 	bra	L43
 L44:
-	;line	289
+	;line	287
 	tst.b	8(a3)
 	beq	L48
-	;line	290
+	;line	288
 	move.b	d4,0(a3,d3.l)
-	;line	291
+	;line	289
 	move.w	d4,6(a3)
-	;line	292
+	;line	290
 	clr.w	4(a3)
-	;line	293
+	;line	291
 	clr.b	8(a3)
 	bra	L49
 L48:
-	;line	296
+	;line	294
 	clr.b	0(a3,d3.l)
 L49:
-	;line	298
+	;line	296
 	bra	L42
 L45:
-	;line	301
+	;line	299
 	cmp.b	#2,8(a3)
 	beq	L50
-	;line	302
+	;line	300
 	move.b	d4,0(a3,d3.l)
-	;line	303
+	;line	301
 	move.w	d4,4(a3)
-	;line	304
+	;line	302
 	clr.w	6(a3)
-	;line	305
+	;line	303
 	move.b	#2,8(a3)
 	bra	L51
 L50:
-	;line	308
+	;line	306
 	clr.b	0(a3,d3.l)
 L51:
-	;line	310
+	;line	308
 	bra	L42
 L46:
-	;line	313
+	;line	311
 	cmp.b	#1,8(a3)
 	beq	L52
-	;line	314
+	;line	312
 	move.b	d4,0(a3,d3.l)
-	;line	315
+	;line	313
 	move.w	#1,6(a3)
-	;line	316
+	;line	314
 	clr.w	4(a3)
-	;line	317
+	;line	315
 	move.b	#1,8(a3)
 	bra	L53
 L52:
-	;line	320
+	;line	318
 	clr.b	0(a3,d3.l)
 L53:
-	;line	322
+	;line	320
 	bra	L42
 L47:
-	;line	325
+	;line	323
 	cmp.b	#3,8(a3)
 	beq	L54
-	;line	326
+	;line	324
 	move.b	d4,0(a3,d3.l)
-	;line	327
+	;line	325
 	move.w	#1,4(a3)
-	;line	328
+	;line	326
 	clr.w	6(a3)
-	;line	329
+	;line	327
 	move.b	#3,8(a3)
 	bra	L55
 L54:
-	;line	332
+	;line	330
 	clr.b	0(a3,d3.l)
 L55:
-	;line	334
+	;line	332
 	bra	L42
 L43:
-	;line	337
+	;line	335
 	clr.b	0(a3,d3.l)
-	;line	338
+	;line	336
 	clr.w	4(a3)
-	;line	339
+	;line	337
 	clr.w	6(a3)
 L42:
-	;line	341
+	;line	339
 	movem.l	(a7)+,d3/d4/a3
 	unlk	a6
 	rts
@@ -597,9 +584,9 @@ _get_valid_paths:
 	moveq	#-1,d4
 	lea	_cell_map,a4
 	move.l	#480,d5
-	;line	354
+	;line	352
 	moveq	#0,d3
-	;line	354
+	;line	352
 	clr.w	d0
 	move.b	10(a3),d0
 	mulu	#12,d0
@@ -619,10 +606,10 @@ _get_valid_paths:
 	ext.w	d0
 	cmp.w	d0,d4
 	bne	L56
-	;line	355
+	;line	353
 	addq.b	#1,d3
 L56:
-	;line	356
+	;line	354
 	clr.w	d0
 	move.b	10(a3),d0
 	mulu	#12,d0
@@ -642,10 +629,10 @@ L56:
 	ext.w	d0
 	cmp.w	d0,d4
 	bne	L57
-	;line	357
+	;line	355
 	addq.b	#1,d3
 L57:
-	;line	358
+	;line	356
 	moveq	#12,d0
 	clr.w	d1
 	move.b	10(a3),d1
@@ -665,10 +652,10 @@ L57:
 	ext.w	d0
 	cmp.w	d0,d4
 	bne	L58
-	;line	359
+	;line	357
 	addq.b	#1,d3
 L58:
-	;line	360
+	;line	358
 	moveq	#12,d0
 	clr.w	d1
 	move.b	10(a3),d1
@@ -688,10 +675,10 @@ L58:
 	ext.w	d0
 	cmp.w	d0,d4
 	bne	L59
-	;line	361
+	;line	359
 	addq.b	#1,d3
 L59:
-	;line	362
+	;line	360
 	move.b	d3,d0
 L60:
 	movem.l	(a7)+,d3/d4/d5/a3/a4
@@ -699,7 +686,7 @@ L60:
 	rts
 _eat_pellet:
 	link	a6,#0
-	;line	365
+	;line	363
 	move.w	#480,d0
 	move.l	8(a6),a0
 	clr.w	d1

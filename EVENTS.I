@@ -231,7 +231,7 @@ void set_occupied(bool set, int y_index, int x_index);
 bool check_shared_occupied(Movement* ghost1_move, Movement* ghost2_move);
 void update_cells(Entities* entity);
 void update_ghost_direction(Ghost* ghost, Pacman* pacman);
-bool check_valid_path(Movement* movement);
+bool check_valid_path(Movement* movement, UCHAR8 direction);
 void kill_ghost(Ghost* ghost, Cell cell_map[][40 ]);
 void add_wall_to_map(Cell cell_map[24 ][40 ], int y_cell_index, int x_cell_index);
 UCHAR8 get_optimal_direction(Movement* movement);
@@ -444,7 +444,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 				    ghost->delta_x = 0;
                 }
                 else {
-                    ghost->direction = get_optimal_direction(ghost);
+
                     ghost->delta_y = 0;
 				    ghost->delta_x = 0;
                 }
@@ -454,7 +454,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
     				ghost->delta_y = 1;
                     ghost->delta_x = 0;
                 } else {
-                    ghost->direction = get_optimal_direction(ghost);
+
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
                 }
@@ -465,7 +465,6 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                     ghost->delta_x = 1;
                 }
                 else {
-                                        ghost->direction = get_optimal_direction(ghost);
 
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
@@ -486,7 +485,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 
 
 }
-# 167 "events.c"
+# 166 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     Movement* pacman = entity->pacman->move;
@@ -528,7 +527,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         break;
     }
 }
-# 215 "events.c"
+# 214 "events.c"
 void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
@@ -536,8 +535,7 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 
 
 
-    collision_type = process_ghost_collision(entity, ticks);
-
+    process_ghost_collision(entity, ticks);
 
     collision_type = check_wall_collision(pacman);
     handle_pacman_collision(collision_type, entity);
@@ -558,7 +556,7 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
-# 286 "events.c"
+# 284 "events.c"
 	switch(input)
 	{
 		case 'w' :
