@@ -115,7 +115,6 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                 else {
                     ghost->delta_y = 0;
 				    ghost->delta_x = 0;
-                    printf("frozen");
                 }
                 break;
             case DOWN:
@@ -125,7 +124,6 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                 } else {
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
-                    printf("frozen");
                 }
                 break;
             case RIGHT:
@@ -136,7 +134,6 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                 else {
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
-                    printf("frozen");
                 }
                 break;
             case LEFT:
@@ -147,11 +144,11 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                 else {
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
-                    printf("frozen");
                 }
         }
+        /*
         if (cell_map[ghost->y_cell_index + ghost->delta_y][ghost->x_cell_index + ghost->delta_x].open_path == TRUE)
-            return;
+            return;*/
    /* }*/          
 }
 /*************************************************************

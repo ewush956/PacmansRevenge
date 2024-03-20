@@ -444,7 +444,6 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                 else {
                     ghost->delta_y = 0;
 				    ghost->delta_x = 0;
-                    printf("frozen");
                 }
                 break;
             case ((UCHAR8)1) :
@@ -454,7 +453,6 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                 } else {
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
-                    printf("frozen");
                 }
                 break;
             case ((UCHAR8)3) :
@@ -465,7 +463,6 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                 else {
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
-                    printf("frozen");
                 }
                 break;
             case ((UCHAR8)2) :
@@ -476,14 +473,14 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                 else {
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
-                    printf("frozen");
                 }
         }
-        if (cell_map[ghost->y_cell_index + ghost->delta_y][ghost->x_cell_index + ghost->delta_x].open_path == -1 )
-            return;
+
+
+
 
 }
-# 166 "events.c"
+# 163 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     Movement* pacman = entity->pacman->move;
@@ -525,7 +522,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         break;
     }
 }
-# 214 "events.c"
+# 211 "events.c"
 void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
@@ -555,7 +552,7 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
-# 285 "events.c"
+# 282 "events.c"
 	switch(input)
 	{
 		case 'w' :

@@ -265,7 +265,8 @@ void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
     ghost->state = new_state;
 }
 void end_game() {
-    printf("GAME OVER\n");
+
+    /*printf("GAME OVER\n");*/
 }
 
 /*************************************************************
@@ -404,58 +405,10 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
     if (ghost->state == RUNNING) {
         if (check_valid_path(ghost_movement) == TRUE) {
             ghost_movement->direction = pacman_movement->direction;
+            return;
         }
-        return;
     }
     ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
-    /*
-    switch (ghost_movement->direction) {
-        case RIGHT:
-            if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_right) {
-                ghost_movement->direction = RIGHT;
-            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_up) {
-                ghost_movement->direction = UP;
-            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_down) {
-                ghost_movement->direction = DOWN;
-            } else {
-                ghost_movement->direction = LEFT;
-            }
-            break;
-        case LEFT:
-            if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_left) {
-                ghost_movement->direction = LEFT;
-            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_up) {
-                ghost_movement->direction = UP;
-            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_down) {
-                ghost_movement->direction = DOWN;
-            } else {
-                ghost_movement->direction = RIGHT;
-            }
-            break;
-        case UP:
-            if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_up) {
-                ghost_movement->direction = UP;
-            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_right) {
-                ghost_movement->direction = RIGHT;
-            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_left) {
-                ghost_movement->direction = LEFT;
-            } else {
-                ghost_movement->direction = DOWN;
-            }
-            break;
-        case DOWN:
-            if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_down) {
-                ghost_movement->direction = DOWN;
-            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_right) {
-                ghost_movement->direction = RIGHT;
-            } else if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_left) {
-                ghost_movement->direction = LEFT;
-            } else {
-                ghost_movement->direction = UP;
-            }
-            break;
-    }
-    */
 
 }
 bool check_valid_path(Movement* movement) {
