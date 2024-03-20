@@ -25,7 +25,7 @@ const UCHAR8 DIRECTION_ARRAY[4] = {UP, DOWN, LEFT, RIGHT};
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
     
     flip_direction(ghost1);
-    flip_direction(ghost2);        
+    flip_direction(ghost2);   
 }
 /*******************************************************************
  * Function: process_ghost_collision
@@ -49,7 +49,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
     ghost_array[1] = all->awkward_ghost;
     ghost_array[2] = all->cyclops_ghost;
     ghost_array[3] = all->moustache_ghost;
-
+/**** Right now ghosts just pass through eachother, so this is not needed
     for (i = 3; i > -1; i--){
         for (n = 1; n <= i; n++){
             if (check_shared_occupied(all_ghosts[i], all_ghosts[i-n]) == TRUE) {
@@ -57,7 +57,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
             }
         }
     }
-
+*/
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH && ghost_array[i]->state != DEAD) {
             handle_wall_collision(all_ghosts[i], i);   
@@ -83,8 +83,8 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
             direction = (direction % 3) - 1;
         ghost -> direction = DIRECTION_ARRAY[direction];
         */
-            /*
-        switch(direction)
+            
+        switch(cell_map[ghost->y_cell_index][ghost->x_cell_index].path)
 		{
 			case UP:
 				ghost->delta_y = -1;
@@ -105,26 +105,19 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 				ghost ->delta_x = -1;
 				ghost ->delta_y = 0;
 				break;
-                */
+        }
+        
+          /*     
         switch (cell_map[ghost->y_cell_index][ghost->x_cell_index].path) {
             case UP:
                 if (cell_map[ghost->y_cell_index - 1][ghost->x_cell_index].open_path == TRUE) {
     				ghost->delta_y = -1;
 				    ghost->delta_x = 0;
                 }
-                else {
-                    /*ghost->direction = get_optimal_direction(ghost);*/
-                    ghost->delta_y = 0;
-				    ghost->delta_x = 0;
-                }
                 break;
             case DOWN:
                 if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == TRUE) {
     				ghost->delta_y = 1;
-                    ghost->delta_x = 0;
-                } else {
-                    /*ghost->direction = get_optimal_direction(ghost);*/
-                    ghost->delta_y = 0;
                     ghost->delta_x = 0;
                 }
                 break;
@@ -133,25 +126,15 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
     				ghost->delta_y = 0;
                     ghost->delta_x = 1;
                 }
-                else {
-                                      /*  ghost->direction = get_optimal_direction(ghost);*/
-                    ghost->delta_y = 0;
-                    ghost->delta_x = 0;
-                }
                 break;
             case LEFT:
                 if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == TRUE) {
     				ghost->delta_y = 0;
                     ghost->delta_x = -1;
                 }
-                else {
-                    ghost->delta_y = 0;
-                    ghost->delta_x = 0;
-                }
+                break;
         }
-        /*
-        if (cell_map[ghost->y_cell_index + ghost->delta_y][ghost->x_cell_index + ghost->delta_x].open_path == TRUE)
-            return;*/
+        */
    /* }*/          
 }
 /*************************************************************
@@ -276,63 +259,38 @@ void set_input(Pacman *pacman, char input)
 			break;
 	}
     */
-   /*
+
    	movement -> delta_y = 0;
     movement -> delta_x = 0;
-    */
+    
 
 	switch(input)
 	{
 		case W_KEY: 
-            if (movement->direction != UP) {
-                movement->changed_direction = TRUE;
                 movement -> delta_y = -1;   		
                 movement -> delta_x = 0;
                 movement -> direction = UP; 
-            }
-            else {
-                movement->changed_direction = FALSE;
-            }
 			break;
 				
 		case A_KEY: 
-            if (movement->direction != LEFT) {
-                movement->changed_direction = TRUE;
                 movement -> delta_x = -1;			
                 movement -> delta_y = 0;
                 movement -> direction = LEFT;
-            }
-            else {
-                movement->changed_direction = FALSE;
-            }
 			break;
 				
 		case S_KEY: 
-            if (movement->direction != DOWN) {
-                movement->changed_direction = TRUE;
                 movement -> delta_y = 1;
                 movement -> delta_x = 0;
                 movement -> direction = DOWN;
-            }
-            else {
-                movement->changed_direction = FALSE;
-            }
 			break;
 				
 		case D_KEY: 
-            if (movement->direction != RIGHT) {
-                movement->changed_direction = TRUE;
                 movement -> delta_x = 1;
                 movement -> delta_y = 0;
                 movement -> direction = RIGHT;
-            }
-            else {
-                movement->changed_direction = FALSE;
-            }
 			break;
 
 		default:
-            movement->changed_direction = FALSE;
             movement -> delta_x = 0; 
             movement -> delta_y = 0;
 	

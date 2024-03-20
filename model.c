@@ -331,6 +331,20 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
                     cell_map[i][j].path = RIGHT;
                     break;
             }
+            switch (direction_map2[i][j]) {
+                case '^':
+                    cell_map[i][j].alt_path = UP;
+                    break;
+                case 'v':
+                    cell_map[i][j].alt_path = DOWN;
+                    break;
+                case '<':
+                    cell_map[i][j].alt_path = LEFT;
+                    break;
+                case '>':
+                    cell_map[i][j].alt_path = RIGHT;
+                    break;
+            }
         }
     }
     cell_map[10][17].has_pellet = FALSE;
@@ -397,7 +411,7 @@ bool update_cell(Movement* entity, UCHAR8 state) {
         return TRUE;
     }
     */
-    if ((entity->x % 16) == 0 || (entity->y % 16 )== 0) {
+    if ((entity->x & 15) == 0 || (entity->y & 15 )== 0) {
         return TRUE;     
     }
 
@@ -407,6 +421,7 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
 {
     Movement* ghost_movement = ghost->move;
     Movement* pacman_movement = pacman->move;
+    ObjectType ghost_type = ghost->type;
     if (ghost->state == DEAD) {
         return;
     }
@@ -419,6 +434,10 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
         ghost_movement->direction = get_optimal_direction(ghost_movement);
         return;
 
+    }
+    if (ghost_type == GHOST_TYPE_AWKWARD || ghost_type == GHOST_TYPE_MOUSTACHE) {
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path;
+        return;
     }
     ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
 
@@ -578,12 +597,14 @@ void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell
     cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
     cell_map[y_cell_index+1][x_cell_index+1].has_pellet = FALSE;
 
-    cell_map[y_cell_index-1][x_cell_index].occupied = FALSE;
-    cell_map[y_cell_index-1][x_cell_index+1].occupied = FALSE;
+    cell_map[y_cell_index-1][x_cell_index].open_path = FALSE;
+    cell_map[y_cell_index-1][x_cell_index].has_pellet = FALSE;
+
+    cell_map[y_cell_index-1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index-1][x_cell_index+1].has_pellet = FALSE;
 
     cell_map[y_cell_index][x_cell_index-1].open_path = FALSE;
     cell_map[y_cell_index][x_cell_index-1].has_pellet = FALSE;
-
 
 }
 void align_axis(Movement* entity) {

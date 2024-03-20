@@ -217,11 +217,11 @@ int main()
 		input = (char)Cnecin();
 	}
     
+        ticks = 0;
     while (state != QUIT) {
 
         time_now = get_time();
         time_elapsed = time_now - time_then;
-        ticks = 0;
 
         if (Cconis())
         {
@@ -235,9 +235,14 @@ int main()
             Super(old_ssp);
 */
             update_movement(&entity, input, ticks);
+            /*debug_print(base8, 12, 0, ticks);*/
+            /*
             if ((ticks & 7) == 0) {
                 update_current_frame(&entity, ticks);   
             }
+            */
+            update_current_frame(&entity, ticks);   
+
             render_frame(back_buffer_ptr, &entity);
             /*debug_pacman_movement(base32, &pacman);*/
 
@@ -280,9 +285,9 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
 
     set_input(entity->pacman,input);
     handle_collisions(entity, ticks);   
-    update_cells(entity);
     update_entities();
     eat_pellet(entity->pacman->move);
+    update_cells(entity);
     check_proximity(entity);
     
 

@@ -112,6 +112,8 @@ extern const ULONG32* wall_map[][20];
 
 
 extern UCHAR8 direction_map[][40 ];
+extern UINT16 direction_map2[][40 ];
+
 extern UINT16 tile_map[][40 ];
 # 2 "events.c" 2
 # 1 "./model.h" 1
@@ -145,6 +147,7 @@ typedef struct {
 	bool can_go_right;
 
 	UCHAR8 path;
+	UCHAR8 alt_path;
 }Cell;
 
 
@@ -409,15 +412,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
     ghost_array[1] = all->awkward_ghost;
     ghost_array[2] = all->cyclops_ghost;
     ghost_array[3] = all->moustache_ghost;
-
-    for (i = 3; i > -1; i--){
-        for (n = 1; n <= i; n++){
-            if (check_shared_occupied(all_ghosts[i], all_ghosts[i-n]) == -1 ) {
-                handle_ghost_collision(all_ghosts[i], all_ghosts[i-n]);
-            }
-        }
-    }
-
+# 61 "events.c"
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH && ghost_array[i]->state != ((UCHAR8)3) ) {
             handle_wall_collision(all_ghosts[i], i);
@@ -436,56 +431,32 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
     UCHAR8 number_of_open_paths = get_valid_paths(ghost);
 
     direction = ghost->direction;
-# 109 "events.c"
-        switch (cell_map[ghost->y_cell_index][ghost->x_cell_index].path) {
-            case ((UCHAR8)0) :
-                if (cell_map[ghost->y_cell_index - 1][ghost->x_cell_index].open_path == -1 ) {
-    				ghost->delta_y = -1;
-				    ghost->delta_x = 0;
-                }
-                else {
+# 87 "events.c"
+        switch(cell_map[ghost->y_cell_index][ghost->x_cell_index].path)
+		{
+			case ((UCHAR8)0) :
+				ghost->delta_y = -1;
+				ghost->delta_x = 0;
+				break;
 
-                    ghost->delta_y = 0;
-				    ghost->delta_x = 0;
-                }
-                break;
-            case ((UCHAR8)1) :
-                if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == -1 ) {
-    				ghost->delta_y = 1;
-                    ghost->delta_x = 0;
-                } else {
+			case ((UCHAR8)1) :
+				ghost-> delta_y = 1;
+				ghost-> delta_x = 0;
+				break;
 
-                    ghost->delta_y = 0;
-                    ghost->delta_x = 0;
-                }
-                break;
-            case ((UCHAR8)3) :
-                if (cell_map[ghost->y_cell_index][ghost->x_cell_index + 1].open_path == -1 ) {
-    				ghost->delta_y = 0;
-                    ghost->delta_x = 1;
-                }
-                else {
+			case ((UCHAR8)3) :
+				ghost ->delta_x = 1;
+				ghost ->delta_y = 0;
+				break;
 
-                    ghost->delta_y = 0;
-                    ghost->delta_x = 0;
-                }
-                break;
-            case ((UCHAR8)2) :
-                if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == -1 ) {
-    				ghost->delta_y = 0;
-                    ghost->delta_x = -1;
-                }
-                else {
-                    ghost->delta_y = 0;
-                    ghost->delta_x = 0;
-                }
+			case ((UCHAR8)2) :
+				ghost ->delta_x = -1;
+				ghost ->delta_y = 0;
+				break;
         }
-
-
-
-
+# 139 "events.c"
 }
-# 166 "events.c"
+# 149 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     Movement* pacman = entity->pacman->move;
@@ -527,7 +498,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         break;
     }
 }
-# 214 "events.c"
+# 197 "events.c"
 void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
@@ -556,59 +527,38 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
-# 284 "events.c"
+# 263 "events.c"
+   	movement -> delta_y = 0;
+    movement -> delta_x = 0;
+
+
 	switch(input)
 	{
 		case 'w' :
-            if (movement->direction != ((UCHAR8)0) ) {
-                movement->changed_direction = -1 ;
                 movement -> delta_y = -1;
                 movement -> delta_x = 0;
                 movement -> direction = ((UCHAR8)0) ;
-            }
-            else {
-                movement->changed_direction = 0 ;
-            }
 			break;
 
 		case 'a' :
-            if (movement->direction != ((UCHAR8)2) ) {
-                movement->changed_direction = -1 ;
                 movement -> delta_x = -1;
                 movement -> delta_y = 0;
                 movement -> direction = ((UCHAR8)2) ;
-            }
-            else {
-                movement->changed_direction = 0 ;
-            }
 			break;
 
 		case 's' :
-            if (movement->direction != ((UCHAR8)1) ) {
-                movement->changed_direction = -1 ;
                 movement -> delta_y = 1;
                 movement -> delta_x = 0;
                 movement -> direction = ((UCHAR8)1) ;
-            }
-            else {
-                movement->changed_direction = 0 ;
-            }
 			break;
 
 		case 'd' :
-            if (movement->direction != ((UCHAR8)3) ) {
-                movement->changed_direction = -1 ;
                 movement -> delta_x = 1;
                 movement -> delta_y = 0;
                 movement -> direction = ((UCHAR8)3) ;
-            }
-            else {
-                movement->changed_direction = 0 ;
-            }
 			break;
 
 		default:
-            movement->changed_direction = 0 ;
             movement -> delta_x = 0;
             movement -> delta_y = 0;
 

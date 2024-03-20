@@ -50,6 +50,7 @@ typedef struct {
 	bool can_go_right;
 
 	UCHAR8 path;
+	UCHAR8 alt_path;
 }Cell;
 
 

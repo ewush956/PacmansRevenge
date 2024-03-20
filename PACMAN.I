@@ -138,6 +138,8 @@ extern const ULONG32* wall_map[][20];
 
 
 extern UCHAR8 direction_map[][40 ];
+extern UINT16 direction_map2[][40 ];
+
 extern UINT16 tile_map[][40 ];
 # 5 "./model.h" 2
 # 28 "./model.h"
@@ -166,6 +168,7 @@ typedef struct {
 	bool can_go_right;
 
 	UCHAR8 path;
+	UCHAR8 alt_path;
 }Cell;
 
 
@@ -1192,11 +1195,11 @@ int main()
 		input = (char)_trap_1_w((short)0x08) ;
 	}
 
+        ticks = 0;
     while (state != ((UCHAR8)0) ) {
 
         time_now = get_time();
         time_elapsed = time_now - time_then;
-        ticks = 0;
 
         if ((short)_trap_1_w((short)0x0B) )
         {
@@ -1205,9 +1208,9 @@ int main()
         if (time_elapsed > 0) {
 # 237 "pacman.c"
             update_movement(&entity, input, ticks);
-            if ((ticks & 7) == 0) {
-                update_current_frame(&entity, ticks);
-            }
+# 244 "pacman.c"
+            update_current_frame(&entity, ticks);
+
             render_frame(back_buffer_ptr, &entity);
 
 
@@ -1240,19 +1243,19 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 279 "pacman.c"
+# 284 "pacman.c"
 void update_movement(Entities* entity, char input, UINT16 ticks) {
 
     set_input(entity->pacman,input);
     handle_collisions(entity, ticks);
-    update_cells(entity);
     update_entities();
     eat_pellet(entity->pacman->move);
+    update_cells(entity);
     check_proximity(entity);
 
 
 }
-# 296 "pacman.c"
+# 301 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input) {
 
 
@@ -1268,7 +1271,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
    return state;
 
 }
-# 318 "pacman.c"
+# 323 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1549,7 +1552,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 604 "pacman.c"
+# 609 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
