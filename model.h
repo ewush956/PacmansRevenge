@@ -48,6 +48,8 @@ typedef struct {
 	bool can_go_down;
 	bool can_go_left;
 	bool can_go_right;
+
+	UCHAR8 path;
 }Cell;
 
 

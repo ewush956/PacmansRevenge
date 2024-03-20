@@ -101,6 +101,8 @@ extern const UCHAR8 pellet[8];
 
 extern const ULONG32* wall_map[][20];
 
+
+extern UCHAR8 direction_map[][MAP_TILE_LENGTH];
 extern UINT16 tile_map[][MAP_TILE_LENGTH];
 
 #endif 

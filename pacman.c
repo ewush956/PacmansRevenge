@@ -374,7 +374,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
-        if (*intro_duration_ptr > 43) {
+        if (*intro_duration_ptr > 44) {
             time_now = get_time();
             time_elapsed = time_now - time_then;
             if (first_frames > FIRST_STOP - 1) {

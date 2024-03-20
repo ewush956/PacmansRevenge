@@ -136,6 +136,8 @@ extern const UCHAR8 pellet[8];
 
 extern const ULONG32* wall_map[][20];
 
+
+extern UCHAR8 direction_map[][40 ];
 extern UINT16 tile_map[][40 ];
 # 5 "./model.h" 2
 # 28 "./model.h"
@@ -162,6 +164,8 @@ typedef struct {
 	bool can_go_down;
 	bool can_go_left;
 	bool can_go_right;
+
+	UCHAR8 path;
 }Cell;
 
 
@@ -1322,7 +1326,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
-        if (*intro_duration_ptr > 43) {
+        if (*intro_duration_ptr > 44) {
             time_now = get_time();
             time_elapsed = time_now - time_then;
             if (first_frames > 16  - 1) {

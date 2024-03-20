@@ -484,7 +484,7 @@ L21:
 	lea	24(a7),a7
 	move.b	d0,d7
 	;line	377
-	cmp.w	#43,(a5)
+	cmp.w	#44,(a5)
 	ble	L24
 	;line	378
 	jsr	_get_time

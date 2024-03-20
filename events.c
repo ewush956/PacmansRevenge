@@ -50,38 +50,6 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
     ghost_array[2] = all->cyclops_ghost;
     ghost_array[3] = all->moustache_ghost;
 
-
-    for (i = 0; i < 4; i++){
-        if (check_wall_collision(all_ghosts[i]) != OPEN_PATH) {
-            /*handle_wall_collision(all_ghosts[i], i);   */
-            update_ghost_direction(ghost_array[i], all->pacman);
-            return;
-        } 
-        /*
-        The stuff below is just fake randomness.
-        */
-       /*
-        else {
-            if (all_ghosts[i]->direction == UP || all_ghosts[i]->direction == DOWN) {
-                if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == TRUE) {
-                    if (i & 1 == 0)
-                        all_ghosts[i]->direction = RIGHT;
-                }
-                else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index - 1].open_path == TRUE) {
-                    if (i & 3 == 0)
-                        all_ghosts[i]->direction = LEFT;
-                    else if (cell_map[all_ghosts[i]->y_cell_index][all_ghosts[i]->x_cell_index + 1].open_path == TRUE)
-                        if (i == 0 || i == 2) {
-                            all_ghosts[i]->direction = RIGHT;
-                        }
-                    
-                }
-            }                   
-        }
-        */
-        
-        
-    }
     for (i = 3; i > -1; i--){
         for (n = 1; n <= i; n++){
             if (check_shared_occupied(all_ghosts[i], all_ghosts[i-n]) == TRUE) {
@@ -89,6 +57,16 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
             }
         }
     }
+
+    for (i = 0; i < 4; i++){
+        if (check_wall_collision(all_ghosts[i]) != OPEN_PATH && ghost_array[i]->state != DEAD) {
+            handle_wall_collision(all_ghosts[i], i);   
+            /*update_ghost_direction(ghost_array[i], all->pacman);*/
+            /*return WALL;*/
+        }        
+    }
+    
+    
     
 }
 void handle_wall_collision(Movement* ghost, int ghost_identifier) {
@@ -98,12 +76,14 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
     UCHAR8 number_of_open_paths = get_valid_paths(ghost);
 
     direction = ghost->direction;
-    for (i = 0; i < 4; i++) {
+    /*for (i = 0; i < 4; i++) {
+        /*
         direction++;
         if (direction > 3) 
             direction = (direction % 3) - 1;
         ghost -> direction = DIRECTION_ARRAY[direction];
-        
+        */
+            /*
         switch(direction)
 		{
 			case UP:
@@ -125,10 +105,54 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 				ghost ->delta_x = -1;
 				ghost ->delta_y = 0;
 				break;
-		}
+                */
+        switch (cell_map[ghost->y_cell_index][ghost->x_cell_index].path) {
+            case UP:
+                if (cell_map[ghost->y_cell_index - 1][ghost->x_cell_index].open_path == TRUE) {
+    				ghost->delta_y = -1;
+				    ghost->delta_x = 0;
+                }
+                else {
+                    ghost->delta_y = 0;
+				    ghost->delta_x = 0;
+                    printf("frozen");
+                }
+                break;
+            case DOWN:
+                if (cell_map[ghost->y_cell_index + 1][ghost->x_cell_index].open_path == TRUE) {
+    				ghost->delta_y = 1;
+                    ghost->delta_x = 0;
+                } else {
+                    ghost->delta_y = 0;
+                    ghost->delta_x = 0;
+                    printf("frozen");
+                }
+                break;
+            case RIGHT:
+                if (cell_map[ghost->y_cell_index][ghost->x_cell_index + 1].open_path == TRUE) {
+    				ghost->delta_y = 0;
+                    ghost->delta_x = 1;
+                }
+                else {
+                    ghost->delta_y = 0;
+                    ghost->delta_x = 0;
+                    printf("frozen");
+                }
+                break;
+            case LEFT:
+                if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == TRUE) {
+    				ghost->delta_y = 0;
+                    ghost->delta_x = -1;
+                }
+                else {
+                    ghost->delta_y = 0;
+                    ghost->delta_x = 0;
+                    printf("frozen");
+                }
+        }
         if (cell_map[ghost->y_cell_index + ghost->delta_y][ghost->x_cell_index + ghost->delta_x].open_path == TRUE)
             return;
-    }           
+   /* }*/          
 }
 /*************************************************************
  * Function: handle_pacman_collision
@@ -194,7 +218,7 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 
 
     /*collision_type = process_ghost_collision(entity);*/
-    process_ghost_collision(entity, ticks);
+    collision_type = process_ghost_collision(entity, ticks);
 
 
     collision_type = check_wall_collision(pacman);

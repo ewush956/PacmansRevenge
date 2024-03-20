@@ -69,6 +69,18 @@ void move_ghost (Ghost *ghost)
     {
         return;
     }
+    if (ghost->state == RUNNING) {
+        if (ghost_movement->delta_x == 0 && ghost_movement->delta_y == 0) {
+                    
+            ghost_movement->last_last_x = ghost_movement->last_x;
+            ghost_movement->last_last_y = ghost_movement->last_y;
+
+            ghost_movement->last_x = ghost_movement->x;
+            ghost_movement->last_y = ghost_movement->y;
+            align_axis(ghost_movement);
+            return;
+        }
+    }
 		switch(direction)
 		{
 			case UP:
@@ -91,7 +103,7 @@ void move_ghost (Ghost *ghost)
 				ghost_movement->delta_y = 0;
 				break;
 		}
-        align_axis(ghost_movement);
+        
         ghost_movement->last_last_x = ghost_movement->last_x;
         ghost_movement->last_last_y = ghost_movement->last_y;
         
@@ -100,6 +112,7 @@ void move_ghost (Ghost *ghost)
 
         ghost_movement-> x += ghost_movement->delta_x;
         ghost_movement-> y += ghost_movement->delta_y;
+        align_axis(ghost_movement);
     
 
 }
@@ -300,6 +313,20 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
             } else {
                 cell_map[i][j].can_go_left = FALSE;
             }
+            switch (direction_map[i][j]) {
+                case '^':
+                    cell_map[i][j].path = UP;
+                    break;
+                case 'v':
+                    cell_map[i][j].path = DOWN;
+                    break;
+                case '<':
+                    cell_map[i][j].path = LEFT;
+                    break;
+                case '>':
+                    cell_map[i][j].path = RIGHT;
+                    break;
+            }
         }
     }
     cell_map[10][17].has_pellet = FALSE;
@@ -334,7 +361,7 @@ void update_cells(Entities* all) {
     
     if (update_cell(awkward->move, awkward->state) == TRUE) {
         update_ghost_direction(awkward, pacman);
-    };
+    }
     if (update_cell(moustache->move, moustache->state) == TRUE) {
         update_ghost_direction(moustache, pacman);
     }
@@ -380,6 +407,8 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
         }
         return;
     }
+    ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
+    /*
     switch (ghost_movement->direction) {
         case RIGHT:
             if (cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].can_go_right) {
@@ -426,6 +455,7 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
             }
             break;
     }
+    */
 
 }
 bool check_valid_path(Movement* movement) {
@@ -541,6 +571,9 @@ void align_axis(Movement* entity) {
         }
 }
 void flip_direction(Movement* ghost) {
+    if (ghost->delta_x == 0 && ghost->delta_y == 0) {
+        return;
+    }
     if (ghost->direction == UP)
         ghost->direction = DOWN;
 
