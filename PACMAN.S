@@ -327,16 +327,16 @@ _update_movement:
 	jsr	_handle_collisions
 	addq.l	#6,a7
 	;line	283
-	jsr	_update_entities
+	move.l	d3,-(a7)
+	jsr	_update_cells
+	addq.l	#4,a7
 	;line	284
+	jsr	_update_entities
+	;line	285
 	move.l	d3,a0
 	move.l	(a0),a0
 	move.l	6(a0),-(a7)
 	jsr	_eat_pellet
-	addq.l	#4,a7
-	;line	285
-	move.l	d3,-(a7)
-	jsr	_update_cells
 	addq.l	#4,a7
 	;line	286
 	move.l	d3,-(a7)

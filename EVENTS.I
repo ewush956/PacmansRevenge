@@ -234,6 +234,8 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman);
 bool check_valid_path(Movement* movement);
 void kill_ghost(Ghost* ghost, Cell cell_map[][40 ]);
 void add_wall_to_map(Cell cell_map[24 ][40 ], int y_cell_index, int x_cell_index);
+UCHAR8 get_optimal_direction(Movement* movement);
+
 
 ObjectType check_wall_collision(Movement* entity);
 
@@ -442,6 +444,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 				    ghost->delta_x = 0;
                 }
                 else {
+                    ghost->direction = get_optimal_direction(ghost);
                     ghost->delta_y = 0;
 				    ghost->delta_x = 0;
                 }
@@ -451,6 +454,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
     				ghost->delta_y = 1;
                     ghost->delta_x = 0;
                 } else {
+                    ghost->direction = get_optimal_direction(ghost);
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
                 }
@@ -461,6 +465,8 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                     ghost->delta_x = 1;
                 }
                 else {
+                                        ghost->direction = get_optimal_direction(ghost);
+
                     ghost->delta_y = 0;
                     ghost->delta_x = 0;
                 }
@@ -480,7 +486,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 
 
 }
-# 163 "events.c"
+# 167 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     Movement* pacman = entity->pacman->move;
@@ -522,7 +528,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         break;
     }
 }
-# 211 "events.c"
+# 215 "events.c"
 void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;
@@ -552,7 +558,7 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
-# 282 "events.c"
+# 286 "events.c"
 	switch(input)
 	{
 		case 'w' :

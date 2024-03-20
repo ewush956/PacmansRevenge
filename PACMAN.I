@@ -255,6 +255,8 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman);
 bool check_valid_path(Movement* movement);
 void kill_ghost(Ghost* ghost, Cell cell_map[][40 ]);
 void add_wall_to_map(Cell cell_map[24 ][40 ], int y_cell_index, int x_cell_index);
+UCHAR8 get_optimal_direction(Movement* movement);
+
 
 ObjectType check_wall_collision(Movement* entity);
 
@@ -1243,9 +1245,9 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
 
     set_input(entity->pacman,input);
     handle_collisions(entity, ticks);
+    update_cells(entity);
     update_entities();
     eat_pellet(entity->pacman->move);
-    update_cells(entity);
     check_proximity(entity);
 
 

@@ -280,9 +280,9 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
 
     set_input(entity->pacman,input);
     handle_collisions(entity, ticks);   
+    update_cells(entity);
     update_entities();
     eat_pellet(entity->pacman->move);
-    update_cells(entity);
     check_proximity(entity);
     
 

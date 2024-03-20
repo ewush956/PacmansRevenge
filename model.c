@@ -69,6 +69,7 @@ void move_ghost (Ghost *ghost)
     {
         return;
     }
+    
     if (ghost->state == RUNNING) {
         if (ghost_movement->delta_x == 0 && ghost_movement->delta_y == 0) {
                     
@@ -81,6 +82,7 @@ void move_ghost (Ghost *ghost)
             return;
         }
     }
+    
 		switch(direction)
 		{
 			case UP:
@@ -153,6 +155,7 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
                 all_ghosts[i]->move->y_cell_index == object_y_index + y_delta) ||
                 (all_ghosts[i]->move->x_cell_index == object_x_index && 
                 all_ghosts[i]->move->y_cell_index == object_y_index))
+
                 collision = all_ghosts[i]->type;
         }
     }
@@ -389,10 +392,15 @@ bool update_cell(Movement* entity, UCHAR8 state) {
     entity->x_cell_index = entity->x >> 4; 
     entity->y_cell_index = (entity->y >> 4) - 1;
     set_occupied(TRUE, y_index, x_index);
-
+/*
     if (entity->x_cell_index != x_index || entity->y_cell_index != y_index) {
         return TRUE;
     }
+    */
+    if ((entity->x % 16) == 0 || (entity->y % 16 )== 0) {
+        return TRUE;     
+    }
+
     return FALSE;
 }
 void update_ghost_direction(Ghost* ghost, Pacman* pacman) 
@@ -403,16 +411,69 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
         return;
     }
     if (ghost->state == RUNNING) {
+        ghost_movement->direction = pacman_movement->direction;
         if (check_valid_path(ghost_movement) == TRUE) {
             ghost_movement->direction = pacman_movement->direction;
             return;
         }
+        ghost_movement->direction = get_optimal_direction(ghost_movement);
+        return;
+
     }
     ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
 
 }
+UCHAR8 get_optimal_direction(Movement* movement) {
+    switch (movement->direction) {
+        case UP:
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up == TRUE) {
+                return UP;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left == TRUE) {
+                return LEFT;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index+1].can_go_right == TRUE) {
+                return RIGHT;
+            }
+            return DOWN;
+        case DOWN:
+            if (cell_map[movement->y_cell_index+1][movement->x_cell_index].can_go_down == TRUE) {
+                return DOWN;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index+1].can_go_right == TRUE) {
+                return RIGHT;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index-1].can_go_left == TRUE) {
+                return LEFT;
+            }
+            return UP;
+        case LEFT:
+            if (cell_map[movement->y_cell_index][movement->x_cell_index-1].can_go_left == TRUE) {
+                return LEFT;
+            }
+            if (cell_map[movement->y_cell_index-1][movement->x_cell_index].can_go_up == TRUE) {
+                return UP;
+            }
+            if (cell_map[movement->y_cell_index+1][movement->x_cell_index].can_go_down == TRUE) {
+                return DOWN;
+            }
+            return RIGHT;
+        case RIGHT:
+            if (cell_map[movement->y_cell_index][movement->x_cell_index+1].can_go_right == TRUE) {
+                return RIGHT;
+            }
+            if (cell_map[movement->y_cell_index+1][movement->x_cell_index].can_go_down == TRUE) {
+                return DOWN;
+            }
+            if (cell_map[movement->y_cell_index-1][movement->x_cell_index].can_go_up == TRUE) {
+                return UP;
+            }
+            return LEFT;
+    }
+}
 bool check_valid_path(Movement* movement) {
     switch (movement->direction) {
+        
         case UP:
             return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up;
         case DOWN:
@@ -421,6 +482,17 @@ bool check_valid_path(Movement* movement) {
             return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left;
         case RIGHT:
             return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right;
+            
+        /*
+        case UP:
+            return cell_map[movement->y_cell_index-1][movement->x_cell_index].open_path;
+        case DOWN:
+            return cell_map[movement->y_cell_index+1][movement->x_cell_index].open_path;
+        case LEFT:
+            return cell_map[movement->y_cell_index][movement->x_cell_index-1].open_path;
+        case RIGHT:
+            return cell_map[movement->y_cell_index][movement->x_cell_index+1].open_path;
+        */
     }
 }
 void set_occupied(bool set, int y_index, int x_index) {
