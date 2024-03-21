@@ -36,22 +36,7 @@ typedef unsigned char GAME_STATE;
 #define BUFFER_SIZE_BYTES 32256                   /*added extra 256*/ 
 #define BUFFER_SIZE_WORDS 16000 
 #define BUFFER_SIZE_LONGS 8064            
-#define BACK_BUFFER_START 0x000000
-#define BACK_BUFFER_END 0x007E00            /* $7E00 is 32,256 in decimal */
 
-#define FRONT_BUFFER_START 0xFC0000         /* starts at 64,512 (+ 32,256 bytes more than the back_buffer) */
-#define FRONT_BUFFER_END 0x17A0000           /* 32,256 more than the start of front_buffer*/
-
-       
-#define VIDEO_REGISTER_HIGH 0xFFFF8201
-#define VIDEO_REGISTER_MID 0xFFFF8203
-#define VIDEO_REGISTER_LOW 0xFFFF820D
-
-/*
-#define VIDEO_ADDR_HIGH (*(volatile UCHAR8*)0xFF8201)
-#define VIDEO_ADDR_MID  (*(volatile UCHAR8*)0xFF8203)
-#define VIDEO_ADDR_LOW  (*(volatile UCHAR8*)0xFF820D)
-*/
 #define VIDEO_ADDR_HIGH  0xFF8201
 #define VIDEO_ADDR_MID  0xFF8203
 
@@ -84,6 +69,8 @@ void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr);
 bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity, int* moves_index, int initial_moves[5]);
 void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState);
 bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
+
+void set_video_base(ULONG32*); /* UINT16*?   */
 
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];

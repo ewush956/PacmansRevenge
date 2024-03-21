@@ -198,7 +198,7 @@ int main()
 
     UCHAR8* base8 = (UCHAR8*)get_video_base();
     ULONG32* base32 = (ULONG32*)get_video_base();
-    ULONG32* original = get_video_base();
+    ULONG32* original = get_video_base(); 
 
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
     ULONG32* background_ptr = (ULONG32*)(&background[0]); /*Not using at the moment*/
@@ -239,7 +239,14 @@ int main()
             /*debug_pacman_movement(base32, &pacman);*/
 
             swap_buffers(&base32, &back_buffer_ptr);
-            Setscreen(-1,base32,-1);  
+            /*
+            Setscreen(-1,base32,-1);
+            */
+            /*
+            */
+            old_ssp = Super(0);
+            set_video_base(base32);
+            Super(old_ssp);
 
             time_then = get_time();
             ticks = (++ticks & 63);
@@ -250,6 +257,12 @@ int main()
     stop_sound();
     Super(old_ssp);
     Setscreen(-1,original,-1);
+    /*
+    old_ssp = Super(0);
+    set_video_base(original);
+    Super(old_ssp);
+    */
+
     clear_screen_q(original);
 
 	return 0;
