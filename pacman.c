@@ -239,11 +239,7 @@ int main()
             /*debug_pacman_movement(base32, &pacman);*/
 
             swap_buffers(&base32, &back_buffer_ptr);
-            /*
-            Setscreen(-1,base32,-1);
-            */
-            /*
-            */
+           
             old_ssp = Super(0);
             set_video_base(base32);
             Super(old_ssp);
@@ -256,12 +252,11 @@ int main()
     old_ssp = Super(0);
     stop_sound();
     Super(old_ssp);
-    Setscreen(-1,original,-1);
-    /*
+    
     old_ssp = Super(0);
     set_video_base(original);
     Super(old_ssp);
-    */
+    
 
     clear_screen_q(original);
 

@@ -23,35 +23,23 @@ fill_loop:	movem.l		d1-7/a1-6,-(a0)
 		rts
 
 
-;-------------------------------------------
+;----------------------------------------
+
 base_value 		equ		8
-
-VIDEO_REG		equ		$FF8200
-
 VIDEO_ADDR_HIGH equ 	$FF8201
-VIDEO_ADDR_MID	equ		$FF8203
 
 _set_video_base:
 		link	a6,#0
 		movem.l	d0-7/a0-6,-(sp)
-		
 		move.l	base_value(a6),a1
-
 		move.l	a1,d0
-		lsr.l	#8,d0
-
+		lsr.l	#8,d0				;remove loe bytes
 		lea VIDEO_ADDR_HIGH,a2
-
 		movep.w d0,(a2)
-		
-		;movep.l	d1,(a3)
-		;movep.w	d1,(a4)
-
 		movem.l	(sp)+,d0-7/a0-6
 		unlk	a6
 		rts
 ;---------------------------------------------------			
-
 
 
 zeros:		ds.l		13
