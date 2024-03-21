@@ -142,7 +142,7 @@ extern UINT16 direction_map2[][40 ];
 
 extern UINT16 tile_map[][40 ];
 # 5 "./model.h" 2
-# 28 "./model.h"
+# 31 "./model.h"
 typedef enum {
     GHOST_TYPE_CRYING,
     GHOST_TYPE_AWKWARD,

@@ -314,14 +314,14 @@ L24:
 _set_input:
 	link	a6,#-4
 	move.l	a3,-(a7)
-	;line	263
+	;line	226
 	move.l	8(a6),a0
 	move.l	6(a0),a3
-	;line	263
+	;line	226
 	clr.w	6(a3)
-	;line	264
+	;line	227
 	clr.w	4(a3)
-	;line	267
+	;line	229
 	move.b	13(a6),d0
 	sub.b	#119,d0
 	beq	L27
@@ -333,48 +333,48 @@ _set_input:
 	beq	L30
 	bra	L26
 L27:
-	;line	270
+	;line	232
 	move.w	#-1,6(a3)
-	;line	271
+	;line	233
 	clr.w	4(a3)
-	;line	272
+	;line	234
 	clr.b	8(a3)
-	;line	273
+	;line	235
 	bra	L25
 L28:
-	;line	276
+	;line	238
 	move.w	#-1,4(a3)
-	;line	277
+	;line	239
 	clr.w	6(a3)
-	;line	278
+	;line	240
 	move.b	#2,8(a3)
-	;line	279
+	;line	241
 	bra	L25
 L29:
-	;line	282
+	;line	244
 	move.w	#1,6(a3)
-	;line	283
+	;line	245
 	clr.w	4(a3)
-	;line	284
+	;line	246
 	move.b	#1,8(a3)
-	;line	285
+	;line	247
 	bra	L25
 L30:
-	;line	288
+	;line	250
 	move.w	#1,4(a3)
-	;line	289
+	;line	251
 	clr.w	6(a3)
-	;line	290
+	;line	252
 	move.b	#3,8(a3)
-	;line	291
+	;line	253
 	bra	L25
 L26:
-	;line	294
+	;line	256
 	clr.w	4(a3)
-	;line	295
+	;line	257
 	clr.w	6(a3)
 L25:
-	;line	297
+	;line	259
 	move.l	(a7)+,a3
 	unlk	a6
 	rts
@@ -385,9 +385,9 @@ _get_valid_paths:
 	moveq	#-1,d4
 	lea	_cell_map,a4
 	move.l	#560,d5
-	;line	310
+	;line	272
 	moveq	#0,d3
-	;line	310
+	;line	272
 	clr.w	d0
 	move.b	10(a3),d0
 	mulu	#14,d0
@@ -407,10 +407,10 @@ _get_valid_paths:
 	ext.w	d0
 	cmp.w	d0,d4
 	bne	L31
-	;line	311
+	;line	273
 	addq.b	#1,d3
 L31:
-	;line	312
+	;line	274
 	clr.w	d0
 	move.b	10(a3),d0
 	mulu	#14,d0
@@ -430,10 +430,10 @@ L31:
 	ext.w	d0
 	cmp.w	d0,d4
 	bne	L32
-	;line	313
+	;line	275
 	addq.b	#1,d3
 L32:
-	;line	314
+	;line	276
 	moveq	#14,d0
 	clr.w	d1
 	move.b	10(a3),d1
@@ -453,10 +453,10 @@ L32:
 	ext.w	d0
 	cmp.w	d0,d4
 	bne	L33
-	;line	315
+	;line	277
 	addq.b	#1,d3
 L33:
-	;line	316
+	;line	278
 	moveq	#14,d0
 	clr.w	d1
 	move.b	10(a3),d1
@@ -476,10 +476,10 @@ L33:
 	ext.w	d0
 	cmp.w	d0,d4
 	bne	L34
-	;line	317
+	;line	279
 	addq.b	#1,d3
 L34:
-	;line	318
+	;line	280
 	move.b	d3,d0
 L35:
 	movem.l	(a7)+,d3/d4/d5/a3/a4
@@ -487,7 +487,7 @@ L35:
 	rts
 _eat_pellet:
 	link	a6,#0
-	;line	321
+	;line	283
 	move.w	#560,d0
 	move.l	8(a6),a0
 	clr.w	d1

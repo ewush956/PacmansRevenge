@@ -57,30 +57,9 @@ void move_ghost (Ghost *ghost)
     Movement* ghost_movement = ghost->move;
 	UCHAR8 direction = ghost->move->direction;
 
-	/*ghost -> delta_x = 0;
-	ghost -> delta_y = 0;
-    */
-	/*
-	if (ghost -> move ->x > SCREEN_WIDTH - MAP_PIXEL_LENGTH && ghost -> move-> x < MAP_PIXEL_LENGTH
-		&& ghost -> move -> y + Y_PIXEL_OFFSET > SCREEN_HEIGHT - MAP_PIXEL_HEIGHT && ghost -> move-> y < MAP_PIXEL_HEIGHT) 
-	{
-	*/
     if (ghost->state == DEAD)
     {
         return;
-    }
-    
-    if (ghost->state == RUNNING) {
-        if (ghost_movement->delta_x == 0 && ghost_movement->delta_y == 0) {
-                    
-            ghost_movement->last_last_x = ghost_movement->last_x;
-            ghost_movement->last_last_y = ghost_movement->last_y;
-
-            ghost_movement->last_x = ghost_movement->x;
-            ghost_movement->last_y = ghost_movement->y;
-            align_axis(ghost_movement);
-            return;
-        }
     }
     
 		switch(direction)
@@ -111,9 +90,13 @@ void move_ghost (Ghost *ghost)
         
         ghost_movement->last_x = ghost_movement->x;
         ghost_movement->last_y = ghost_movement->y;
-
-        ghost_movement-> x += ghost_movement->delta_x;
-        ghost_movement-> y += ghost_movement->delta_y;
+        if (ghost->state == RUNNING) {
+            ghost_movement-> x += (ghost_movement->delta_x << 1);
+            ghost_movement-> y += (ghost_movement->delta_y << 1);
+        } else {
+            ghost_movement-> x += ghost_movement->delta_x;
+            ghost_movement-> y += ghost_movement->delta_y;
+        }
         align_axis(ghost_movement);
     
 
@@ -137,9 +120,9 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
                            ObjectType curr_type)
 {  
     
+/*
     ObjectType collision = OPEN_PATH;
     int i;
-
 
     Ghost *all_ghosts[4];
     all_ghosts[0] = all->crying_ghost;
@@ -160,7 +143,7 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
         }
     }
     return collision;
-    
+    */
 }    
 /*************************************************************
  * Function: check_pacman_collision
@@ -406,11 +389,7 @@ bool update_cell(Movement* entity, UCHAR8 state) {
     entity->x_cell_index = entity->x >> 4; 
     entity->y_cell_index = (entity->y >> 4) - 1;
     set_occupied(TRUE, y_index, x_index);
-/*
-    if (entity->x_cell_index != x_index || entity->y_cell_index != y_index) {
-        return TRUE;
-    }
-    */
+
     if ((entity->x & 15) == 0 || (entity->y & 15 )== 0) {
         return TRUE;     
     }
@@ -443,6 +422,9 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
 
 }
 UCHAR8 get_optimal_direction(Movement* movement) {
+    UINT16 x = movement->x;
+    UINT16 y = movement->y;
+
     switch (movement->direction) {
         case UP:
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up == TRUE) {
@@ -470,7 +452,8 @@ UCHAR8 get_optimal_direction(Movement* movement) {
             if (cell_map[movement->y_cell_index][movement->x_cell_index-1].can_go_left == TRUE) {
                 return LEFT;
             }
-            if (cell_map[movement->y_cell_index-1][movement->x_cell_index].can_go_up == TRUE) {
+            if (cell_map[movement->y_cell_index-1][movement->x_cell_index].can_go_up == TRUE &&
+                y > MIDDLE_OF_SCREEN_Y) {
                 return UP;
             }
             if (cell_map[movement->y_cell_index+1][movement->x_cell_index].can_go_down == TRUE) {
@@ -481,7 +464,8 @@ UCHAR8 get_optimal_direction(Movement* movement) {
             if (cell_map[movement->y_cell_index][movement->x_cell_index+1].can_go_right == TRUE) {
                 return RIGHT;
             }
-            if (cell_map[movement->y_cell_index+1][movement->x_cell_index].can_go_down == TRUE) {
+            if (cell_map[movement->y_cell_index+1][movement->x_cell_index].can_go_down == TRUE &&
+                y > MIDDLE_OF_SCREEN_Y) {
                 return DOWN;
             }
             if (cell_map[movement->y_cell_index-1][movement->x_cell_index].can_go_up == TRUE) {

@@ -222,48 +222,10 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
-    /*
-	pacman -> move -> delta_y = 0;
-    pacman -> move -> delta_x = 0;
-
-	switch(input)
-	{
-		case W_KEY: 
-			pacman -> move -> delta_y = -1;   		
-            pacman -> move -> delta_x = 0;
-            pacman -> move -> direction = UP; 
-			break;
-				
-		case A_KEY: 
-			pacman -> move -> delta_x = -1;			
-            pacman -> move -> delta_y = 0;
-            pacman -> move -> direction = LEFT;
-			break;
-				
-		case S_KEY: 
-			pacman -> move -> delta_y = 1;			
-            pacman -> move -> delta_x = 0;
-            pacman -> move -> direction = DOWN;
-			break;
-				
-		case D_KEY: 
-			pacman -> move -> delta_x = 1;			
-            pacman -> move -> delta_y = 0;
-            pacman -> move -> direction = RIGHT;
-			break;
-
-		default:
-            pacman -> move -> delta_x = 0; 
-            pacman -> move -> delta_y = 0;
-	
-			break;
-	}
-    */
 
    	movement -> delta_y = 0;
     movement -> delta_x = 0;
     
-
 	switch(input)
 	{
 		case W_KEY: 

@@ -121,7 +121,7 @@ extern UINT16 tile_map[][40 ];
 # 4 "./model.h" 2
 # 1 "./bitmaps.h" 1
 # 5 "./model.h" 2
-# 28 "./model.h"
+# 31 "./model.h"
 typedef enum {
     GHOST_TYPE_CRYING,
     GHOST_TYPE_AWKWARD,
@@ -527,10 +527,9 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
-# 263 "events.c"
+
    	movement -> delta_y = 0;
     movement -> delta_x = 0;
-
 
 	switch(input)
 	{

@@ -9,6 +9,9 @@
 #define LEFT ((UCHAR8)2)
 #define RIGHT ((UCHAR8)3)
 
+#define MIDDLE_OF_SCREEN_Y 200
+#define MIDDLE_OF_SCREEN_X 320
+
 #define MOVEMENT_MULTIPLIER 3 
 
 #define MAP_TILE_LENGTH 40        /* 1 tile = 16 pixels*/ 
