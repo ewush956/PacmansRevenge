@@ -17,6 +17,8 @@ void refresh_screen(ULONG32* base32, Entities* entity);
 void render_initial_timer(UCHAR8* base);
 void render_pellet(UCHAR8* base8, Movement* move);
 void clear_pacman(ULONG32* base32, Movement* move);
+void render_pellets(ULONG32* base32, Entities* all);
+
 
 
 

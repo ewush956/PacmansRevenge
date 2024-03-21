@@ -190,6 +190,7 @@ int main()
 	char input;
     int waka_repetitions = 10; 
     int buffer_offset = 256 - ((long)(screen_buffer) % 256); 
+    int background_offset = 256 - ((long)(background) % 256);
     long old_ssp; 
 
 	UCHAR8 collision_type = 0;
@@ -201,8 +202,8 @@ int main()
     ULONG32* original = get_video_base();
 
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
-    ULONG32* background_ptr = (ULONG32*)(&background[0]); /*Not using at the moment*/
-  
+    ULONG32* background_ptr = (ULONG32*)(&background[background_offset]); /*Not using at the moment*/
+
     GAME_STATE state = PLAY;
 
     SoundState wakaState = {0, 0};
@@ -211,7 +212,7 @@ int main()
     plot_screen(base32, splash);
     while (!Cconis());
 
-    initialize_game(base32, back_buffer_ptr, &entity);
+    initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
 	if (Cconis())
 	{
 		input = (char)Cnecin();
@@ -227,24 +228,19 @@ int main()
         {
             input = (char)Cnecin();
         }
+        
         if (time_elapsed > 0) {
-/*
+
             old_ssp = Super(0);
             play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
             play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
             Super(old_ssp);
-*/
+
             update_movement(&entity, input, ticks);
-            /*debug_print(base8, 12, 0, ticks);*/
-            /*
-            if ((ticks & 7) == 0) {
-                update_current_frame(&entity, ticks);   
-            }
-            */
+
             update_current_frame(&entity, ticks);   
 
             render_frame(back_buffer_ptr, &entity);
-            /*debug_pacman_movement(base32, &pacman);*/
 
             swap_buffers(&base32, &back_buffer_ptr);
             Setscreen(-1,base32,-1);  
@@ -252,6 +248,7 @@ int main()
             time_then = get_time();
             ticks = (++ticks & 63);
         }
+        
         state = update_game_state(state, input);
     }
     old_ssp = Super(0);
@@ -349,7 +346,7 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
  * Purpose: Initializes the game, manually moves the ghosts out of the center
  *          and plays intro music
  ******************************************************************/
-void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) {
+void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity) {
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
     UCHAR8* base8 = (UCHAR8*)base32;
@@ -373,6 +370,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     init_map_cells(cell_map, tile_map);    
     clear_and_render_maps(base32, back_buffer_ptr);
+    render_map(background_ptr, tile_map);
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);

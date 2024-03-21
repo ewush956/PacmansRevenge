@@ -237,50 +237,64 @@ void render_pellet(UCHAR8* base8, Movement* move) {
     int pellet_plot_x = (move->x_cell_index << 4) + 12;
     int pellet_plot_y = (move->y_cell_index << 4) + 12 + Y_PIXEL_OFFSET;
 
+    int x_cell_index = move->x_cell_index;
+    int y_cell_index = move->y_cell_index;
+
     if (move->direction == LEFT) {
-        if (cell_map[move->y_cell_index][move->x_cell_index + 2].has_pellet == TRUE) {
+        if (cell_map[y_cell_index][x_cell_index + 2].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x + 32, pellet_plot_y, pellet, 8);
         }
-        if (cell_map[move->y_cell_index + 1][move->x_cell_index + 2].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x + 32, pellet_plot_y, pellet + 16, 8);
+        if (cell_map[y_cell_index + 1][x_cell_index + 2].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x + 32, pellet_plot_y + 16, pellet, 8);
         }
-        if (cell_map[move->y_cell_index - 1][move->x_cell_index + 2].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x + 32, pellet_plot_y - 16, pellet + 8, 8);
+        if (cell_map[y_cell_index - 1][x_cell_index + 2].has_pellet == TRUE) {
+            plot_8(base8, pellet_plot_x + 32, pellet_plot_y - 16, pellet, 8);
         }
     }
     else if (move->direction == RIGHT) {
-        if (cell_map[move->y_cell_index][move->x_cell_index - 1].has_pellet == TRUE) {
+        if (cell_map[y_cell_index][x_cell_index - 1].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x - 16, pellet_plot_y, pellet, 8);
         }
-        if (cell_map[move->y_cell_index + 1][move->x_cell_index - 1].has_pellet == TRUE) {
+        if (cell_map[y_cell_index + 1][x_cell_index - 1].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 16, pellet, 8);
         }
-        if (cell_map[move->y_cell_index - 1][move->x_cell_index - 1].has_pellet == TRUE) {
+        if (cell_map[y_cell_index - 1][x_cell_index - 1].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet, 8);
         }
     }
     else if (move->direction == DOWN) {
-        if (cell_map[move->y_cell_index - 1][move->x_cell_index].has_pellet == TRUE) {
+        if (cell_map[y_cell_index - 1][x_cell_index].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x, pellet_plot_y - 16, pellet, 8);
         }
-        if (cell_map[move->y_cell_index - 1][move->x_cell_index + 1].has_pellet == TRUE) {
+        if (cell_map[y_cell_index - 1][x_cell_index + 1].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x + 16, pellet_plot_y - 16, pellet, 8);
         }
-        if (cell_map[move->y_cell_index - 1][move->x_cell_index - 1].has_pellet == TRUE) {
+        if (cell_map[y_cell_index - 1][x_cell_index - 1].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet, 8);
         }
     }
     else if (move->direction == UP) {
-        if (cell_map[move->y_cell_index + 2][move->x_cell_index].has_pellet == TRUE) {
+        if (cell_map[y_cell_index + 2][x_cell_index].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x, pellet_plot_y + 32, pellet, 8);
         }
-        if (cell_map[move->y_cell_index + 2][move->x_cell_index + 1].has_pellet == TRUE) {
+        if (cell_map[y_cell_index + 2][x_cell_index + 1].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x + 16, pellet_plot_y + 32, pellet, 8);
         }
-        if (cell_map[move->y_cell_index + 2][move->x_cell_index - 1].has_pellet == TRUE) {
+        if (cell_map[y_cell_index + 2][x_cell_index - 1].has_pellet == TRUE) {
             plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 32, pellet, 8);
         }
     }
+    
+}
+void render_pellets(ULONG32* base32, Entities* all) {
+    UCHAR8 *base8 = (UCHAR8*)base32;
+
+    render_pellet(base8, all->crying_ghost->move);
+    render_pellet(base8, all->moustache_ghost->move);
+    render_pellet(base8, all->awkward_ghost->move);
+    render_pellet(base8, all->cyclops_ghost->move);
+
+    render_pellet(base8, all->pacman->move);
 }
 void clear_pacman(ULONG32* base32, Movement* move) {
     UCHAR8 direction = move->direction;
