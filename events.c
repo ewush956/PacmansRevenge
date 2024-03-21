@@ -3,6 +3,8 @@
 #include "model.h"
 #include "TYPES.H"
 #include "events.h"
+#include "psg.h"
+#include "renderer.h"
 #include <stdio.h>
 
 const UCHAR8 DIRECTION_ARRAY[4] = {UP, DOWN, LEFT, RIGHT};
@@ -281,5 +283,4 @@ UCHAR8 get_valid_paths(Movement *ghost)
 }
 void eat_pellet(Movement* pacman) {
     cell_map[pacman->y_cell_index][pacman->x_cell_index].has_pellet = FALSE;
-    
 }

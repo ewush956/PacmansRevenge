@@ -93,6 +93,7 @@ void move_ghost (Ghost *ghost)
         if (ghost->state == RUNNING) {
             ghost_movement-> x += (ghost_movement->delta_x << 1);
             ghost_movement-> y += (ghost_movement->delta_y << 1);
+            
         } else {
             ghost_movement-> x += ghost_movement->delta_x;
             ghost_movement-> y += ghost_movement->delta_y;
@@ -248,6 +249,9 @@ void change_pacman_state(Pacman* pacman, UCHAR8 new_state) {
     pacman->state = new_state;
 }
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
+    if (ghost->state == DEAD) {
+        return;
+    }
     ghost->state = new_state;
 }
 void end_game() {

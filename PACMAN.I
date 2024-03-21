@@ -927,8 +927,9 @@ void swap_buffers(ULONG32** base32, ULONG32** back_buffer_ptr);
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 void update_movement(Entities* entity, char input, UINT16 ticks);
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity);
+
 ULONG32 get_time();
-GAME_STATE update_game_state(GAME_STATE new_state, char input);
+GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all);
 void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
 void debug_cells_pac(UCHAR8* base, Pacman* pacman);
 void update_entities();
@@ -1198,7 +1199,7 @@ int main()
 	}
 
         ticks = 0;
-    while (state != ((UCHAR8)0) ) {
+    while (state != ((UCHAR8)0)  && state != ((UCHAR8)4) ) {
 
         time_now = get_time();
         time_elapsed = time_now - time_then;
@@ -1228,13 +1229,25 @@ int main()
             ticks = (++ticks & 63);
         }
 
-        state = update_game_state(state, input);
+        state = update_game_state(state, input, &entity);
     }
+
     old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
     stop_sound();
     _trap_1_wl((short)0x20,(long)(old_ssp)) ;
     (void)_trap_14_wllw((short)0x5,(long)(-1),(long)original,(short)(-1)) ;
     clear_screen_q(original);
+
+    if (state == ((UCHAR8)4) ) {
+        plot_screen(original, splash);
+        while (input != '\033') {
+            input = (char)_trap_1_w((short)0x08) ;
+        }
+    }
+
+
+
+
 
 	return 0;
 }
@@ -1251,7 +1264,7 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 281 "pacman.c"
+# 293 "pacman.c"
 void update_movement(Entities* entity, char input, UINT16 ticks) {
 
     set_input(entity->pacman,input);
@@ -1263,8 +1276,8 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
 
 
 }
-# 298 "pacman.c"
-GAME_STATE update_game_state(GAME_STATE new_state, char input) {
+# 310 "pacman.c"
+GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
 
 
     GAME_STATE state;
@@ -1273,13 +1286,16 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
         state = ((UCHAR8)0) ;
         return state;
     }
-
-    state = new_state;
-
-   return state;
+    if (all->awkward_ghost->state == ((UCHAR8)3)  &&
+        all->crying_ghost->state == ((UCHAR8)3)  &&
+        all->moustache_ghost->state == ((UCHAR8)3)  &&
+        all->cyclops_ghost->state == ((UCHAR8)3) ) {
+        return ((UCHAR8)4) ;
+    }
+    return new_state;
 
 }
-# 320 "pacman.c"
+# 335 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1561,7 +1577,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 607 "pacman.c"
+# 622 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;

@@ -219,7 +219,7 @@ int main()
 	}
     
         ticks = 0;
-    while (state != QUIT) {
+    while (state != QUIT && state != WIN) {
 
         time_now = get_time();
         time_elapsed = time_now - time_then;
@@ -228,7 +228,7 @@ int main()
         {
             input = (char)Cnecin();
         }
-        
+            
         if (time_elapsed > 0) {
 
             old_ssp = Super(0);
@@ -249,14 +249,26 @@ int main()
             ticks = (++ticks & 63);
         }
         
-        state = update_game_state(state, input);
+        state = update_game_state(state, input, &entity);
     }
+
     old_ssp = Super(0);
     stop_sound();
     Super(old_ssp);
     Setscreen(-1,original,-1);
     clear_screen_q(original);
-
+    
+    if (state == WIN) {
+        plot_screen(original, splash);
+        while (input != '\033') {
+            input = (char)Cnecin();
+        }
+    }
+    /*
+    else if (state == QUIT) {
+        plot_screen(base32, lose);
+    }
+*/
 	return 0;
 }
 /******************************************************************
@@ -295,7 +307,7 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
  * Parameters: new_state, input
  * Returns: GAME_STATE
  ******************************************************************/
-GAME_STATE update_game_state(GAME_STATE new_state, char input) {
+GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
 
     /*Do something that updates the gamestate*/
     GAME_STATE state;
@@ -304,10 +316,13 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input) {
         state = QUIT;
         return state;
     }
-
-    state = new_state;
-
-   return state;
+    if (all->awkward_ghost->state == DEAD && 
+        all->crying_ghost->state == DEAD &&
+        all->moustache_ghost->state == DEAD &&
+        all->cyclops_ghost->state == DEAD) {
+        return WIN; 
+    }
+    return new_state;
 
 }
 /*******************************************************************
