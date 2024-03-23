@@ -189,13 +189,11 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         break;
     }
 }
-/***********************************************************
-*  Uses an XOR shift algorthm to generate a random number 
-*   -For randomizing direction of any ghost
-*    
-*   @return 'state' this is the random number that is returned
+/*
 *
-***********************************************************/
+*
+*
+*/
 void handle_collisions(Entities* entity, UINT16 ticks) {
     int i;
     ObjectType collision_type = OPEN_PATH;

@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <linea.h>
 
-/*ULONG32 combined_address;*/
+
 volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
 volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_MID;
 
@@ -243,7 +243,10 @@ int main()
             render_frame(back_buffer_ptr, &entity);
 
             swap_buffers(&base32, &back_buffer_ptr);
-            Setscreen(-1,base32,-1);  
+            /*Setscreen(-1,base32,-1);*/
+            old_ssp = Super(0);
+            set_video_base(base32);
+            Super(old_ssp);  
 
             time_then = get_time();
             ticks = (++ticks & 63);
@@ -255,7 +258,10 @@ int main()
     old_ssp = Super(0);
     stop_sound();
     Super(old_ssp);
-    Setscreen(-1,original,-1);
+   /*Setscreen(-1,original,-1);*/
+    old_ssp = Super(0);
+    set_video_base(original);
+    Super(old_ssp);  
     clear_screen_q(original);
     
     if (state == WIN) {
@@ -660,7 +666,7 @@ ULONG32* get_video_base()
 {
 	ULONG32 old_ssp;
     ULONG32 combined_address;
-   /* UINT16* video_base_ptr;*/
+   
 
     UCHAR8 high_byte; 
     UCHAR8 low_byte ;
@@ -670,7 +676,6 @@ ULONG32* get_video_base()
     low_byte = *ptr_to_lowbyte;
     Super(old_ssp); 		
     
-   /*combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte << 8);*/
    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte  << 8);
    
     return (ULONG32*)combined_address;

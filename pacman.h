@@ -63,6 +63,8 @@ void update_movement(Entities* entity, char input, UINT16 ticks);
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity);
 
 ULONG32 get_time();
+void set_video_base(ULONG32*);
+
 GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all);
 void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
 void debug_cells_pac(UCHAR8* base, Pacman* pacman);
