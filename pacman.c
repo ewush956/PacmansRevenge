@@ -218,7 +218,7 @@ int main()
 		input = (char)Cnecin();
 	}
     
-        ticks = 0;
+    ticks = 0;
     while (state != QUIT && state != WIN) {
 
         time_now = get_time();
@@ -230,11 +230,12 @@ int main()
         }
             
         if (time_elapsed > 0) {
-
+            /*
             old_ssp = Super(0);
             play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
             play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
             Super(old_ssp);
+            */
 
             update_movement(&entity, input, ticks);
 
@@ -243,7 +244,10 @@ int main()
             render_frame(back_buffer_ptr, &entity);
 
             swap_buffers(&base32, &back_buffer_ptr);
-            Setscreen(-1,base32,-1);  
+            /*Setscreen(-1,base32,-1); */
+            old_ssp = Super(0);
+            set_video_base(base32);
+            Super(old_ssp);  
 
             time_then = get_time();
             ticks = (++ticks & 63);
@@ -254,12 +258,13 @@ int main()
 
     old_ssp = Super(0);
     stop_sound();
+    set_video_base(original);
     Super(old_ssp);
-    Setscreen(-1,original,-1);
-    clear_screen_q(original);
+    /*Setscreen(-1,original,-1);*/
+    /*clear_screen_q(original);*/
     
     if (state == WIN) {
-        plot_screen(original, splash);
+        /*plot_screen(original, splash);*/
         while (input != '\033') {
             input = (char)Cnecin();
         }
@@ -295,8 +300,8 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
     set_input(entity->pacman,input);
     handle_collisions(entity, ticks);   
     update_entities();
-    eat_pellet(entity->pacman->move);
     update_cells(entity);
+    eat_pellet(entity->pacman->move);
     check_proximity(entity);
     
 
@@ -423,15 +428,16 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool 
     Movement* cyclops_ghost = entity->cyclops_ghost->move;
 
     if (enable != TRUE) {
-        move_ghost(entity->crying_ghost);
-        move_ghost(entity->awkward_ghost);
-        move_ghost(entity->moustache_ghost);
-        move_ghost(entity->cyclops_ghost);
 	    /*update_cells(entity);*/
         update_cell(awkward_ghost, entity->awkward_ghost->state);
         update_cell(moustache_ghost, entity->moustache_ghost->state);
         update_cell(crying_ghost, entity->crying_ghost->state);
         update_cell(cyclops_ghost, entity->cyclops_ghost->state);
+
+        move_ghost(entity->crying_ghost);
+        move_ghost(entity->awkward_ghost);
+        move_ghost(entity->moustache_ghost);
+        move_ghost(entity->cyclops_ghost);
 
         update_current_frame(entity, frame_index);
 	    render_frame(base, entity);
@@ -660,7 +666,7 @@ ULONG32* get_video_base()
 {
 	ULONG32 old_ssp;
     ULONG32 combined_address;
-   /* UINT16* video_base_ptr;*/
+   
 
     UCHAR8 high_byte; 
     UCHAR8 low_byte ;
@@ -670,7 +676,6 @@ ULONG32* get_video_base()
     low_byte = *ptr_to_lowbyte;
     Super(old_ssp); 		
     
-   /*combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte << 8);*/
    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte  << 8);
    
     return (ULONG32*)combined_address;

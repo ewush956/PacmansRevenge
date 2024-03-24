@@ -62,7 +62,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
 */
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH && ghost_array[i]->state != DEAD) {
-            handle_wall_collision(all_ghosts[i], i);   
+            handle_wall_collision(all_ghosts[i], ghost_array[i]->state);   
             /*update_ghost_direction(ghost_array[i], all->pacman);*/
             /*return WALL;*/
         }        
@@ -71,11 +71,11 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
     
     
 }
-void handle_wall_collision(Movement* ghost, int ghost_identifier) {
+void handle_wall_collision(Movement* ghost, UCHAR8 state) {
     
     int i, direction;
     UCHAR8 possible_direction = 0;
-    UCHAR8 number_of_open_paths = get_valid_paths(ghost);
+    /*UCHAR8 number_of_open_paths = get_valid_paths(ghost);*/
 
     direction = ghost->direction;
     /*for (i = 0; i < 4; i++) {
@@ -85,7 +85,12 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
             direction = (direction % 3) - 1;
         ghost -> direction = DIRECTION_ARRAY[direction];
         */
-            
+       /*
+        if (state == RUNNING) {
+            ghost->delta_y = 0;
+            ghost->delta_x = 0;
+        }
+        */
         switch(cell_map[ghost->y_cell_index][ghost->x_cell_index].path)
 		{
 			case UP:
@@ -109,7 +114,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 				break;
         }
         
-          /*     
+        /*   
         switch (cell_map[ghost->y_cell_index][ghost->x_cell_index].path) {
             case UP:
                 if (cell_map[ghost->y_cell_index - 1][ghost->x_cell_index].open_path == TRUE) {
@@ -137,6 +142,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
                 break;
         }
         */
+        
    /* }*/          
 }
 /*************************************************************

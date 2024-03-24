@@ -143,7 +143,9 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman);
 bool check_valid_path(Movement* movement, UCHAR8 direction);
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
-UCHAR8 get_optimal_direction(Movement* movement);
+UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement);
+UCHAR8 get_alternate_direction(bool can_go_up, bool can_go_down, bool can_go_left, bool can_go_right, 
+                               UINT16 ghost_x, UINT16 ghost_y, UINT16 pacman_x, UINT16 pacman_y);
 
 
 ObjectType check_wall_collision(Movement* entity);

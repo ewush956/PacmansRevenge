@@ -26,7 +26,7 @@ void clock_tick_handle(UINT16* clock_count, Entities* entity);		/* calls move pa
 void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 /* void handle_wall_collision(Movement* entity); */
-void handle_wall_collision(Movement* ghost, int ghost_identifier);
+void handle_wall_collision(Movement* ghost, UCHAR8 state);
 void handle_collisions(Entities* entity, UINT16 ticks);
 ObjectType process_ghost_collision(Entities* all, UINT16 tick);
 ULONG32 random_number_generator(Xor *xor);
