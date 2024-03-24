@@ -30,7 +30,6 @@ VIDEO_ADDR_HIGH equ 	$FF8201
 
 _set_video_base:
  
-
 		link	a6,#0
 		movem.l	d0-7/a0-6,-(sp)
 		move.l	base_value(a6),a1

@@ -203,7 +203,7 @@ void update_song(int treble_channel, const Note treble_song[], int treble_song_l
 }
 
 void play_intro() {
-    /*mom pick me up i'm scared :( */
+   
 }
 void play_jaws_theme() {
 

@@ -9,7 +9,7 @@
 #include "bitmaps.h"
 #include "events.h"
 #include "psg.h"
-#include "isr.h"
+/*#include "isr.h"*/
 
 
 #include <osbind.h>
@@ -84,10 +84,5 @@ extern Ghost cyclops_ghost;
 
 extern Movement crying_ghost_movement;
 extern Ghost crying_ghost;
-
-/*extern bool request_to_render = FALSE;   /* make a global.h and .c file for this stuff .. ?*/
-
-
-
 
 #endif

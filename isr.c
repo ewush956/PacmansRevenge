@@ -1,8 +1,9 @@
 
+#include <osbind.h>
+
 #include "isr.h"    
 #include "TYPES.H"
-#include <osbind.h>
-/*#include "pacman.h"     /*for rextern render requst*/
+#include "globals.h"
 
 /*********************
 *
@@ -26,12 +27,16 @@ Vector install_vector(int num, Vector vector)
 void do_vbl()
 {
 
-    if (clock_ticks == 70)
+/*
+    if (ticks == 2)
     {
         request_to_render = TRUE;
-        clock_ticks = 0;
+        ticks = 0;
     }
+    */
 
-    clock_ticks++;
+    ticks++;
+    request_to_render = TRUE; /**/
+
 
 }
