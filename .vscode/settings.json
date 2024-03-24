@@ -4,6 +4,7 @@
         "STRUCTS.C": "cpp",
         "TST_STRC.C": "cpp",
         "RASTER.C": "cpp",
-        "events.h": "c"
+        "events.h": "c",
+        "bitmaps.h": "c"
     }
 }

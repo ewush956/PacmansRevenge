@@ -14,9 +14,6 @@
 #include <linea.h>
 
 
-volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
-volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_MID;
-
 
 /************************* KNOWN BUGS ***************************
  * 1. Sometimes 3-4 pixels will plot right around a single pellet
@@ -176,6 +173,9 @@ Timer timer = {
 
 UCHAR8 background[BUFFER_SIZE_BYTES];
 UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
+volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
+volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_MID;
+
 
 int main()
 {
@@ -208,6 +208,8 @@ int main()
 
     SoundState wakaState = {0, 0};
     SoundState wakaNoise = {0, 0};
+    
+    Vector orig_vector28 = install_vector(TRAP_28, trap28_isr);   /* for VBL*/
 
     plot_screen(base32, splash);
     while (!Cconis());
@@ -240,13 +242,16 @@ int main()
 
             update_current_frame(&entity, ticks);   
 
-            render_frame(back_buffer_ptr, &entity);
+            if (request_to_render == TRUE)
+            {
+                render_frame(back_buffer_ptr, &entity);
+                swap_buffers(&base32, &back_buffer_ptr);
+                old_ssp = Super(0);
+                set_video_base(base32);
+                Super(old_ssp);
 
-            swap_buffers(&base32, &back_buffer_ptr);
-            /*Setscreen(-1,base32,-1);*/
-            old_ssp = Super(0);
-            set_video_base(base32);
-            Super(old_ssp);  
+                request_to_render = FALSE;  /* = 0*/
+            }  
 
             time_then = get_time();
             ticks = (++ticks & 63);
@@ -270,6 +275,8 @@ int main()
             input = (char)Cnecin();
         }
     }
+
+     install_vector(TRAP_28, orig_vector28);        /*return vector back to orig*/
     /*
     else if (state == QUIT) {
         plot_screen(base32, lose);
@@ -681,3 +688,5 @@ ULONG32* get_video_base()
     return (ULONG32*)combined_address;
 
 }
+
+
