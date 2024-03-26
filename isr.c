@@ -26,15 +26,6 @@ Vector install_vector(int num, Vector vector)
 
 void do_vbl()
 {
-
-/*
-    if (ticks == 2)
-    {
-        request_to_render = TRUE;
-        ticks = 0;
-    }
-    */
-
     ticks++;
     request_to_render = TRUE; /**/
 

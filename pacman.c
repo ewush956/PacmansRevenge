@@ -264,9 +264,11 @@ int main()
 
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
-            old_ssp = Super(0);
+           
+           old_ssp = Super(0); 
             set_video_base(base32);
             Super(old_ssp);
+           
             request_to_render = FALSE; 
 
         }  
