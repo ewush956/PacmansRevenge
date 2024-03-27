@@ -7,6 +7,7 @@
 #include "renderer.h"
 #include <stdio.h>
 
+
 const UCHAR8 DIRECTION_ARRAY[4] = {UP, DOWN, LEFT, RIGHT};
 
 /*********************************************************************************
@@ -219,9 +220,18 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
         kill_ghost(entity->crying_ghost, cell_map);
 
 }
-void set_input(Pacman *pacman, char input)
+void set_input(Pacman *pacman, char input) 
 {
     Movement* movement = pacman->move;
+     
+     /*
+    char input;
+     if (Cconis())
+        {
+            input = (char)Cnecin();
+        }
+     */
+
 
    	movement -> delta_y = 0;
     movement -> delta_x = 0;

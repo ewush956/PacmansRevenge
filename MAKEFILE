@@ -1,10 +1,10 @@
 
 all: pacman
 
-pacman: pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o psg.o music.o effects.o isr.o isr_asm.o globals.o
-	cc68x -g pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o psg.o music.o effects.o isr.o isr_asm.o globals.o -o pacman
+pacman: pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o psg.o music.o effects.o isr.o isr_asm.o globals.o input.o                                   
+	cc68x -g pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o psg.o music.o effects.o isr.o isr_asm.o globals.o input.o -o pacman
 
-pacman.o: pacman.c pacman.h raster.h font.h bitmaps.h model.h events.h renderer.h isr.h globals.h
+pacman.o: pacman.c pacman.h raster.h font.h bitmaps.h model.h events.h renderer.h isr.h globals.h input.h
 	cc68x -g -c pacman.c
 
 raster.o: raster.c raster.h
@@ -43,8 +43,11 @@ globals.o: globals.c globals.h
 isr_asm.o: isr_asm.s
 	gen -D -L2 isr_asm.s
 
-isr.o: isr.c isr.h
+isr.o: isr.c isr.h music.h effects.h pacman.h input.h 
 	cc68x -g -c isr.c
+
+input.o: input.c input.h 
+	cc68x -g -c input.c
 	
 
 

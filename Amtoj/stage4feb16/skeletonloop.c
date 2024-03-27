@@ -316,6 +316,7 @@ void next_test(UINT32* base) {
 void set_input(Pacman *pacman, char input)
 {
 
+	
 	pacman -> move -> delta_y = 0;
     pacman -> move -> delta_x = 0;              /* make this better? how to reset it everytime?*/
     /*pacman -> move -> direction = 0;*/

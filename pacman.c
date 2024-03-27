@@ -3,6 +3,7 @@
 #include "model.h"
 #include "renderer.h"
 #include "TYPES.H"
+#include "input.h"
 #include "font.h"
 #include "bitmaps.h"
 #include "events.h"
@@ -179,17 +180,19 @@ UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
 volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_MID;
 
-/*bool request_to_render = FALSE;*/
 
-int main()
-{
-    Entities entity = {
+
+ Entities entity = {
         &pacman,
         &crying_ghost,
         &awkward_ghost,
         &moustache_ghost,
         &cyclops_ghost,
     };
+    
+
+int main()
+{
     int i;
 	char input;
     int waka_repetitions = 10; 
@@ -198,7 +201,6 @@ int main()
     long old_ssp; 
 
 	UCHAR8 collision_type = 0;
-    /*UINT16 ticks = 0;*/
 	ULONG32 time_then, time_now, time_elapsed;
 
     UCHAR8* base8 = (UCHAR8*)get_video_base();
@@ -209,88 +211,58 @@ int main()
     ULONG32* background_ptr = (ULONG32*)(&background[background_offset]); /*Not using at the moment*/
 
     GAME_STATE state = PLAY;
-
     SoundState wakaState = {0, 0};
     SoundState wakaNoise = {0, 0};
     
     Vector orig_vector28 = install_vector(TRAP_28, trap28_isr);   /* for VBL*/
 
     plot_screen(base32, splash);
-    while (!Cconis());
+    while (!Cconis());      /* waits for any input need to change it later*/
 
     initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
-	if (Cconis())
-	{
-		input = (char)Cnecin();
+
+	if (Cconis())	{
+        input = get_input();
 	}
-    
+
     ticks = 0;
 
     while (state != QUIT && state != WIN) 
     {
-
-        /*
-        time_now = get_time();                                  
-        time_elapsed = time_now - time_then;
-        */
-        /* this*/
-        
-        if (Cconis())
+  
+        if (Cconis())	
         {
-            input = (char)Cnecin();
-        }
+            input = get_input();
 
-         /* ignore for now (i know this is very trival jsut bear with me)*/   
-        if ( request_to_render == TRUE /*time_elapsed > 0*/) 
-        {
-
-            old_ssp = Super(0);
-            play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
-            play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise); 
-            Super(old_ssp);
-
-            /*
-            update_movement(&entity, input, ticks);
-            update_current_frame(&entity, ticks);   
-            */
-        }
-          
-
-
+	    }
+        set_input(entity.pacman,input);
+      
         if (request_to_render == TRUE)
         {   
-            update_movement(&entity, input, ticks);
+            update_movement(&entity,ticks);         /* should not be here */
             update_current_frame(&entity, ticks);
+            /*
+            */
 
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
            
-           old_ssp = Super(0); 
+            old_ssp = Super(0); 
             set_video_base(base32);
             Super(old_ssp);
            
             request_to_render = FALSE; 
-
         }  
-        
-
-            /*
-            time_then = get_time();
-            */
-            ticks = (++ticks & 63);
-           /*this*/
-
-  
-        
+      
         state = update_game_state(state, input, &entity);
     }
 
     old_ssp = Super(0);
     stop_sound();
     Super(old_ssp);
-   /*Setscreen(-1,original,-1);*/
+
     old_ssp = Super(0);
-    set_video_base(original);
+    set_video_base(original);                   /* return screen base location to orig */
     Super(old_ssp);  
     clear_screen_q(original);
     
@@ -301,12 +273,8 @@ int main()
         }
     }
 
-     install_vector(TRAP_28, orig_vector28);        /*return vector back to orig*/
-    /*
-    else if (state == QUIT) {
-        plot_screen(base32, lose);
-    }
-*/
+     install_vector(TRAP_28, orig_vector28);        /* return vector back to orig */
+
 	return 0;
 }
 /******************************************************************
@@ -328,9 +296,10 @@ void update_entities() {
  * 
  * Parameters: entity, input, ticks
  ******************************************************************/
-void update_movement(Entities* entity, char input, UINT16 ticks) {
+void update_movement(Entities* entity, /*char input,*/ UINT16 ticks) {
 
-    set_input(entity->pacman,input);
+ 
+    /*set_input(entity->pacman , input);*/
     handle_collisions(entity, ticks);   
     update_entities();
     eat_pellet(entity->pacman->move);
@@ -399,13 +368,16 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
  * Purpose: Initializes the game, manually moves the ghosts out of the center
  *          and plays intro music
  ******************************************************************/
-void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity) {
+void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity)
+ {
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
     UCHAR8* base8 = (UCHAR8*)base32;
     UCHAR8* back8 = (UCHAR8*)back_buffer_ptr;
 
-    /*ULONG32 time_then = get_time(), song_now, song_then, time_elapsed;    /**/
+    /*ULONG32 time_then = get_time(), */
+    ULONG32 song_now, song_then, time_elapsed;    /**/
+    ULONG32 time_then = time_now;
     long old_ssp; 
     int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
     int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
@@ -419,7 +391,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
     int first_frames = 0;
     bool enable = TRUE;
 
-    /*int time_now = get_time();      /* this */
+    /*int time_now; /*= get_time();      /* this */
 
     init_map_cells(cell_map, tile_map);    
     clear_and_render_maps(base32, back_buffer_ptr);
@@ -427,26 +399,29 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
-/*
+    
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
         if (*intro_duration_ptr > 44) {
-            time_now = get_time();
+            /*time_now = get_time(); ---*/
             time_elapsed = time_now - time_then;
+            /*
             if (first_frames > FIRST_STOP - 1) {
                 stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
                 first_frames = 0;
-            }
+            }*/
+            /*
             if (stop_ghosts == FALSE && time_elapsed > 0) {
                 manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
                 swap_buffers(&base32, &back_buffer_ptr);
                 Setscreen(-1,base32,-1);  
-                /*time_now = get_time();
-                time_then = get_time();
-            }
+                /*time_now = get_time(); ----
+                /*time_then = get_time(); --
+                time_then = time_now;
+            }*/
             first_frames++;
         }
-    }*/
+    }
     clear_and_render_entities(base32, back_buffer_ptr, entity);
 }
 /*******************************************************************
@@ -545,7 +520,7 @@ void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassSt
  *          returns TRUE if the song has finished.
  *****************************************************************/
 bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
-    ULONG32 time_now = get_time();
+    /*ULONG32 time_now = get_time();*/
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
     int tempo = 5;

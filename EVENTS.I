@@ -590,8 +590,9 @@ extern	FILE	_iob[];
 # 8 "events.c" 2
 
 
+
 const UCHAR8 DIRECTION_ARRAY[4] = {((UCHAR8)0) , ((UCHAR8)1) , ((UCHAR8)2) , ((UCHAR8)3) };
-# 27 "events.c"
+# 28 "events.c"
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 
     flip_direction(ghost1);
@@ -619,7 +620,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
     ghost_array[1] = all->awkward_ghost;
     ghost_array[2] = all->cyclops_ghost;
     ghost_array[3] = all->moustache_ghost;
-# 63 "events.c"
+# 64 "events.c"
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH && ghost_array[i]->state != ((UCHAR8)3) ) {
             handle_wall_collision(all_ghosts[i], i);
@@ -638,7 +639,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
     UCHAR8 number_of_open_paths = get_valid_paths(ghost);
 
     direction = ghost->direction;
-# 89 "events.c"
+# 90 "events.c"
         switch(cell_map[ghost->y_cell_index][ghost->x_cell_index].path)
 		{
 			case ((UCHAR8)0) :
@@ -661,9 +662,9 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 				ghost ->delta_y = 0;
 				break;
         }
-# 141 "events.c"
+# 142 "events.c"
 }
-# 151 "events.c"
+# 152 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     Movement* pacman = entity->pacman->move;
@@ -738,7 +739,7 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
-
+# 236 "events.c"
    	movement -> delta_y = 0;
     movement -> delta_x = 0;
 

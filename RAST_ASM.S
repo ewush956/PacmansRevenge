@@ -32,6 +32,8 @@ _set_video_base:
  
 		link	a6,#0
 		movem.l	d0-7/a0-6,-(sp)
+		;move.w	sr,d5
+		
 		move.l	base_value(a6),a1
 		move.l	a1,d0
 		lsr.l	#8,d0			
