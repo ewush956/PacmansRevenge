@@ -5,6 +5,7 @@
 #include "events.h"
 #include "psg.h"
 #include "renderer.h"
+#include "globals.h"
 #include <stdio.h>
 
 const UCHAR8 DIRECTION_ARRAY[4] = {UP, DOWN, LEFT, RIGHT};

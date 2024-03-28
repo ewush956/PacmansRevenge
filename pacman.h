@@ -9,7 +9,7 @@
 #include "bitmaps.h"
 #include "events.h"
 #include "psg.h"
-
+#include "isr.h"
 
 #include <osbind.h>
 #include <stdio.h>
@@ -42,10 +42,11 @@ typedef unsigned char GAME_STATE;
 #define FRONT_BUFFER_START 0xFC0000         /* starts at 64,512 (+ 32,256 bytes more than the back_buffer) */
 #define FRONT_BUFFER_END 0x17A0000           /* 32,256 more than the start of front_buffer*/
 
-       
+/*
 #define VIDEO_REGISTER_HIGH 0xFFFF8201
 #define VIDEO_REGISTER_MID 0xFFFF8203
 #define VIDEO_REGISTER_LOW 0xFFFF820D
+*/
 
 /*
 #define VIDEO_ADDR_HIGH (*(volatile UCHAR8*)0xFF8201)
@@ -59,7 +60,7 @@ typedef unsigned char GAME_STATE;
 /*void swap_buffers();*/
 void swap_buffers(ULONG32** base32, ULONG32** back_buffer_ptr);
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
-void update_movement(Entities* entity, char input);
+void update_movement(Entities* entity);
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity);
 
 ULONG32 get_time();

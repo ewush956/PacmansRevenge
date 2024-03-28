@@ -9,5 +9,6 @@
 #define S_KEY 's'
 #define D_KEY 'd'
 
+char get_input();
 
 #endif
