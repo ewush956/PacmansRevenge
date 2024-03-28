@@ -33,8 +33,7 @@ void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
  * Function: process_ghost_collision
  * Purpose: To handle collisions between ghost and wall and eachother
  *******************************************************************/
-ObjectType process_ghost_collision(Entities* all, UINT16 tick)
-{  
+ObjectType process_ghost_collision(Entities* all) {  
     
     ObjectType collision = OPEN_PATH;
     int i, n;
@@ -202,14 +201,14 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 *   @return 'state' this is the random number that is returned
 *
 ***********************************************************/
-void handle_collisions(Entities* entity, UINT16 ticks) {
+void handle_collisions(Entities* entity) {
     int i;
     ObjectType collision_type = OPEN_PATH;
     Movement* pacman = entity->pacman->move;
 
 
     /*collision_type = process_ghost_collision(entity);*/
-    process_ghost_collision(entity, ticks);
+    process_ghost_collision(entity);
 
     collision_type = check_wall_collision(pacman);
     handle_pacman_collision(collision_type, entity); 

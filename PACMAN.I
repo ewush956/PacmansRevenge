@@ -321,21 +321,14 @@ extern const UCHAR8 font[];
 # 5 "./events.h" 2
 # 17 "./events.h"
 extern const UCHAR8 DIRECTION_ARRAY[4];
-typedef struct
-{
 
-    ULONG32 value;
 
-}Xor;
-
-void clock_tick_handle(UINT16* clock_count, Entities* entity);
 void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 
 void handle_wall_collision(Movement* ghost, UCHAR8 state);
-void handle_collisions(Entities* entity, UINT16 ticks);
-ObjectType process_ghost_collision(Entities* all, UINT16 tick);
-ULONG32 random_number_generator(Xor *xor);
+void handle_collisions(Entities* entity);
+ObjectType process_ghost_collision(Entities* all);
 void set_input(Pacman *pacman, char input);
 
 UCHAR8 get_valid_paths(Movement *ghost);
@@ -928,7 +921,7 @@ typedef unsigned char GAME_STATE;
 # 60 "./pacman.h"
 void swap_buffers(ULONG32** base32, ULONG32** back_buffer_ptr);
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
-void update_movement(Entities* entity, char input, UINT16 ticks);
+void update_movement(Entities* entity, char input);
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity);
 
 ULONG32 get_time();
@@ -1217,13 +1210,14 @@ int main()
 
         if (time_elapsed > 0) {
 # 240 "pacman.c"
-            update_movement(&entity, input, ticks);
+            update_movement(&entity, input);
 
             update_current_frame(&entity, ticks);
 
             render_frame(back_buffer_ptr, &entity);
-
+# 251 "pacman.c"
             swap_buffers(&base32, &back_buffer_ptr);
+
 
             old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
             set_video_base(base32);
@@ -1269,11 +1263,11 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 298 "pacman.c"
-void update_movement(Entities* entity, char input, UINT16 ticks) {
+# 304 "pacman.c"
+void update_movement(Entities* entity, char input) {
 
     set_input(entity->pacman,input);
-    handle_collisions(entity, ticks);
+    handle_collisions(entity);
     update_entities();
     update_cells(entity);
     eat_pellet(entity->pacman->move);
@@ -1281,7 +1275,7 @@ void update_movement(Entities* entity, char input, UINT16 ticks) {
 
 
 }
-# 315 "pacman.c"
+# 321 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
 
 
@@ -1300,7 +1294,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
     return new_state;
 
 }
-# 340 "pacman.c"
+# 346 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1583,7 +1577,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 628 "pacman.c"
+# 634 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;

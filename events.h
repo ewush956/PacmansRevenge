@@ -15,21 +15,14 @@
 #define S_KEY 's'
 #define D_KEY 'd'
 extern const UCHAR8 DIRECTION_ARRAY[4];
-typedef struct
-{
 
-    ULONG32 value;
 
-}Xor;
-
-void clock_tick_handle(UINT16* clock_count, Entities* entity);		/* calls move pacman calls all synch event handlers */
 void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 /* void handle_wall_collision(Movement* entity); */
 void handle_wall_collision(Movement* ghost, UCHAR8 state);
-void handle_collisions(Entities* entity, UINT16 ticks);
-ObjectType process_ghost_collision(Entities* all, UINT16 tick);
-ULONG32 random_number_generator(Xor *xor);
+void handle_collisions(Entities* entity);
+ObjectType process_ghost_collision(Entities* all);
 void set_input(Pacman *pacman, char input);
 
 UCHAR8 get_valid_paths(Movement *ghost);

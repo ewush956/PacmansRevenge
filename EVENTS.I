@@ -265,21 +265,14 @@ void set_prev(Entities* entity);
 # 5 "./events.h" 2
 # 17 "./events.h"
 extern const UCHAR8 DIRECTION_ARRAY[4];
-typedef struct
-{
 
-    ULONG32 value;
 
-}Xor;
-
-void clock_tick_handle(UINT16* clock_count, Entities* entity);
 void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 
 void handle_wall_collision(Movement* ghost, UCHAR8 state);
-void handle_collisions(Entities* entity, UINT16 ticks);
-ObjectType process_ghost_collision(Entities* all, UINT16 tick);
-ULONG32 random_number_generator(Xor *xor);
+void handle_collisions(Entities* entity);
+ObjectType process_ghost_collision(Entities* all);
 void set_input(Pacman *pacman, char input);
 
 UCHAR8 get_valid_paths(Movement *ghost);
@@ -604,8 +597,7 @@ void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 
 
 
-ObjectType process_ghost_collision(Entities* all, UINT16 tick)
-{
+ObjectType process_ghost_collision(Entities* all) {
 
     ObjectType collision = OPEN_PATH;
     int i, n;
@@ -622,7 +614,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
     ghost_array[1] = all->awkward_ghost;
     ghost_array[2] = all->cyclops_ghost;
     ghost_array[3] = all->moustache_ghost;
-# 63 "events.c"
+# 62 "events.c"
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH && ghost_array[i]->state != ((UCHAR8)3) ) {
             handle_wall_collision(all_ghosts[i], ghost_array[i]->state);
@@ -641,7 +633,7 @@ void handle_wall_collision(Movement* ghost, UCHAR8 state) {
 
 
     direction = ghost->direction;
-# 94 "events.c"
+# 93 "events.c"
         switch(cell_map[ghost->y_cell_index][ghost->x_cell_index].path)
 		{
 			case ((UCHAR8)0) :
@@ -664,9 +656,9 @@ void handle_wall_collision(Movement* ghost, UCHAR8 state) {
 				ghost ->delta_y = 0;
 				break;
         }
-# 147 "events.c"
+# 146 "events.c"
 }
-# 157 "events.c"
+# 156 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     Movement* pacman = entity->pacman->move;
@@ -708,15 +700,15 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
         break;
     }
 }
-# 205 "events.c"
-void handle_collisions(Entities* entity, UINT16 ticks) {
+# 204 "events.c"
+void handle_collisions(Entities* entity) {
     int i;
     ObjectType collision_type = OPEN_PATH;
     Movement* pacman = entity->pacman->move;
 
 
 
-    process_ghost_collision(entity, ticks);
+    process_ghost_collision(entity);
 
     collision_type = check_wall_collision(pacman);
     handle_pacman_collision(collision_type, entity);

@@ -86,7 +86,6 @@ void render_frame(ULONG32* base, Entities* entity) {
     render_ghosts(base, entity);
     render_pacman(base, pacman);
 
-
 /*
     render_pellet(base8, crying);
     render_pellet(base8, moustache);
@@ -185,7 +184,6 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     } else {
         render_non_default_ghost(base32, cyclops_g);
     }
-    
 }
 /*************************************************************
 * Function: de_render_ghost

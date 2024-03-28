@@ -237,13 +237,19 @@ int main()
             Super(old_ssp);
             */
 
-            update_movement(&entity, input, ticks);
+            update_movement(&entity, input);
 
             update_current_frame(&entity, ticks);   
 
             render_frame(back_buffer_ptr, &entity);
-
+            /*
+           render_pellet((UCHAR8*)base32, awkward_ghost.move->y_cell_index, awkward_ghost.move->x_cell_index, awkward_ghost.move->direction);
+            render_pellet((UCHAR8*)base32, moustache_ghost.move->y_cell_index, moustache_ghost.move->x_cell_index, moustache_ghost.move->direction);
+            render_pellet((UCHAR8*)base32, crying_ghost.move->y_cell_index, crying_ghost.move->x_cell_index, crying_ghost.move->direction);
+            render_pellet((UCHAR8*)base32, cyclops_ghost.move->y_cell_index, cyclops_ghost.move->x_cell_index, cyclops_ghost.move->direction);
+*/
             swap_buffers(&base32, &back_buffer_ptr);
+
             /*Setscreen(-1,base32,-1); */
             old_ssp = Super(0);
             set_video_base(base32);
@@ -295,10 +301,10 @@ void update_entities() {
  * 
  * Parameters: entity, input, ticks
  ******************************************************************/
-void update_movement(Entities* entity, char input, UINT16 ticks) {
+void update_movement(Entities* entity, char input) {
 
     set_input(entity->pacman,input);
-    handle_collisions(entity, ticks);   
+    handle_collisions(entity);   
     update_entities();
     update_cells(entity);
     eat_pellet(entity->pacman->move);

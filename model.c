@@ -56,6 +56,11 @@ void move_ghost (Ghost *ghost)
 {
     Movement* ghost_movement = ghost->move;
 	UCHAR8 direction = ghost->move->direction;
+    UINT16 x_cell_index = ghost->move->x_cell_index;
+    UINT16 y_cell_index = ghost->move->y_cell_index;
+
+    UINT16 old_x = ghost_movement->x;
+    UINT16 old_y = ghost_movement->y;
 
     if (ghost->state == DEAD)
     {
@@ -94,6 +99,16 @@ void move_ghost (Ghost *ghost)
         if (ghost->state == RUNNING) {
             ghost_movement-> x += (ghost_movement->delta_x << 1);
             ghost_movement-> y += (ghost_movement->delta_y << 1);
+            if ((ghost_movement->x >> 4) != (old_x >> 4)) {
+                ghost_movement->x -= ghost_movement->delta_x;
+                align_axis(ghost_movement);
+                return;
+            }
+            if ((ghost_movement->y >> 4) != (old_y >> 4)) {
+                ghost_movement->y -= ghost_movement->delta_y;
+                align_axis(ghost_movement);
+                return;
+            }
             
         } else {
             ghost_movement-> x += ghost_movement->delta_x;
@@ -121,7 +136,6 @@ void move_ghost (Ghost *ghost)
 ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x_index, int y_delta, int x_delta,
                            ObjectType curr_type)
 {  
-    
 /*
     ObjectType collision = OPEN_PATH;
     int i;
@@ -171,7 +185,6 @@ ObjectType check_wall_collision(Movement* entity) {
     int y_delta = entity->delta_y;
     int x_delta = entity->delta_x;
 
-
     if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
         if ((entity->direction == UP || entity->direction == DOWN)) {
             effective_y_position = entity->y - COLLISION_THRESHOLD;
@@ -184,6 +197,31 @@ ObjectType check_wall_collision(Movement* entity) {
                 return WALL;  
         }
     }
+/*
+       if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
+        if ((entity->direction == UP || entity->direction == DOWN)) {
+            if (entity->direction == UP) {
+                effective_x_position = entity->x + COLLISION_THRESHOLD;
+            }
+            else {
+                effective_y_position = entity->y - COLLISION_THRESHOLD;
+            }
+            if (effective_y_position <= (UINT16)cell_map[object_y_index][object_x_index].y_position)
+                return WALL;
+        }
+        if ((entity->direction == LEFT || entity->direction == RIGHT)) {
+            if (entity->direction == LEFT) {
+                effective_y_position = entity->y + COLLISION_THRESHOLD;
+            }
+            else {
+                effective_x_position = entity->x - COLLISION_THRESHOLD;
+            }
+            if (effective_x_position <= (UINT16)cell_map[object_y_index][object_x_index].x_position)
+                return WALL;  
+        }
+    }
+    */
+
     return OPEN_PATH;
 }
 /***************************************************
@@ -233,7 +271,7 @@ void check_proximity(Entities* all) {
             change_pacman_state(all->pacman, EVIL); 
             change_ghost_state(ghosts[i], RUNNING); 
         }
-        else if (x_distance >= 5 && y_distance >= 5){
+        else if (x_distance > 8 || y_distance > 8){
             change_ghost_state(ghosts[i], DEFAULT);
         }
     }
@@ -395,15 +433,24 @@ bool update_cell(Movement* entity, UCHAR8 state) {
     entity->y_cell_index = (entity->y >> 4) - 1;
     set_occupied(TRUE, y_index, x_index);
 
+/*
     if ((entity->x & 15) == 0 || (entity->y & 15 )== 0) {
+        if (entity->direction == LEFT) {
+            if (cell_map[y_index][x_index].can_go_left == FALSE) {
+                (entity->x_cell_index)++;
+                return TRUE;
+            }
+        }
+        if ( entity->direction == UP) {
+            
+        }
         return TRUE;     
     }
-/*
 
+    */
     if (((entity->x + entity->delta_x) & 15) == 0 || ((entity->y + entity->delta_y) & 15) == 0) {
         return TRUE;     
     }
-    */
 
     return FALSE;
 }
@@ -595,7 +642,7 @@ bool check_valid_path(Movement* movement, UCHAR8 direction) {
             return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left;
         case RIGHT:
             return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right;
-            
+        
         /*
         case UP:
             return cell_map[movement->y_cell_index-1][movement->x_cell_index].open_path;
