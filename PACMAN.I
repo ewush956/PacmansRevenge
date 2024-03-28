@@ -1092,90 +1092,6 @@ extern int seconds;
 # 1 "C:/c68/include/linea.h" 1
 # 18 "pacman.c" 2
 # 62 "pacman.c"
-Movement pacman_movement = {
-        16  * 19, 16  * 21 + 16 ,
-        0,0,
-        ((UCHAR8)0) ,
-        21,19,
-        16  * 19, 16  * 21 + 16 ,
-        16  * 19, 16  * 21 + 16 ,
-        0 
-};
-Pacman pacman = {
-    0,
-    ((UCHAR8)0) ,
-    PACMAN,
-    &pacman_movement
-};
-# 83 "pacman.c"
-Movement crying_ghost_movement = {
-        16  * 17, 16  * 10 + 16 ,
-        0,0,
-        ((UCHAR8)3) ,
-        10, 17,
-        16  * 17, 16  * 10 + 16 ,
-        16  * 17, 16  * 10 + 16 ,
-        0 
-};
-Ghost crying_ghost = {
-    0,
-    ((UCHAR8)0) ,
-    GHOST_TYPE_CRYING,
-    0 ,
-    &crying_ghost_movement
-};
-# 106 "pacman.c"
-Movement cyclops_ghost_movement = {
-        16  * 17, 16  * 12 + 16 ,
-        0,0,
-        ((UCHAR8)2) ,
-        12, 17,
-        16  * 17, 16  * 12 + 16 ,
-        16  * 17, 16  * 12 + 16 ,
-        0 
-};
-Ghost cyclops_ghost = {
-    0,
-    ((UCHAR8)0) ,
-    GHOST_TYPE_CYCLOPS,
-    0 ,
-    &cyclops_ghost_movement
-};
-# 128 "pacman.c"
-Movement moustache_ghost_movement = {
-        16  * 21, 16  * 10 + 16 ,
-        0,0,
-        ((UCHAR8)2) ,
-        10, 21,
-        16  * 21, 16  * 10 + 16 ,
-        16  * 21, 16  * 10 + 16 ,
-        0 
-};
-Ghost moustache_ghost = {
-    0,
-    ((UCHAR8)0) ,
-    GHOST_TYPE_MOUSTACHE,
-    0 ,
-    &moustache_ghost_movement
-};
-# 151 "pacman.c"
-Movement awkward_ghost_movement = {
-        16  * 21, 16  * 12 + 16 ,
-        0,0,
-        ((UCHAR8)2) ,
-        12, 21,
-        16  * 21, 16  * 12 + 16 ,
-        16  * 21, 16  * 12 + 16 ,
-        0 
-};
-Ghost awkward_ghost = {
-    0,
-    ((UCHAR8)0) ,
-    GHOST_TYPE_AWKWARD,
-    0 ,
-    &awkward_ghost_movement
-};
-# 173 "pacman.c"
 Timer timer = {
     0,0,
     20, 28, 44, 52
@@ -1188,13 +1104,6 @@ volatile UCHAR8* ptr_to_lowbyte = 0xFF8203 ;
 
 
 
- Entities entity = {
-        &pacman,
-        &crying_ghost,
-        &awkward_ghost,
-        &moustache_ghost,
-        &cyclops_ghost,
-    };
 
 
 int main()
@@ -1244,16 +1153,9 @@ int main()
 	    }
         set_input(entity.pacman,input);
 
-
-
         if (request_to_render == -1 )
         {
-# 252 "pacman.c"
-            update_movement(&entity,ticks);
-            update_current_frame(&entity, ticks);
-
-
-
+# 131 "pacman.c"
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
 
@@ -1300,7 +1202,7 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 309 "pacman.c"
+# 183 "pacman.c"
 void update_movement(Entities* entity,   UINT16 ticks) {
 
 
@@ -1313,7 +1215,7 @@ void update_movement(Entities* entity,   UINT16 ticks) {
 
 
 }
-# 327 "pacman.c"
+# 201 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
 
 
@@ -1332,7 +1234,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
     return new_state;
 
 }
-# 352 "pacman.c"
+# 226 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1399,7 +1301,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
         if (*intro_duration_ptr > 44) {
 
             time_elapsed = time_now - time_then;
-# 432 "pacman.c"
+# 306 "pacman.c"
             first_frames++;
         }
     }
@@ -1607,7 +1509,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 645 "pacman.c"
+# 519 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;

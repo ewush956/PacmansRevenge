@@ -34,27 +34,8 @@ void do_vbl()
     char input;
     ticks++;
 
-    /*
-    if (seconds > 8 && cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index].has_pellet)
-    {
-        if (is_waka_playing == FALSE)
-        {   
-            /* (mask interrupts before this plays and unmask them after the end of the sound)
-            play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
-            play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
-            is_waka_playing = TRUE;
-        } 
-        else   
-        {
-            is_waka_playing = FALSE;
-        }
-    }*/
-    
-    /*
-    input = get_input();
-    */
-
-   if ( seconds > 8 && request_to_render == TRUE)
+   
+   if ( seconds > 7 && request_to_render == TRUE)
    {
        if (cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index - 1].has_pellet == TRUE ||
             cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index + 1].has_pellet == TRUE ||
@@ -69,10 +50,10 @@ void do_vbl()
             stop_sound();
         }
        
-           /*
+           
         update_movement(&entity, ticks);
         update_current_frame(&entity, ticks);
-        */
+        
    }
 
     if (ticks == 70){
