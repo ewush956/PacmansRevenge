@@ -15,8 +15,12 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
 void render_non_default_ghost(ULONG32* base32, Ghost* ghost);
 void refresh_screen(ULONG32* base32, Entities* entity);
 void render_initial_timer(UCHAR8* base);
-void render_pellet(UCHAR8* base8, Movement* move);
+/*void render_pellet(UCHAR8* base8, Movement* move);*/
 void clear_pacman(ULONG32* base32, Movement* move);
+void render_pellets(ULONG32* base32, Entities* all);
+void render_pellet(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, UCHAR8 direction);
+
+
 
 
 

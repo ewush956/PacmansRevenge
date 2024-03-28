@@ -1,4 +1,3 @@
-
 ; ------------ QUICK CLEAR FROM LAB -------------
 
 ; quick clear (uses movem to reduce fetch-execute cycle overhead)
@@ -11,7 +10,7 @@
 
 base		equ		64		; offset from SP, not A6
 _clear_screen_q:	movem.l		d0-7/a0-6,-(sp)
-		lea			zeros,a0
+		lea		zeros,a0
 		movem.l		(a0)+,d1-7/a1-6
 		movea.l		base(sp),a0
 		adda.l		#32000,a0
@@ -33,7 +32,7 @@ _set_video_base:
 		movem.l	d0-7/a0-6,-(sp)
 		move.l	base_value(a6),a1
 		move.l	a1,d0
-		lsr.l	#8,d0				;remove loe bytes
+		lsr.l	#8,d0			
 		lea VIDEO_ADDR_HIGH,a2
 		movep.w d0,(a2)
 		movem.l	(sp)+,d0-7/a0-6

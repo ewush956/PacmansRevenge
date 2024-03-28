@@ -168,6 +168,13 @@ void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* 
  * @param base pointer to the base adress of the frame buffer
  * @param bitmap array of longs containing the bitmap data
  */
-void plot_screen(ULONG32* base, const ULONG32* bitmap) {
+void plot_screen(ULONG32* base, const ULONG32 bitmap[]) {
+    int i, j, index = 0;
+    for (i = 0; i < 400; i++) {
+        for (j = 0; j < 20; j++) {
+            *(base + j + (i*20)) = bitmap[index];
+            index++;
+        }
+    }
     return;
 }

@@ -56,19 +56,17 @@ void move_ghost (Ghost *ghost)
 {
     Movement* ghost_movement = ghost->move;
 	UCHAR8 direction = ghost->move->direction;
+    UINT16 x_cell_index = ghost->move->x_cell_index;
+    UINT16 y_cell_index = ghost->move->y_cell_index;
 
-	/*ghost -> delta_x = 0;
-	ghost -> delta_y = 0;
-    */
-	/*
-	if (ghost -> move ->x > SCREEN_WIDTH - MAP_PIXEL_LENGTH && ghost -> move-> x < MAP_PIXEL_LENGTH
-		&& ghost -> move -> y + Y_PIXEL_OFFSET > SCREEN_HEIGHT - MAP_PIXEL_HEIGHT && ghost -> move-> y < MAP_PIXEL_HEIGHT) 
-	{
-	*/
+    UINT16 old_x = ghost_movement->x;
+    UINT16 old_y = ghost_movement->y;
+
     if (ghost->state == DEAD)
     {
         return;
     }
+    
 		switch(direction)
 		{
 			case UP:
@@ -91,15 +89,32 @@ void move_ghost (Ghost *ghost)
 				ghost_movement->delta_y = 0;
 				break;
 		}
-        align_axis(ghost_movement);
+        
         ghost_movement->last_last_x = ghost_movement->last_x;
         ghost_movement->last_last_y = ghost_movement->last_y;
         
         ghost_movement->last_x = ghost_movement->x;
         ghost_movement->last_y = ghost_movement->y;
 
-        ghost_movement-> x += ghost_movement->delta_x;
-        ghost_movement-> y += ghost_movement->delta_y;
+        if (ghost->state == RUNNING) {
+            ghost_movement-> x += (ghost_movement->delta_x << 1);
+            ghost_movement-> y += (ghost_movement->delta_y << 1);
+            if ((ghost_movement->x >> 4) != (old_x >> 4)) {
+                ghost_movement->x -= ghost_movement->delta_x;
+                align_axis(ghost_movement);
+                return;
+            }
+            if ((ghost_movement->y >> 4) != (old_y >> 4)) {
+                ghost_movement->y -= ghost_movement->delta_y;
+                align_axis(ghost_movement);
+                return;
+            }
+            
+        } else {
+            ghost_movement-> x += ghost_movement->delta_x;
+            ghost_movement-> y += ghost_movement->delta_y;
+        }
+        align_axis(ghost_movement);
     
 
 }
@@ -121,10 +136,9 @@ void move_ghost (Ghost *ghost)
 ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x_index, int y_delta, int x_delta,
                            ObjectType curr_type)
 {  
-    
+/*
     ObjectType collision = OPEN_PATH;
     int i;
-
 
     Ghost *all_ghosts[4];
     all_ghosts[0] = all->crying_ghost;
@@ -140,11 +154,12 @@ ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x
                 all_ghosts[i]->move->y_cell_index == object_y_index + y_delta) ||
                 (all_ghosts[i]->move->x_cell_index == object_x_index && 
                 all_ghosts[i]->move->y_cell_index == object_y_index))
+
                 collision = all_ghosts[i]->type;
         }
     }
     return collision;
-    
+    */
 }    
 /*************************************************************
  * Function: check_pacman_collision
@@ -170,7 +185,6 @@ ObjectType check_wall_collision(Movement* entity) {
     int y_delta = entity->delta_y;
     int x_delta = entity->delta_x;
 
-
     if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
         if ((entity->direction == UP || entity->direction == DOWN)) {
             effective_y_position = entity->y - COLLISION_THRESHOLD;
@@ -183,6 +197,31 @@ ObjectType check_wall_collision(Movement* entity) {
                 return WALL;  
         }
     }
+/*
+       if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
+        if ((entity->direction == UP || entity->direction == DOWN)) {
+            if (entity->direction == UP) {
+                effective_x_position = entity->x + COLLISION_THRESHOLD;
+            }
+            else {
+                effective_y_position = entity->y - COLLISION_THRESHOLD;
+            }
+            if (effective_y_position <= (UINT16)cell_map[object_y_index][object_x_index].y_position)
+                return WALL;
+        }
+        if ((entity->direction == LEFT || entity->direction == RIGHT)) {
+            if (entity->direction == LEFT) {
+                effective_y_position = entity->y + COLLISION_THRESHOLD;
+            }
+            else {
+                effective_x_position = entity->x - COLLISION_THRESHOLD;
+            }
+            if (effective_x_position <= (UINT16)cell_map[object_y_index][object_x_index].x_position)
+                return WALL;  
+        }
+    }
+    */
+
     return OPEN_PATH;
 }
 /***************************************************
@@ -232,7 +271,7 @@ void check_proximity(Entities* all) {
             change_pacman_state(all->pacman, EVIL); 
             change_ghost_state(ghosts[i], RUNNING); 
         }
-        else {
+        else if (x_distance > 8 || y_distance > 8){
             change_ghost_state(ghosts[i], DEFAULT);
         }
     }
@@ -249,10 +288,14 @@ void change_pacman_state(Pacman* pacman, UCHAR8 new_state) {
     pacman->state = new_state;
 }
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
+    if (ghost->state == DEAD) {
+        return;
+    }
     ghost->state = new_state;
 }
 void end_game() {
-    
+
+    /*printf("GAME OVER\n");*/
 }
 
 /*************************************************************
@@ -276,6 +319,53 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
             } else {
                 cell_map[i][j].open_path = FALSE;
                 cell_map[i][j].has_pellet = FALSE;
+            }
+            if (i < (MAP_PIXEL_HEIGHT - 1) && (tile_map[i+1][j] == 0)) {
+                cell_map[i][j].can_go_down = TRUE;
+            } else {
+                cell_map[i][j].can_go_down = FALSE;
+            }
+
+            if (j < (MAP_PIXEL_LENGTH - 1) && (tile_map[i][j+1] == 0)) {
+                cell_map[i][j].can_go_right = TRUE;
+            } else {
+                cell_map[i][j].can_go_right = FALSE;
+            }
+
+            if (tile_map[i-1][j] == 0 && i > 0) {
+                cell_map[i][j].can_go_up = TRUE;
+            } else {
+                cell_map[i][j].can_go_up = FALSE;
+            }
+
+            if (tile_map[i][j-1] == 0 && j > 0) {
+                cell_map[i][j].can_go_left = TRUE;
+            } else {
+                cell_map[i][j].can_go_left = FALSE;
+            }
+            switch (direction_map[i][j]) {
+                case '^': cell_map[i][j].path = UP;         break;
+                case 'v': cell_map[i][j].path = DOWN;       break;
+                case '<': cell_map[i][j].path = LEFT;       break;
+                case '>': cell_map[i][j].path = RIGHT;      break;
+            }
+            switch (direction_map2[i][j]) {
+                case '^': cell_map[i][j].alt_path = UP;     break;
+                case 'v': cell_map[i][j].alt_path = DOWN;   break;
+                case '<': cell_map[i][j].alt_path = LEFT;   break;
+                case '>': cell_map[i][j].alt_path = RIGHT;  break;
+            }
+            switch (direction_map3[i][j]) {
+                case '^': cell_map[i][j].alt_path2 = UP;    break;
+                case 'v': cell_map[i][j].alt_path2 = DOWN;  break;
+                case '<': cell_map[i][j].alt_path2 = LEFT;  break;
+                case '>': cell_map[i][j].alt_path2 = RIGHT; break;
+            }
+            switch (direction_map4[i][j]) {
+                case '^': cell_map[i][j].alt_path3 = UP;    break;
+                case 'v': cell_map[i][j].alt_path3 = DOWN;  break;
+                case '<': cell_map[i][j].alt_path3 = LEFT;  break;
+                case '>': cell_map[i][j].alt_path3 = RIGHT; break;
             }
         }
     }
@@ -309,28 +399,269 @@ void update_cells(Entities* all) {
     Ghost* cyclops = all->cyclops_ghost;
     Ghost* awkward = all->awkward_ghost;
     
-
-    /*Pacmans state doesn't matter here, probably faster to pass in const value*/
-    update_cell(awkward->move, awkward->state);
-    update_cell(moustache->move, moustache->state);
-    update_cell(crying->move, crying->state);
-    update_cell(cyclops->move, cyclops->state);
+    if (update_cell(awkward->move, awkward->state) == TRUE) {
+        update_ghost_direction(awkward, pacman);
+    }
+    if (update_cell(moustache->move, moustache->state) == TRUE) {
+        update_ghost_direction(moustache, pacman);
+    }
+    if (update_cell(crying->move, crying->state) == TRUE) {
+        update_ghost_direction(crying, pacman);
+    }
+    if (update_cell(cyclops->move, cyclops->state) == TRUE) {
+        update_ghost_direction(cyclops, pacman);
+    }
 
     update_cell(pacman->move, DEFAULT);
 
 }
-void update_cell(Movement* entity, UCHAR8 state) {
+/*Returns true if entity has entered a new cell*/
+bool update_cell(Movement* entity, UCHAR8 state) {
 
     int x_index = entity->x_cell_index;
     int y_index = entity->y_cell_index;
 
     set_occupied(FALSE, y_index, x_index);
     if (state == DEAD) {
-        return;
+        return FALSE;
     }
     entity->x_cell_index = entity->x >> 4; 
     entity->y_cell_index = (entity->y >> 4) - 1;
     set_occupied(TRUE, y_index, x_index);
+
+/*
+    if ((entity->x & 15) == 0 || (entity->y & 15 )== 0) {
+        if (entity->direction == LEFT) {
+            if (cell_map[y_index][x_index].can_go_left == FALSE) {
+                (entity->x_cell_index)++;
+                return TRUE;
+            }
+        }
+        if ( entity->direction == UP) {
+            
+        }
+        return TRUE;     
+    }
+
+    */
+    if (((entity->x + entity->delta_x) & 15) == 0 || ((entity->y + entity->delta_y) & 15) == 0) {
+        return TRUE;     
+    }
+
+    return FALSE;
+}
+void update_ghost_direction(Ghost* ghost, Pacman* pacman) 
+{
+    Movement* ghost_movement = ghost->move;
+    Movement* pacman_movement = pacman->move;
+    ObjectType ghost_type = ghost->type;
+    bool reverse = FALSE;
+    if (ghost->state == DEAD) {
+        return;
+    }
+    if (ghost->state == RUNNING) {
+        /*ghost_movement->direction = pacman_movement->direction;*/
+        switch (pacman_movement->direction) {
+            case UP:
+                if (pacman_movement->y_cell_index < ghost_movement->y_cell_index) 
+                    reverse = TRUE;
+                break;
+            case DOWN:
+                if (pacman_movement->y_cell_index > ghost_movement->y_cell_index)
+                    reverse = TRUE;
+                break;
+            case LEFT:
+                if (pacman_movement->x_cell_index < ghost_movement->x_cell_index)
+                    reverse = TRUE;
+                break;
+            case RIGHT:
+                if (pacman_movement->x_cell_index > ghost_movement->x_cell_index)
+                    reverse = TRUE;
+                break;
+        }
+        if (reverse == TRUE) {
+            flip_direction(pacman_movement);
+            if (check_valid_path(ghost_movement, pacman_movement->direction) == TRUE) {
+                ghost_movement->direction = pacman_movement->direction;
+                flip_direction(pacman_movement);
+                return;
+            }
+            flip_direction(pacman_movement);
+        }
+        else if (check_valid_path(ghost_movement, pacman_movement->direction) == TRUE )
+        {
+            ghost_movement->direction = pacman_movement->direction;
+            return;
+        }
+        ghost_movement->direction = get_optimal_direction(ghost_movement, pacman_movement);
+        return;
+
+    }
+    /*
+    if (ghost_type == GHOST_TYPE_CYCLOPS || ghost_type == GHOST_TYPE_MOUSTACHE) {
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path;
+        return;
+    }
+    ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
+*/
+    if (ghost_type == GHOST_TYPE_CRYING)
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
+    
+    else if (ghost_type == GHOST_TYPE_CYCLOPS)
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path;
+    
+    else if (ghost_type == GHOST_TYPE_MOUSTACHE)
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path2;
+    
+    else
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path3;
+}
+
+UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
+    UINT16 x = movement->x;
+    UINT16 y = movement->y;
+
+    UINT16 pac_x = pacman_movement->x;
+    UINT16 pac_y = pacman_movement->y;
+
+    switch (movement->direction) {
+        case UP:
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up == TRUE) {
+                return UP;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left == TRUE) {
+                return LEFT;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) {
+                return RIGHT;
+            }
+            return DOWN;
+        case DOWN:
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down == TRUE) {
+                return DOWN;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) {
+                return RIGHT;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left == TRUE) {
+                return LEFT;
+            }
+            return UP;
+        case LEFT:
+            
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left == TRUE) {
+                return LEFT;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up == TRUE) {
+                if (y > MIDDLE_OF_SCREEN_Y)
+                    return UP;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down == TRUE) {
+                return DOWN;
+            }
+            return RIGHT;
+        case RIGHT:
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) {
+                return RIGHT;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down == TRUE) {
+                if (y < MIDDLE_OF_SCREEN_Y) 
+                    return DOWN;
+            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up == TRUE) {
+                return UP;
+            }
+            return LEFT;
+    }
+}
+
+/*
+UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
+    UCHAR8 optimal_direction;
+    UINT16 ghost_x, ghost_y, pacman_x, pacman_y;
+    bool can_go_up, can_go_down, can_go_left, can_go_right;
+
+    ghost_x = movement->x;
+    ghost_y = movement->y;
+    pacman_x = pacman_movement->x;
+    pacman_y = pacman_movement->y;
+    can_go_up = cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up;
+    can_go_down = cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down;
+    can_go_left = cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left;
+    can_go_right = cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right;
+
+    if (movement->direction == UP) {
+        if (ghost_y > pacman_y && (can_go_up == TRUE)) {
+            optimal_direction = UP;
+        } else {
+            optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, DOWN);
+        }
+    } else if (movement->direction == DOWN) {
+        if (ghost_y < pacman_y && (can_go_down == TRUE)) {
+            optimal_direction = DOWN;
+        } else {
+            optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, UP);
+        }
+    } else if (movement->direction == LEFT) {
+        if (ghost_x > pacman_x && (can_go_left == TRUE)) {
+            optimal_direction = LEFT;
+        } else {
+            optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, RIGHT);
+        }
+    } else if (movement->direction == RIGHT) {
+        if (ghost_x < pacman_x && (can_go_right == TRUE)) {
+            optimal_direction = RIGHT;
+        } else {
+            optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, LEFT);
+        }
+    } else {
+        optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, movement->direction);
+    }
+
+    return optimal_direction;
+}
+UCHAR8 get_alternate_direction(bool can_go_up, bool can_go_down, bool can_go_left, bool can_go_right, 
+                               UINT16 ghost_x, UINT16 ghost_y, UINT16 pacman_x, UINT16 pacman_y) {
+    if (ghost_y > pacman_y && can_go_down == TRUE) {
+        return DOWN;
+    } else if (ghost_y < pacman_y && can_go_up == TRUE) {
+        return UP;
+    } else if (ghost_x > pacman_x && can_go_right == TRUE) {
+        return RIGHT;
+    } else if (ghost_x < pacman_x && can_go_left == TRUE) {
+        return LEFT;
+    }
+
+    if (can_go_up == TRUE) return UP;
+    if (can_go_down == TRUE) return DOWN;
+    if (can_go_left == TRUE) return LEFT;
+    if (can_go_right == TRUE) return RIGHT;
+
+}
+*/
+bool check_valid_path(Movement* movement, UCHAR8 direction) {
+    switch (direction) {
+        
+        case UP:
+            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up;
+        case DOWN:
+            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down;
+        case LEFT:
+            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left;
+        case RIGHT:
+            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right;
+        
+        /*
+        case UP:
+            return cell_map[movement->y_cell_index-1][movement->x_cell_index].open_path;
+        case DOWN:
+            return cell_map[movement->y_cell_index+1][movement->x_cell_index].open_path;
+        case LEFT:
+            return cell_map[movement->y_cell_index][movement->x_cell_index-1].open_path;
+        case RIGHT:
+            return cell_map[movement->y_cell_index][movement->x_cell_index+1].open_path;
+        */
+    }
 }
 void set_occupied(bool set, int y_index, int x_index) {
     cell_map[y_index][x_index].occupied = set;
@@ -414,6 +745,16 @@ void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell
 
     cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
     cell_map[y_cell_index+1][x_cell_index+1].has_pellet = FALSE;
+
+    cell_map[y_cell_index-1][x_cell_index].open_path = FALSE;
+    cell_map[y_cell_index-1][x_cell_index].has_pellet = FALSE;
+
+    cell_map[y_cell_index-1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index-1][x_cell_index+1].has_pellet = FALSE;
+
+    cell_map[y_cell_index][x_cell_index-1].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index-1].has_pellet = FALSE;
+
 }
 void align_axis(Movement* entity) {
 
@@ -425,6 +766,9 @@ void align_axis(Movement* entity) {
         }
 }
 void flip_direction(Movement* ghost) {
+    if (ghost->delta_x == 0 && ghost->delta_y == 0) {
+        return;
+    }
     if (ghost->direction == UP)
         ghost->direction = DOWN;
 
