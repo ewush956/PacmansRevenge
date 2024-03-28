@@ -105,12 +105,12 @@ _handle_wall_collision:
 	;line	94
 	clr.w	d0
 	move.b	9(a3),d0
-	mulu	#560,d0
+	mulu	#640,d0
 	move.l	d0,a0
 	add.l	#_cell_map,a0
-	clr.w	d0
+	clr.l	d0
 	move.b	10(a3),d0
-	mulu	#14,d0
+	asl.l	#4,d0
 	add.l	d0,a0
 	move.b	11(a0),d0
 	sub.b	#0,d0
@@ -387,13 +387,13 @@ _get_valid_paths:
 	move.l	8(a6),a3
 	moveq	#-1,d4
 	lea	_cell_map,a4
-	move.l	#560,d5
+	move.l	#640,d5
 	;line	280
 	moveq	#0,d3
 	;line	280
-	clr.w	d0
+	clr.l	d0
 	move.b	10(a3),d0
-	mulu	#14,d0
+	asl.l	#4,d0
 	move.l	d0,a0
 	move.l	a0,-(a7)
 	move.l	d5,-(a7)
@@ -414,9 +414,9 @@ _get_valid_paths:
 	addq.b	#1,d3
 L31:
 	;line	282
-	clr.w	d0
+	clr.l	d0
 	move.b	10(a3),d0
-	mulu	#14,d0
+	asl.l	#4,d0
 	move.l	d0,a0
 	move.l	a0,-(a7)
 	move.l	d5,-(a7)
@@ -437,11 +437,11 @@ L31:
 	addq.b	#1,d3
 L32:
 	;line	284
-	moveq	#14,d0
-	clr.w	d1
-	move.b	10(a3),d1
-	subq.w	#1,d1
-	muls	d1,d0
+	clr.w	d0
+	move.b	10(a3),d0
+	subq.w	#1,d0
+	ext.l	d0
+	asl.l	#4,d0
 	move.l	d0,a0
 	move.l	a0,-(a7)
 	move.l	d5,-(a7)
@@ -460,11 +460,11 @@ L32:
 	addq.b	#1,d3
 L33:
 	;line	286
-	moveq	#14,d0
-	clr.w	d1
-	move.b	10(a3),d1
-	addq.w	#1,d1
-	muls	d1,d0
+	clr.w	d0
+	move.b	10(a3),d0
+	addq.w	#1,d0
+	ext.l	d0
+	asl.l	#4,d0
 	move.l	d0,a0
 	move.l	a0,-(a7)
 	move.l	d5,-(a7)
@@ -491,18 +491,17 @@ L35:
 _eat_pellet:
 	link	a6,#0
 	;line	291
-	move.w	#560,d0
+	move.w	#640,d0
 	move.l	8(a6),a0
 	clr.w	d1
 	move.b	9(a0),d1
 	mulu	d1,d0
 	move.l	d0,a0
 	add.l	#_cell_map,a0
-	moveq	#14,d0
 	move.l	8(a6),a1
-	clr.w	d1
-	move.b	10(a1),d1
-	mulu	d1,d0
+	clr.l	d0
+	move.b	10(a1),d0
+	asl.l	#4,d0
 	add.l	d0,a0
 	clr.b	6(a0)
 	unlk	a6

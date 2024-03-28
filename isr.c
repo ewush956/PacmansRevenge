@@ -33,7 +33,7 @@ void do_vbl()
     char input;
     ticks++;
 
-   if ( seconds > 7 && request_to_render == TRUE)
+   if ( seconds > 8 && request_to_render == TRUE)
    {
        if (cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index - 1].has_pellet == TRUE ||
             cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index + 1].has_pellet == TRUE ||

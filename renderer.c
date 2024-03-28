@@ -68,7 +68,7 @@ void render_frame(ULONG32* base, Entities* entity) {
     int awkward_y = awkward->y_cell_index;
     int cyclops_x = cyclops->x_cell_index;
     int cyclops_y = cyclops->y_cell_index;
-    /*
+    
 
     int crying_last_x = crying->last_last_x >> 4;
     int crying_last_y = crying->last_last_y >> 4;
@@ -78,21 +78,21 @@ void render_frame(ULONG32* base, Entities* entity) {
     int awkward_last_y = awkward->last_last_y >> 4;
     int cyclops_last_x = cyclops->last_last_x >> 4;
     int cyclops_last_y = cyclops->last_last_y >> 4;
-    */
+    
 
     clear_entities(base, pacman->move, crying, moustache,
                    awkward, cyclops); 
 
     render_ghosts(base, entity);
     render_pacman(base, pacman);
-
-/*
-    render_pellet(base8, crying);
-    render_pellet(base8, moustache);
-    render_pellet(base8, awkward);
-    render_pellet(base8, cyclops);
-    render_pellet(base8, pacman->move);
-    */
+    /*
+    render_pellet(base8, crying_last_x, crying_last_y, crying->direction);
+    render_pellet(base8, moustache_last_x, moustache_last_y, moustache->direction);
+    render_pellet(base8, awkward_last_x, awkward_last_y, awkward->direction);
+    render_pellet(base8, cyclops_last_x, cyclops_last_y, cyclops->direction);
+    render_pellet(base8, pacman->move->x_cell_index - pacman->move->delta_x, pacman->move->y_cell_index - pacman->move->delta_y, pacman->move->direction);
+    
+*/
 
     render_pellet(base8, crying_x, crying_y, crying->direction);
     render_pellet(base8, moustache_x, moustache_y, moustache->direction);
@@ -100,13 +100,7 @@ void render_frame(ULONG32* base, Entities* entity) {
     render_pellet(base8, cyclops_x, cyclops_y, cyclops->direction);
     render_pellet(base8, pacman->move->x_cell_index, pacman->move->y_cell_index, pacman->move->direction);
     
-    /*
-    render_pellet(base8, crying_last_x, crying_last_y, crying->direction);
-    render_pellet(base8, moustache_last_x, moustache_last_y, moustache->direction);
-    render_pellet(base8, awkward_last_x, awkward_last_y, awkward->direction);
-    render_pellet(base8, cyclops_last_x, cyclops_last_y, cyclops->direction);
-    render_pellet(base8, pacman->move->x_cell_index - pacman->move->delta_x, pacman->move->y_cell_index - pacman->move->delta_y, pacman->move->direction);
-*/
+
     
     /*render_timer(base, entity->timer);*/
 
@@ -173,6 +167,13 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
         render_non_default_ghost(base32, moustache_g);
     }
 
+/*
+    if (entity->crying_ghost->state == DEFAULT) {
+        plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->direction][crying_g->current_frame], SPRITE_HEIGHT);
+    } else {
+        render_non_default_ghost(base32, crying_g);
+    }
+*/
     if (entity->crying_ghost->state == DEFAULT) {
         plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->direction][crying_g->current_frame], SPRITE_HEIGHT);
     } else {
@@ -317,15 +318,20 @@ void render_pellet(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, UCHA
         
     }
     else if (direction == UP) {
-        if (cell_map[y_cell_index + 2][x_cell_index].has_pellet == TRUE) {
+        if (cell_map[y_cell_index + 2][x_cell_index].has_pellet == TRUE) 
             plot_8(base8, pellet_plot_x, pellet_plot_y + 32, pellet, 8);
-        }
-        if (cell_map[y_cell_index + 2][x_cell_index + 1].has_pellet == TRUE) {
+
+        if (cell_map[y_cell_index + 2][x_cell_index + 1].has_pellet == TRUE) 
             plot_8(base8, pellet_plot_x + 16, pellet_plot_y + 32, pellet, 8);
-        }
-        if (cell_map[y_cell_index + 2][x_cell_index - 1].has_pellet == TRUE) {
+
+        if (cell_map[y_cell_index + 2][x_cell_index - 1].has_pellet == TRUE) 
             plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 32, pellet, 8);
-        }
+
+        if (cell_map[y_cell_index + 3][x_cell_index - 1].has_pellet == TRUE)
+            plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 48, pellet, 8);
+
+        if (cell_map[y_cell_index + 3][x_cell_index + 1].has_pellet == TRUE)
+            plot_8(base8, pellet_plot_x + 16, pellet_plot_y + 48, pellet, 8);        
     }
     
 }

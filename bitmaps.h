@@ -103,7 +103,9 @@ extern const ULONG32* wall_map[][20];
 
 
 extern UCHAR8 direction_map[][MAP_TILE_LENGTH];
-extern UINT16 direction_map2[][MAP_TILE_LENGTH];
+extern UCHAR8 direction_map2[][MAP_TILE_LENGTH];
+extern UCHAR8 direction_map3[][MAP_TILE_LENGTH];
+extern UCHAR8 direction_map4[][MAP_TILE_LENGTH];
 
 extern UINT16 tile_map[][MAP_TILE_LENGTH];
 

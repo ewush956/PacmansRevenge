@@ -109,14 +109,9 @@ int main()
         set_input(entity.pacman, input);  
         if (request_to_render == TRUE) 
         {
-/*
-            update_movement(&entity);
-            update_current_frame(&entity, ticks);   
-            */
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
 
-            /*set_video_base(base32);*/
             request_to_render = FALSE; 
             
             old_ssp = Super(0);
@@ -297,7 +292,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
 
     /*ULONG32 time_then = get_time(), */
     ULONG32 song_now, song_then, time_elapsed;    /**/
-    ULONG32 time_then = time_now;
+    /*ULONG32 time_then = time_now;*/
     long old_ssp; 
     int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
     int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
@@ -323,6 +318,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
         if (*intro_duration_ptr > 44) {
+            /*time_elapsed = time_now - time_then;*/
             
             if (first_frames > FIRST_STOP - 1) {
                 stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
@@ -332,14 +328,14 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
             if (stop_ghosts == FALSE && time_elapsed > 0) {
                 manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
                 swap_buffers(&base32, &back_buffer_ptr);
+
+                request_to_render = FALSE; 
+
                 old_ssp = Super(0);
                 set_video_base(base32);  
                 Super(old_ssp);
 
-                request_to_render = FALSE; 
-
-
-                time_then = time_now;
+                /*time_then = time_now;*/
             }
             
             first_frames++;

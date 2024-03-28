@@ -344,32 +344,28 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
                 cell_map[i][j].can_go_left = FALSE;
             }
             switch (direction_map[i][j]) {
-                case '^':
-                    cell_map[i][j].path = UP;
-                    break;
-                case 'v':
-                    cell_map[i][j].path = DOWN;
-                    break;
-                case '<':
-                    cell_map[i][j].path = LEFT;
-                    break;
-                case '>':
-                    cell_map[i][j].path = RIGHT;
-                    break;
+                case '^': cell_map[i][j].path = UP;         break;
+                case 'v': cell_map[i][j].path = DOWN;       break;
+                case '<': cell_map[i][j].path = LEFT;       break;
+                case '>': cell_map[i][j].path = RIGHT;      break;
             }
             switch (direction_map2[i][j]) {
-                case '^':
-                    cell_map[i][j].alt_path = UP;
-                    break;
-                case 'v':
-                    cell_map[i][j].alt_path = DOWN;
-                    break;
-                case '<':
-                    cell_map[i][j].alt_path = LEFT;
-                    break;
-                case '>':
-                    cell_map[i][j].alt_path = RIGHT;
-                    break;
+                case '^': cell_map[i][j].alt_path = UP;     break;
+                case 'v': cell_map[i][j].alt_path = DOWN;   break;
+                case '<': cell_map[i][j].alt_path = LEFT;   break;
+                case '>': cell_map[i][j].alt_path = RIGHT;  break;
+            }
+            switch (direction_map3[i][j]) {
+                case '^': cell_map[i][j].alt_path2 = UP;    break;
+                case 'v': cell_map[i][j].alt_path2 = DOWN;  break;
+                case '<': cell_map[i][j].alt_path2 = LEFT;  break;
+                case '>': cell_map[i][j].alt_path2 = RIGHT; break;
+            }
+            switch (direction_map4[i][j]) {
+                case '^': cell_map[i][j].alt_path3 = UP;    break;
+                case 'v': cell_map[i][j].alt_path3 = DOWN;  break;
+                case '<': cell_map[i][j].alt_path3 = LEFT;  break;
+                case '>': cell_map[i][j].alt_path3 = RIGHT; break;
             }
         }
     }
@@ -501,12 +497,24 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
         return;
 
     }
+    /*
     if (ghost_type == GHOST_TYPE_CYCLOPS || ghost_type == GHOST_TYPE_MOUSTACHE) {
         ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path;
         return;
     }
     ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
-
+*/
+    if (ghost_type == GHOST_TYPE_CRYING)
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
+    
+    else if (ghost_type == GHOST_TYPE_CYCLOPS)
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path;
+    
+    else if (ghost_type == GHOST_TYPE_MOUSTACHE)
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path2;
+    
+    else
+        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path3;
 }
 
 UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {

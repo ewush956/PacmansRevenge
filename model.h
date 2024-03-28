@@ -54,6 +54,8 @@ typedef struct {
 
 	UCHAR8 path;
 	UCHAR8 alt_path;
+	UCHAR8 alt_path2;
+	UCHAR8 alt_path3;
 }Cell;
 
 
