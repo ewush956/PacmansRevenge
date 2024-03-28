@@ -14,7 +14,7 @@
 int seconds = 0;
 SoundState wakaState = {0, 0};
 SoundState wakaNoise = {0, 0};
-bool is_waka_playing = FALSE;
+/*bool is_waka_playing = FALSE; /* */
 
 Vector install_vector(int num, Vector vector)
 {
@@ -48,15 +48,28 @@ void do_vbl()
         {
             is_waka_playing = FALSE;
         }
-    }
-    */  
+    }*/
+    
     /*
     input = get_input();
     */
 
-   if (request_to_render == TRUE)
+   if ( seconds > 8 && request_to_render == TRUE)
    {
-        /*
+       if (cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index - 1].has_pellet == TRUE ||
+            cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index + 1].has_pellet == TRUE ||
+            cell_map[entity.pacman->move->y_cell_index - 1][entity.pacman->move->x_cell_index].has_pellet == TRUE ||
+            cell_map[entity.pacman->move->y_cell_index + 1][entity.pacman->move->x_cell_index].has_pellet == TRUE)
+       {
+            play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
+            play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
+        
+        } 
+        else{
+            stop_sound();
+        }
+       
+           /*
         update_movement(&entity, ticks);
         update_current_frame(&entity, ticks);
         */

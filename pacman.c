@@ -199,6 +199,7 @@ int main()
     int buffer_offset = 256 - ((long)(screen_buffer) % 256); 
     int background_offset = 256 - ((long)(background) % 256);
     long old_ssp; 
+    bool is_waka_playing = FALSE;
 
 	UCHAR8 collision_type = 0;
 	ULONG32 time_then, time_now, time_elapsed;
@@ -236,9 +237,18 @@ int main()
 
 	    }
         set_input(entity.pacman,input);
-      
+
+
+
         if (request_to_render == TRUE)
-        {   
+        {  
+            /*
+            old_ssp = Super(0); 
+            play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
+            play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
+            Super(old_ssp);
+            */ 
+        
             update_movement(&entity,ticks);         /* should not be here */
             update_current_frame(&entity, ticks);
             /*

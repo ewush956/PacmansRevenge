@@ -1205,6 +1205,7 @@ int main()
     int buffer_offset = 256 - ((long)(screen_buffer) % 256);
     int background_offset = 256 - ((long)(background) % 256);
     long old_ssp;
+    bool is_waka_playing = 0 ;
 
 	UCHAR8 collision_type = 0;
 	ULONG32 time_then, time_now, time_elapsed;
@@ -1243,8 +1244,11 @@ int main()
 	    }
         set_input(entity.pacman,input);
 
+
+
         if (request_to_render == -1 )
         {
+# 252 "pacman.c"
             update_movement(&entity,ticks);
             update_current_frame(&entity, ticks);
 
@@ -1296,7 +1300,7 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 299 "pacman.c"
+# 309 "pacman.c"
 void update_movement(Entities* entity,   UINT16 ticks) {
 
 
@@ -1309,7 +1313,7 @@ void update_movement(Entities* entity,   UINT16 ticks) {
 
 
 }
-# 317 "pacman.c"
+# 327 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
 
 
@@ -1328,7 +1332,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
     return new_state;
 
 }
-# 342 "pacman.c"
+# 352 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1395,7 +1399,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
         if (*intro_duration_ptr > 44) {
 
             time_elapsed = time_now - time_then;
-# 422 "pacman.c"
+# 432 "pacman.c"
             first_frames++;
         }
     }
@@ -1603,7 +1607,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 635 "pacman.c"
+# 645 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
