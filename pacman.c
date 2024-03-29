@@ -18,43 +18,40 @@
 #include <linea.h>
 
 /************************* KNOWN BUGS ***************************
- * 1. Sometimes 3-4 pixels will plot right around a single pellet
- *    currently cause is unknown, might be due to bounds checking 
- *    on raster function 
  * 
- * 2. Occasionally ghost movement causes half of a pellet sprite
+ * 1. Occasionally ghost movement causes half of a pellet sprite
  *    to render on either the back or the front buffer causing flickering
  * 
- * 3. Pacman cannot initially move up(very first frame only), only left or right.
- *    This is because of the input detection.
- * 
- * 4. There is still a little bit of flickering when freeing the ghosts initially
+ * 2. There is still a little bit of flickering when freeing the ghosts initially
  *    The double buffering appears to be solid in the main game loop, but it
  *    is not applied correctly in the initialize_game function.
  * 
- * 5. The screen occasionaly flashes, not sure if it's an issue with steem or not,
- *    seems to occur randomly.
- * 
- * 6. The cyclops ghost's eye is not properly centered in some of it's alternate frames
+ * 3. The cyclops ghost's eye is not properly centered in some of it's alternate frames
  *    causing the movement to look jittery. This is an issue with it's bitmap.
  * 
- ************************* STILL INCOMPLETE ***************************
-
- * 1. Games win / loose condition. Proximity checking has been added,
- *    we just need to implement the loosing / wining event
+ * 4. When killing a ghost, the event triggered "kill ghost" sound plays for
+ *    2 - 3 cycles, it's supposed to only play once. I like how it sounds though :)
  * 
- * 2. Ghosts running from pacman
+ * 5. Ghosts don't clear properly when being eaten.
  * 
- * 3. Sound for eating a ghost / no sound when not eating a pellet.
- *    (currently waka waka sound is not event triggered, 
- *    it's just played in the main loop)
+ ************************* TO DO **********************************
+ *
+ * 1. Games loose condition. Proximity checking has been added,
+ *    we just need to implement the loosing event. 
+ *  
+ *    We might be able to implement a finite state machine to check if 
+ *    pacman is stuck, or we can give an option for the player to "give up"
+ *    if they are softlocked.
+ * 
+ * 2. Add a timer to the game.
  * 
  *********************************************************************/
 
-         UCHAR8  background[BUFFER_SIZE_BYTES];
-         UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
 volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
 volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
+
+         UCHAR8  background[BUFFER_SIZE_BYTES];
+         UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
 /*******************************************************************
  * Function: initialize_game
  * Purpose: Initializes the game, manually moves the ghosts out of the center

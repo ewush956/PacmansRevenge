@@ -4,8 +4,6 @@
 #include "effects.h"
 #include <stdio.h>
 
-
-
 /*************************************************************
 * Declaration: Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH]
 * Purpose: Represents the game's map, storing the state of each
@@ -150,9 +148,9 @@ void check_proximity(Entities* all) {
     pacman_y_index = all->pacman->move->y_cell_index;
 
     for (i = 0; i < 4; i++) {
-        if (ghosts[i]->state == DEAD) {
-            continue;
-        }
+
+        if (ghosts[i]->state == DEAD) { continue; }
+
         ghost_x_index = ghosts[i]->move->x_cell_index;
         ghost_y_index = ghosts[i]->move->y_cell_index;
 
@@ -168,21 +166,18 @@ void check_proximity(Entities* all) {
             y_distance = ghost_y_index - pacman_y_index;
         }
 
-        if (x_distance <= 5 && y_distance <= 5) {
+        if (x_distance <= PROXIMITY_THRESHOLD && y_distance <= PROXIMITY_THRESHOLD) {
             ghostCountWithinRange++;
             change_pacman_state(all->pacman, EVIL); 
             change_ghost_state(ghosts[i], RUNNING); 
         }
-        else if (x_distance > 8 || y_distance > 8){
+        else if (x_distance > EXIT_PROXIMITY || y_distance > EXIT_PROXIMITY){
             change_ghost_state(ghosts[i], DEFAULT);
         }
     }
-    if (ghostCountWithinRange == 0) {
-        change_pacman_state(all->pacman, DEFAULT);
-    }
-    else if (ghostCountWithinRange >= 2) {
-        end_game();
-    }
+    if (ghostCountWithinRange == 0) { change_pacman_state(all->pacman, DEFAULT); }
+    /*else if (ghostCountWithinRange >= 2) { end_game(); } */
+    /* ^^^ we probably aren't going to do this, makes the game super annoying*/
     
 }
 
@@ -197,7 +192,6 @@ void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
 }
 void end_game() {
 
-    /*printf("GAME OVER\n");*/
 }
 
 /*************************************************************
@@ -222,7 +216,8 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
                 cell_map[i][j].open_path = FALSE;
                 cell_map[i][j].has_pellet = FALSE;
             }
-            if (i < (MAP_PIXEL_HEIGHT - 1) && (tile_map[i+1][j] == 0)) {
+            if (i < (MAP_PIXEL_HEIGHT - 1) && 
+               (tile_map[i+1][j] == 0)) {
                 cell_map[i][j].can_go_down = TRUE;
             } else {
                 cell_map[i][j].can_go_down = FALSE;

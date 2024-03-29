@@ -21,6 +21,8 @@
 #define MAP_PIXEL_HEIGHT 352    /* 11 vert walls x 32 pixels = 352   */
 
 #define PIXELS_PER_CELL  16
+#define PROXIMITY_THRESHOLD 5
+#define EXIT_PROXIMITY 8
 
 #define RUNNING ((UCHAR8)1)
 #define FROZEN ((UCHAR8)2)
@@ -135,10 +137,6 @@ void move_ghost (Ghost *ghost);
 void move_pacman (Pacman *pacman);
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
                                   UINT16 object_x_index, int y_delta, int x_delta);
-
-/*
-ObjectType process_ghost_collision(Entities* all);
-*/
 
 void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
 bool update_cell(Movement* entity, UCHAR8 state);

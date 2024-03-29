@@ -3,22 +3,7 @@
 #include "TYPES.H"
 #include "osbind.h"
 
-/*Helper function*/
-/*void write_psg(int reg, UCHAR8 val);*/
 unsigned char read_psg(int reg);
-/*
-typedef struct {
-    int frequency;
-    int duration;
-    int volume;
-}Note;
-
-typedef struct {
-    int current_note_index;
-    int note_time_left;
-}MusicState;
-*/
-
 
 /******************************************
 * Function Name: set_note_frequency
