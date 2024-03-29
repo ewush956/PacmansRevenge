@@ -31,17 +31,6 @@ void move_pacman (Pacman *pacman)
     pacman_movement->x += (pacman_movement->delta_x << 1);
     pacman_movement->y += (pacman_movement->delta_y << 1);
     align_axis(pacman_movement);
-
-    /*
-    if (pacman -> state == DEFAULT) {
-    pacman_movement->x += (pacman_movement->delta_x << 1);
-    pacman_movement->y += (pacman_movement->delta_y << 1);
-    }
-    else {
-        pacman_movement->x += (pacman_movement->delta_x << 2);
-        pacman_movement->y += (pacman_movement->delta_y << 2);
-    }
-    */
 }
 /*************************************************************
 * Function: move_ghost
@@ -62,107 +51,44 @@ void move_ghost (Ghost *ghost)
     UINT16 old_x = ghost_movement->x;
     UINT16 old_y = ghost_movement->y;
 
-    if (ghost->state == DEAD)
+    if (ghost->state == DEAD) { return; }
+    
+    switch(direction)
     {
-        return;
+        case UP:    set_deltas(ghost_movement, 0, -1); break;        
+        case DOWN:  set_deltas(ghost_movement, 0, 1); break;        
+        case RIGHT: set_deltas(ghost_movement, 1, 0); break;        
+        case LEFT:  set_deltas(ghost_movement, -1, 0); break;
     }
     
-		switch(direction)
-		{
-			case UP:
-				ghost_movement->delta_y = -1;
-				ghost_movement->delta_x = 0;
-				break;
-			
-			case DOWN:
-				ghost_movement->delta_y = 1;
-				ghost_movement->delta_x = 0;
-				break;
-			
-			case RIGHT:
-				ghost_movement->delta_x = 1;
-				ghost_movement->delta_y = 0;
-				break;
-			
-			case LEFT:
-				ghost_movement->delta_x = -1;
-				ghost_movement->delta_y = 0;
-				break;
-		}
-        
-        ghost_movement->last_last_x = ghost_movement->last_x;
-        ghost_movement->last_last_y = ghost_movement->last_y;
-        
-        ghost_movement->last_x = ghost_movement->x;
-        ghost_movement->last_y = ghost_movement->y;
-
-        if (ghost->state == RUNNING) {
-            ghost_movement-> x += (ghost_movement->delta_x << 1);
-            ghost_movement-> y += (ghost_movement->delta_y << 1);
-            if ((ghost_movement->x >> 4) != (old_x >> 4)) {
-                ghost_movement->x -= ghost_movement->delta_x;
-                align_axis(ghost_movement);
-                return;
-            }
-            if ((ghost_movement->y >> 4) != (old_y >> 4)) {
-                ghost_movement->y -= ghost_movement->delta_y;
-                align_axis(ghost_movement);
-                return;
-            }
-            
-        } else {
-            ghost_movement-> x += ghost_movement->delta_x;
-            ghost_movement-> y += ghost_movement->delta_y;
-        }
-        align_axis(ghost_movement);
+    ghost_movement->last_last_x = ghost_movement->last_x;
+    ghost_movement->last_last_y = ghost_movement->last_y;
     
+    ghost_movement->last_x = ghost_movement->x;
+    ghost_movement->last_y = ghost_movement->y;
 
+    if (ghost->state == RUNNING) {
+        ghost_movement-> x += (ghost_movement->delta_x << 1);
+        ghost_movement-> y += (ghost_movement->delta_y << 1);
+        if ((ghost_movement->x >> 4) != (old_x >> 4)) {
+            ghost_movement->x -= ghost_movement->delta_x;
+            align_axis(ghost_movement);
+            return;
+        }
+        if ((ghost_movement->y >> 4) != (old_y >> 4)) {
+            ghost_movement->y -= ghost_movement->delta_y;
+            align_axis(ghost_movement);
+            return;
+        }
+        
+    } else {
+        ghost_movement-> x += ghost_movement->delta_x;
+        ghost_movement-> y += ghost_movement->delta_y;
+    }
+    align_axis(ghost_movement);
 }
 /*************************************************************
-* Function: check_collision
-* Module: model
-* Purpose: Checks for collisions between an object and ghosts or walls.
-* Parameters: Entities* entity - Pointer to the entities structure containing ghosts,
-*             UINT16 object_y_index - Y index of the object,
-*             UINT16 object_x_index - X index of the object,
-*             UINT16 y_delta - Y direction movement delta,
-*             UINT16 x_delta - X direction movement delta.
-* Details: Determines if the specified object's next position (based on deltas)
-*          will result in a collision with either any of the ghosts or a wall.
-*          It returns WALL if a wall collision is detected, OBJECT if a collision
-*          with any ghost is detected, and 0 if no collision is detected. The function
-*          also logs the collision location for ghost collisions.
-*************************************************************/
-ObjectType check_collision(Entities* all, UINT16 object_y_index, UINT16 object_x_index, int y_delta, int x_delta,
-                           ObjectType curr_type)
-{  
-/*
-    ObjectType collision = OPEN_PATH;
-    int i;
-
-    Ghost *all_ghosts[4];
-    all_ghosts[0] = all->crying_ghost;
-    all_ghosts[1] = all->awkward_ghost;
-    all_ghosts[2] = all->cyclops_ghost;
-    all_ghosts[3] = all->moustache_ghost;
-
-    for (i = 0; i < 4; i++){
-        
-        if (all_ghosts[i]->type != curr_type) 
-        {
-            if ((all_ghosts[i]->move->x_cell_index == object_x_index + x_delta &&
-                all_ghosts[i]->move->y_cell_index == object_y_index + y_delta) ||
-                (all_ghosts[i]->move->x_cell_index == object_x_index && 
-                all_ghosts[i]->move->y_cell_index == object_y_index))
-
-                collision = all_ghosts[i]->type;
-        }
-    }
-    return collision;
-    */
-}    
-/*************************************************************
- * Function: check_pacman_collision
+ * Function: check_wall_collision
  * Module: model
  * Purpose: Checks for collisions between an object and walls.
  * Parameters: Entities* entity - Pointer to the entities structure containing
@@ -197,31 +123,6 @@ ObjectType check_wall_collision(Movement* entity) {
                 return WALL;  
         }
     }
-/*
-       if (cell_map[object_y_index + y_delta][object_x_index + x_delta].open_path == FALSE) {
-        if ((entity->direction == UP || entity->direction == DOWN)) {
-            if (entity->direction == UP) {
-                effective_x_position = entity->x + COLLISION_THRESHOLD;
-            }
-            else {
-                effective_y_position = entity->y - COLLISION_THRESHOLD;
-            }
-            if (effective_y_position <= (UINT16)cell_map[object_y_index][object_x_index].y_position)
-                return WALL;
-        }
-        if ((entity->direction == LEFT || entity->direction == RIGHT)) {
-            if (entity->direction == LEFT) {
-                effective_y_position = entity->y + COLLISION_THRESHOLD;
-            }
-            else {
-                effective_x_position = entity->x - COLLISION_THRESHOLD;
-            }
-            if (effective_x_position <= (UINT16)cell_map[object_y_index][object_x_index].x_position)
-                return WALL;  
-        }
-    }
-    */
-
     return OPEN_PATH;
 }
 /***************************************************
@@ -344,28 +245,28 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
                 cell_map[i][j].can_go_left = FALSE;
             }
             switch (direction_map[i][j]) {
-                case '^': cell_map[i][j].path = UP;         break;
-                case 'v': cell_map[i][j].path = DOWN;       break;
-                case '<': cell_map[i][j].path = LEFT;       break;
-                case '>': cell_map[i][j].path = RIGHT;      break;
+                case '^': cell_map[i][j].crying_path = UP;         break;
+                case 'v': cell_map[i][j].crying_path = DOWN;       break;
+                case '<': cell_map[i][j].crying_path = LEFT;       break;
+                case '>': cell_map[i][j].crying_path = RIGHT;      break;
             }
             switch (direction_map2[i][j]) {
-                case '^': cell_map[i][j].alt_path = UP;     break;
-                case 'v': cell_map[i][j].alt_path = DOWN;   break;
-                case '<': cell_map[i][j].alt_path = LEFT;   break;
-                case '>': cell_map[i][j].alt_path = RIGHT;  break;
+                case '^': cell_map[i][j].cyclops_path = UP;     break;
+                case 'v': cell_map[i][j].cyclops_path = DOWN;   break;
+                case '<': cell_map[i][j].cyclops_path = LEFT;   break;
+                case '>': cell_map[i][j].cyclops_path = RIGHT;  break;
             }
             switch (direction_map3[i][j]) {
-                case '^': cell_map[i][j].alt_path2 = UP;    break;
-                case 'v': cell_map[i][j].alt_path2 = DOWN;  break;
-                case '<': cell_map[i][j].alt_path2 = LEFT;  break;
-                case '>': cell_map[i][j].alt_path2 = RIGHT; break;
+                case '^': cell_map[i][j].awkward_path = UP;    break;
+                case 'v': cell_map[i][j].awkward_path = DOWN;  break;
+                case '<': cell_map[i][j].awkward_path = LEFT;  break;
+                case '>': cell_map[i][j].awkward_path = RIGHT; break;
             }
             switch (direction_map4[i][j]) {
-                case '^': cell_map[i][j].alt_path3 = UP;    break;
-                case 'v': cell_map[i][j].alt_path3 = DOWN;  break;
-                case '<': cell_map[i][j].alt_path3 = LEFT;  break;
-                case '>': cell_map[i][j].alt_path3 = RIGHT; break;
+                case '^': cell_map[i][j].moustache_path = UP;    break;
+                case 'v': cell_map[i][j].moustache_path = DOWN;  break;
+                case '<': cell_map[i][j].moustache_path = LEFT;  break;
+                case '>': cell_map[i][j].moustache_path = RIGHT; break;
             }
         }
     }
@@ -429,55 +330,37 @@ bool update_cell(Movement* entity, UCHAR8 state) {
     entity->y_cell_index = (entity->y >> 4) - 1;
     set_occupied(TRUE, y_index, x_index);
 
-/*
-    if ((entity->x & 15) == 0 || (entity->y & 15 )== 0) {
-        if (entity->direction == LEFT) {
-            if (cell_map[y_index][x_index].can_go_left == FALSE) {
-                (entity->x_cell_index)++;
-                return TRUE;
-            }
-        }
-        if ( entity->direction == UP) {
-            
-        }
-        return TRUE;     
-    }
-
-    */
     if (((entity->x + entity->delta_x) & 15) == 0 || ((entity->y + entity->delta_y) & 15) == 0) {
         return TRUE;     
     }
 
     return FALSE;
 }
+/*************************************************************
+ * Function: update_ghost_direction
+ * Purpose: Updates the direction of the ghost relative position
+ *          to pacman and the coresponding ghost path on cell map
+ * Parameters: Ghost* ghost - Pointer to Ghost structure
+ *             Pacman* pacman - Pointer to Pacman structure
+ *************************************************************/
 void update_ghost_direction(Ghost* ghost, Pacman* pacman) 
 {
-    Movement* ghost_movement = ghost->move;
+    Movement* ghost_movement  = ghost->move;
     Movement* pacman_movement = pacman->move;
-    ObjectType ghost_type = ghost->type;
+    ObjectType ghost_type     = ghost->type;
+
+    UCHAR8 ghost_x_indx = ghost_movement->x_cell_index;
+    UCHAR8 ghost_y_indx = ghost_movement->y_cell_index;
+
     bool reverse = FALSE;
-    if (ghost->state == DEAD) {
-        return;
-    }
+    
+    if (ghost->state == DEAD) { return; }
     if (ghost->state == RUNNING) {
-        /*ghost_movement->direction = pacman_movement->direction;*/
         switch (pacman_movement->direction) {
-            case UP:
-                if (pacman_movement->y_cell_index < ghost_movement->y_cell_index) 
-                    reverse = TRUE;
-                break;
-            case DOWN:
-                if (pacman_movement->y_cell_index > ghost_movement->y_cell_index)
-                    reverse = TRUE;
-                break;
-            case LEFT:
-                if (pacman_movement->x_cell_index < ghost_movement->x_cell_index)
-                    reverse = TRUE;
-                break;
-            case RIGHT:
-                if (pacman_movement->x_cell_index > ghost_movement->x_cell_index)
-                    reverse = TRUE;
-                break;
+            case UP:    if (pacman_movement->y_cell_index < ghost_y_indx) { reverse = TRUE; } break;
+            case DOWN:  if (pacman_movement->y_cell_index > ghost_y_indx) { reverse = TRUE; } break;
+            case LEFT:  if (pacman_movement->x_cell_index < ghost_x_indx) { reverse = TRUE; } break;
+            case RIGHT: if (pacman_movement->x_cell_index > ghost_x_indx) { reverse = TRUE; } break;
         }
         if (reverse == TRUE) {
             flip_direction(pacman_movement);
@@ -495,26 +378,14 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
         }
         ghost_movement->direction = get_optimal_direction(ghost_movement, pacman_movement);
         return;
-
     }
-    /*
-    if (ghost_type == GHOST_TYPE_CYCLOPS || ghost_type == GHOST_TYPE_MOUSTACHE) {
-        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path;
-        return;
+    switch (ghost_type) 
+    {
+        case CRYING_PATH:    ghost_movement->direction = cell_map[ghost_y_indx][ghost_x_indx].crying_path;    break;
+        case AWKWARD_PATH:   ghost_movement->direction = cell_map[ghost_y_indx][ghost_x_indx].awkward_path;   break;
+        case CYCLOPS_PATH:   ghost_movement->direction = cell_map[ghost_y_indx][ghost_x_indx].cyclops_path;   break;
+        case MOUSTACHE_PATH: ghost_movement->direction = cell_map[ghost_y_indx][ghost_x_indx].moustache_path; break;
     }
-    ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
-*/
-    if (ghost_type == GHOST_TYPE_CRYING)
-        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].path;
-    
-    else if (ghost_type == GHOST_TYPE_CYCLOPS)
-        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path;
-    
-    else if (ghost_type == GHOST_TYPE_MOUSTACHE)
-        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path2;
-    
-    else
-        ghost_movement->direction = cell_map[ghost_movement->y_cell_index][ghost_movement->x_cell_index].alt_path3;
 }
 
 UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
@@ -526,147 +397,47 @@ UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
 
     switch (movement->direction) {
         case UP:
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up == TRUE) {
-                return UP;
-            }
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left == TRUE) {
-                return LEFT;
-            }
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) {
-                return RIGHT;
-            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up    == TRUE) { return UP;    }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left  == TRUE) { return LEFT;  }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) { return RIGHT; }
             return DOWN;
+
         case DOWN:
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down == TRUE) {
-                return DOWN;
-            }
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) {
-                return RIGHT;
-            }
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left == TRUE) {
-                return LEFT;
-            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down  == TRUE) { return DOWN;  }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) { return RIGHT; }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left  == TRUE) { return LEFT;  }
             return UP;
+
         case LEFT:
-            
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left == TRUE) {
-                return LEFT;
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left  == TRUE) { return LEFT;  }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up    == TRUE) {
+                if (y > MIDDLE_OF_SCREEN_Y) { return UP; }
             }
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up == TRUE) {
-                if (y > MIDDLE_OF_SCREEN_Y)
-                    return UP;
-            }
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down == TRUE) {
-                return DOWN;
-            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down  == TRUE) { return DOWN;  }
             return RIGHT;
+
         case RIGHT:
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) {
-                return RIGHT;
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) { return RIGHT; }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down  == TRUE) {
+                if (y < MIDDLE_OF_SCREEN_Y) { return DOWN; }
             }
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down == TRUE) {
-                if (y < MIDDLE_OF_SCREEN_Y) 
-                    return DOWN;
-            }
-            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up == TRUE) {
-                return UP;
-            }
+            if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up    == TRUE) { return UP;    }
             return LEFT;
     }
 }
-
-/*
-UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
-    UCHAR8 optimal_direction;
-    UINT16 ghost_x, ghost_y, pacman_x, pacman_y;
-    bool can_go_up, can_go_down, can_go_left, can_go_right;
-
-    ghost_x = movement->x;
-    ghost_y = movement->y;
-    pacman_x = pacman_movement->x;
-    pacman_y = pacman_movement->y;
-    can_go_up = cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up;
-    can_go_down = cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down;
-    can_go_left = cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left;
-    can_go_right = cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right;
-
-    if (movement->direction == UP) {
-        if (ghost_y > pacman_y && (can_go_up == TRUE)) {
-            optimal_direction = UP;
-        } else {
-            optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, DOWN);
-        }
-    } else if (movement->direction == DOWN) {
-        if (ghost_y < pacman_y && (can_go_down == TRUE)) {
-            optimal_direction = DOWN;
-        } else {
-            optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, UP);
-        }
-    } else if (movement->direction == LEFT) {
-        if (ghost_x > pacman_x && (can_go_left == TRUE)) {
-            optimal_direction = LEFT;
-        } else {
-            optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, RIGHT);
-        }
-    } else if (movement->direction == RIGHT) {
-        if (ghost_x < pacman_x && (can_go_right == TRUE)) {
-            optimal_direction = RIGHT;
-        } else {
-            optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, LEFT);
-        }
-    } else {
-        optimal_direction = get_alternate_direction(can_go_up, can_go_down, can_go_left, can_go_right, ghost_x, ghost_y, pacman_x, pacman_y, movement->direction);
-    }
-
-    return optimal_direction;
-}
-UCHAR8 get_alternate_direction(bool can_go_up, bool can_go_down, bool can_go_left, bool can_go_right, 
-                               UINT16 ghost_x, UINT16 ghost_y, UINT16 pacman_x, UINT16 pacman_y) {
-    if (ghost_y > pacman_y && can_go_down == TRUE) {
-        return DOWN;
-    } else if (ghost_y < pacman_y && can_go_up == TRUE) {
-        return UP;
-    } else if (ghost_x > pacman_x && can_go_right == TRUE) {
-        return RIGHT;
-    } else if (ghost_x < pacman_x && can_go_left == TRUE) {
-        return LEFT;
-    }
-
-    if (can_go_up == TRUE) return UP;
-    if (can_go_down == TRUE) return DOWN;
-    if (can_go_left == TRUE) return LEFT;
-    if (can_go_right == TRUE) return RIGHT;
-
-}
-*/
 bool check_valid_path(Movement* movement, UCHAR8 direction) {
     switch (direction) {
         
-        case UP:
-            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up;
-        case DOWN:
-            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down;
-        case LEFT:
-            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left;
-        case RIGHT:
-            return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right;
-        
-        /*
-        case UP:
-            return cell_map[movement->y_cell_index-1][movement->x_cell_index].open_path;
-        case DOWN:
-            return cell_map[movement->y_cell_index+1][movement->x_cell_index].open_path;
-        case LEFT:
-            return cell_map[movement->y_cell_index][movement->x_cell_index-1].open_path;
-        case RIGHT:
-            return cell_map[movement->y_cell_index][movement->x_cell_index+1].open_path;
-        */
+        case UP:    return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up; 
+        case DOWN:  return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down; 
+        case LEFT:  return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left;
+        case RIGHT: return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right;
     }
 }
 void set_occupied(bool set, int y_index, int x_index) {
-    cell_map[y_index][x_index].occupied = set;
-    cell_map[y_index + 1][x_index].occupied = set;
-    cell_map[y_index][x_index + 1].occupied = set;
+    cell_map[y_index][x_index].occupied         = set;
+    cell_map[y_index + 1][x_index].occupied     = set;
+    cell_map[y_index][x_index + 1].occupied     = set;
     cell_map[y_index + 1][x_index + 1].occupied = set;
 }
 /*Checks if two ghosts share an occupied region
@@ -712,16 +483,12 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     */
     ghost->move->x = (ghost->move->x_cell_index << 4);
     ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
+    set_deltas(ghost->move, 0, 0);
 
     y_cell_index = ghost->move->y_cell_index;
     x_cell_index = ghost->move->x_cell_index;
 
     add_wall_to_map(cell_map, y_cell_index, x_cell_index);
-    
-   /* cell_map[y_cell_index][x_cell_index].open_path = FALSE;
-    cell_map[y_cell_index+1][x_cell_index].open_path = FALSE;
-    cell_map[y_cell_index][x_cell_index+1].open_path = FALSE;
-    cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;*/
 }
 /*************************************************************
 * Function: add_wall_to_map
@@ -734,25 +501,25 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
 *          making it a wall. This is used to dynamically alter the map's layout.
 *************************************************************/
 void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index) {
-    cell_map[y_cell_index][x_cell_index].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index].open_path  = FALSE;
     cell_map[y_cell_index][x_cell_index].has_pellet = FALSE;
 
-    cell_map[y_cell_index+1][x_cell_index].open_path = FALSE;
+    cell_map[y_cell_index+1][x_cell_index].open_path  = FALSE;
     cell_map[y_cell_index+1][x_cell_index].has_pellet = FALSE;
 
-    cell_map[y_cell_index][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index+1].open_path  = FALSE;
     cell_map[y_cell_index][x_cell_index+1].has_pellet = FALSE;
 
-    cell_map[y_cell_index+1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index+1][x_cell_index+1].open_path  = FALSE;
     cell_map[y_cell_index+1][x_cell_index+1].has_pellet = FALSE;
 
-    cell_map[y_cell_index-1][x_cell_index].open_path = FALSE;
+    cell_map[y_cell_index-1][x_cell_index].open_path  = FALSE;
     cell_map[y_cell_index-1][x_cell_index].has_pellet = FALSE;
 
-    cell_map[y_cell_index-1][x_cell_index+1].open_path = FALSE;
+    cell_map[y_cell_index-1][x_cell_index+1].open_path  = FALSE;
     cell_map[y_cell_index-1][x_cell_index+1].has_pellet = FALSE;
 
-    cell_map[y_cell_index][x_cell_index-1].open_path = FALSE;
+    cell_map[y_cell_index][x_cell_index-1].open_path  = FALSE;
     cell_map[y_cell_index][x_cell_index-1].has_pellet = FALSE;
 
 }
@@ -780,6 +547,10 @@ void flip_direction(Movement* ghost) {
 
     else 
         ghost->direction = LEFT;
+}
+void set_deltas(Movement* move, UINT16 dx, UINT16 dy) {
+    move->delta_x = dx;
+    move->delta_y = dy;
 }
 void update_current_frame(Entities* all, int clock) {
     Pacman* pacman = all->pacman;

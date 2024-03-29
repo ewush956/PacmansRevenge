@@ -28,6 +28,11 @@
 #define DEFAULT ((UCHAR8)0)
 #define EVIL ((UCHAR8)1)
 
+#define CRYING_PATH ((UCHAR8)0)
+#define CYCLOPS_PATH ((UCHAR8)1)
+#define AWKWARD_PATH ((UCHAR8)2)
+#define MOUSTACHE_PATH ((UCHAR8)3)
+
 typedef enum {
     GHOST_TYPE_CRYING,
     GHOST_TYPE_AWKWARD,
@@ -52,10 +57,10 @@ typedef struct {
 	bool can_go_left;
 	bool can_go_right;
 
-	UCHAR8 path;
-	UCHAR8 alt_path;
-	UCHAR8 alt_path2;
-	UCHAR8 alt_path3;
+	UCHAR8 crying_path;
+	UCHAR8 cyclops_path;
+	UCHAR8 awkward_path;
+	UCHAR8 moustache_path;
 }Cell;
 
 
@@ -95,8 +100,9 @@ typedef struct
 	UCHAR8 state;		
 	ObjectType type;
 	bool has_collided;
-
+	UCHAR8 path_number;
 	Movement* move;
+
 }Ghost;
 
 typedef struct{
@@ -127,8 +133,6 @@ typedef struct {
 
 void move_ghost (Ghost *ghost);
 void move_pacman (Pacman *pacman);
-ObjectType check_collision(Entities* entity, UINT16 object_y_index, UINT16 object_x_index, int y_delta, int x_delta,
-                           ObjectType curr_type);
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
                                   UINT16 object_x_index, int y_delta, int x_delta);
 
@@ -163,5 +167,6 @@ void update_current_frame(Entities* all, int clock);
 
 void set_prev_prev(Entities* entity);
 void set_prev(Entities* entity);
+void set_deltas(Movement* move, UINT16 dx, UINT16 dy);
 
 #endif
