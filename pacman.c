@@ -55,15 +55,78 @@
          UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
 volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
 volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
+/*******************************************************************
+ * Function: initialize_game
+ * Purpose: Initializes the game, manually moves the ghosts out of the center
+ *          and plays intro music
+ ******************************************************************/
+void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity) 
+{
+    SoundState  trebleState = {0, 0};
+    SoundState  bassState   = {0, 0};
+    UCHAR8*     base8       = (UCHAR8*)base32;
+    UCHAR8*     back8       = (UCHAR8*)back_buffer_ptr;
 
+    ULONG32     song_now, song_then, time_elapsed; 
+
+    long old_ssp; 
+    int  treble_song_length = PACMAN_INTRO_TREBLE_LENGTH;
+    int  bass_song_length   = PACMAN_INTRO_BASS_LENGTH;
+    int  initial_moves[5]   = {0,1,2,3,4};
+    int  moves_index        = 0;
+    int  intro_duration     = 0;
+    int  first_frames       = 0;
+    int* intro_duration_ptr = &intro_duration;
+    int* indx_ptr           = &moves_index;
+
+    bool song_finished      = FALSE;
+    bool stop_ghosts        = FALSE;
+    bool enable             = TRUE;
+
+    init_map_cells(cell_map, tile_map);    
+    clear_and_render_maps(base32, back_buffer_ptr);
+    render_map(background_ptr, tile_map);
+    clear_and_render_entities(base32, back_buffer_ptr, entity);
+    set_first_movements(base32, base8, entity);
+    initialize_sound(&old_ssp, &trebleState, &bassState);
+    
+    while (!song_finished) {
+        song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, 
+                                     treble_song_length, bass_song_length, intro_duration_ptr
+                                     );
+        if (*intro_duration_ptr > START_MUSIC_THRESHOLD) {
+            
+            if (first_frames > FIRST_STOP - 1) {
+                stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
+                first_frames = 0;
+            }
+            if (stop_ghosts == FALSE && time_elapsed > 0) {
+                manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
+                swap_buffers(&base32, &back_buffer_ptr);
+
+                request_to_render = FALSE; 
+
+                old_ssp = Super(0);
+                set_video_base(base32);  
+                Super(old_ssp);
+            }
+            first_frames++;
+        }
+    }
+    clear_and_render_entities(base32, back_buffer_ptr, entity);
+}
+/*******************************************************************
+ * Function: main
+ * Purpose: executes main game loop
+ ******************************************************************/
 int main() 
 {
     Entities entity = {
-        &pacman,
-        &crying_ghost,
-        &awkward_ghost,
-        &moustache_ghost,
-        &cyclops_ghost,
+         &pacman,
+         &crying_ghost,
+         &awkward_ghost,
+         &moustache_ghost,
+         &cyclops_ghost,
     };
     int  i;
 	char input;
@@ -72,40 +135,28 @@ int main()
     int  background_offset   = 256 - ((long)(background) % 256);
     long old_ssp; 
 
-	UCHAR8   collision_type  = 0;
-    UINT16   ticks           = 0;
-	ULONG32  time_then, 
-             time_now, 
-             time_elapsed;
-
-    UCHAR8*  base8           = (UCHAR8*)get_video_base();
+    /*UCHAR8*  base8           = (UCHAR8*)get_video_base();*/
     ULONG32* base32          = (ULONG32*)get_video_base();
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
     ULONG32* background_ptr  = (ULONG32*)(&background[background_offset]); /*Not using at the moment*/
 
     GAME_STATE state         = PLAY;
-    SoundState wakaState     = {0, 0};
-    SoundState wakaNoise     = {0, 0};
-
     Vector     orig_vector28 = install_vector(TRAP_28, trap28_isr);
 
     plot_screen(base32, splash);
+
     while (!Cconis());
 
     initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
-	if (Cconis())
-	{
-		input = get_input();
-	}
+
+	if (Cconis()) { input = get_input(); }
     set_input(entity.pacman, input);
+
     ticks = 0;
     while (state != QUIT && state != WIN) {
 
-        if (Cconis())
-        {
-            input = (char)Cnecin();
-        }
+        if (Cconis()) { input = (char)Cnecin(); }
         set_input(entity.pacman, input);  
         if (request_to_render == TRUE) 
         {
@@ -127,8 +178,6 @@ int main()
     set_video_base(original);
     Super(old_ssp);
 
-    /*clear_screen_q(original);*/
-    
     if (state == WIN) {
         plot_screen(original, splash);
         game_over_flag = TRUE;
@@ -170,9 +219,7 @@ void update_movement(Entities* entity) {
     update_entities();
     update_cells(entity);
     eat_pellet(entity->pacman->move);
-    check_proximity(entity);
-    
-
+    check_proximity(entity);   
 } 
 /*******************************************************************
  * Function: update_game_state
@@ -182,7 +229,6 @@ void update_movement(Entities* entity) {
  ******************************************************************/
 GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
 
-    /*Do something that updates the gamestate*/
     GAME_STATE state;
     if (input == '\033')
     {
@@ -230,76 +276,6 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
     *back_buffer_ptr = temp;
 }
 /*******************************************************************
- * Function: initialize_game
- * Purpose: Initializes the game, manually moves the ghosts out of the center
- *          and plays intro music
- ******************************************************************/
-void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity) 
- {
-    /*
-    MusicState trebleState = {0, 0};
-    MusicState bassState = {0, 0};
-    */
-    SoundState trebleState = {0, 0};
-    SoundState bassState = {0, 0};
-    UCHAR8* base8 = (UCHAR8*)base32;
-    UCHAR8* back8 = (UCHAR8*)back_buffer_ptr;
-
-    /*ULONG32 time_then = get_time(), */
-    ULONG32 song_now, song_then, time_elapsed;    /**/
-    /*ULONG32 time_then = time_now;*/
-    long old_ssp; 
-    int treble_song_length = PACMAN_INTRO_TREBLE_LENGTH;
-    int bass_song_length = PACMAN_INTRO_BASS_LENGTH;
-    int initial_moves[5] = {0,1,2,3,4};
-    int moves_index = 0;
-    int* indx_ptr = &moves_index;
-    bool song_finished = FALSE;
-    bool stop_ghosts = FALSE;
-    int intro_duration = 0;
-    int* intro_duration_ptr = &intro_duration;
-    int first_frames = 0;
-    bool enable = TRUE;
-
-    /*int time_now; /*= get_time();      /* this */
-
-    init_map_cells(cell_map, tile_map);    
-    clear_and_render_maps(base32, back_buffer_ptr);
-    render_map(background_ptr, tile_map);
-    clear_and_render_entities(base32, back_buffer_ptr, entity);
-    set_first_movements(base32, base8, entity);
-    initialize_sound(&old_ssp, &trebleState, &bassState);
-    
-    while (!song_finished) {
-        song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
-        if (*intro_duration_ptr > 44) {
-            /*time_elapsed = time_now - time_then;*/
-            
-            if (first_frames > FIRST_STOP - 1) {
-                stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
-                first_frames = 0;
-            }
-            
-            if (stop_ghosts == FALSE && time_elapsed > 0) {
-                manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
-                swap_buffers(&base32, &back_buffer_ptr);
-
-                request_to_render = FALSE; 
-
-                old_ssp = Super(0);
-                set_video_base(base32);  
-                Super(old_ssp);
-
-                /*time_then = time_now;*/
-            }
-            
-            first_frames++;
-        }
-    }
-    clear_and_render_entities(base32, back_buffer_ptr, entity);
-}
-
-/*******************************************************************
  * Function: manually_move_ghost
  * Purpose: Manually moves the ghost
  * Parameters: base, entity, frame_index
@@ -311,7 +287,6 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool 
     Movement* cyclops_ghost = entity->cyclops_ghost->move;
 
     if (enable != TRUE) {
-	    /*update_cells(entity);*/
         update_cell(awkward_ghost, entity->awkward_ghost->state);
         update_cell(moustache_ghost, entity->moustache_ghost->state);
         update_cell(crying_ghost, entity->crying_ghost->state);
@@ -405,10 +380,6 @@ bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, So
         *time_then = time_now;
 
         *old_ssp = Super(0);
-        /*
-        update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, trebleState);
-        song_finished = update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, bassState);
-        */
         play_sound(CHANNEL_A, pacman_intro_treble, treble_song_length, trebleState);
         song_finished = play_sound(CHANNEL_B, pacman_intro_bass, bass_song_length, bassState);
         Super(*old_ssp);

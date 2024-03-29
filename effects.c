@@ -54,27 +54,7 @@ const SoundCycle ghost_kill_sound_cycle[GHOST_KILL_CYCLE_LENGTH] = {
     {G5,        THIRTY_SECOND_NOTE, KILL_GHOST_VOLUME},
     {E5,        THIRTY_SECOND_NOTE, 0                }
 };
-/*
-bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state) {
-    int index = state->current_sound_index;
-    int* time_left = &state->sound_time_left;
-
-    if (*time_left == 0) {
-        if (index < cycle_length) {
-            *time_left = sound_cycle[index].duration;
-            play_note(channel, sound_cycle[index].frequency, sound_cycle[index].volume);
-            state->current_sound_index++;
-        } else {
-            stop_sound();
-            state->current_sound_index = 0; 
-            return TRUE;
-        }
-    }
-    (*time_left)--;
-    return FALSE; 
-}
-*/
+/*Just sets global flag so the isr can handle it*/
 void play_kill_ghost_sound(){
-
     kill_ghost_flag = TRUE;
 }

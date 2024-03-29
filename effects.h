@@ -10,18 +10,7 @@
 #define WAKA_VOLUME 12
 #define WAKA_NOISE 14
 #define KILL_GHOST_VOLUME 15
-/*
-typedef struct {
-    int frequency;
-    int volume;
-    int duration;
-}SoundCycle;
 
-typedef struct {
-    int current_sound_index;
-    int sound_time_left;
-}SoundState;
-*/
 extern const SoundCycle waka_sound_cycle[WAKA_CYCLE_LENGTH];
 extern const SoundCycle waka_noise_cycle[WAKA_CYCLE_LENGTH];
 extern const SoundCycle ghost_kill_sound_cycle[GHOST_KILL_CYCLE_LENGTH];

@@ -52,14 +52,13 @@ void move_ghost (Ghost *ghost)
     UINT16 old_x = ghost_movement->x;
     UINT16 old_y = ghost_movement->y;
 
-    return;
     if (ghost->state == DEAD) { return; }
     
     switch(direction)
     {
         case UP:    set_deltas(ghost_movement, 0, -1); break;        
-        case DOWN:  set_deltas(ghost_movement, 0, 1); break;        
-        case RIGHT: set_deltas(ghost_movement, 1, 0); break;        
+        case DOWN:  set_deltas(ghost_movement, 0, 1);  break;        
+        case RIGHT: set_deltas(ghost_movement, 1, 0);  break;        
         case LEFT:  set_deltas(ghost_movement, -1, 0); break;
     }
     

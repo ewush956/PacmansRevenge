@@ -24,18 +24,7 @@
 
 #define SELECT_REGISTER 0xFF8800
 #define WRITE_REGISTER 0xFF8802
-/*
-typedef struct {
-    int frequency;
-    int duration;
-    int volume;
-}Note;
 
-typedef struct {
-    int current_note_index;
-    int note_time_left;
-}MusicState;
-*/
 typedef struct {
     int frequency;
     int duration;
@@ -58,9 +47,10 @@ typedef struct {
 #define SEVENTH_OCTAVE 6
 #define EIGHTH_OCTAVE 7
 
-/* IMPORTANT NOTE
- * All of these will be moved to music.h, I was having compile issues that's why they are here
-*/
+/* NOTE **************************************************************************
+ * The below definitions are not specific to music, they are used in effects as well
+ * so I'm defining them here.
+ *********************************************************************************/
 #define WHOLE_NOTE 32
 #define HALF_NOTE 16
 #define QUARTER_NOTE 8
@@ -169,4 +159,5 @@ void stop_sound();
 void set_envelope(int shape, unsigned int sustain);
 void write_psg(int reg, UCHAR8 val);
 bool play_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state);
+
 #endif
