@@ -38,15 +38,33 @@ void do_vbl()
         update_movement(&entity);
         update_current_frame(&entity, ticks);
 
-        if (waka_playing == TRUE) {
+        if (single_waka_playing == TRUE) {
+            if (play_waka_sound(CHANNEL_B, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState) == TRUE) 
+                single_waka_playing = FALSE;
+        }
+
+        else if (waka_playing == TRUE) {
             play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
-            if (play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise) == TRUE) {
+            if (play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise) == TRUE) 
                 waka_playing = FALSE;
-            }
         }
         else {
-            
+            if ( cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index - 1].has_pellet == TRUE ||
+                     cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index + 1].has_pellet == TRUE ||
+                     cell_map[entity.pacman->move->y_cell_index - 1][entity.pacman->move->x_cell_index].has_pellet == TRUE ||
+                     cell_map[entity.pacman->move->y_cell_index + 1][entity.pacman->move->x_cell_index].has_pellet == TRUE)
+            {
+                waka_playing = TRUE;
+                play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
+                play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
         
+            }  
+            else {
+                single_waka_playing = TRUE;
+                play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
+            }
+        }
+/*
         switch (waka_noise_cycle[wakaState.current_sound_index].volume) {
             case 13:
             
@@ -71,29 +89,7 @@ void do_vbl()
                 break;
         }
         }
-    /*
-       if (waka_noise_cycle[wakaState.current_sound_index].volume == 14) {
-       if ( cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index - 1].has_pellet == TRUE ||
-            cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index + 1].has_pellet == TRUE ||
-            cell_map[entity.pacman->move->y_cell_index - 1][entity.pacman->move->x_cell_index].has_pellet == TRUE ||
-            cell_map[entity.pacman->move->y_cell_index + 1][entity.pacman->move->x_cell_index].has_pellet == TRUE)
-       {
-            waka_playing = TRUE;
-            play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
-            play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
-        
-        } 
-       }
-        else if (waka_noise_cycle[wakaState.current_sound_index].volume > 0){
-
-            play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
-            play_waka_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
-        }
-        else {
-            waka_playing = FALSE;
-            stop_sound();
-        }
-    */
+        */
         
    }
 
