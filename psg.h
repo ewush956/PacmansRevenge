@@ -29,12 +29,13 @@ typedef struct {
     int frequency;
     int duration;
     int volume;
-}Note;
+}SoundCycle;
+
 
 typedef struct {
-    int current_note_index;
-    int note_time_left;
-}MusicState;
+    int current_sound_index;
+    int sound_time_left;
+}SoundState;
 
 #define NUM_NOTES 12
 #define FIRST_OCTAVE 0
@@ -46,9 +47,10 @@ typedef struct {
 #define SEVENTH_OCTAVE 6
 #define EIGHTH_OCTAVE 7
 
-/* IMPORTANT NOTE
- * All of these will be moved to music.h, I was having compile issues that's why they are here
-*/
+/* NOTE **************************************************************************
+ * The below definitions are not specific to music, they are used in effects as well
+ * so I'm defining them here.
+ *********************************************************************************/
 #define WHOLE_NOTE 32
 #define HALF_NOTE 16
 #define QUARTER_NOTE 8
@@ -154,5 +156,8 @@ void set_volume(int channel, unsigned char volume);
 void set_master_volume(unsigned char volume);
 void play_note(int channel, int tuning, unsigned char volume);
 void stop_sound();
+void set_envelope(int shape, unsigned int sustain);
+void write_psg(int reg, UCHAR8 val);
+bool play_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state);
 
 #endif

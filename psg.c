@@ -3,22 +3,7 @@
 #include "TYPES.H"
 #include "osbind.h"
 
-/*Helper function*/
-void write_psg(int reg, UCHAR8 val);
 unsigned char read_psg(int reg);
-/*
-typedef struct {
-    int frequency;
-    int duration;
-    int volume;
-}Note;
-
-typedef struct {
-    int current_note_index;
-    int note_time_left;
-}MusicState;
-*/
-
 
 /******************************************
 * Function Name: set_note_frequency
@@ -140,9 +125,6 @@ void enable_channel(int channel, int toneOn, int noiseOn) {
  *************************************************************/
 void set_master_volume(unsigned char volume){
 
-    volatile char *PSG_reg_select = SELECT_REGISTER;
-    volatile char *PSG_reg_write  = WRITE_REGISTER;
-
     write_psg(VOLUME_OFFSET, volume);
     write_psg(VOLUME_OFFSET + CHANNEL_B, volume);
     write_psg(VOLUME_OFFSET + CHANNEL_C, volume);
@@ -168,6 +150,29 @@ void play_note(int channel, int tuning, unsigned char volume) {
  ******************************************************************/
 void stop_sound() {
     set_master_volume(0);
+}
+bool play_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state) {
+    int index = state->current_sound_index;
+    int* time_left = &state->sound_time_left;
+
+    if (*time_left == 0) {
+        if (index < cycle_length) {
+            *time_left = sound_cycle[index].duration; 
+            play_note(channel, sound_cycle[index].frequency, sound_cycle[index].volume); 
+            state->current_sound_index++; 
+        } else {
+            stop_sound(); 
+            state->current_sound_index = 0; 
+            return TRUE; 
+        }
+    }
+    (*time_left)--; 
+    return FALSE; 
+}
+void set_envelope(int shape, unsigned int sustain) {
+    write_psg(11, sustain);
+    write_psg(12, sustain);
+    write_psg(13, shape);
 }
 /********************************************************
  *              ~~~~ Helper function ~~~~

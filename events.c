@@ -10,26 +10,6 @@
 
 const UCHAR8 DIRECTION_ARRAY[4] = {UP, DOWN, LEFT, RIGHT};
 
-/*********************************************************************************
-*   This function handles collisions between a ghost and a wall in the game environment.
-*   If a collision with a wall occurs, the function determines possible directions the ghost
-*   can move to and selects one of them randomly. It uses an XOR algorithm to generate a random 
-*   number, which is then modded by the available directions to choose a random direction.
-*   
-*   Parameters:
-*      - collision_type: An integer representing the type of collision (e.g., WALL).
-*      - ghost: A pointer to the Ghost structure representing the ghost involved in the collision.
-*      - cell_map: A 2D array representing the game map.
-*      - xor_shift_struct: A pointer to the XOR shift structure used for random number generation.
-*
-*   Note: This function is currently not functional due to a bug with random number generation
-*         and a logic error.
- *************************************************************************************/
-void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
-    
-    flip_direction(ghost1);
-    flip_direction(ghost2);   
-}
 /*******************************************************************
  * Function: process_ghost_collision
  * Purpose: To handle collisions between ghost and wall and eachother
@@ -51,22 +31,6 @@ ObjectType process_ghost_collision(Entities* all) {
     ghost_array[1] = all->awkward_ghost;
     ghost_array[2] = all->cyclops_ghost;
     ghost_array[3] = all->moustache_ghost;
-/**** Right now ghosts just pass through eachother, so this is not needed
-    for (i = 3; i > -1; i--){
-        for (n = 1; n <= i; n++){
-            if (check_shared_occupied(all_ghosts[i], all_ghosts[i-n]) == TRUE) {
-                handle_ghost_collision(all_ghosts[i], all_ghosts[i-n]);
-            }
-        }
-    }
-*/
-/*
-    for (i = 0; i < 4; i++){
-        if (check_wall_collision(all_ghosts[i]) != OPEN_PATH && ghost_array[i]->state != DEAD) {
-            handle_wall_collision(all_ghosts[i], ghost_array[i]->state, ghost_array[i]->path_number);   
-        }        
-    }
-    */
 }
 void handle_wall_collision(Movement* ghost, UCHAR8 state, UCHAR8 path_number) {
     
@@ -189,6 +153,26 @@ UCHAR8 get_valid_paths(Movement *ghost)
     if (cell_map[ghost->y_cell_index][ghost->x_cell_index - 1].open_path == TRUE) { count++; }
     if (cell_map[ghost->y_cell_index][ghost->x_cell_index + 1].open_path == TRUE) { count++; }
     return count;
+}
+/*********************************************************************************
+*   This function handles collisions between a ghost and a wall in the game environment.
+*   If a collision with a wall occurs, the function determines possible directions the ghost
+*   can move to and selects one of them randomly. It uses an XOR algorithm to generate a random 
+*   number, which is then modded by the available directions to choose a random direction.
+*   
+*   Parameters:
+*      - collision_type: An integer representing the type of collision (e.g., WALL).
+*      - ghost: A pointer to the Ghost structure representing the ghost involved in the collision.
+*      - cell_map: A 2D array representing the game map.
+*      - xor_shift_struct: A pointer to the XOR shift structure used for random number generation.
+*
+*   Note: This function is currently not functional due to a bug with random number generation
+*         and a logic error.
+ *************************************************************************************/
+void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
+    
+    flip_direction(ghost1);
+    flip_direction(ghost2);   
 }
 void eat_pellet(Movement* pacman) {
     cell_map[pacman->y_cell_index][pacman->x_cell_index].has_pellet = FALSE;
