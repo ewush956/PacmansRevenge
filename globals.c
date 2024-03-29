@@ -9,6 +9,8 @@ bool request_to_render = FALSE;
 
 volatile ULONG32 time_now = 0;
 volatile UINT16 ticks = 0;
+volatile bool waka_playing = FALSE;
+volatile bool single_waka_playing = FALSE;
 
 /**************************************************************************
 * Declaration: Pacman pacman
@@ -51,6 +53,7 @@ Ghost crying_ghost = {
     DEFAULT,
     GHOST_TYPE_CRYING,
     FALSE,
+    CRYING_PATH,
     &crying_ghost_movement
 };
 
@@ -74,6 +77,7 @@ Ghost cyclops_ghost = {
     DEFAULT,
     GHOST_TYPE_CYCLOPS,
     FALSE,
+    CYCLOPS_PATH,
     &cyclops_ghost_movement
 };
 /*************************************************************
@@ -96,6 +100,7 @@ Ghost moustache_ghost = {
     DEFAULT,
     GHOST_TYPE_MOUSTACHE,
     FALSE,
+    MOUSTACHE_PATH,
     &moustache_ghost_movement
 };
 
@@ -119,6 +124,7 @@ Ghost awkward_ghost = {
     DEFAULT,
     GHOST_TYPE_AWKWARD,
     FALSE,
+    AWKWARD_PATH,
     &awkward_ghost_movement
 };
 Timer timer = {
