@@ -160,47 +160,6 @@ bool update_music(int channel, const Note song[], int song_length, MusicState *s
     state->note_time_left -= 1; 
     return FALSE;
 }
-void update_song(int treble_channel, const Note treble_song[], int treble_song_length,
-                 int bass_channel, const Note bass_song[], int bass_song_length,
-                 int elapsed_time) { /* Add elapsed_time parameter */
-    static int treble_note_index = 0, bass_note_index = 0;
-    static int treble_note_time_left = 0, bass_note_time_left = 0;
-
-    /* Update treble part */
-    if (treble_note_time_left <= elapsed_time) { /* Adjust based on actual elapsed time */
-        elapsed_time -= treble_note_time_left; /* Use residual time for the start of the next note */
-        if (treble_note_index < treble_song_length) {
-            play_note(treble_channel, treble_song[treble_note_index].frequency, treble_song[treble_note_index].volume);
-            treble_note_time_left = treble_song[treble_note_index].duration - elapsed_time; /* Start next note accounting for residual time */
-            treble_note_index++;
-        } else {
-            treble_note_index = 0; /* Loop or handle end of song */
-        }
-    } else {
-        treble_note_time_left -= elapsed_time;
-    }
-
-    /* Update bass part in a similar manner to treble */
-    if (bass_note_time_left <= elapsed_time) {
-        elapsed_time -= bass_note_time_left;
-        if (bass_note_index < bass_song_length) {
-            play_note(bass_channel, bass_song[bass_note_index].frequency, bass_song[bass_note_index].volume);
-            bass_note_time_left = bass_song[bass_note_index].duration - elapsed_time;
-            bass_note_index++;
-        } else {
-            bass_note_index = 0;
-        }
-    } else {
-        bass_note_time_left -= elapsed_time;
-    }
-
-    /* Check if both treble and bass parts have reached the end */
-    if (treble_note_index >= treble_song_length && bass_note_index >= bass_song_length) {
-        stop_sound();
-        treble_note_index = 0; /* Reset for looping or finishing */
-        bass_note_index = 0;
-    }
-}
 
 void play_intro() {
     /*mom pick me up i'm scared :( */

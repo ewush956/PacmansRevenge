@@ -60,3 +60,19 @@ bool play_waka_sound(int channel, const SoundCycle sound_cycle[], int cycle_leng
     (*time_left)--;
     return FALSE; 
 }
+void play_kill_ghost_sound(){
+
+	/*long old_ssp = Super(0);*/
+
+	write_psg(4,255);
+	write_psg(5,1);
+	write_psg(6,0x0F);
+	enable_channel(CHANNEL_C, TONE_OFF, NOISE_ON);
+
+    set_volume(CHANNEL_A, 3);   /* set channel A */
+    set_volume(CHANNEL_B, 4);   /* set channel B */
+	set_volume(CHANNEL_C, 15);   /* set channel C */
+	set_envelope(0,0x0700);
+
+	/*Super(old_ssp);*/
+}

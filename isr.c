@@ -35,6 +35,10 @@ void do_vbl()
 
    if ( seconds > 8 && request_to_render == TRUE)
    {
+    if (game_over_flag == TRUE) {
+        stop_sound();
+        return;
+    }
         update_movement(&entity);
         update_current_frame(&entity, ticks);
 

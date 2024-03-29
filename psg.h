@@ -154,5 +154,6 @@ void set_volume(int channel, unsigned char volume);
 void set_master_volume(unsigned char volume);
 void play_note(int channel, int tuning, unsigned char volume);
 void stop_sound();
-
+void set_envelope(int shape, unsigned int sustain);
+void write_psg(int reg, UCHAR8 val);
 #endif

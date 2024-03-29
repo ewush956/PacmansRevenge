@@ -21,8 +21,7 @@ _main:
 	lea	-24(a6),a3
 	lea	__trap_1_w,a4
 	lea	-62(a6),a5
-	moveq	#32,d6
-	move.l	#__trap_1_wl,d7
+	moveq	#32,d7
 	;line	93
 	lea	L1,a0
 	move.l	a3,a1
@@ -58,7 +57,7 @@ _main:
 	jsr	_get_video_base
 	move.l	d0,(a5)
 	jsr	_get_video_base
-	move.l	d0,-66(a6)
+	move.l	d0,d6
 	move.w	-32(a6),d0
 	ext.l	d0
 	add.l	#_screen_buffer,d0
@@ -160,9 +159,8 @@ L11:
 	clr.b	_request_to_render
 	;line	117
 	pea	0
-	move.w	d6,-(a7)
-	move.l	d7,a0
-	jsr	(a0)
+	move.w	d7,-(a7)
+	jsr	__trap_1_wl
 	addq.l	#6,a7
 	move.l	d0,d5
 	;line	118
@@ -171,9 +169,8 @@ L11:
 	addq.l	#4,a7
 	;line	119
 	move.l	d5,-(a7)
-	move.w	d6,-(a7)
-	move.l	d7,a0
-	jsr	(a0)
+	move.w	d7,-(a7)
+	jsr	__trap_1_wl
 	addq.l	#6,a7
 L12:
 	;line	122
@@ -196,30 +193,31 @@ L13:
 L10:
 	;line	125
 	pea	0
-	move.w	d6,-(a7)
-	move.l	d7,a0
-	jsr	(a0)
+	move.w	d7,-(a7)
+	jsr	__trap_1_wl
 	addq.l	#6,a7
 	move.l	d0,d5
 	;line	126
 	jsr	_stop_sound
 	;line	127
-	move.l	-66(a6),-(a7)
+	move.l	d6,-(a7)
 	jsr	_set_video_base
 	addq.l	#4,a7
 	;line	128
 	move.l	d5,-(a7)
-	move.w	d6,-(a7)
-	move.l	d7,a0
-	jsr	(a0)
+	move.w	d7,-(a7)
+	jsr	__trap_1_wl
 	addq.l	#6,a7
 	;line	132
 	cmp.b	#4,d4
 	bne	L14
+	;line	133
+	pea	_splash
+	move.l	d6,-(a7)
+	jsr	_plot_screen
+	addq.l	#8,a7
 	;line	134
-	clr.b	_waka_playing
-	;line	135
-	clr.b	_single_waka_playing
+	move.b	#-1,_game_over_flag
 	;line	136
 	bra	L16
 L15:

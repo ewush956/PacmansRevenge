@@ -11,6 +11,7 @@ volatile ULONG32 time_now = 0;
 volatile UINT16 ticks = 0;
 volatile bool waka_playing = FALSE;
 volatile bool single_waka_playing = FALSE;
+volatile bool game_over_flag = FALSE;
 
 /**************************************************************************
 * Declaration: Pacman pacman

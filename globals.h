@@ -10,6 +10,7 @@ extern volatile UINT16 ticks;
 extern volatile ULONG32 time_now;
 extern volatile bool waka_playing;
 extern volatile bool single_waka_playing;
+extern volatile bool game_over_flag;
 
  /*extern Entities entity;*/
 extern Movement pacman_movements;

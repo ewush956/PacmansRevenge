@@ -4,7 +4,7 @@
 #include "osbind.h"
 
 /*Helper function*/
-void write_psg(int reg, UCHAR8 val);
+/*void write_psg(int reg, UCHAR8 val);*/
 unsigned char read_psg(int reg);
 /*
 typedef struct {
@@ -140,9 +140,6 @@ void enable_channel(int channel, int toneOn, int noiseOn) {
  *************************************************************/
 void set_master_volume(unsigned char volume){
 
-    volatile char *PSG_reg_select = SELECT_REGISTER;
-    volatile char *PSG_reg_write  = WRITE_REGISTER;
-
     write_psg(VOLUME_OFFSET, volume);
     write_psg(VOLUME_OFFSET + CHANNEL_B, volume);
     write_psg(VOLUME_OFFSET + CHANNEL_C, volume);
@@ -168,6 +165,11 @@ void play_note(int channel, int tuning, unsigned char volume) {
  ******************************************************************/
 void stop_sound() {
     set_master_volume(0);
+}
+void set_envelope(int shape, unsigned int sustain) {
+    write_psg(11, sustain);
+    write_psg(12, sustain);
+    write_psg(13, shape);
 }
 /********************************************************
  *              ~~~~ Helper function ~~~~

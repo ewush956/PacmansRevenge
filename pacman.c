@@ -130,9 +130,9 @@ int main()
     /*clear_screen_q(original);*/
     
     if (state == WIN) {
-        /*plot_screen(original, splash);*/
-        waka_playing = FALSE;
-        single_waka_playing = FALSE;
+        plot_screen(original, splash);
+        game_over_flag = TRUE;
+
         while (input != '\033') {
             input = (char)Cnecin();
         }

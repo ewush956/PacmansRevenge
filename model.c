@@ -1,6 +1,7 @@
 #include "TYPES.H"
 #include "model.h"
 #include "bitmaps.h"
+#include "effects.h"
 #include <stdio.h>
 
 
@@ -51,6 +52,7 @@ void move_ghost (Ghost *ghost)
     UINT16 old_x = ghost_movement->x;
     UINT16 old_y = ghost_movement->y;
 
+    return;
     if (ghost->state == DEAD) { return; }
     
     switch(direction)
@@ -489,6 +491,7 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     x_cell_index = ghost->move->x_cell_index;
 
     add_wall_to_map(cell_map, y_cell_index, x_cell_index);
+    play_kill_ghost_sound();
 }
 /*************************************************************
 * Function: add_wall_to_map
