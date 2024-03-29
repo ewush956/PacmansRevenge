@@ -39,7 +39,7 @@ void do_vbl()
         update_current_frame(&entity, ticks);
 
         if (single_waka_playing == TRUE) {
-            if (play_waka_sound(CHANNEL_B, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState) == TRUE) 
+            if (play_waka_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState) == TRUE) 
                 single_waka_playing = FALSE;
         }
 
