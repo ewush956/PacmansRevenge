@@ -131,6 +131,8 @@ int main()
     
     if (state == WIN) {
         /*plot_screen(original, splash);*/
+        waka_playing = FALSE;
+        single_waka_playing = FALSE;
         while (input != '\033') {
             input = (char)Cnecin();
         }

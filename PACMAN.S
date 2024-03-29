@@ -217,9 +217,13 @@ L10:
 	cmp.b	#4,d4
 	bne	L14
 	;line	134
+	clr.b	_waka_playing
+	;line	135
+	clr.b	_single_waka_playing
+	;line	136
 	bra	L16
 L15:
-	;line	135
+	;line	137
 	move.w	#8,-(a7)
 	jsr	(a4)
 	addq.l	#2,a7
@@ -229,11 +233,11 @@ L16:
 	bne	L15
 L17:
 L14:
-	;line	143
+	;line	145
 	move.l	-88(a6),-(a7)
 	move.w	#28,-(a7)
 	jsr	_install_vector
-	;line	144
+	;line	146
 	moveq	#0,d0
 L18:
 	movem.l	-120(a6),d3/d4/d5/d6/d7/a3/a4/a5
@@ -243,23 +247,23 @@ _update_entities:
 	link	a6,#0
 	move.l	a3,-(a7)
 	lea	_move_ghost,a3
-	;line	152
+	;line	154
 	pea	_pacman
 	jsr	_move_pacman
 	addq.l	#4,a7
-	;line	153
+	;line	155
 	pea	_moustache_ghost
 	jsr	(a3)
 	addq.l	#4,a7
-	;line	154
+	;line	156
 	pea	_crying_ghost
 	jsr	(a3)
 	addq.l	#4,a7
-	;line	155
+	;line	157
 	pea	_cyclops_ghost
 	jsr	(a3)
 	addq.l	#4,a7
-	;line	156
+	;line	158
 	pea	_awkward_ghost
 	jsr	(a3)
 	move.l	-4(a6),a3
@@ -269,23 +273,23 @@ _update_movement:
 	link	a6,#0
 	move.l	d3,-(a7)
 	move.l	8(a6),d3
-	;line	167
+	;line	169
 	move.l	d3,-(a7)
 	jsr	_handle_collisions
 	addq.l	#4,a7
-	;line	168
+	;line	170
 	jsr	_update_entities
-	;line	169
+	;line	171
 	move.l	d3,-(a7)
 	jsr	_update_cells
 	addq.l	#4,a7
-	;line	170
+	;line	172
 	move.l	d3,a0
 	move.l	(a0),a0
 	move.l	6(a0),-(a7)
 	jsr	_eat_pellet
 	addq.l	#4,a7
-	;line	171
+	;line	173
 	move.l	d3,-(a7)
 	jsr	_check_proximity
 	move.l	-4(a6),d3
@@ -295,16 +299,16 @@ _update_game_state:
 	link	a6,#-2
 	move.l	a3,-(a7)
 	move.l	12(a6),a3
-	;line	185
+	;line	187
 	cmp.b	#27,11(a6)
 	bne	L19
-	;line	187
+	;line	189
 	clr.b	-1(a6)
-	;line	188
+	;line	190
 	move.b	-1(a6),d0
 	bra	L20
 L19:
-	;line	190
+	;line	192
 	move.l	8(a3),a0
 	cmp.b	#3,2(a0)
 	bne	L21
@@ -317,11 +321,11 @@ L19:
 	move.l	16(a3),a0
 	cmp.b	#3,2(a0)
 	bne	L21
-	;line	194
+	;line	196
 	moveq	#4,d0
 	bra	L20
 L21:
-	;line	196
+	;line	198
 	move.b	9(a6),d0
 L20:
 	move.l	(a7)+,a3
@@ -329,36 +333,36 @@ L20:
 	rts
 _get_time:
 	link	a6,#-12
-	;line	212
+	;line	214
 	move.l	#1122,-4(a6)
-	;line	212
+	;line	214
 	pea	0
 	move.w	#32,-(a7)
 	jsr	__trap_1_wl
 	addq.l	#6,a7
 	move.l	d0,-12(a6)
-	;line	213
+	;line	215
 	move.l	-4(a6),a0
 	move.l	(a0),-8(a6)
-	;line	214
+	;line	216
 	move.l	-12(a6),-(a7)
 	move.w	#32,-(a7)
 	jsr	__trap_1_wl
-	;line	216
+	;line	218
 	move.l	-8(a6),d0
 L22:
 	unlk	a6
 	rts
 _swap_buffers:
 	link	a6,#-4
-	;line	227
+	;line	229
 	move.l	8(a6),a0
 	move.l	(a0),-4(a6)
-	;line	227
+	;line	229
 	move.l	12(a6),a0
 	move.l	8(a6),a1
 	move.l	(a0),(a1)
-	;line	228
+	;line	230
 	move.l	12(a6),a0
 	move.l	-4(a6),(a0)
 	unlk	a6
@@ -375,7 +379,7 @@ _initialize_game:
 	move.l	20(a6),d3
 	lea	8(a6),a3
 	lea	12(a6),a4
-	;line	311
+	;line	313
 	lea	L23,a0
 	lea	-4(a6),a1
 	move.l	(a0)+,(a1)+
@@ -400,43 +404,43 @@ _initialize_game:
 	lea	-56(a6),a5
 	moveq	#0,d4
 	move.b	#-1,-63(a6)
-	;line	311
+	;line	313
 	pea	_tile_map
 	pea	_cell_map
 	jsr	_init_map_cells
 	addq.l	#8,a7
-	;line	312
+	;line	314
 	move.l	(a4),-(a7)
 	move.l	(a3),-(a7)
 	jsr	_clear_and_render_maps
 	addq.l	#8,a7
-	;line	313
+	;line	315
 	pea	_tile_map
 	move.l	16(a6),-(a7)
 	jsr	_render_map
 	addq.l	#8,a7
-	;line	314
+	;line	316
 	move.l	d3,-(a7)
 	move.l	(a4),-(a7)
 	move.l	(a3),-(a7)
 	jsr	_clear_and_render_entities
 	lea	12(a7),a7
-	;line	315
+	;line	317
 	move.l	d3,-(a7)
 	move.l	d7,-(a7)
 	move.l	(a3),-(a7)
 	jsr	_set_first_movements
 	lea	12(a7),a7
-	;line	316
+	;line	318
 	pea	-8(a6)
 	pea	-4(a6)
 	pea	-32(a6)
 	jsr	_initialize_sound
 	lea	12(a7),a7
-	;line	318
+	;line	320
 	bra	L27
 L26:
-	;line	319
+	;line	321
 	move.l	a5,-(a7)
 	move.w	-36(a6),-(a7)
 	move.w	-34(a6),-(a7)
@@ -447,13 +451,13 @@ L26:
 	jsr	_update_sound
 	lea	24(a7),a7
 	move.b	d0,d6
-	;line	320
+	;line	322
 	cmp.w	#44,(a5)
 	ble	L29
-	;line	323
+	;line	325
 	cmp.w	#15,d4
 	ble	L30
-	;line	324
+	;line	326
 	pea	-46(a6)
 	move.l	-52(a6),-(a7)
 	move.l	d3,-(a7)
@@ -463,15 +467,15 @@ L26:
 	jsr	_execute_movements_and_render_frame
 	lea	24(a7),a7
 	move.b	d0,d5
-	;line	325
+	;line	327
 	moveq	#0,d4
 L30:
-	;line	328
+	;line	330
 	tst.b	d5
 	bne	L31
 	tst.l	-28(a6)
 	bls	L31
-	;line	329
+	;line	331
 	move.b	d5,d0
 	ext.w	d0
 	move.w	d0,-(a7)
@@ -480,37 +484,37 @@ L30:
 	move.l	(a4),-(a7)
 	jsr	_manually_move_ghost
 	lea	12(a7),a7
-	;line	330
+	;line	332
 	move.l	a4,-(a7)
 	move.l	a3,-(a7)
 	jsr	_swap_buffers
 	addq.l	#8,a7
-	;line	332
-	clr.b	_request_to_render
 	;line	334
+	clr.b	_request_to_render
+	;line	336
 	pea	0
 	move.w	#32,-(a7)
 	jsr	__trap_1_wl
 	addq.l	#6,a7
 	move.l	d0,-32(a6)
-	;line	335
+	;line	337
 	move.l	(a3),-(a7)
 	jsr	_set_video_base
 	addq.l	#4,a7
-	;line	336
+	;line	338
 	move.l	-32(a6),-(a7)
 	move.w	#32,-(a7)
 	jsr	__trap_1_wl
 	addq.l	#6,a7
 L31:
-	;line	341
+	;line	343
 	addq.w	#1,d4
 L29:
 L27:
 	tst.b	d6
 	beq	L26
 L28:
-	;line	344
+	;line	346
 	move.l	d3,-(a7)
 	move.l	(a4),-(a7)
 	move.l	(a3),-(a7)
@@ -524,7 +528,7 @@ _manually_move_ghost:
 	move.l	12(a6),a3
 	lea	_move_ghost,a4
 	lea	_update_cell,a5
-	;line	358
+	;line	360
 	move.l	12(a3),a0
 	move.l	8(a0),-4(a6)
 	move.l	8(a3),a0
@@ -533,12 +537,12 @@ _manually_move_ghost:
 	move.l	8(a0),-12(a6)
 	move.l	16(a3),a0
 	move.l	8(a0),-16(a6)
-	;line	358
+	;line	360
 	move.b	19(a6),d0
 	ext.w	d0
 	cmp.w	#-1,d0
 	beq	L32
-	;line	360
+	;line	362
 	move.l	8(a3),a0
 	clr.w	d0
 	move.b	2(a0),d0
@@ -546,7 +550,7 @@ _manually_move_ghost:
 	move.l	-8(a6),-(a7)
 	jsr	(a5)
 	addq.l	#6,a7
-	;line	361
+	;line	363
 	move.l	12(a3),a0
 	clr.w	d0
 	move.b	2(a0),d0
@@ -554,7 +558,7 @@ _manually_move_ghost:
 	move.l	-4(a6),-(a7)
 	jsr	(a5)
 	addq.l	#6,a7
-	;line	362
+	;line	364
 	move.l	4(a3),a0
 	clr.w	d0
 	move.b	2(a0),d0
@@ -562,7 +566,7 @@ _manually_move_ghost:
 	move.l	-12(a6),-(a7)
 	jsr	(a5)
 	addq.l	#6,a7
-	;line	363
+	;line	365
 	move.l	16(a3),a0
 	clr.w	d0
 	move.b	2(a0),d0
@@ -570,28 +574,28 @@ _manually_move_ghost:
 	move.l	-16(a6),-(a7)
 	jsr	(a5)
 	addq.l	#6,a7
-	;line	365
+	;line	367
 	move.l	4(a3),-(a7)
 	jsr	(a4)
 	addq.l	#4,a7
-	;line	366
+	;line	368
 	move.l	8(a3),-(a7)
 	jsr	(a4)
 	addq.l	#4,a7
-	;line	367
+	;line	369
 	move.l	12(a3),-(a7)
 	jsr	(a4)
 	addq.l	#4,a7
-	;line	368
+	;line	370
 	move.l	16(a3),-(a7)
 	jsr	(a4)
 	addq.l	#4,a7
-	;line	370
+	;line	372
 	move.w	16(a6),-(a7)
 	move.l	a3,-(a7)
 	jsr	_update_current_frame
 	addq.l	#6,a7
-	;line	371
+	;line	373
 	move.l	a3,-(a7)
 	move.l	8(a6),-(a7)
 	jsr	_render_frame
@@ -601,16 +605,16 @@ L32:
 	rts
 _clear_and_render_maps:
 	link	a6,#0
-	;line	380
+	;line	382
 	move.l	8(a6),-(a7)
 	jsr	_clear_screen_q
 	addq.l	#4,a7
-	;line	381
+	;line	383
 	pea	_tile_map
 	move.l	8(a6),-(a7)
 	jsr	_render_map
 	addq.l	#8,a7
-	;line	382
+	;line	384
 	pea	_tile_map
 	move.l	12(a6),-(a7)
 	jsr	_render_map
@@ -618,7 +622,7 @@ _clear_and_render_maps:
 	rts
 _clear_and_render_entities:
 	link	a6,#0
-	;line	389
+	;line	391
 	move.l	8+_cyclops_ghost,-(a7)
 	move.l	8+_awkward_ghost,-(a7)
 	move.l	8+_moustache_ghost,-(a7)
@@ -627,12 +631,12 @@ _clear_and_render_entities:
 	move.l	8(a6),-(a7)
 	jsr	_clear_entities
 	lea	24(a7),a7
-	;line	391
+	;line	393
 	move.l	16(a6),-(a7)
 	move.l	8(a6),-(a7)
 	jsr	_render_frame
 	addq.l	#8,a7
-	;line	392
+	;line	394
 	move.l	16(a6),-(a7)
 	move.l	12(a6),-(a7)
 	jsr	_render_frame
@@ -645,9 +649,9 @@ _execute_movements_and_render_frame:
 	move.l	8(a6),d3
 	move.l	12(a6),d4
 	move.l	20(a6),d5
-	;line	401
+	;line	403
 	moveq	#0,d6
-	;line	401
+	;line	403
 	move.w	(a3),a0
 	add.l	a0,a0
 	move.l	28(a6),d0
@@ -665,46 +669,46 @@ _execute_movements_and_render_frame:
 	beq	L38
 	bra	L33
 L34:
-	;line	404
+	;line	406
 	move.l	d5,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_set_second_movements
-	;line	405
+	;line	407
 	addq.w	#1,(a3)
-	;line	406
+	;line	408
 	bra	L33
 L35:
-	;line	409
+	;line	411
 	move.l	d5,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_set_third_movements
-	;line	410
+	;line	412
 	addq.w	#1,(a3)
-	;line	411
+	;line	413
 	bra	L33
 L36:
-	;line	414
+	;line	416
 	move.l	d5,-(a7)
 	move.l	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_set_third_movements
-	;line	415
+	;line	417
 	addq.w	#1,(a3)
-	;line	416
+	;line	418
 	bra	L33
 L37:
-	;line	419
+	;line	421
 	addq.w	#1,(a3)
-	;line	420
+	;line	422
 	bra	L33
 L38:
-	;line	423
-	moveq	#-1,d6
-	;line	424
-	bra	L33
 	;line	425
+	moveq	#-1,d6
+	;line	426
+	bra	L33
+	;line	427
 	move.b	d6,d0
 L33:
 L39:
@@ -713,26 +717,26 @@ L39:
 	rts
 _initialize_sound:
 	link	a6,#0
-	;line	433
+	;line	435
 	pea	0
 	move.w	#32,-(a7)
 	jsr	__trap_1_wl
 	addq.l	#6,a7
 	move.l	8(a6),a0
 	move.l	d0,(a0)
-	;line	434
-	clr.w	-(a7)
-	move.w	#1,-(a7)
-	move.w	#1,-(a7)
-	jsr	_enable_channel
-	addq.l	#6,a7
-	;line	435
-	clr.w	-(a7)
-	move.w	#1,-(a7)
-	clr.w	-(a7)
-	jsr	_enable_channel
-	addq.l	#6,a7
 	;line	436
+	clr.w	-(a7)
+	move.w	#1,-(a7)
+	move.w	#1,-(a7)
+	jsr	_enable_channel
+	addq.l	#6,a7
+	;line	437
+	clr.w	-(a7)
+	move.w	#1,-(a7)
+	clr.w	-(a7)
+	jsr	_enable_channel
+	addq.l	#6,a7
+	;line	438
 	move.l	8(a6),a0
 	move.l	(a0),-(a7)
 	move.w	#32,-(a7)
@@ -741,36 +745,36 @@ _initialize_sound:
 	rts
 _update_sound:
 	link	a6,#-8
-	;line	449
+	;line	451
 	move.l	_time_now,d0
 	move.l	12(a6),a0
 	sub.l	(a0),d0
 	move.l	d0,-4(a6)
 	move.w	#5,-8(a6)
-	;line	449
+	;line	451
 	move.w	-8(a6),d0
 	ext.l	d0
 	move.l	-4(a6),d1
 	cmp.l	d0,d1
 	bcs	L40
-	;line	450
+	;line	452
 	move.l	12(a6),a0
 	move.l	_time_now,(a0)
-	;line	452
+	;line	454
 	pea	0
 	move.w	#32,-(a7)
 	jsr	__trap_1_wl
 	addq.l	#6,a7
 	move.l	8(a6),a0
 	move.l	d0,(a0)
-	;line	453
+	;line	455
 	move.l	16(a6),-(a7)
 	move.w	24(a6),-(a7)
 	pea	_pacman_intro_treble
 	clr.w	-(a7)
 	jsr	_update_music
 	lea	12(a7),a7
-	;line	454
+	;line	456
 	move.l	20(a6),-(a7)
 	move.w	26(a6),-(a7)
 	pea	_pacman_intro_bass
@@ -778,19 +782,19 @@ _update_sound:
 	jsr	_update_music
 	lea	12(a7),a7
 	move.b	d0,-5(a6)
-	;line	455
+	;line	457
 	move.l	8(a6),a0
 	move.l	(a0),-(a7)
 	move.w	#32,-(a7)
 	jsr	__trap_1_wl
-	;line	456
+	;line	458
 	move.l	28(a6),a0
 	addq.w	#1,(a0)
-	;line	457
+	;line	459
 	move.b	-5(a6),d0
 	bra	L41
 L40:
-	;line	459
+	;line	461
 	moveq	#0,d0
 L41:
 	unlk	a6
@@ -805,7 +809,7 @@ _debug_pacman_movement:
 	movem.l	d3/d4/d5/d6/d7/a3/a4/a5,-(a7)
 	move.l	12(a6),a3
 	lea	-46(a6),a4
-	;line	474
+	;line	476
 	lea	L42,a0
 	lea	-34(a6),a1
 	move.l	(a0)+,(a1)+
@@ -816,39 +820,39 @@ _debug_pacman_movement:
 	move.l	(a0)+,(a1)+
 	move.l	(a0)+,(a1)+
 	move.w	(a0)+,(a1)+
-	;line	474
-	move.l	8(a6),d6
 	;line	476
-	move.l	6(a3),a0
-	move.w	(a0),(a4)
-	;line	477
-	move.l	6(a3),a0
-	move.w	2(a0),-44(a6)
+	move.l	8(a6),d6
 	;line	478
 	move.l	6(a3),a0
-	move.w	12(a0),-42(a6)
+	move.w	(a0),(a4)
 	;line	479
 	move.l	6(a3),a0
-	move.w	14(a0),-40(a6)
+	move.w	2(a0),-44(a6)
 	;line	480
 	move.l	6(a3),a0
-	move.w	16(a0),-38(a6)
+	move.w	12(a0),-42(a6)
 	;line	481
 	move.l	6(a3),a0
-	move.w	18(a0),-36(a6)
+	move.w	14(a0),-40(a6)
+	;line	482
+	move.l	6(a3),a0
+	move.w	16(a0),-38(a6)
 	;line	483
+	move.l	6(a3),a0
+	move.w	18(a0),-36(a6)
+	;line	485
 	moveq	#0,d3
-	;line	484
-	moveq	#32,d5
 	;line	486
+	moveq	#32,d5
+	;line	488
 	moveq	#0,d4
 	bra	L44
 L43:
-	;line	487
+	;line	489
 	sub.l	a5,a5
 	bra	L48
 L47:
-	;line	488
+	;line	490
 	move.w	d5,-(a7)
 	move.w	a5,d0
 	asl.w	#3,d0
@@ -863,7 +867,7 @@ L48:
 	cmp.w	#10,a5
 	blt	L47
 L49:
-	;line	491
+	;line	493
 	lea	-34(a6),a0
 	move.w	d4,d0
 	muls	#5,d0
@@ -875,15 +879,15 @@ L49:
 	move.l	d6,-(a7)
 	jsr	_plot_string
 	lea	16(a7),a7
-	;line	492
-	add.w	#32,d3
 	;line	494
+	add.w	#32,d3
+	;line	496
 	ext.l	d4
 	move.l	d4,d0
 	add.l	d0,d0
 	cmp.w	#100,0(a4,d0.l)
 	bcs	L51
-	;line	495
+	;line	497
 	ext.l	d4
 	move.l	d4,d0
 	add.l	d0,d0
@@ -891,7 +895,7 @@ L49:
 	and.l	#65535,d0
 	divu	#100,d0
 	move.w	d0,-56(a6)
-	;line	496
+	;line	498
 	ext.l	d4
 	move.l	d4,d0
 	add.l	d0,d0
@@ -902,7 +906,7 @@ L49:
 	divu	#10,d0
 	swap	d0
 	move.w	d0,-52(a6)
-	;line	497
+	;line	499
 	ext.l	d4
 	move.l	d4,d0
 	add.l	d0,d0
@@ -911,16 +915,16 @@ L49:
 	divu	#10,d0
 	swap	d0
 	move.w	d0,d7
-	;line	498
+	;line	500
 	move.w	-56(a6),-(a7)
 	move.w	d5,-(a7)
 	move.w	d3,-(a7)
 	move.l	d6,-(a7)
 	jsr	_debug_print
 	lea	10(a7),a7
-	;line	499
+	;line	501
 	add.w	#16,d3
-	;line	500
+	;line	502
 	move.w	-52(a6),d0
 	mulu	#10,d0
 	add.w	d7,d0
@@ -932,7 +936,7 @@ L49:
 	lea	10(a7),a7
 	bra	L52
 L51:
-	;line	502
+	;line	504
 	ext.l	d4
 	move.l	d4,d0
 	add.l	d0,d0
@@ -940,7 +944,7 @@ L51:
 	and.l	#65535,d0
 	divu	#10,d0
 	move.w	d0,-52(a6)
-	;line	503
+	;line	505
 	ext.l	d4
 	move.l	d4,d0
 	add.l	d0,d0
@@ -949,7 +953,7 @@ L51:
 	divu	#10,d0
 	swap	d0
 	move.w	d0,d7
-	;line	504
+	;line	506
 	move.w	-52(a6),d0
 	mulu	#10,d0
 	add.w	d7,d0
@@ -960,14 +964,14 @@ L51:
 	jsr	_debug_print
 	lea	10(a7),a7
 L52:
-	;line	507
-	add.w	#32,d3
 	;line	509
+	add.w	#32,d3
+	;line	511
 	moveq	#64,d0
 	add.w	d3,d0
 	cmp.w	#640,d0
 	bls	L53
-	;line	510
+	;line	512
 	moveq	#0,d3
 L53:
 L46:
@@ -985,7 +989,7 @@ _debug_print:
 	move.l	8(a6),d3
 	move.w	12(a6),d4
 	move.w	14(a6),d5
-	;line	526
+	;line	528
 	clr.l	d0
 	move.w	16(a6),d0
 	divu	#10,d0
@@ -1001,13 +1005,13 @@ _debug_print:
 	move.w	-4(a6),d0
 	add.w	#48,d0
 	move.w	d0,-8(a6)
-	;line	526
+	;line	528
 	move.w	d5,-(a7)
 	move.w	d4,-(a7)
 	move.l	d3,-(a7)
 	jsr	_clear_letter
 	addq.l	#8,a7
-	;line	527
+	;line	529
 	move.w	d5,-(a7)
 	moveq	#8,d0
 	add.w	d4,d0
@@ -1015,7 +1019,7 @@ _debug_print:
 	move.l	d3,-(a7)
 	jsr	_clear_letter
 	addq.l	#8,a7
-	;line	528
+	;line	530
 	move.w	-6(a6),-(a7)
 	pea	_font
 	move.w	d5,-(a7)
@@ -1023,7 +1027,7 @@ _debug_print:
 	move.l	d3,-(a7)
 	jsr	_plot_letter
 	lea	14(a7),a7
-	;line	529
+	;line	531
 	move.w	-8(a6),-(a7)
 	pea	_font
 	move.w	d5,-(a7)
@@ -1044,18 +1048,18 @@ _debug_cells_pac:
 	link	a6,#-10
 	movem.l	d3/d4,-(a7)
 	move.l	8(a6),d3
-	;line	541
+	;line	543
 	lea	L54,a0
 	lea	-6(a6),a1
 	move.l	(a0)+,(a1)+
 	lea	L55,a0
 	lea	-10(a6),a1
 	move.l	(a0)+,(a1)+
-	;line	541
+	;line	543
 	moveq	#0,d4
 	bra	L57
 L56:
-	;line	542
+	;line	544
 	clr.w	-(a7)
 	move.w	d4,d0
 	asl.w	#3,d0
@@ -1069,7 +1073,7 @@ L57:
 	cmp.w	#14,d4
 	blt	L56
 L58:
-	;line	545
+	;line	547
 	pea	-6(a6)
 	pea	_font
 	clr.w	-(a7)
@@ -1077,7 +1081,7 @@ L58:
 	move.l	d3,-(a7)
 	jsr	_plot_string
 	lea	16(a7),a7
-	;line	546
+	;line	548
 	move.l	12(a6),a0
 	move.l	6(a0),a0
 	clr.w	d0
@@ -1088,7 +1092,7 @@ L58:
 	move.l	d3,-(a7)
 	jsr	_debug_print
 	lea	10(a7),a7
-	;line	547
+	;line	549
 	pea	-10(a6)
 	pea	_font
 	clr.w	-(a7)
@@ -1096,7 +1100,7 @@ L58:
 	move.l	d3,-(a7)
 	jsr	_plot_string
 	lea	16(a7),a7
-	;line	548
+	;line	550
 	move.l	12(a6),a0
 	move.l	6(a0),a0
 	clr.w	d0
@@ -1111,107 +1115,107 @@ L58:
 	rts
 _set_first_movements:
 	link	a6,#0
-	;line	557
-	move.l	8+_crying_ghost,a0
-	move.w	#1,4(a0)
-	;line	558
-	move.l	8+_crying_ghost,a0
-	clr.w	6(a0)
 	;line	559
 	move.l	8+_crying_ghost,a0
-	move.b	#3,8(a0)
-	;line	561
-	move.l	8+_awkward_ghost,a0
-	move.w	#-1,4(a0)
-	;line	562
-	move.l	8+_awkward_ghost,a0
+	move.w	#1,4(a0)
+	;line	560
+	move.l	8+_crying_ghost,a0
 	clr.w	6(a0)
+	;line	561
+	move.l	8+_crying_ghost,a0
+	move.b	#3,8(a0)
 	;line	563
 	move.l	8+_awkward_ghost,a0
-	move.b	#2,8(a0)
+	move.w	#-1,4(a0)
+	;line	564
+	move.l	8+_awkward_ghost,a0
+	clr.w	6(a0)
 	;line	565
-	move.l	8+_cyclops_ghost,a0
-	clr.w	4(a0)
-	;line	566
-	move.l	8+_cyclops_ghost,a0
-	move.w	#-1,6(a0)
+	move.l	8+_awkward_ghost,a0
+	move.b	#2,8(a0)
 	;line	567
 	move.l	8+_cyclops_ghost,a0
-	clr.b	8(a0)
+	clr.w	4(a0)
+	;line	568
+	move.l	8+_cyclops_ghost,a0
+	move.w	#-1,6(a0)
 	;line	569
+	move.l	8+_cyclops_ghost,a0
+	clr.b	8(a0)
+	;line	571
 	move.l	8+_moustache_ghost,a0
 	clr.w	4(a0)
-	;line	570
+	;line	572
 	move.l	8+_moustache_ghost,a0
 	move.w	#1,6(a0)
-	;line	571
+	;line	573
 	move.l	8+_moustache_ghost,a0
 	move.b	#1,8(a0)
 	unlk	a6
 	rts
 _set_second_movements:
 	link	a6,#0
-	;line	575
-	move.l	8+_moustache_ghost,a0
-	move.w	#1,4(a0)
-	;line	576
-	move.l	8+_moustache_ghost,a0
-	clr.w	6(a0)
 	;line	577
 	move.l	8+_moustache_ghost,a0
-	move.b	#3,8(a0)
+	move.w	#1,4(a0)
+	;line	578
+	move.l	8+_moustache_ghost,a0
+	clr.w	6(a0)
 	;line	579
+	move.l	8+_moustache_ghost,a0
+	move.b	#3,8(a0)
+	;line	581
 	move.l	8+_cyclops_ghost,a0
 	move.w	#-1,4(a0)
-	;line	580
+	;line	582
 	move.l	8+_cyclops_ghost,a0
 	clr.w	6(a0)
-	;line	581
+	;line	583
 	move.l	8+_cyclops_ghost,a0
 	move.b	#2,8(a0)
 	unlk	a6
 	rts
 _set_third_movements:
 	link	a6,#0
-	;line	584
-	move.l	8+_crying_ghost,a0
-	clr.w	4(a0)
-	;line	585
-	move.l	8+_crying_ghost,a0
-	move.w	#-1,6(a0)
 	;line	586
 	move.l	8+_crying_ghost,a0
-	clr.b	8(a0)
+	clr.w	4(a0)
+	;line	587
+	move.l	8+_crying_ghost,a0
+	move.w	#-1,6(a0)
 	;line	588
+	move.l	8+_crying_ghost,a0
+	clr.b	8(a0)
+	;line	590
 	move.l	8+_awkward_ghost,a0
 	clr.w	4(a0)
-	;line	589
+	;line	591
 	move.l	8+_awkward_ghost,a0
 	move.w	#1,6(a0)
-	;line	590
+	;line	592
 	move.l	8+_awkward_ghost,a0
 	move.b	#1,8(a0)
 	unlk	a6
 	rts
 _get_video_base:
 	link	a6,#-10
-	;line	602
+	;line	604
 	pea	0
 	move.w	#32,-(a7)
 	jsr	__trap_1_wl
 	addq.l	#6,a7
 	move.l	d0,-4(a6)
-	;line	603
+	;line	605
 	move.l	_ptr_to_highbyte,a0
 	move.b	(a0),-9(a6)
-	;line	604
+	;line	606
 	move.l	_ptr_to_lowbyte,a0
 	move.b	(a0),-10(a6)
-	;line	605
+	;line	607
 	move.l	-4(a6),-(a7)
 	move.w	#32,-(a7)
 	jsr	__trap_1_wl
-	;line	607
+	;line	609
 	clr.l	d0
 	move.b	-9(a6),d0
 	moveq	#16,d1
@@ -1221,7 +1225,7 @@ _get_video_base:
 	asl.l	#8,d1
 	or.l	d1,d0
 	move.l	d0,-8(a6)
-	;line	609
+	;line	611
 	move.l	-8(a6),d0
 L60:
 	unlk	a6
