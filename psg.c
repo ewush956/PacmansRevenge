@@ -166,6 +166,24 @@ void play_note(int channel, int tuning, unsigned char volume) {
 void stop_sound() {
     set_master_volume(0);
 }
+bool play_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state) {
+    int index = state->current_sound_index;
+    int* time_left = &state->sound_time_left;
+
+    if (*time_left == 0) {
+        if (index < cycle_length) {
+            *time_left = sound_cycle[index].duration; 
+            play_note(channel, sound_cycle[index].frequency, sound_cycle[index].volume); 
+            state->current_sound_index++; 
+        } else {
+            stop_sound(); 
+            state->current_sound_index = 0; 
+            return TRUE; 
+        }
+    }
+    (*time_left)--; 
+    return FALSE; 
+}
 void set_envelope(int shape, unsigned int sustain) {
     write_psg(11, sustain);
     write_psg(12, sustain);

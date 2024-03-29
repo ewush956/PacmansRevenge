@@ -24,7 +24,7 @@
 
 #define SELECT_REGISTER 0xFF8800
 #define WRITE_REGISTER 0xFF8802
-
+/*
 typedef struct {
     int frequency;
     int duration;
@@ -35,6 +35,18 @@ typedef struct {
     int current_note_index;
     int note_time_left;
 }MusicState;
+*/
+typedef struct {
+    int frequency;
+    int duration;
+    int volume;
+}SoundCycle;
+
+
+typedef struct {
+    int current_sound_index;
+    int sound_time_left;
+}SoundState;
 
 #define NUM_NOTES 12
 #define FIRST_OCTAVE 0
@@ -156,4 +168,5 @@ void play_note(int channel, int tuning, unsigned char volume);
 void stop_sound();
 void set_envelope(int shape, unsigned int sustain);
 void write_psg(int reg, UCHAR8 val);
+bool play_sound(int channel, const SoundCycle sound_cycle[], int cycle_length, SoundState *state);
 #endif

@@ -5,7 +5,7 @@
 #include "psg.h"
 
 #define WAKA_CYCLE_LENGTH 14
-
+/*
 typedef struct {
     int frequency;
     int volume;
@@ -16,7 +16,7 @@ typedef struct {
     int current_sound_index;
     int sound_time_left;
 }SoundState;
-
+*/
 extern const SoundCycle waka_sound_cycle[WAKA_CYCLE_LENGTH];
 extern const SoundCycle waka_noise_cycle[WAKA_CYCLE_LENGTH];
 

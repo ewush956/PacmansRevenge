@@ -85,8 +85,8 @@ void clear_and_render_entities(ULONG32* base32, ULONG32* back_buffer_ptr, Entiti
 void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr);
 
 bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* back8, Entities* entity, int* moves_index, int initial_moves[5]);
-void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState);
-bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
+void initialize_sound(long* old_ssp, SoundState* trebleState, SoundState* bassState);
+bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, SoundState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
 
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];

@@ -235,60 +235,13 @@ void swap_buffers (ULONG32** base32, ULONG32** back_buffer_ptr)
  *          and plays intro music
  ******************************************************************/
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity) 
-/*  
-    MusicState trebleState = {0, 0};
-    MusicState bassState = {0, 0};
-    UCHAR8* base8 = (UCHAR8*)base32;
-    UCHAR8* back8 = (UCHAR8*)back_buffer_ptr;
-
-    ULONG32 time_then = get_time(), song_now, song_then, time_elapsed;
-    long old_ssp; 
-    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
-    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
-    int initial_moves[5] = {0,1,2,3,4};
-    int moves_index = 0;
-    int* indx_ptr = &moves_index;
-    bool song_finished = FALSE;
-    bool stop_ghosts = FALSE;
-    int intro_duration = 0;
-    int* intro_duration_ptr = &intro_duration;
-    int first_frames = 0;
-    bool enable = TRUE;
-
-    int time_now = get_time();
-
-    init_map_cells(cell_map, tile_map);    
-    clear_and_render_maps(base32, back_buffer_ptr);
-    render_map(background_ptr, tile_map);
-    clear_and_render_entities(base32, back_buffer_ptr, entity);
-    set_first_movements(base32, base8, entity);
-    initialize_sound(&old_ssp, &trebleState, &bassState);
-
-    while (!song_finished) {
-        song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
-        if (*intro_duration_ptr > 44) {
-            time_now = get_time();
-            time_elapsed = time_now - time_then;
-            if (first_frames > FIRST_STOP - 1) {
-                stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
-                first_frames = 0;
-            }
-            if (stop_ghosts == FALSE && time_elapsed > 0) {
-                manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
-                swap_buffers(&base32, &back_buffer_ptr);
-                Setscreen(-1,base32,-1);  
-                time_then = get_time();
-            }
-            first_frames++;
-        }
-    }
-    clear_and_render_entities(base32, back_buffer_ptr, entity);
-}
-*/
-
  {
+    /*
     MusicState trebleState = {0, 0};
     MusicState bassState = {0, 0};
+    */
+    SoundState trebleState = {0, 0};
+    SoundState bassState = {0, 0};
     UCHAR8* base8 = (UCHAR8*)base32;
     UCHAR8* back8 = (UCHAR8*)back_buffer_ptr;
 
@@ -296,8 +249,8 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
     ULONG32 song_now, song_then, time_elapsed;    /**/
     /*ULONG32 time_then = time_now;*/
     long old_ssp; 
-    int treble_song_length = sizeof(pacman_intro_treble) / sizeof(Note);
-    int bass_song_length = sizeof(pacman_intro_bass) / sizeof(Note);
+    int treble_song_length = PACMAN_INTRO_TREBLE_LENGTH;
+    int bass_song_length = PACMAN_INTRO_BASS_LENGTH;
     int initial_moves[5] = {0,1,2,3,4};
     int moves_index = 0;
     int* indx_ptr = &moves_index;
@@ -431,7 +384,7 @@ bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* 
  * Function: initialize_sound
  * Purpose: Enables channels A and B for sound
 ******************************************************************/
-void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState) {
+void initialize_sound(long* old_ssp, SoundState* trebleState, SoundState* bassState) {
     *old_ssp = Super(0);
     enable_channel(CHANNEL_B, TONE_ON, NOISE_OFF);
     enable_channel(CHANNEL_A, TONE_ON, NOISE_OFF);
@@ -442,7 +395,7 @@ void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassSt
  * Purpose: Updates the the state of a song (note structure) 
  *          returns TRUE if the song has finished.
  *****************************************************************/
-bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
+bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, SoundState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
     /*ULONG32 time_now = get_time();*/
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
@@ -452,8 +405,12 @@ bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, Mu
         *time_then = time_now;
 
         *old_ssp = Super(0);
+        /*
         update_music(CHANNEL_A, pacman_intro_treble, treble_song_length, trebleState);
         song_finished = update_music(CHANNEL_B, pacman_intro_bass, bass_song_length, bassState);
+        */
+        play_sound(CHANNEL_A, pacman_intro_treble, treble_song_length, trebleState);
+        song_finished = play_sound(CHANNEL_B, pacman_intro_bass, bass_song_length, bassState);
         Super(*old_ssp);
         (*intro_duration)++;
         return song_finished;
