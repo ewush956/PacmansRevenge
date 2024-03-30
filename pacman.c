@@ -63,14 +63,13 @@
 UCHAR8 background[BUFFER_SIZE_BYTES];
 UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
-volatile UCHAR8* ptr_to_lowbyte = VIDEO_ADDR_MID;
+volatile UCHAR8* ptr_to_midbyte = VIDEO_ADDR_MID;
 GAME_STATE state = PLAY;
  
 
 int main()
 {
     int i;
-	/*char input; /**/
     UCHAR8 input;
     int waka_repetitions = 10; 
     int buffer_offset = 256 - ((long)(screen_buffer) % 256); 
@@ -96,7 +95,7 @@ int main()
 
     Vector orig_vector28 = install_vector(TRAP_28, trap28_isr);   /* for VBL*/
     Vector orig_vector70 = install_vector(TRAP_70, trap70_isr);   /* for IKBD*/
-    /*disable_MIDI_interrupts();*/
+    /*disable_MIDI_interrupts(); /* */
     
     /*
    plot_screen(base32, splash); 
@@ -114,9 +113,6 @@ int main()
 
     initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
 
-/*
-	if (Cconis())	
-        input = get_input(); */
 
     ticks = 0;
 
@@ -154,13 +150,9 @@ int main()
     
     if (state == WIN) {
         plot_screen(original, splash);
-        
-        /*while (input != ESC_BREAK) {
-            input = (char)Cnecin();
-        }*/
     }
 
-    enable_MIDI_interrupts(); /**/
+    /*enable_MIDI_interrupts(); /**/
     install_vector(TRAP_28, orig_vector28);        /* return vector back to orig */
     install_vector(TRAP_70, orig_vector70); 
 
@@ -185,10 +177,9 @@ void update_entities() {
  * 
  * Parameters: entity, input, ticks
  ******************************************************************/
-void update_movement(Entities* entity, /*char input,*/ UINT16 ticks) {
+void update_movement(Entities* entity, UINT16 ticks) {
 
  
-    /*set_input(entity->pacman , input);*/
     handle_collisions(entity, ticks);   
     update_entities();
     eat_pellet(entity->pacman->move);
@@ -293,7 +284,6 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
         if (*intro_duration_ptr > 44) {
-            /*time_now = get_time(); ---*/
             
             if (first_frames > FIRST_STOP - 1) {
                 stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
@@ -574,14 +564,14 @@ ULONG32* get_video_base()
 	ULONG32 old_ssp;
     ULONG32 combined_address;
     UCHAR8 high_byte; 
-    UCHAR8 low_byte ;
+    UCHAR8 mid_byte ;
 
 	old_ssp = Super(0); 				
     high_byte = *ptr_to_highbyte;
-    low_byte = *ptr_to_lowbyte;
+    mid_byte = *ptr_to_midbyte;
     Super(old_ssp); 	
 
-    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte  << 8);
+    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)mid_byte  << 8);
    
     return (ULONG32*)combined_address;
 
@@ -602,6 +592,11 @@ void dequeue()
         tail = -1;
     }
 }
+/********
+* A simple state machine to handle the keybaord input as
+* the game loops.
+*
+********/
 void process_keyboard_input(UCHAR8 input)
 {   
     /* state must be global*/
@@ -615,7 +610,6 @@ void process_keyboard_input(UCHAR8 input)
             else{
                 set_input(entity.pacman,input);
             }
-
             break;
         case WAITING_FOR_ESC_BREAK:
             if (input == ESC_BREAK){
@@ -624,7 +618,6 @@ void process_keyboard_input(UCHAR8 input)
             else{
                 state = PLAY;
             }
-
             break;
 
         default:

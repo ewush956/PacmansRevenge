@@ -1084,7 +1084,7 @@ extern Entities entity;
 # 1 "./isr.h" 1
 # 1 "./TYPES.H" 1
 # 5 "./isr.h" 2
-# 17 "./isr.h"
+# 18 "./isr.h"
 typedef void (*Vector)();
 Vector install_vector(int num, Vector vector);
 
@@ -1096,6 +1096,7 @@ void trap70_isr();
 
 void disable_MIDI_interrupts();
 void enable_MIDI_interrupts();
+
 
 extern int seconds;
 # 14 "pacman.c" 2
@@ -1109,14 +1110,13 @@ extern int seconds;
 UCHAR8 background[32256 ];
 UCHAR8 screen_buffer[32256 ];
 volatile UCHAR8* ptr_to_highbyte = 0xFF8201 ;
-volatile UCHAR8* ptr_to_lowbyte = 0xFF8203 ;
+volatile UCHAR8* ptr_to_midbyte = 0xFF8203 ;
 GAME_STATE state = ((UCHAR8)1) ;
 
 
 int main()
 {
     int i;
-
     UCHAR8 input;
     int waka_repetitions = 10;
     int buffer_offset = 256 - ((long)(screen_buffer) % 256);
@@ -1142,11 +1142,8 @@ int main()
 
     Vector orig_vector28 = install_vector(28 , trap28_isr);
     Vector orig_vector70 = install_vector(70 , trap70_isr);
-# 115 "pacman.c"
+# 114 "pacman.c"
     initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
-
-
-
 
 
     ticks = 0;
@@ -1185,13 +1182,9 @@ int main()
 
     if (state == ((UCHAR8)4) ) {
         plot_screen(original, splash);
-
-
-
-
     }
 
-    enable_MIDI_interrupts();
+
     install_vector(28 , orig_vector28);
     install_vector(70 , orig_vector70);
 
@@ -1210,9 +1203,8 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 188 "pacman.c"
-void update_movement(Entities* entity,   UINT16 ticks) {
-
+# 180 "pacman.c"
+void update_movement(Entities* entity, UINT16 ticks) {
 
 
     handle_collisions(entity, ticks);
@@ -1223,7 +1215,7 @@ void update_movement(Entities* entity,   UINT16 ticks) {
 
 
 }
-# 206 "pacman.c"
+# 197 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) {
 
 
@@ -1243,7 +1235,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
     return new_state;
 
 }
-# 232 "pacman.c"
+# 223 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1308,7 +1300,6 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, treble_song_length, bass_song_length, intro_duration_ptr);
         if (*intro_duration_ptr > 44) {
-
 
             if (first_frames > 16  - 1) {
                 stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
@@ -1541,7 +1532,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 535 "pacman.c"
+# 525 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;
@@ -1584,14 +1575,14 @@ ULONG32* get_video_base()
 	ULONG32 old_ssp;
     ULONG32 combined_address;
     UCHAR8 high_byte;
-    UCHAR8 low_byte ;
+    UCHAR8 mid_byte ;
 
 	old_ssp = _trap_1_wl((short)0x20,(long)(0)) ;
     high_byte = *ptr_to_highbyte;
-    low_byte = *ptr_to_lowbyte;
+    mid_byte = *ptr_to_midbyte;
     _trap_1_wl((short)0x20,(long)(old_ssp)) ;
 
-    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte  << 8);
+    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)mid_byte  << 8);
 
     return (ULONG32*)combined_address;
 
@@ -1612,6 +1603,11 @@ void dequeue()
         tail = -1;
     }
 }
+
+
+
+
+
 void process_keyboard_input(UCHAR8 input)
 {
 
@@ -1625,7 +1621,6 @@ void process_keyboard_input(UCHAR8 input)
             else{
                 set_input(entity.pacman,input);
             }
-
             break;
         case ((UCHAR8)5) :
             if (input == 0x81 ){
@@ -1634,7 +1629,6 @@ void process_keyboard_input(UCHAR8 input)
             else{
                 state = ((UCHAR8)1) ;
             }
-
             break;
 
         default:

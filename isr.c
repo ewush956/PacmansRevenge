@@ -72,10 +72,12 @@ void do_vbl()
 
 void do_IKBD_isr()
 {
-   
+    
+    /*if ((*IKBD_status & 0x80) == 0) /**/
+
     SCANCODE code = *IKBD_RDR;
 
-    if ((code & 0x80) != 0x80) {                /* not enqueueing break codes as we dont want to hold w a s or d to move*/   
+    if ((code & 0x80) != 0x80) {                /* not enqueuing break codes as we dont want to HOLD w a s or d to move*/   
         
         tail = (tail + 1) % 256;
         keyboard_buffer[tail] = code;
@@ -87,25 +89,29 @@ void do_IKBD_isr()
         keyboard_buffer[tail] = code;
         fill_level++;   
     }
-  
 
-   *in_service_register_b &= CLEAR_BIT_6; 
+
+    *in_service_register_b &= CLEAR_BIT_6; 
+
+
 
 }
-
 void disable_MIDI_interrupts()
 {
     long old_ssp = Super(0);
-    *interrupt_enable_b &= DISABLE;
+    *interrupt_enable_b &= DISABLE; 
+    /**interrupt_enable_b = DISABLE;*/
     Super(old_ssp);
 }
 void enable_MIDI_interrupts()
 {
     long old_ssp = Super(0);
-    *interrupt_enable_b |= ENABLE;
-     Super(old_ssp);
-
+    *interrupt_enable_b |= ENABLE; 
+    /**interrupt_enable_b = 0xFF; */
+    Super(old_ssp);
 }
+
+
 
 /*****************
 *   Purpose: Initializes the cirecular queue keyboard buffer struct
