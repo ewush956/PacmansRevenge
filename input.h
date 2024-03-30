@@ -2,7 +2,7 @@
 #define INPUT_H
 
 
-/* add arrow keys for input later */
+
 
 #define W_KEY 'w'
 #define A_KEY 'a'

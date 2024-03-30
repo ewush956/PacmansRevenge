@@ -9,6 +9,8 @@ typedef unsigned int  UINT16;
 typedef unsigned long ULONG32;
 
 typedef signed char bool;
+
+typedef UCHAR8 SCANCODE;
 # 4 "./bitmaps.h" 2
 
 

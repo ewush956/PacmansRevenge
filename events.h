@@ -30,7 +30,9 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier);
 void handle_collisions(Entities* entity, UINT16 ticks);
 ObjectType process_ghost_collision(Entities* all, UINT16 tick);
 ULONG32 random_number_generator(Xor *xor);
-void set_input(Pacman *pacman, char input);
+
+/*void set_input(Pacman *pacman, char input);*/
+void set_input(Pacman *pacman, UCHAR8 input);
 
 UCHAR8 get_valid_paths(Movement *ghost);
 void eat_pellet(Movement* pacman);

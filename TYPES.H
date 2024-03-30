@@ -7,6 +7,8 @@ typedef unsigned long ULONG32;
 
 typedef signed char bool; 
 
+typedef UCHAR8 SCANCODE;
+
 #define TRUE -1
 #define FALSE 0
 
@@ -32,5 +34,7 @@ typedef signed char bool;
 #define LONGS_PER_ROW 20
 #define WORDS_PER_ROW 40
 #define BYTES_PER_ROW 80
+
+
 
 #endif

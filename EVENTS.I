@@ -1,4 +1,102 @@
 # 1 "events.c" 1
+# 1 "C:/c68/include/stdio.h" 1
+# 1 "C:/c68/include/compiler.h" 1
+# 11 "C:/c68/include/stdio.h" 2
+# 20 "C:/c68/include/stdio.h"
+typedef unsigned long  size_t;
+# 69 "C:/c68/include/stdio.h"
+typedef	struct
+	{
+	long		_cnt;
+	unsigned char	*_ptr;
+	unsigned char	*_base;
+	unsigned int	_flag;
+	int		_file;
+	long		_bsiz;
+	unsigned char	_ch;
+	}
+	FILE;
+
+
+typedef unsigned long fpos_t;
+# 92 "C:/c68/include/stdio.h"
+extern	FILE	_iob[];
+# 108 "C:/c68/include/stdio.h"
+ char *	ctermid	(char *) ;
+
+
+
+
+ int	remove	(const char *) ;
+ int	rename	(const char *, const char *) ;
+ char *	tmpnam	(char *) ;
+ FILE *	tmpfile	(void) ;
+
+ int	fclose	(FILE *) ;
+ int	fflush	(FILE *) ;
+
+ FILE *	fopen	(const char *, const char *) ;
+ FILE *	freopen	(const char *, const char *, FILE *) ;
+
+ void	setbuf	(FILE *, char *) ;
+ int	setvbuf	(FILE *, char *, int, size_t) ;
+# 132 "C:/c68/include/stdio.h"
+ int  fscanf  (FILE *, const char *, ...) ;
+ int  scanf   (const char *, ...) ;
+ int  sscanf  (const char *, const char *, ...) ;
+
+
+ int	fprintf	(FILE *, const char *, ...) ;
+ int	printf	(const char *, ...) ;
+ int	sprintf	(char *, const char *, ...) ;
+
+ int 	vfprintf (FILE *, const char *, char * ) ;
+ int 	vprintf	 (const char *, char * ) ;
+ int 	vsprintf (char *, const char *, char * ) ;
+
+ int	vscanf  (const char *, char * ) ;
+ int	vfscanf (FILE *, const char *, char * ) ;
+ int	vsscanf	(const char *, const char *, char * ) ;
+
+
+ int	fgetc	(FILE *) ;
+ char	*fgets	(char *, int, FILE *) ;
+ char	*gets	(char *) ;
+ int	fputc	(int c, FILE *) ;
+ int	fputs	(const char *, FILE *) ;
+ int	puts	(const char *) ;
+
+ size_t	fread	(void *, size_t, size_t, FILE *) ;
+ size_t	fwrite	(const void *, size_t, size_t, FILE *) ;
+
+ int	fgetpos	(FILE *, fpos_t *) ;
+ int	fsetpos	(FILE *, fpos_t *) ;
+
+ int	fseek	(FILE *, long, int) ;
+ long	ftell	(FILE *) ;
+ void	rewind	(FILE *) ;
+
+ void	perror	(const char *) ;
+
+
+ FILE	*fdopen	(int, const char *) ;
+
+
+ FILE *	fopenp	(const char *, const char *) ;
+ int 	fungetc	(int, FILE *) ;
+ int	pclose	(FILE *) ;
+ FILE *	popen	(const char *, const char *) ;
+ void	setlinebuf	(FILE *) ;
+
+ void	_binmode	(int) ;
+ long 	getl	(FILE *) ;
+ long 	putl	(long, FILE *) ;
+ short 	getw	(FILE *) ;
+ short 	putw	(short, FILE *) ;
+ void	_getbuf	(FILE *fp) ;
+# 192 "C:/c68/include/stdio.h"
+ int	_filbuf	(FILE *) ;
+# 2 "events.c" 2
 # 1 "./bitmaps.h" 1
 # 1 "./TYPES.H" 1
 
@@ -9,6 +107,8 @@ typedef unsigned int  UINT16;
 typedef unsigned long ULONG32;
 
 typedef signed char bool;
+
+typedef UCHAR8 SCANCODE;
 # 4 "./bitmaps.h" 2
 
 
@@ -115,7 +215,7 @@ extern UCHAR8 direction_map[][40 ];
 extern UINT16 direction_map2[][40 ];
 
 extern UINT16 tile_map[][40 ];
-# 2 "events.c" 2
+# 4 "events.c" 2
 # 1 "./model.h" 1
 # 1 "./types.h" 1
 # 4 "./model.h" 2
@@ -253,9 +353,9 @@ void update_current_frame(Entities* all, int clock);
 
 void set_prev_prev(Entities* entity);
 void set_prev(Entities* entity);
-# 3 "events.c" 2
+# 5 "events.c" 2
 # 1 "./TYPES.H" 1
-# 4 "events.c" 2
+# 6 "events.c" 2
 # 1 "./events.h" 1
 # 1 "./TYPES.H" 1
 # 4 "./events.h" 2
@@ -278,17 +378,17 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier);
 void handle_collisions(Entities* entity, UINT16 ticks);
 ObjectType process_ghost_collision(Entities* all, UINT16 tick);
 ULONG32 random_number_generator(Xor *xor);
-void set_input(Pacman *pacman, char input);
+
+
+void set_input(Pacman *pacman, UCHAR8 input);
 
 UCHAR8 get_valid_paths(Movement *ghost);
 void eat_pellet(Movement* pacman);
-# 5 "events.c" 2
+# 7 "events.c" 2
 # 1 "./psg.h" 1
 # 1 "./TYPES.H" 1
 # 4 "./psg.h" 2
 # 1 "C:/c68/include/osbind.h" 1
-# 1 "C:/c68/include/compiler.h" 1
-# 9 "C:/c68/include/osbind.h" 2
 # 1 "C:/c68/include/ostruct.h" 1
 # 22 "C:/c68/include/ostruct.h"
 typedef struct {
@@ -466,7 +566,7 @@ void set_volume(int channel, unsigned char volume);
 void set_master_volume(unsigned char volume);
 void play_note(int channel, int tuning, unsigned char volume);
 void stop_sound();
-# 6 "events.c" 2
+# 8 "events.c" 2
 # 1 "./renderer.h" 1
 # 1 "./model.h" 1
 # 2 "./renderer.h" 2
@@ -491,108 +591,39 @@ void render_initial_timer(UCHAR8* base);
 void render_pellet(UCHAR8* base8, Movement* move);
 void clear_pacman(ULONG32* base32, Movement* move);
 void render_pellets(ULONG32* base32, Entities* all);
-# 7 "events.c" 2
-# 1 "C:/c68/include/stdio.h" 1
-# 20 "C:/c68/include/stdio.h"
-typedef unsigned long  size_t;
-# 69 "C:/c68/include/stdio.h"
-typedef	struct
-	{
-	long		_cnt;
-	unsigned char	*_ptr;
-	unsigned char	*_base;
-	unsigned int	_flag;
-	int		_file;
-	long		_bsiz;
-	unsigned char	_ch;
-	}
-	FILE;
+# 9 "events.c" 2
+# 1 "./globals.h" 1
+# 1 "./TYPES.H" 1
+# 4 "./globals.h" 2
+# 1 "./model.h" 1
+# 5 "./globals.h" 2
+# 16 "./globals.h"
+extern bool request_to_render;
+extern volatile UINT16 ticks;
+extern volatile ULONG32 time_now;
 
+extern char keyboard_buffer[256];
+extern UCHAR8 head;
+extern int tail;
+extern UCHAR8 fill_level;
 
-typedef unsigned long fpos_t;
-# 92 "C:/c68/include/stdio.h"
-extern	FILE	_iob[];
-# 108 "C:/c68/include/stdio.h"
- char *	ctermid	(char *) ;
-
-
-
-
- int	remove	(const char *) ;
- int	rename	(const char *, const char *) ;
- char *	tmpnam	(char *) ;
- FILE *	tmpfile	(void) ;
-
- int	fclose	(FILE *) ;
- int	fflush	(FILE *) ;
-
- FILE *	fopen	(const char *, const char *) ;
- FILE *	freopen	(const char *, const char *, FILE *) ;
-
- void	setbuf	(FILE *, char *) ;
- int	setvbuf	(FILE *, char *, int, size_t) ;
-# 132 "C:/c68/include/stdio.h"
- int  fscanf  (FILE *, const char *, ...) ;
- int  scanf   (const char *, ...) ;
- int  sscanf  (const char *, const char *, ...) ;
-
-
- int	fprintf	(FILE *, const char *, ...) ;
- int	printf	(const char *, ...) ;
- int	sprintf	(char *, const char *, ...) ;
-
- int 	vfprintf (FILE *, const char *, char * ) ;
- int 	vprintf	 (const char *, char * ) ;
- int 	vsprintf (char *, const char *, char * ) ;
-
- int	vscanf  (const char *, char * ) ;
- int	vfscanf (FILE *, const char *, char * ) ;
- int	vsscanf	(const char *, const char *, char * ) ;
-
-
- int	fgetc	(FILE *) ;
- char	*fgets	(char *, int, FILE *) ;
- char	*gets	(char *) ;
- int	fputc	(int c, FILE *) ;
- int	fputs	(const char *, FILE *) ;
- int	puts	(const char *) ;
-
- size_t	fread	(void *, size_t, size_t, FILE *) ;
- size_t	fwrite	(const void *, size_t, size_t, FILE *) ;
-
- int	fgetpos	(FILE *, fpos_t *) ;
- int	fsetpos	(FILE *, fpos_t *) ;
-
- int	fseek	(FILE *, long, int) ;
- long	ftell	(FILE *) ;
- void	rewind	(FILE *) ;
-
- void	perror	(const char *) ;
-
-
- FILE	*fdopen	(int, const char *) ;
-
-
- FILE *	fopenp	(const char *, const char *) ;
- int 	fungetc	(int, FILE *) ;
- int	pclose	(FILE *) ;
- FILE *	popen	(const char *, const char *) ;
- void	setlinebuf	(FILE *) ;
-
- void	_binmode	(int) ;
- long 	getl	(FILE *) ;
- long 	putl	(long, FILE *) ;
- short 	getw	(FILE *) ;
- short 	putw	(short, FILE *) ;
- void	_getbuf	(FILE *fp) ;
-# 192 "C:/c68/include/stdio.h"
- int	_filbuf	(FILE *) ;
-# 8 "events.c" 2
-
+extern Movement pacman_movements;
+extern Pacman pacman;
+extern Movement awkward_ghost_movement;
+extern Ghost awkward_ghost;
+extern Movement moustache_ghost_movement;
+extern Ghost moustache_ghost;
+extern Movement cyclops_ghost_movement;
+extern Ghost cyclops_ghost;
+extern Movement crying_ghost_movement;
+extern Ghost crying_ghost;
+extern Timer timer;
+extern Entities entity;
+# 10 "events.c" 2
 
 
 const UCHAR8 DIRECTION_ARRAY[4] = {((UCHAR8)0) , ((UCHAR8)1) , ((UCHAR8)2) , ((UCHAR8)3) };
-# 28 "events.c"
+# 29 "events.c"
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 
     flip_direction(ghost1);
@@ -620,7 +651,7 @@ ObjectType process_ghost_collision(Entities* all, UINT16 tick)
     ghost_array[1] = all->awkward_ghost;
     ghost_array[2] = all->cyclops_ghost;
     ghost_array[3] = all->moustache_ghost;
-# 64 "events.c"
+# 65 "events.c"
     for (i = 0; i < 4; i++){
         if (check_wall_collision(all_ghosts[i]) != OPEN_PATH && ghost_array[i]->state != ((UCHAR8)3) ) {
             handle_wall_collision(all_ghosts[i], i);
@@ -639,7 +670,7 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
     UCHAR8 number_of_open_paths = get_valid_paths(ghost);
 
     direction = ghost->direction;
-# 90 "events.c"
+# 91 "events.c"
         switch(cell_map[ghost->y_cell_index][ghost->x_cell_index].path)
 		{
 			case ((UCHAR8)0) :
@@ -662,9 +693,9 @@ void handle_wall_collision(Movement* ghost, int ghost_identifier) {
 				ghost ->delta_y = 0;
 				break;
         }
-# 142 "events.c"
+# 143 "events.c"
 }
-# 152 "events.c"
+# 153 "events.c"
 void handle_pacman_collision(ObjectType object_type, Entities* entity) {
 
     Movement* pacman = entity->pacman->move;
@@ -736,34 +767,35 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
         kill_ghost(entity->crying_ghost, cell_map);
 
 }
-void set_input(Pacman *pacman, char input)
+# 270 "events.c"
+void set_input(Pacman *pacman, UCHAR8 input)
 {
     Movement* movement = pacman->move;
-# 236 "events.c"
+# 283 "events.c"
    	movement -> delta_y = 0;
     movement -> delta_x = 0;
 
 	switch(input)
 	{
-		case 'w' :
+		case 0x11 :
                 movement -> delta_y = -1;
                 movement -> delta_x = 0;
                 movement -> direction = ((UCHAR8)0) ;
 			break;
 
-		case 'a' :
+		case 0x1E :
                 movement -> delta_x = -1;
                 movement -> delta_y = 0;
                 movement -> direction = ((UCHAR8)2) ;
 			break;
 
-		case 's' :
+		case 0x1F :
                 movement -> delta_y = 1;
                 movement -> delta_x = 0;
                 movement -> direction = ((UCHAR8)1) ;
 			break;
 
-		case 'd' :
+		case 0x20 :
                 movement -> delta_x = 1;
                 movement -> delta_y = 0;
                 movement -> direction = ((UCHAR8)3) ;

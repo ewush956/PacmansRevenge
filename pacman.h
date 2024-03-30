@@ -23,6 +23,10 @@ typedef unsigned char GAME_STATE;
 #define PAUSE ((UCHAR8)2)
 #define GAMEOVER ((UCHAR8)3)
 #define WIN ((UCHAR8)4)
+#define WAITING_FOR_ESC_BREAK ((UCHAR8)5)
+#define MENU ((UCHAR8)6)
+
+
 
 #define ALLIGNMENT 256
 
@@ -44,12 +48,14 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
 ULONG32 get_time();
 void set_video_base(ULONG32*);
 
-GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all);
+GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all);
 void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
 void debug_cells_pac(UCHAR8* base, Pacman* pacman);
 void update_entities();
 void free_ghosts(ULONG32* base32, UCHAR8* base8, Entities* entity);
-void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool enable);
+
+void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool enable, ULONG32* back_buffer_ptr);
+
 ULONG32* byte_allign(ULONG32* array_address);
 void debug_pacman_movement(ULONG32* base32, Pacman* pacman);
 
@@ -66,10 +72,13 @@ bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* 
 void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState);
 bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
 
+void dequeue();
+void process_keyboard_input(UCHAR8 input);
 
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 
+/*
 extern Movement pacman_movements;
 extern Pacman pacman;
 
@@ -86,5 +95,6 @@ extern Movement crying_ghost_movement;
 extern Ghost crying_ghost;
 
 extern Entities entity;
+*/
 
 #endif

@@ -9,6 +9,8 @@ typedef unsigned int  UINT16;
 typedef unsigned long ULONG32;
 
 typedef signed char bool;
+
+typedef UCHAR8 SCANCODE;
 # 4 "./raster.h" 2
 # 25 "./raster.h"
 void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height);

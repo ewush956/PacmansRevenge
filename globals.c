@@ -5,9 +5,15 @@
 
 
 bool request_to_render = FALSE;
-
 volatile ULONG32 time_now = 0;
 volatile UINT16 ticks = 0;
+
+char keyboard_buffer[256];         
+UCHAR8 head = 0;
+int tail = -1;
+UCHAR8 fill_level = 0;
+
+
 
 /**************************************************************************
 * Declaration: Pacman pacman
@@ -121,6 +127,11 @@ Ghost awkward_ghost = {
     &awkward_ghost_movement
 };
 
+Timer timer = {
+    0,0,
+    20, 28, 44, 52
+};
+
  Entities entity = {
         &pacman,
         &crying_ghost,
@@ -129,4 +140,13 @@ Ghost awkward_ghost = {
         &cyclops_ghost,
     };
 
+/*
+typedef struct {
 
+    char keyboard_buffer[256];         
+    int head;
+    int tail;
+    int fill_level;
+
+}Queue;
+*/

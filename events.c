@@ -1,12 +1,13 @@
 
+#include <stdio.h>
+
 #include "bitmaps.h"
 #include "model.h"
 #include "TYPES.H"
 #include "events.h"
 #include "psg.h"
 #include "renderer.h"
-#include <stdio.h>
-
+#include "globals.h"
 
 const UCHAR8 DIRECTION_ARRAY[4] = {UP, DOWN, LEFT, RIGHT};
 
@@ -220,18 +221,12 @@ void handle_collisions(Entities* entity, UINT16 ticks) {
         kill_ghost(entity->crying_ghost, cell_map);
 
 }
+/*
 void set_input(Pacman *pacman, char input) 
 {
     Movement* movement = pacman->move;
      
-     /*
-    char input;
-     if (Cconis())
-        {
-            input = (char)Cnecin();
-        }
-     */
-
+    
 
    	movement -> delta_y = 0;
     movement -> delta_x = 0;
@@ -257,6 +252,58 @@ void set_input(Pacman *pacman, char input)
 			break;
 				
 		case D_KEY: 
+                movement -> delta_x = 1;
+                movement -> delta_y = 0;
+                movement -> direction = RIGHT;
+			break;
+
+		default:
+            movement -> delta_x = 0; 
+            movement -> delta_y = 0;
+	
+			break;
+	}
+    
+
+}
+*/
+void set_input(Pacman *pacman, UCHAR8 input) 
+{
+    Movement* movement = pacman->move;
+     
+     /*
+    char input;
+     if (Cconis())
+        {
+            input = (char)Cnecin();
+        }
+     */
+
+
+   	movement -> delta_y = 0;
+    movement -> delta_x = 0;
+    
+	switch(input)
+	{
+		case W_MAKE: 
+                movement -> delta_y = -1;   		
+                movement -> delta_x = 0;
+                movement -> direction = UP; 
+			break;
+				
+		case A_MAKE: 
+                movement -> delta_x = -1;			
+                movement -> delta_y = 0;
+                movement -> direction = LEFT;
+			break;
+				
+		case S_MAKE: 
+                movement -> delta_y = 1;
+                movement -> delta_x = 0;
+                movement -> direction = DOWN;
+			break;
+				
+		case D_MAKE: 
                 movement -> delta_x = 1;
                 movement -> delta_y = 0;
                 movement -> direction = RIGHT;

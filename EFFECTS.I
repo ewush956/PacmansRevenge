@@ -9,6 +9,8 @@ typedef unsigned int  UINT16;
 typedef unsigned long ULONG32;
 
 typedef signed char bool;
+
+typedef UCHAR8 SCANCODE;
 # 4 "./effects.h" 2
 # 1 "./psg.h" 1
 # 1 "./TYPES.H" 1

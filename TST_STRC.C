@@ -11,6 +11,8 @@
 #include "events.h"
 #include "input.h"
 
+#include "globals.h"
+
 #define LETTERS_PER_BLOCK 6
 
 
@@ -114,36 +116,33 @@ void set_input(Pacman *pacman, char input)
 {
 
 	pacman -> move -> delta_y = 0;
-    pacman -> move -> delta_x = 0;              /* make this better? how to reset it everytime?*/
-    /*pacman -> move -> direction = 0;*/
+    pacman -> move -> delta_x = 0;             
 
 	switch(input)
 	{
 		case W_KEY: 
-			pacman -> move -> delta_y = -1;   		/* UP 1*/
+			pacman -> move -> delta_y = -1;   		
             pacman -> move -> direction = UP; 
 			break;
 				
 		case A_KEY: 
-			pacman -> move -> delta_x = -1;			/*Left 3*/
+			pacman -> move -> delta_x = -1;			
             pacman -> move -> direction = LEFT;
 			break;
 				
 		case S_KEY: 
-			pacman -> move -> delta_y = 1;			/*Down 2*/
+			pacman -> move -> delta_y = 1;			
             pacman -> move -> direction = DOWN;
 			break;
 				
 		case D_KEY: 
-			pacman -> move -> delta_x = 1;			/* Right 4*/
+			pacman -> move -> delta_x = 1;			
             pacman -> move -> direction = RIGHT;
 			break;
 
 		default:
-			printf("Invalid input\n");
             pacman-> delta_x = 0;
             pacman -> move -> delta_y = 0;
-			/*pacman -> move -> direction = 0;*/
 			break;
 	}
 
