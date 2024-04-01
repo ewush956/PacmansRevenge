@@ -15,19 +15,20 @@
 #define CLEAR_BIT_6 0xBF
 
 
+
 typedef void (*Vector)();
 Vector install_vector(int num, Vector vector);
 
 void do_vbl();        
-void do_IKBD_isr();
+void do_IKBD_isr(); 
 
+/*inside isr_asm.s*/
 void trap28_isr();     
 void trap70_isr();
+/*---------------*/
 
 void disable_MIDI_interrupts();
 void enable_MIDI_interrupts();
-
-
 extern int seconds;
 
 

@@ -1068,6 +1068,10 @@ extern UCHAR8 head;
 extern int tail;
 extern UCHAR8 fill_level;
 
+extern int global_mouse_x;
+extern int global_mouse_y;
+
+
 extern Movement pacman_movements;
 extern Pacman pacman;
 extern Movement awkward_ghost_movement;
@@ -1084,20 +1088,20 @@ extern Entities entity;
 # 1 "./isr.h" 1
 # 1 "./TYPES.H" 1
 # 5 "./isr.h" 2
-# 18 "./isr.h"
+# 19 "./isr.h"
 typedef void (*Vector)();
 Vector install_vector(int num, Vector vector);
 
 void do_vbl();
 void do_IKBD_isr();
 
+
 void trap28_isr();
 void trap70_isr();
 
+
 void disable_MIDI_interrupts();
 void enable_MIDI_interrupts();
-
-
 extern int seconds;
 # 14 "pacman.c" 2
 # 1 "C:/c68/include/osbind.h" 1
@@ -1142,7 +1146,24 @@ int main()
 
     Vector orig_vector28 = install_vector(28 , trap28_isr);
     Vector orig_vector70 = install_vector(70 , trap70_isr);
-# 114 "pacman.c"
+
+
+
+   plot_screen(base32, splash);
+   while (input != 0x1C )
+   {
+        if (fill_level > 0){
+            input = keyboard_buffer[head];
+            head = (head + 1) % 256;
+            fill_level--;
+        }
+
+        process_keyboard_input(input);
+
+   }
+   clear_screen_q(base32);
+
+
     initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
 
 
@@ -1158,6 +1179,8 @@ int main()
         }
 
         process_keyboard_input(input);
+
+
 
         if (request_to_render == -1 ){
             render_frame(back_buffer_ptr, &entity);
@@ -1203,7 +1226,7 @@ void update_entities() {
     move_ghost(&awkward_ghost);
 
 }
-# 180 "pacman.c"
+# 184 "pacman.c"
 void update_movement(Entities* entity, UINT16 ticks) {
 
 
@@ -1215,7 +1238,7 @@ void update_movement(Entities* entity, UINT16 ticks) {
 
 
 }
-# 197 "pacman.c"
+# 201 "pacman.c"
 GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) {
 
 
@@ -1235,7 +1258,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
     return new_state;
 
 }
-# 223 "pacman.c"
+# 227 "pacman.c"
 ULONG32 get_time()
 {
 
@@ -1532,7 +1555,7 @@ void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
     plot_string(base, 8*8 , 0, font, stry);
     debug_print(base, 12*8 , 0, pacman->move->y_cell_index);
 }
-# 525 "pacman.c"
+# 529 "pacman.c"
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     crying_ghost.move->delta_x = 1;
 	crying_ghost.move->delta_y = 0;

@@ -607,6 +607,10 @@ extern UCHAR8 head;
 extern int tail;
 extern UCHAR8 fill_level;
 
+extern int global_mouse_x;
+extern int global_mouse_y;
+
+
 extern Movement pacman_movements;
 extern Pacman pacman;
 extern Movement awkward_ghost_movement;

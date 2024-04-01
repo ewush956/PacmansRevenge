@@ -6,6 +6,7 @@
         "RASTER.C": "cpp",
         "events.h": "c",
         "bitmaps.h": "c",
-        "font.h": "c"
+        "font.h": "c",
+        "pacman.h": "c"
     }
 }

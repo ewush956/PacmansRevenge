@@ -91,15 +91,15 @@ int main()
    
     SoundState wakaState = {0, 0};
     SoundState wakaNoise = {0, 0};
-   
+    
 
     Vector orig_vector28 = install_vector(TRAP_28, trap28_isr);   /* for VBL*/
     Vector orig_vector70 = install_vector(TRAP_70, trap70_isr);   /* for IKBD*/
     /*disable_MIDI_interrupts(); /* */
     
-    /*
+
+/*
    plot_screen(base32, splash); 
-   
    while (input != ENTER)
    {    
         if (fill_level > 0){
@@ -109,7 +109,10 @@ int main()
         }
 
         process_keyboard_input(input);
-   }*/
+        /*printf("%d\n",global_mouse_x); 
+   }
+   clear_screen_q(base32);
+  */ 
 
     initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
 
@@ -126,6 +129,8 @@ int main()
         }
 
         process_keyboard_input(input);
+
+        /*printf("%d",global_mouse_x); */
 
         if (request_to_render == TRUE){  
             render_frame(back_buffer_ptr, &entity);

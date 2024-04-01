@@ -18,10 +18,24 @@ volatile UCHAR8 * const IKBD_control = 0xFFFC00;
 volatile const UCHAR8 *const IKBD_status = 0xFFFC00;
 volatile const SCANCODE * const IKBD_RDR = 0xFFFC02;            /* receive data register */
 
-volatile UCHAR8  *const in_service_register_b = 0xFFFA11;            /* clear bit #6 of this*/ 
-volatile UCHAR8 *const interrupt_enable_b = 0xFFFA09;               /* disable interrupts for MIDI*/
+volatile UCHAR8  *const in_service_register_b = 0xFFFA11;       /* clear bit #6 of this*/ 
+volatile UCHAR8 *const interrupt_enable_b = 0xFFFA09;           /* disable interrupts for MIDI*/
+/*
+int global_mouse_x = 200;
+int global_mouse_y = 200;
+*/
+bool left_button_pressed = FALSE;
+bool right_button_pressed = FALSE;
 
+typedef enum {
 
+    KEYBOARD_INPUT,
+    MOUSE_HEADER,
+    MOUSE_DELTA_X,
+    MOUSE_DELTA_Y
+}IKBDState;
+
+IKBDState ikbd_state = KEYBOARD_INPUT;              
 
 Vector install_vector(int num, Vector vector)
 {
@@ -73,25 +87,71 @@ void do_vbl()
 void do_IKBD_isr()
 {
     
-    /*if ((*IKBD_status & 0x80) == 0) /**/
-
     SCANCODE code = *IKBD_RDR;
 
-    if ((code & 0x80) != 0x80) {                /* not enqueuing break codes as we dont want to HOLD w a s or d to move*/   
-        
-        tail = (tail + 1) % 256;
-        keyboard_buffer[tail] = code;
-        fill_level++;
-    }
-    else if (code == ESC_BREAK)
-    {
-        tail = (tail + 1) % 256;
-        keyboard_buffer[tail] = code;
-        fill_level++;   
-    }
+        switch(ikbd_state)
+        {
+            case KEYBOARD_INPUT:
+                if ((code & 0x80) != 0x80 || code == ESC_BREAK) {       /* not enqueuing break codes as we dont want to HOLD w a s or d to move*/   
+                    tail = (tail + 1) % 256;
+                    keyboard_buffer[tail] = code;
+                    fill_level++;
+                }
+                else if (code >= 0xF8){
+                    ikbd_state = MOUSE_HEADER;
+                }
+                    break;
 
+            case MOUSE_HEADER:
+                if (code & 0x02){
+                    left_button_pressed = TRUE;
+                }
+                else if (code & 0x01) {
+                    right_button_pressed = TRUE;
+                }
+                ikbd_state = MOUSE_DELTA_X;
+                break;
+            
+            case MOUSE_DELTA_X:
+                if (code & 0x80){
+                    global_mouse_x -= (int)(code & 0x7F);           /* clearing high bit with 0x7F*/
+                }
+                else{
+                    global_mouse_x += (int)(code & 0x7F);
+                }
 
-    *in_service_register_b &= CLEAR_BIT_6; 
+                if (global_mouse_x < 0){
+                    global_mouse_x = 0;
+                }
+                else if (global_mouse_x >= 640) {
+                    global_mouse_x = 639;
+                }
+
+                ikbd_state = MOUSE_DELTA_Y;
+                break;
+            
+            case MOUSE_DELTA_Y:
+                global_mouse_y += (int)(code & 0x7F);
+                
+                if (global_mouse_y < 0)
+                {
+                    global_mouse_y = 0;
+                }
+                else if(global_mouse_y >= 399)
+                {
+                    global_mouse_y = 399;
+                }
+
+                left_button_pressed = FALSE;
+                right_button_pressed = FALSE;
+                ikbd_state = KEYBOARD_INPUT;
+                break;
+
+            default:
+                break;
+        }
+
+   *in_service_register_b &= CLEAR_BIT_6; 
 
 
 
