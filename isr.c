@@ -14,14 +14,11 @@ int seconds = 0;
 SoundState wakaState = {0, 0};
 SoundState wakaNoise = {0, 0};
 SoundState killState = {0, 0};
-
 volatile UCHAR8 * const IKBD_control = 0xFFFC00;
 volatile const UCHAR8 *const IKBD_status = 0xFFFC00;
 volatile const SCANCODE * const IKBD_RDR = 0xFFFC02;            /* receive data register */
-
 volatile UCHAR8  *const in_service_register_b = 0xFFFA11;       /* clear bit #6 of this*/ 
 volatile UCHAR8 *const interrupt_enable_b = 0xFFFA09;           /* disable interrupts for MIDI*/
-
 bool left_button_pressed = FALSE;
 bool right_button_pressed = FALSE;
 
@@ -32,7 +29,6 @@ typedef enum {
     MOUSE_DELTA_X,
     MOUSE_DELTA_Y
 }IKBDState;
-
 IKBDState ikbd_state = KEYBOARD_INPUT;              
 
 
@@ -58,7 +54,7 @@ void do_vbl()
     {
         if (game_over_flag == TRUE) {
             stop_sound();
-            return;
+            /*return; */
         }
         update_movement(&entity);
         update_current_frame(&entity, ticks);
@@ -100,7 +96,7 @@ void do_vbl()
     time_now++;
     request_to_render = TRUE; 
 }
-\
+
 void do_IKBD_isr()
 {   
     SCANCODE code = *IKBD_RDR;
@@ -168,9 +164,6 @@ void do_IKBD_isr()
     }
 
    *in_service_register_b &= CLEAR_BIT_6; 
-
-
-
 }
 
 void disable_MIDI_interrupts()
