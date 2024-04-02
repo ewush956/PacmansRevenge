@@ -72,7 +72,7 @@ bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* 
 void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState);
 bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
 
-void dequeue();
+
 void process_keyboard_input(UCHAR8 input);
 
 extern UCHAR8 background[BUFFER_SIZE_BYTES];

@@ -130,7 +130,6 @@ int main()
 
         process_keyboard_input(input);
 
-        /*printf("%d",global_mouse_x); */
 
         if (request_to_render == TRUE){  
             render_frame(back_buffer_ptr, &entity);
@@ -581,22 +580,7 @@ ULONG32* get_video_base()
     return (ULONG32*)combined_address;
 
 }
-/* not using atm */
-void dequeue()
-{
-    UCHAR8 input;
 
-    input = keyboard_buffer[head];
-    head++;
-    
-    /*fill_level--; */
-
-    if (fill_level == 255)
-    {
-        head = 0;
-        tail = -1;
-    }
-}
 /********
 * A simple state machine to handle the keybaord input as
 * the game loops.
@@ -629,10 +613,6 @@ void process_keyboard_input(UCHAR8 input)
             break;
 
     }
-    
-    
-
-
 }
 
 

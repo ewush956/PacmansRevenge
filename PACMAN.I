@@ -959,7 +959,7 @@ bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* 
 void initialize_sound(long* old_ssp, MusicState* trebleState, MusicState* bassState);
 bool update_sound(long* old_ssp, ULONG32* time_then, MusicState* trebleState, MusicState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
 
-void dequeue();
+
 void process_keyboard_input(UCHAR8 input);
 
 extern UCHAR8 background[32256 ];
@@ -1146,24 +1146,7 @@ int main()
 
     Vector orig_vector28 = install_vector(28 , trap28_isr);
     Vector orig_vector70 = install_vector(70 , trap70_isr);
-
-
-
-   plot_screen(base32, splash);
-   while (input != 0x1C )
-   {
-        if (fill_level > 0){
-            input = keyboard_buffer[head];
-            head = (head + 1) % 256;
-            fill_level--;
-        }
-
-        process_keyboard_input(input);
-
-   }
-   clear_screen_q(base32);
-
-
+# 117 "pacman.c"
     initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
 
 
@@ -1179,7 +1162,6 @@ int main()
         }
 
         process_keyboard_input(input);
-
 
 
         if (request_to_render == -1 ){
@@ -1610,27 +1592,7 @@ ULONG32* get_video_base()
     return (ULONG32*)combined_address;
 
 }
-
-void dequeue()
-{
-    UCHAR8 input;
-
-    input = keyboard_buffer[head];
-    head++;
-
-
-
-    if (fill_level == 255)
-    {
-        head = 0;
-        tail = -1;
-    }
-}
-
-
-
-
-
+# 589 "pacman.c"
 void process_keyboard_input(UCHAR8 input)
 {
 
@@ -1658,8 +1620,4 @@ void process_keyboard_input(UCHAR8 input)
             break;
 
     }
-
-
-
-
 }
