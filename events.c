@@ -113,22 +113,22 @@ void set_input(Pacman *pacman, char input)
     set_deltas(movement, 0, 0);    
 	switch(input)
 	{
-		case W_KEY: 
+		case W_MAKE: 
             set_deltas(movement, 0, -1); 
             movement->direction = UP;     
             break;	
 
-		case A_KEY: 
+		case A_MAKE: 
             set_deltas(movement, -1, 0);
             movement -> direction = LEFT;
 			break;
 				
-		case S_KEY: 
+		case S_MAKE: 
             set_deltas(movement, 0, 1);
             movement -> direction = DOWN;
 			break;
 
-		case D_KEY: 
+		case D_MAKE: 
             set_deltas(movement, 1, 0);
             movement -> direction = RIGHT;
 			break;

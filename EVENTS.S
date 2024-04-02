@@ -347,13 +347,13 @@ _set_input:
 	addq.l	#8,a7
 	;line	114
 	move.b	13(a6),d0
-	sub.b	#119,d0
+	sub.b	#17,d0
 	beq	L25
-	sub.b	#-22,d0
+	sub.b	#13,d0
 	beq	L26
-	sub.b	#18,d0
+	subq.b	#1,d0
 	beq	L27
-	sub.b	#-15,d0
+	subq.b	#1,d0
 	beq	L28
 	bra	L24
 L25:

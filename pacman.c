@@ -52,6 +52,8 @@ volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
 
          UCHAR8  background[BUFFER_SIZE_BYTES];
          UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
+        
+        GAME_STATE state         = PLAY;
 /*******************************************************************
  * Function: initialize_game
  * Purpose: Initializes the game, manually moves the ghosts out of the center
@@ -126,7 +128,7 @@ int main()
          &cyclops_ghost,
     };
     int  i;
-	char input;
+	UCHAR8 input;
     int  waka_repetitions    = 10; 
     int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
     int  background_offset   = 256 - ((long)(background) % 256);
@@ -138,21 +140,44 @@ int main()
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
     ULONG32* background_ptr  = (ULONG32*)(&background[background_offset]); /*Not using at the moment*/
 
-    GAME_STATE state         = PLAY;
+    /*GAME_STATE state         = PLAY; (global to this file-check top*/
     Vector     orig_vector28 = install_vector(TRAP_28, trap28_isr);
+    Vector     orig_vector70 = install_vector(TRAP_70, trap70_isr);   /* for IKBD*/
 
+/*  -Took out the splash screen for now (IKBD stuff)-
     plot_screen(base32, splash);
-
     while (!Cconis());
-
+*/
     initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
 
-	if (Cconis()) { input = get_input(); }
+	/*
+    if (Cconis()) { input = get_input(); }
     set_input(entity.pacman, input);
+    */
 
     ticks = 0;
     while (state != QUIT && state != WIN) {
 
+        if (fill_level > 0){
+            input = keyboard_buffer[head];
+            head = (head + 1) % 256;
+            fill_level--;
+        }
+
+        process_keyboard_input(input);
+
+        if (request_to_render == TRUE){  
+            render_frame(back_buffer_ptr, &entity);
+            swap_buffers(&base32, &back_buffer_ptr);
+            old_ssp = Super(0); 
+            set_video_base(base32);
+            Super(old_ssp);
+            request_to_render = FALSE; 
+        }  
+      
+        state = update_game_state(state, input, &entity);
+    }
+        /* (OLD loop)
         if (Cconis()) { input = (char)Cnecin(); }
         set_input(entity.pacman, input);  
         if (request_to_render == TRUE) 
@@ -169,6 +194,7 @@ int main()
         }
         state = update_game_state(state, input, &entity);
     }
+    */
 
     old_ssp = Super(0);
     stop_sound();
@@ -178,17 +204,19 @@ int main()
     if (state == WIN) {
         plot_screen(original, splash);
         game_over_flag = TRUE;
-
-        while (input != '\033') {
-            input = (char)Cnecin();
-        }
     }
+
+        /*while (input != '\033') {
+            input = (char)Cnecin();
+        }*/
     /*
     else if (state == QUIT) {
         plot_screen(base32, lose);
     }
 */
     install_vector(TRAP_28, orig_vector28);
+    install_vector(TRAP_70, orig_vector70);
+
 	return 0;
 }
 /******************************************************************
@@ -224,8 +252,23 @@ void update_movement(Entities* entity) {
  * Parameters: new_state, input
  * Returns: GAME_STATE
  ******************************************************************/
-GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
+GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) {
 
+    GAME_STATE state;
+    if (input == ESC_BREAK)
+    {
+        state = QUIT;
+        return state;
+    }
+    if (all->awkward_ghost->state == DEAD && 
+        all->crying_ghost->state == DEAD &&
+        all->moustache_ghost->state == DEAD &&
+        all->cyclops_ghost->state == DEAD) {
+        return WIN; 
+    }
+
+    return new_state;
+    /*
     GAME_STATE state;
     if (input == '\033')
     {
@@ -239,7 +282,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, char input, Entities* all) {
         return WIN; 
     }
     return new_state;
-
+    */
 }
 /*******************************************************************
  * Function: get_time
@@ -536,3 +579,38 @@ ULONG32* get_video_base()
     return (ULONG32*)combined_address;
 
 }
+/*****************************
+* A simple finite state machine 
+*  that handles keyboard input
+*
+*
+******************************/
+void process_keyboard_input(UCHAR8 input)
+{   
+    /* state must be global*/
+
+    switch(state)
+    {   
+        case PLAY:
+            if (input == ESC_MAKE){
+                state = WAITING_FOR_ESC_BREAK;
+            } 
+            else{
+                set_input(entity.pacman,input);
+            }
+            break;
+        case WAITING_FOR_ESC_BREAK:
+            if (input == ESC_BREAK){
+                state = QUIT;
+            }
+            else{
+                state = PLAY;
+            }
+            break;
+
+        default:
+            break;
+
+    }
+}
+
