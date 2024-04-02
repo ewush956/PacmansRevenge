@@ -160,16 +160,17 @@ void disable_MIDI_interrupts()
 {
     long old_ssp = Super(0);
     *interrupt_enable_b &= DISABLE; 
-    /**interrupt_enable_b = DISABLE;*/
+
     Super(old_ssp);
 }
 void enable_MIDI_interrupts()
 {
     long old_ssp = Super(0);
     *interrupt_enable_b |= ENABLE; 
-    /**interrupt_enable_b = 0xFF; */
     Super(old_ssp);
 }
+
+
 
 
 
