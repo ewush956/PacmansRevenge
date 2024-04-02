@@ -213,5 +213,3 @@ void enable_MIDI_interrupts()
     *interrupt_enable_b |= ENABLE; 
     Super(old_ssp);
 }
-
-

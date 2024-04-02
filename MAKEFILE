@@ -45,7 +45,7 @@ isr_asm.o: isr_asm.s
 isr.o: isr.c isr.h music.h effects.h pacman.h input.h 
 	cc68x -g -c isr.c
 
-input.o: input.c input.h 
+input.o: input.c input.h events.h
 	cc68x -g -c input.c
 	
 

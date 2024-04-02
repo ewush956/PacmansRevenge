@@ -8,6 +8,7 @@ typedef unsigned long ULONG32;
 typedef signed char bool; 
 
 typedef UCHAR8 SCANCODE;
+typedef unsigned char GAME_STATE;
 
 #define TRUE -1
 #define FALSE 0

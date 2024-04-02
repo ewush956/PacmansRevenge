@@ -15,8 +15,8 @@
 #include <stdio.h>
 #include <linea.h> 
 
+/*
 typedef unsigned char GAME_STATE;
-
 #define QUIT ((UCHAR8)0)
 #define PLAY ((UCHAR8)1)
 #define PAUSE ((UCHAR8)2)
@@ -24,9 +24,8 @@ typedef unsigned char GAME_STATE;
 #define WIN ((UCHAR8)4)
 #define WAITING_FOR_ESC_BREAK ((UCHAR8)5)
 #define MENU ((UCHAR8)6)
+*/
 
-#define BACK_BUFFER_START 0x00000
-#define BACK_BUFFER_END 0x39BFFF
 
 #define ALLIGNMENT 256
 
@@ -74,7 +73,7 @@ bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* 
 void initialize_sound(long* old_ssp, SoundState* trebleState, SoundState* bassState);
 bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, SoundState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
 
-void process_keyboard_input(UCHAR8 input);
+/*void process_keyboard_input(UCHAR8 input);*/
 
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];

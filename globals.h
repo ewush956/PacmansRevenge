@@ -12,6 +12,15 @@
 #define ESC_BREAK 0x81
 #define ENTER 0x1C
 
+#define QUIT ((UCHAR8)0)
+#define PLAY ((UCHAR8)1)
+#define PAUSE ((UCHAR8)2)
+#define GAMEOVER ((UCHAR8)3)
+#define WIN ((UCHAR8)4)
+#define WAITING_FOR_ESC_BREAK ((UCHAR8)5)
+#define MENU ((UCHAR8)6)
+extern GAME_STATE state;
+
 extern bool request_to_render;   
 extern volatile UINT16 ticks;           
 extern volatile ULONG32 time_now;

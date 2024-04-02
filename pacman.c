@@ -280,26 +280,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
     return new_state;
     */
 }
-/*******************************************************************
- * Function: get_time
- * Purpose: Gets the current time
- * Parameters: none
- * Returns: time
- * Note: time is in 70HZ
- ******************************************************************/
-ULONG32 get_time()
-{
 
-	ULONG32 *timer = (ULONG32 *)0x462; 		
-	ULONG32 timeNow;
-	ULONG32 old_ssp;
-	old_ssp = Super(0); 				
-	timeNow = *timer;
-	Super(old_ssp); 			
-
-	return timeNow;
-
-}
 /*******************************************************************
  * Function: swap_buffers
  * Purpose: Swaps the adress of the front and back buffers
@@ -424,95 +405,6 @@ bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, So
     }
     return FALSE;
 }
-/*******************************************************************
- * Function: debug_pacman_movement
- * Purpose: Prints out Pacman's movement coordinates for debugging
- ******************************************************************/
-void debug_pacman_movement(ULONG32* base32, Pacman* pacman) 
-{
-    UCHAR8* base;
-    const char labels[6][5] = {"X: ", "Y: ", "LX: ", "LY: ", "LLX: ", "LLY: "};
-    UINT16 values[6];
-    UINT16 x_offset, y_offset;
-    UINT16 tens, ones, hundreds;
-    int i, j;
-
-    base = (UCHAR8*)base32;
-    
-    values[0] = pacman->move->x;
-    values[1] = pacman->move->y;
-    values[2] = pacman->move->last_x;
-    values[3] = pacman->move->last_y;
-    values[4] = pacman->move->last_last_x;
-    values[5] = pacman->move->last_last_y;
-
-    x_offset = 0;
-    y_offset = LETTER_HEIGHT * 2; 
-
-    for (i = 0; i < 6; ++i) {
-        for (j = 0; j < 10; ++j) { 
-            clear_letter(base, x_offset + j*LETTER_WIDTH, y_offset);
-        }
-
-        plot_string(base, x_offset, y_offset, font, labels[i]);
-        x_offset += 4*LETTER_WIDTH; 
-
-        if (values[i] >= 100) {
-            hundreds = values[i] / 100;
-            tens = (values[i] / 10) % 10;
-            ones = values[i] % 10;
-            debug_print(base, x_offset, y_offset, hundreds);
-            x_offset += 2*LETTER_WIDTH; 
-            debug_print(base, x_offset, y_offset, tens * 10 + ones);
-        } else {
-            tens = values[i] / 10;
-            ones = values[i] % 10;
-            debug_print(base, x_offset, y_offset, tens * 10 + ones);
-        }
-
-        x_offset += 4*LETTER_WIDTH; 
-
-        if (x_offset + 8*LETTER_WIDTH > SCREEN_WIDTH) {
-            x_offset = 0;
-            /*y_offset += LETTER_HEIGHT; */
-        }
-    }
-}
-/*******************************************************************
- * Function: debug_print
- * Purpose: Prints out an integer value using plot letter
- *****************************************************************/
-void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
-    UINT16 tens = value / 10;
-    UINT16 ones = value % 10;
-
-    unsigned int tens_char = tens + '0';
-    unsigned int ones_char = ones + '0';
-
-	clear_letter(base, x, y);
-	clear_letter(base, x+LETTER_WIDTH, y);
-    plot_letter(base, x , y, font, tens_char);
-    plot_letter(base, x + LETTER_WIDTH, y, font, ones_char);
-}
-/*******************************************************************
- * Function: debug_cells
- * Purpose: Prints out pacmans current cell indeces
- ******************************************************************/
-void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
-    int j;
-
-    const char strx[] = "X: ";
-	const char stry[] = "Y: ";	
-
-    for (j = 0; j < 14; j++) {
-    	clear_letter(base, j*LETTER_WIDTH, 0);
-	}
-
-    plot_string(base, 0, 0, font, strx);
-    debug_print(base, 4*LETTER_WIDTH, 0, pacman->move->x_cell_index);
-    plot_string(base, 8*LETTER_WIDTH, 0, font, stry);
-    debug_print(base, 12*LETTER_WIDTH, 0, pacman->move->y_cell_index);
-}
 /******************************************************************
  * Function: set_first_movements
  * Purpose: Sets the first movements of the ghosts
@@ -581,10 +473,9 @@ ULONG32* get_video_base()
 *
 *
 ******************************/
+/*
 void process_keyboard_input(UCHAR8 input)
 {   
-    /* state must be global*/
-
     switch(state)
     {   
         case PLAY:
@@ -608,5 +499,5 @@ void process_keyboard_input(UCHAR8 input)
             break;
 
     }
-}
+}*/
 
