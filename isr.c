@@ -21,6 +21,8 @@ volatile UCHAR8  *const in_service_register_b = 0xFFFA11;       /* clear bit #6 
 volatile UCHAR8 *const interrupt_enable_b = 0xFFFA09;           /* disable interrupts for MIDI*/
 bool left_button_pressed = FALSE;
 bool right_button_pressed = FALSE;
+Vector orig_vector28;
+Vector orig_vector70;
 
 typedef enum {
 
@@ -47,10 +49,10 @@ Vector install_vector(int num, Vector vector)
 
 void do_vbl()
 {
-    /*char input;*/
+
     ticks++;
 
-    if ( seconds > 8 && request_to_render == TRUE)
+    if (seconds > START_DELAY && request_to_render == TRUE)
     {
         if (game_over_flag == TRUE) {
             stop_sound();
@@ -105,9 +107,7 @@ void do_IKBD_isr()
     {
         case KEYBOARD_INPUT:
             if ((code & 0x80) != 0x80 || code == ESC_BREAK) {       /* not enqueuing break codes as we dont want to HOLD w a s or d to move*/   
-                tail = (tail + 1) % 256;
-                keyboard_buffer[tail] = code;
-                fill_level++;
+                enqueue(code);
             }
             else if (code >= 0xF8){
                 ikbd_state = MOUSE_HEADER;
@@ -166,20 +166,52 @@ void do_IKBD_isr()
    *in_service_register_b &= CLEAR_BIT_6; 
 }
 
+
+
+void enqueue(SCANCODE code)
+{
+    tail = (tail + 1) % 256;
+    keyboard_buffer[tail] = code;
+    fill_level++;
+
+}
+UCHAR8 dequeue()
+{
+    UCHAR8 input;
+    input = keyboard_buffer[head];
+    head = (head + 1) % 256;
+    fill_level--;
+
+    return input;
+
+}
+void install_custom_vectors()
+{
+    disable_MIDI_interrupts();
+    orig_vector28 = install_vector(TRAP_28, trap28_isr);
+    orig_vector70 = install_vector(TRAP_70, trap70_isr);  
+    enable_MIDI_interrupts();
+}
+
+void remove_custom_vectors()
+{
+    disable_MIDI_interrupts();
+    install_vector(TRAP_28, orig_vector28);
+    install_vector(TRAP_70, orig_vector70);
+    enable_MIDI_interrupts();
+}
+
 void disable_MIDI_interrupts()
 {
     long old_ssp = Super(0);
     *interrupt_enable_b &= DISABLE; 
-    /**interrupt_enable_b = DISABLE;*/
     Super(old_ssp);
 }
 void enable_MIDI_interrupts()
 {
     long old_ssp = Super(0);
     *interrupt_enable_b |= ENABLE; 
-    /**interrupt_enable_b = 0xFF; */
     Super(old_ssp);
 }
-
 
 

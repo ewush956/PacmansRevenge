@@ -139,10 +139,8 @@ int main()
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
     ULONG32* background_ptr  = (ULONG32*)(&background[background_offset]); /*Not using at the moment*/
-
-    /*GAME_STATE state         = PLAY; (global to this file-check top*/
-    Vector     orig_vector28 = install_vector(TRAP_28, trap28_isr);
-    Vector     orig_vector70 = install_vector(TRAP_70, trap70_isr);   /* for IKBD*/
+   
+    install_custom_vectors();
 
 /*  -Took out the splash screen for now (IKBD stuff)-
     plot_screen(base32, splash);
@@ -159,9 +157,7 @@ int main()
     while (state != QUIT && state != WIN) {
 
         if (fill_level > 0){
-            input = keyboard_buffer[head];
-            head = (head + 1) % 256;
-            fill_level--;
+            input = dequeue();
         }
 
         process_keyboard_input(input);
@@ -214,8 +210,8 @@ int main()
         plot_screen(base32, lose);
     }
 */
-    install_vector(TRAP_28, orig_vector28);
-    install_vector(TRAP_70, orig_vector70);
+
+   remove_custom_vectors(); /**/
 
 	return 0;
 }
