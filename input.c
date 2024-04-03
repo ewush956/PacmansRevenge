@@ -4,7 +4,11 @@
 #include "globals.h"
 
 
-
+/*****************************
+* A simple finite state machine 
+*  that handles keyboard input
+*
+******************************/
 void process_keyboard_input(UCHAR8 input)
 {   
     /* state must be global*/

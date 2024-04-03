@@ -19,8 +19,8 @@ UCHAR8 head = 0;
 int tail = -1;
 UCHAR8 fill_level = 0;
 
-int global_mouse_x = 200;
-int global_mouse_y = 200;
+int global_mouse_x = 300;
+int global_mouse_y = 150;
 
 
 

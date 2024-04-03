@@ -19,10 +19,17 @@ volatile const UCHAR8 *const IKBD_status = 0xFFFC00;
 volatile const SCANCODE * const IKBD_RDR = 0xFFFC02;            /* receive data register */
 volatile UCHAR8  *const in_service_register_b = 0xFFFA11;       /* clear bit #6 of this*/ 
 volatile UCHAR8 *const interrupt_enable_b = 0xFFFA09;           /* disable interrupts for MIDI*/
+
 bool left_button_pressed = FALSE;
 bool right_button_pressed = FALSE;
+
 Vector orig_vector28;
 Vector orig_vector70;
+
+UCHAR8 mouse_delta_x;
+UCHAR8 mouse_delta_y;
+UCHAR8 mouse_button;
+
 
 typedef enum {
 
@@ -56,10 +63,11 @@ void do_vbl()
     {
         if (game_over_flag == TRUE) {
             stop_sound();
-            /*return; */
+            return; 
         }
         update_movement(&entity);
         update_current_frame(&entity, ticks);
+
         if (kill_ghost_flag == TRUE) {
             if (play_sound(CHANNEL_C, ghost_kill_sound_cycle, GHOST_KILL_CYCLE_LENGTH, &killState) == TRUE)
                 kill_ghost_flag = FALSE;
@@ -110,55 +118,20 @@ void do_IKBD_isr()
                 enqueue(code);
             }
             else if (code >= 0xF8){
-                ikbd_state = MOUSE_HEADER;
+                mouse_button = code;
+                ikbd_state = MOUSE_DELTA_X;
             }
-                break;
-
-        case MOUSE_HEADER:
-            if (code & 0x02){
-                left_button_pressed = TRUE;
-            }
-            else if (code & 0x01) {
-                right_button_pressed = TRUE;
-            }
-            ikbd_state = MOUSE_DELTA_X;
             break;
-        
-        case MOUSE_DELTA_X:
-            if (code & 0x80){
-                global_mouse_x -= (int)(code & 0x7F);           /* clearing high bit with 0x7F*/
-            }
-            else{
-                global_mouse_x += (int)(code & 0x7F);
-            }
-
-            if (global_mouse_x < 0){
-                global_mouse_x = 0;
-            }
-            else if (global_mouse_x >= 640) {
-                global_mouse_x = 639;
-            }
-
+        case MOUSE_DELTA_X: 
+            mouse_delta_x = code;
             ikbd_state = MOUSE_DELTA_Y;
             break;
-        
         case MOUSE_DELTA_Y:
-            global_mouse_y += (int)(code & 0x7F);
-            
-            if (global_mouse_y < 0)
-            {
-                global_mouse_y = 0;
-            }
-            else if(global_mouse_y >= 399)
-            {
-                global_mouse_y = 399;
-            }
-
-            left_button_pressed = FALSE;
-            right_button_pressed = FALSE;
+            mouse_delta_y = code;
             ikbd_state = KEYBOARD_INPUT;
+            /*left_button_pressed = FALSE;
+            right_button_pressed = FALSE; */
             break;
-
         default:
             break;
     }
@@ -167,10 +140,37 @@ void do_IKBD_isr()
 }
 
 
+void update_mouse()
+{
+
+    global_mouse_x += (int)((char)mouse_delta_x); 
+    global_mouse_y += (int)((char)mouse_delta_y);
+
+    if (global_mouse_x < 0){
+        global_mouse_x = 0;
+    }
+    else if (global_mouse_x >= 639) {
+        global_mouse_x = 639;
+    }
+
+    if (global_mouse_y < 0){
+        global_mouse_y = 0;
+    }
+
+    else if(global_mouse_y >= 399 ){
+        global_mouse_y = 399;
+    }
+
+    /*printf("DELTA y--%u\n",mouse_delta_x);*/
+    mouse_delta_x = 0;
+    mouse_delta_y = 0;
+
+}
+
 
 void enqueue(SCANCODE code)
 {
-    tail = (tail + 1) % 256;
+    tail = (tail + 1) & BUFFER_SIZE_256_HEX;
     keyboard_buffer[tail] = code;
     fill_level++;
 
@@ -179,7 +179,7 @@ UCHAR8 dequeue()
 {
     UCHAR8 input;
     input = keyboard_buffer[head];
-    head = (head + 1) % 256;
+    head = (head + 1) & BUFFER_SIZE_256_HEX;
     fill_level--;
 
     return input;

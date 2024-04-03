@@ -133,6 +133,8 @@ int main()
     int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
     int  background_offset   = 256 - ((long)(background) % 256);
     long old_ssp; 
+    int orig_ipl;
+    int orig_ssp;
 
     /*UCHAR8*  base8           = (UCHAR8*)get_video_base();*/
     ULONG32* base32          = (ULONG32*)get_video_base();
@@ -146,28 +148,68 @@ int main()
     plot_screen(base32, splash);
     while (!Cconis());
 */
-    initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
+    
+    while (input != ENTER)
+    {    
+        if (fill_level > 0){
+             orig_ssp = Super(0);                        /* mask all intrpts before deQ ing */
+            orig_ipl = set_ipl(7);
+            Super(orig_ssp);
+            
+            input = dequeue();
+            
+            orig_ssp = Super(0);
+            set_ipl(orig_ipl);
+            Super(orig_ssp);
+            process_keyboard_input(input);
+        }
+        update_mouse();
+        printf("(%d,%d)\n",global_mouse_x,global_mouse_y); 
 
-	/*
-    if (Cconis()) { input = get_input(); }
-    set_input(entity.pacman, input);
-    */
+        /*
+        if (left_button_pressed == TRUE){
+            printf("left");
+            left_button_pressed = FALSE;
+        }
+        if (right_button_pressed == TRUE)
+        {
+            printf("right");
+            right_button_pressed = FALSE;
+        }*/
+       /*
+       if (global_mouse_y != i){}*/
+   }
+
+   clear_screen_q(base32);
+   
+    initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
 
     ticks = 0;
     while (state != QUIT && state != WIN) {
 
         if (fill_level > 0){
+            orig_ssp = Super(0);                        /* mask all intrpts before enQing */
+            orig_ipl = set_ipl(7);
+            Super(orig_ssp);
+
             input = dequeue();
+
+            orig_ssp = Super(0);
+            set_ipl(orig_ipl);
+            Super(orig_ssp);
         }
 
         process_keyboard_input(input);
 
         if (request_to_render == TRUE){  
+            /*page_flip(&base32,&back_buffer_ptr);*/
+            
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
             old_ssp = Super(0); 
             set_video_base(base32);
             Super(old_ssp);
+            
             request_to_render = FALSE; 
         }  
       
@@ -191,7 +233,7 @@ int main()
         state = update_game_state(state, input, &entity);
     }
     */
-
+    
     old_ssp = Super(0);
     stop_sound();
     set_video_base(original);
@@ -201,6 +243,7 @@ int main()
         plot_screen(original, splash);
         game_over_flag = TRUE;
     }
+   
 
         /*while (input != '\033') {
             input = (char)Cnecin();
@@ -242,6 +285,19 @@ void update_movement(Entities* entity) {
     eat_pellet(entity->pacman->move);
     check_proximity(entity);   
 } 
+void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr)
+{
+    long old_ssp;
+
+    render_frame(back_buffer_ptr, &entity);
+    swap_buffers(&base32, &back_buffer_ptr);
+
+    old_ssp = Super(0); 
+    set_video_base(base32);
+    Super(old_ssp);
+
+
+}
 /*******************************************************************
  * Function: update_game_state
  * Purpose: Updates the game state

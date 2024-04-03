@@ -26,13 +26,11 @@ typedef unsigned char GAME_STATE;
 #define MENU ((UCHAR8)6)
 */
 
-
 #define ALLIGNMENT 256
 
 #define FIRST_STOP 16
 #define SECOND_STOP 16
 #define THIRD_STOP 32
-
 
 #define BUFFER_SIZE_BYTES 32256             
 #define BUFFER_SIZE_WORDS 16000 
@@ -74,22 +72,18 @@ void initialize_sound(long* old_ssp, SoundState* trebleState, SoundState* bassSt
 bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, SoundState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
 
 /*void process_keyboard_input(UCHAR8 input);*/
+void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr);
 
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
-
 extern Movement pacman_movements;
 extern Pacman pacman;
-
 extern Movement awkward_ghost_movement;
 extern Ghost awkward_ghost;
-
 extern Movement moustache_ghost_movement;
 extern Ghost moustache_ghost;
-
 extern Movement cyclops_ghost_movement;
 extern Ghost cyclops_ghost;
-
 extern Movement crying_ghost_movement;
 extern Ghost crying_ghost;
 

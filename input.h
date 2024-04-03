@@ -1,13 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include "TYPES.H"
 
-/*
-#define W_KEY 'w'
-#define A_KEY 'a'
-#define S_KEY 's'
-#define D_KEY 'd'
-*/
 
 void process_keyboard_input(UCHAR8 input);
 
