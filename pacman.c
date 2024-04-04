@@ -53,12 +53,16 @@ volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
          UCHAR8  background[BUFFER_SIZE_BYTES];
          UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
         
-        GAME_STATE state         = PLAY;
+        /*GAME_STATE state         = PLAY; /**/
+        GAME_STATE state         = MENU; /**/
+        ULONG32    mouse_background[30];
+        
 /*******************************************************************
  * Function: initialize_game
  * Purpose: Initializes the game, manually moves the ghosts out of the center
  *          and plays intro music
  ******************************************************************/
+
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity) 
 {
     SoundState  trebleState = {0, 0};
@@ -81,6 +85,8 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
     bool song_finished      = FALSE;
     bool stop_ghosts        = FALSE;
     bool enable             = TRUE;
+    int orig_ipl;
+    int orig_ssp;
 
     init_map_cells(cell_map, tile_map);    
     clear_and_render_maps(base32, back_buffer_ptr);
@@ -89,16 +95,26 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
     
+
     while (!song_finished) {
+        /*orig_ssp = Super(0);                      
+        orig_ipl = set_ipl(7);
+        Super(orig_ssp);*/
+
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, 
                                      treble_song_length, bass_song_length, intro_duration_ptr
                                      );
+        /*orig_ssp = Super(0);
+        set_ipl(orig_ipl);
+        Super(orig_ssp); */
+        /*
         if (*intro_duration_ptr > START_MUSIC_THRESHOLD) {
             
             if (first_frames > FIRST_STOP - 1) {
                 stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
                 first_frames = 0;
             }
+            
             if (stop_ghosts == FALSE && time_elapsed > 0) {
                 manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
                 swap_buffers(&base32, &back_buffer_ptr);
@@ -109,24 +125,92 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
                 set_video_base(base32);  
                 Super(old_ssp);
             }
+            
             first_frames++;
-        }
-    }
+        }*/
+    } 
     clear_and_render_entities(base32, back_buffer_ptr, entity);
+    state = PLAY;
+}
+
+int main()
+{
+
+    int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
+    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+    long old_ssp;
+
+    int orig_ipl;
+    int orig_ssp;
+    ULONG32* original         = get_video_base();
+    ULONG32* base32           = get_video_base();
+    UINT16* base16            = (UINT16*)base32;
+   
+
+    UCHAR8 input;
+    plot_screen(base32, splash);
+    install_custom_vectors(); 
+    initialize_mouse();
+
+    capture_mouse_background(base32,mouse_background,global_mouse_x,global_mouse_y);
+    render_mouse(base16);
+   
+    /*
+    while (state != QUIT  && input != ENTER && state != WIN){
+        
+        if (fill_level > 0){
+            
+            orig_ssp = Super(0);                     
+            orig_ipl = set_ipl(7);
+            Super(orig_ssp);
+
+            input = dequeue();
+            
+            orig_ssp = Super(0);
+            set_ipl(orig_ipl);
+            Super(orig_ssp); 
+
+            process_keyboard_input(input);
+        }
+            if (left_button_pressed == TRUE){
+            
+                clear_screen_q(base32);
+                game_loop();
+                
+            }
+        
+        update_mouse();
+        render_mouse(base16);
+        /*
+        if (request_to_render == TRUE)
+        {  
+            restore_mouse_background(base32,mouse_background,old_mouse_x,old_mouse_y);
+            capture_mouse_background(base32,mouse_background,global_mouse_x,global_mouse_y);
+            render_mouse(base16);
+        } 
+     }*/
+
+    clear_screen_q(base32);
+    game_loop();
+    
+  
+    /* add the lose screen as well */
+    if (state == WIN)
+    {
+        plot_screen(original, splash);
+        game_over_flag = TRUE;
+    }
+   
+    remove_custom_vectors();
+
+    return 0;
 }
 /*******************************************************************
- * Function: main
+ * Function: game_loop
  * Purpose: executes main game loop
  ******************************************************************/
-int main() 
+void game_loop() 
 {
-    Entities entity = {
-         &pacman,
-         &crying_ghost,
-         &awkward_ghost,
-         &moustache_ghost,
-         &cyclops_ghost,
-    };
     int  i;
 	UCHAR8 input;
     int  waka_repetitions    = 10; 
@@ -142,49 +226,15 @@ int main()
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
     ULONG32* background_ptr  = (ULONG32*)(&background[background_offset]); /*Not using at the moment*/
    
-    install_custom_vectors();
+    /*install_custom_vectors(); */
+  
+    /*ticks = 0;*/
 
-/*  -Took out the splash screen for now (IKBD stuff)-
-    plot_screen(base32, splash);
-    while (!Cconis());
-*/
+    /*clear_screen_q(base32);*/
     
-    while (input != ENTER)
-    {    
-        if (fill_level > 0){
-             orig_ssp = Super(0);                        /* mask all intrpts before deQ ing */
-            orig_ipl = set_ipl(7);
-            Super(orig_ssp);
-            
-            input = dequeue();
-            
-            orig_ssp = Super(0);
-            set_ipl(orig_ipl);
-            Super(orig_ssp);
-            process_keyboard_input(input);
-        }
-        update_mouse();
-        printf("(%d,%d)\n",global_mouse_x,global_mouse_y); 
-
-        /*
-        if (left_button_pressed == TRUE){
-            printf("left");
-            left_button_pressed = FALSE;
-        }
-        if (right_button_pressed == TRUE)
-        {
-            printf("right");
-            right_button_pressed = FALSE;
-        }*/
-       /*
-       if (global_mouse_y != i){}*/
-   }
-
-   clear_screen_q(base32);
-   
+  
     initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
 
-    ticks = 0;
     while (state != QUIT && state != WIN) {
 
         if (fill_level > 0){
@@ -193,70 +243,44 @@ int main()
             Super(orig_ssp);
 
             input = dequeue();
+            process_keyboard_input(input);
 
             orig_ssp = Super(0);
             set_ipl(orig_ipl);
             Super(orig_ssp);
         }
 
-        process_keyboard_input(input);
 
-        if (request_to_render == TRUE){  
-            /*page_flip(&base32,&back_buffer_ptr);*/
-            
-            render_frame(back_buffer_ptr, &entity);
-            swap_buffers(&base32, &back_buffer_ptr);
-            old_ssp = Super(0); 
-            set_video_base(base32);
-            Super(old_ssp);
-            
-            request_to_render = FALSE; 
-        }  
-      
-        state = update_game_state(state, input, &entity);
-    }
-        /* (OLD loop)
-        if (Cconis()) { input = (char)Cnecin(); }
-        set_input(entity.pacman, input);  
-        if (request_to_render == TRUE) 
-        {
-            render_frame(back_buffer_ptr, &entity);
-            swap_buffers(&base32, &back_buffer_ptr);
+    if (request_to_render == TRUE){  
+        /*page_flip(&base32,&back_buffer_ptr);*/
+        
+        render_frame(back_buffer_ptr, &entity);
+        swap_buffers(&base32, &back_buffer_ptr);
 
-            request_to_render = FALSE; 
-            
-            old_ssp = Super(0);
-            set_video_base(base32);
-            Super(old_ssp);  
-            
-        }
-        state = update_game_state(state, input, &entity);
-    }
-    */
+        old_ssp = Super(0); 
+        set_video_base(base32);
+        Super(old_ssp);
+        
+        request_to_render = FALSE; 
+    }  
     
+    state = update_game_state(state, input, &entity);
+    }
+      
     old_ssp = Super(0);
     stop_sound();
     set_video_base(original);
     Super(old_ssp);
 
+    /*
     if (state == WIN) {
         plot_screen(original, splash);
         game_over_flag = TRUE;
-    }
+    }*/
    
+   /* remove_custom_vectors(); /**/
 
-        /*while (input != '\033') {
-            input = (char)Cnecin();
-        }*/
-    /*
-    else if (state == QUIT) {
-        plot_screen(base32, lose);
-    }
-*/
-
-   remove_custom_vectors(); /**/
-
-	return 0;
+	
 }
 /******************************************************************
 * Function: update_entities

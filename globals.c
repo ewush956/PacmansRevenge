@@ -19,8 +19,15 @@ UCHAR8 head = 0;
 int tail = -1;
 UCHAR8 fill_level = 0;
 
-int global_mouse_x = 300;
-int global_mouse_y = 150;
+int global_mouse_x = MIDDLE_OF_SCREEN_X;
+int global_mouse_y = MIDDLE_OF_SCREEN_Y;
+
+int old_mouse_x;
+int old_mouse_y;
+
+
+bool left_button_pressed = FALSE;
+bool right_button_pressed = FALSE;
 
 
 
@@ -31,7 +38,7 @@ int global_mouse_y = 150;
 *          direction, and cell index on the game map.
 *************************************************************/
 Movement pacman_movement = {
-        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,        
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET,      /* x y*/  
         0,0,        /*Initial Displacement*/
         UP,
         21,19,          /*Cell index -> y, x*/
@@ -52,12 +59,12 @@ Pacman pacman = {
 *          and cell index on the game map.
 *************************************************************/
 Movement crying_ghost_movement = {
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,     
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 7 + Y_PIXEL_OFFSET,     
         0,0,
         RIGHT,
-        10, 17,
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
+        7, 19, /* y x*/
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 7 + Y_PIXEL_OFFSET,
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 7 + Y_PIXEL_OFFSET,
         FALSE
 };
 Ghost crying_ghost = {
@@ -76,12 +83,12 @@ Ghost crying_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Movement cyclops_ghost_movement = {
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      
+        PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 11 + Y_PIXEL_OFFSET,      
         0,0,
         LEFT,
-        12, 17,
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      
-        PIXELS_PER_CELL * 17, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+        11, 13, /* y x*/
+        PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 11 + Y_PIXEL_OFFSET,      
+        PIXELS_PER_CELL * 13, PIXELS_PER_CELL * 11 + Y_PIXEL_OFFSET,
         FALSE
 };
 Ghost cyclops_ghost = {
@@ -99,12 +106,12 @@ Ghost cyclops_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Movement moustache_ghost_movement = {
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      
+        PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 11 + Y_PIXEL_OFFSET,      
         0,0,
         LEFT,
-        10, 21,
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,      
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 10 + Y_PIXEL_OFFSET,
+        11, 25, /* y x*/
+        PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 11 + Y_PIXEL_OFFSET,      
+        PIXELS_PER_CELL * 25, PIXELS_PER_CELL * 11 + Y_PIXEL_OFFSET,
         FALSE
 };
 Ghost moustache_ghost = {
@@ -123,12 +130,12 @@ Ghost moustache_ghost = {
 *          direction, and cell index on the game map.
 *************************************************************/
 Movement awkward_ghost_movement = {
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,      
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 15 + Y_PIXEL_OFFSET,      
         0,0,
         LEFT,
-        12, 21,
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET, 
-        PIXELS_PER_CELL * 21, PIXELS_PER_CELL * 12 + Y_PIXEL_OFFSET,
+        15, 19, /* y x*/
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 15 + Y_PIXEL_OFFSET, 
+        PIXELS_PER_CELL * 19, PIXELS_PER_CELL * 15 + Y_PIXEL_OFFSET,
         FALSE
 };
 Ghost awkward_ghost = {

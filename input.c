@@ -32,6 +32,14 @@ void process_keyboard_input(UCHAR8 input)
             }
             break;
 
+        case MENU:  
+            /*
+            if(input == ENTER || left_button_pressed == TRUE) {/*&& within_button_range) 
+                left_button_pressed = FALSE;
+                /*state = PLAY; 
+            }*/
+
+            break;
         default:
             break;
 

@@ -20,6 +20,8 @@ void clear_pacman(ULONG32* base32, Movement* move);
 void render_pellets(ULONG32* base32, Entities* all);
 void render_pellet(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, UCHAR8 direction);
 
+void render_mouse(UINT16* base16);
+
 
 
 

@@ -4,6 +4,7 @@
 #include "bitmaps.h"
 #include "RASTER.H"
 #include "font.h"
+#include "globals.h"
 /*************************************************************
 * Function: render_map
 * Purpose: Initialize game map rendering by plotting tiles.
@@ -54,11 +55,13 @@ void render_frame(ULONG32* base, Entities* entity) {
 
     UCHAR8* base8 = (UCHAR8*)base;
 
+    Ghost* awk;
     Pacman* pacman = entity->pacman;
     Movement* crying = entity->crying_ghost->move;
     Movement* moustache = entity->moustache_ghost->move;
     Movement* awkward = entity->awkward_ghost->move;
     Movement* cyclops = entity->cyclops_ghost->move;
+
 
     int crying_x = crying->x_cell_index;
     int crying_y = crying->y_cell_index;
@@ -79,6 +82,7 @@ void render_frame(ULONG32* base, Entities* entity) {
     int cyclops_last_x = cyclops->last_last_x >> 4;
     int cyclops_last_y = cyclops->last_last_y >> 4;
     
+    /*awk->current_frame ^= 1; */
 
     clear_entities(base, pacman->move, crying, moustache,
                    awkward, cyclops); 
@@ -205,7 +209,9 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
     int tombstone_x = ghost->move->x_cell_index  << 4;
 
     clear_bitmap_32(base32, ghost->move->x, ghost->move->y, SPRITE_HEIGHT);
+    /*clear_bitmap_32(base32, (UINT16)ghost->move->x_cell_index, (UINT16)ghost->move->y_cell_index, SPRITE_HEIGHT);*/
     plot_bitmap_32(base32, tombstone_x, tombstone_y, tombstone, SPRITE_HEIGHT);
+    
 }
 /*************************************************************
 * Function: render_non_default_ghost
@@ -265,7 +271,6 @@ void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
     clear_bitmap_32(base32, crying->last_last_x, crying->last_last_y, SPRITE_HEIGHT);
     
     clear_bitmap_32(base32, pacman->last_last_x, pacman->last_last_y, SPRITE_HEIGHT);
-
     clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
     
 }
@@ -346,6 +351,16 @@ void render_pellets(ULONG32* base32, Entities* all) {
     render_pellet(base8, all->pacman->move);
     */
 }
+void render_mouse(UINT16* base16)
+{
+    UCHAR8 height = 16;
+
+    /*toggle_mouse_sprite(base16,global_mouse_x,global_mouse_y,mouse_cursor,height); /**/
+    /*plot_bitmap_16(base16,global_mouse_x,global_mouse_y,mouse_cursor,16); */
+    plot_mouse(base16,global_mouse_x,global_mouse_y,mouse_cursor);
+
+}
+/*
 void clear_pacman(ULONG32* base32, Movement* move) {
     UCHAR8 direction = move->direction;
     UCHAR8 y_index = move->y_cell_index;
@@ -365,5 +380,6 @@ void clear_pacman(ULONG32* base32, Movement* move) {
             break;
        }
     }
-}
+
+}*/
 

@@ -93,6 +93,9 @@ extern const ULONG32 splash[8000];
 
 extern const UINT16 wall_single_16[];
 
+extern const UINT16 mouse_cursor[]; /*******/
+/*extern ULONG32 mouse_background[];*/
+
 extern const ULONG32 null_sprite_16[];
 extern const ULONG32 null_sprite_32[];
 

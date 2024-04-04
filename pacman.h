@@ -74,6 +74,8 @@ bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, So
 /*void process_keyboard_input(UCHAR8 input);*/
 void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr);
 
+void game_loop();
+
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 extern Movement pacman_movements;
@@ -87,5 +89,6 @@ extern Ghost cyclops_ghost;
 extern Movement crying_ghost_movement;
 extern Ghost crying_ghost;
 
+extern ULONG32 mouse_background[];
 
 #endif

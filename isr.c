@@ -1,6 +1,5 @@
 
 #include <osbind.h>
-
 #include "isr.h"    
 #include "TYPES.H"
 #include "globals.h"
@@ -20,21 +19,21 @@ volatile const SCANCODE * const IKBD_RDR = 0xFFFC02;            /* receive data 
 volatile UCHAR8  *const in_service_register_b = 0xFFFA11;       /* clear bit #6 of this*/ 
 volatile UCHAR8 *const interrupt_enable_b = 0xFFFA09;           /* disable interrupts for MIDI*/
 
-bool left_button_pressed = FALSE;
-bool right_button_pressed = FALSE;
-
 Vector orig_vector28;
 Vector orig_vector70;
 
 UCHAR8 mouse_delta_x;
 UCHAR8 mouse_delta_y;
-UCHAR8 mouse_button;
-
+UCHAR8 mouse_button = 0;
+/*
+int old_mouse_x;
+int old_mouse_y;
+*/
 
 typedef enum {
 
     KEYBOARD_INPUT,
-    MOUSE_HEADER,
+    MOUSE_HEADER, 
     MOUSE_DELTA_X,
     MOUSE_DELTA_Y
 }IKBDState;
@@ -57,14 +56,14 @@ Vector install_vector(int num, Vector vector)
 void do_vbl()
 {
 
-    ticks++;
-
-    if (seconds > START_DELAY && request_to_render == TRUE)
+    
+    if (/*seconds > START_DELAY &&*/ request_to_render == TRUE && state == PLAY)
     {
         if (game_over_flag == TRUE) {
             stop_sound();
             return; 
         }
+
         update_movement(&entity);
         update_current_frame(&entity, ticks);
 
@@ -103,8 +102,13 @@ void do_vbl()
         seconds++;
         ticks = 0;
     }
+
+    ticks++;
     time_now++;
+
     request_to_render = TRUE; 
+   
+
 }
 
 void do_IKBD_isr()
@@ -114,7 +118,7 @@ void do_IKBD_isr()
     switch(ikbd_state)
     {
         case KEYBOARD_INPUT:
-            if ((code & 0x80) != 0x80 || code == ESC_BREAK) {       /* not enqueuing break codes as we dont want to HOLD w a s or d to move*/   
+            if ((code & 0x80) == 0x00 || code == ESC_BREAK) {    
                 enqueue(code);
             }
             else if (code >= 0xF8){
@@ -122,16 +126,17 @@ void do_IKBD_isr()
                 ikbd_state = MOUSE_DELTA_X;
             }
             break;
+
         case MOUSE_DELTA_X: 
             mouse_delta_x = code;
             ikbd_state = MOUSE_DELTA_Y;
             break;
+
         case MOUSE_DELTA_Y:
             mouse_delta_y = code;
             ikbd_state = KEYBOARD_INPUT;
-            /*left_button_pressed = FALSE;
-            right_button_pressed = FALSE; */
             break;
+
         default:
             break;
     }
@@ -143,8 +148,13 @@ void do_IKBD_isr()
 void update_mouse()
 {
 
+    old_mouse_x = global_mouse_x;
+    old_mouse_y = global_mouse_y;
+
     global_mouse_x += (int)((char)mouse_delta_x); 
     global_mouse_y += (int)((char)mouse_delta_y);
+
+    
 
     if (global_mouse_x < 0){
         global_mouse_x = 0;
@@ -157,20 +167,40 @@ void update_mouse()
         global_mouse_y = 0;
     }
 
-    else if(global_mouse_y >= 399 ){
-        global_mouse_y = 399;
+    else if(global_mouse_y >= 390 ){
+        global_mouse_y = 390;
     }
 
-    /*printf("DELTA y--%u\n",mouse_delta_x);*/
+    if (mouse_button == LEFT_CLICK && is_mouse_in_bounds() ) {
+        left_button_pressed = TRUE;
+        mouse_button = 0;
+    }
+
     mouse_delta_x = 0;
     mouse_delta_y = 0;
+
+}
+
+bool is_mouse_in_bounds()
+{
+    
+
+    if (global_mouse_x > 335 && global_mouse_x < 477)
+    {   
+        if (global_mouse_y > 150 && global_mouse_y < 200)
+            return TRUE;
+    }
+
+    return FALSE;
+
 
 }
 
 
 void enqueue(SCANCODE code)
 {
-    tail = (tail + 1) & BUFFER_SIZE_256_HEX;
+    
+   tail = (tail + 1) & BUFFER_SIZE_255_HEX;
     keyboard_buffer[tail] = code;
     fill_level++;
 
@@ -179,7 +209,7 @@ UCHAR8 dequeue()
 {
     UCHAR8 input;
     input = keyboard_buffer[head];
-    head = (head + 1) & BUFFER_SIZE_256_HEX;
+    head = (head + 1) & BUFFER_SIZE_255_HEX;
     fill_level--;
 
     return input;
@@ -212,4 +242,11 @@ void enable_MIDI_interrupts()
     long old_ssp = Super(0);
     *interrupt_enable_b |= ENABLE; 
     Super(old_ssp);
+}
+
+void initialize_mouse()
+{
+    int global_mouse_x = MIDDLE_OF_SCREEN_X;
+    int global_mouse_y = MIDDLE_OF_SCREEN_Y;
+   
 }

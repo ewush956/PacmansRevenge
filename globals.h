@@ -11,6 +11,7 @@
 #define ESC_MAKE 0x01
 #define ESC_BREAK 0x81
 #define ENTER 0x1C
+#define LEFT_CLICK 0xFA
 
 #define QUIT ((UCHAR8)0)
 #define PLAY ((UCHAR8)1)
@@ -28,8 +29,15 @@ extern char keyboard_buffer[256];
 extern UCHAR8 head;
 extern int tail;
 extern UCHAR8 fill_level;
+
 extern int global_mouse_x;
 extern int global_mouse_y;
+
+extern int old_mouse_x;
+extern int old_mouse_y;
+
+extern bool left_button_pressed;
+extern bool right_button_pressed;
 
 
 extern volatile bool waka_playing;

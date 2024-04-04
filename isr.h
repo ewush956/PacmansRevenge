@@ -4,16 +4,15 @@
 
 #include "TYPES.H"
 
-#define START_DELAY 8
+#define START_DELAY 7
 #define TRAP_28 28
 #define TRAP_70 70
-#define DISABLE 0xBF            /* we want to AND this to diable interrupts*/
-#define ENABLE 0x40             /* we want to OR this in*/
+#define DISABLE 0xBF            
+#define ENABLE 0x40             
 #define CLEAR_BIT_6 0xBF
-#define BUFFER_SIZE_256_HEX 0xFF
+#define BUFFER_SIZE_255_HEX 0xFF /* 255?*/
 
-extern bool left_button_pressed;
-extern bool right_button_pressed;
+
 
 typedef void (*Vector)();
 Vector install_vector(int num, Vector vector);
@@ -35,6 +34,8 @@ void enqueue(SCANCODE code);
 UCHAR8 dequeue();
 
 void update_mouse();
+void initialize_mouse();
+bool is_mouse_in_bounds();
 
 extern int seconds;
 

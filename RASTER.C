@@ -64,7 +64,70 @@ void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned 
         dy++; 
     }
 }
-/**
+void toggle_mouse_sprite(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height) {
+    int row;
+    int dy = y;
+    UINT16* location = base + (y * WORDS_PER_ROW) + (x >> 4); 
+
+    for (row = 0; row < height; row++) {
+        if (x >= 0 && x <= (SCREEN_WIDTH - WALL_SIZE) && dy >= 0 && y <= (SCREEN_HEIGHT - WALL_SIZE)) {
+            *location ^= bitmap[row] >> (x % WALL_SIZE);
+            *(location + 1) ^= bitmap[row] << (16 - (x % WALL_SIZE)); 
+        }
+        location += WORDS_PER_ROW; 
+        dy++; 
+    }
+}
+void plot_mouse(UINT16 *base, int x, int y, const UINT16 bitmap[]) {
+	int i, j;
+	
+                /* i < mse Height */
+	for(i = 0, j = 0; i < 19; i++) {
+		*(base + (y + i) * 40 + (x >> 4)) ^= *(bitmap + j) >> (x & 15);
+		*(base + (y + i) * 40 + ((x >> 4) + 1)) ^= *(bitmap + j++) << (16 - (x & 15));
+	}
+}
+
+void capture_mouse_background(ULONG32 background[], ULONG32* base32, int x, int y)
+{
+    int i, j;
+    	for(i = 0, j = 0; i < 19; i++) {
+		background[j++] = *(base32 + (y + i) * 20 + (x >> 5));
+		background[j++] = *(base32 + (y + i) * 20 + ((x >> 5) + 1));
+	}
+
+    /*
+    ULONG32* location = base32 + (y + i) * 20 + (x >> 5);
+
+    for (i = 0, row = 0; i < 16; i++)
+    {
+        background[row++] = *location;
+        background[row++] = *(location + 1);
+    }*/
+
+}
+
+void restore_mouse_background(ULONG32* base32, ULONG32 background[], int x, int y)
+{   
+    int i,j;
+    /*
+     ULONG32* location = base32 + (y + i) * 20 + (x >> 5);
+
+    for (i = 0,row = 0; i < 16; i++)
+    {
+
+        *location = background[row++];
+        *(location + 1) = background[row++];
+    }
+    */
+   for(i = 0, j = 0; i < 19; i++) {
+		*(base32 + (y + i) * 20 + (x >> 5)) |= background[j++];
+		*(base32 + (y + i) * 20 + ((x >> 5) + 1)) |= background[j++];
+	}
+
+}
+
+/******************
  * Plots a bitmap at the specified x, y position on the screen.
  *
  * @param base pointer to the base address of the frame buffer
