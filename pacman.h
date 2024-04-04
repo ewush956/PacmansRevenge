@@ -44,7 +44,7 @@ typedef unsigned char GAME_STATE;
 void swap_buffers(ULONG32** base32, ULONG32** back_buffer_ptr);
 void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input);
 void update_movement(Entities* entity);
-void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity);
+void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity);
 
 ULONG32 get_time();
 void set_video_base(ULONG32*);

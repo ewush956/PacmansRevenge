@@ -167,8 +167,8 @@ void update_mouse()
         global_mouse_y = 0;
     }
 
-    else if(global_mouse_y >= 390 ){
-        global_mouse_y = 390;
+    else if(global_mouse_y >= 370 ){
+        global_mouse_y = 370;
     }
 
     if (mouse_button == LEFT_CLICK && is_mouse_in_bounds() ) {

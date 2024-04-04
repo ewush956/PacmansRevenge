@@ -64,9 +64,12 @@ void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned 
         dy++; 
     }
 }
-void toggle_mouse_sprite(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height) {
+
+void plot_mouse(UINT16 *base, int x, int y, const UINT16 bitmap[]) {
+
     int row;
     int dy = y;
+    int height = 19;
     UINT16* location = base + (y * WORDS_PER_ROW) + (x >> 4); 
 
     for (row = 0; row < height; row++) {
@@ -78,53 +81,21 @@ void toggle_mouse_sprite(UINT16* base, int x, int y, const UINT16 bitmap[], unsi
         dy++; 
     }
 }
-void plot_mouse(UINT16 *base, int x, int y, const UINT16 bitmap[]) {
-	int i, j;
-	
-                /* i < mse Height */
-	for(i = 0, j = 0; i < 19; i++) {
-		*(base + (y + i) * 40 + (x >> 4)) ^= *(bitmap + j) >> (x & 15);
-		*(base + (y + i) * 40 + ((x >> 4) + 1)) ^= *(bitmap + j++) << (16 - (x & 15));
-	}
-}
-
-void capture_mouse_background(ULONG32 background[], ULONG32* base32, int x, int y)
-{
-    int i, j;
-    	for(i = 0, j = 0; i < 19; i++) {
-		background[j++] = *(base32 + (y + i) * 20 + (x >> 5));
-		background[j++] = *(base32 + (y + i) * 20 + ((x >> 5) + 1));
-	}
-
-    /*
-    ULONG32* location = base32 + (y + i) * 20 + (x >> 5);
-
-    for (i = 0, row = 0; i < 16; i++)
-    {
-        background[row++] = *location;
-        background[row++] = *(location + 1);
-    }*/
-
-}
 
 void restore_mouse_background(ULONG32* base32, ULONG32 background[], int x, int y)
 {   
-    int i,j;
-    /*
-     ULONG32* location = base32 + (y + i) * 20 + (x >> 5);
+    int i;
+    
+    ULONG32* location = base32 + (y * 20) + (x >> 5);
+    ULONG32* splash = background + (y * 20) + (x >> 5);
 
-    for (i = 0,row = 0; i < 16; i++)
+    for (i = 0; i < SPRITE_WIDTH; i++)
     {
-
-        *location = background[row++];
-        *(location + 1) = background[row++];
+        *location++ = *splash++;       
+        *location = *splash;
+        location += LONGS_PER_ROW - 1;
+        splash += LONGS_PER_ROW - 1;
     }
-    */
-   for(i = 0, j = 0; i < 19; i++) {
-		*(base32 + (y + i) * 20 + (x >> 5)) |= background[j++];
-		*(base32 + (y + i) * 20 + ((x >> 5) + 1)) |= background[j++];
-	}
-
 }
 
 /******************

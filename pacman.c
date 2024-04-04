@@ -55,7 +55,6 @@ volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
         
         /*GAME_STATE state         = PLAY; /**/
         GAME_STATE state         = MENU; /**/
-        ULONG32    mouse_background[30];
         
 /*******************************************************************
  * Function: initialize_game
@@ -63,7 +62,7 @@ volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
  *          and plays intro music
  ******************************************************************/
 
-void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity) 
+void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) 
 {
     SoundState  trebleState = {0, 0};
     SoundState  bassState   = {0, 0};
@@ -150,16 +149,14 @@ int main()
     UCHAR8 input;
     plot_screen(base32, splash);
     install_custom_vectors(); 
-    initialize_mouse();
-
-    capture_mouse_background(base32,mouse_background,global_mouse_x,global_mouse_y);
+    initialize_mouse(); 
     render_mouse(base16);
-   
-    /*
-    while (state != QUIT  && input != ENTER && state != WIN){
+    
+    while (state != QUIT  && input != ENTER && state != WIN)
+    {
         
-        if (fill_level > 0){
-            
+        if (fill_level > 0)
+        {
             orig_ssp = Super(0);                     
             orig_ipl = set_ipl(7);
             Super(orig_ssp);
@@ -172,27 +169,22 @@ int main()
 
             process_keyboard_input(input);
         }
-            if (left_button_pressed == TRUE){
-            
-                clear_screen_q(base32);
-                game_loop();
-                
-            }
-        
-        update_mouse();
-        render_mouse(base16);
-        /*
+        if (left_button_pressed == TRUE)
+        {
+            clear_screen_q(base32);
+            game_loop();
+
+        }
         if (request_to_render == TRUE)
         {  
-            restore_mouse_background(base32,mouse_background,old_mouse_x,old_mouse_y);
-            capture_mouse_background(base32,mouse_background,global_mouse_x,global_mouse_y);
+            update_mouse();
+            restore_mouse_background(base32,splash,old_mouse_x,old_mouse_y); 
             render_mouse(base16);
+            request_to_render = FALSE;
         } 
-     }*/
+     }
 
-    clear_screen_q(base32);
-    game_loop();
-    
+  
   
     /* add the lose screen as well */
     if (state == WIN)
@@ -220,22 +212,14 @@ void game_loop()
     int orig_ipl;
     int orig_ssp;
 
-    /*UCHAR8*  base8           = (UCHAR8*)get_video_base();*/
     ULONG32* base32          = (ULONG32*)get_video_base();
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
-    ULONG32* background_ptr  = (ULONG32*)(&background[background_offset]); /*Not using at the moment*/
-   
-    /*install_custom_vectors(); */
-  
-    /*ticks = 0;*/
 
-    /*clear_screen_q(base32);*/
-    
-  
-    initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
+    initialize_game(base32, back_buffer_ptr, &entity);
 
-    while (state != QUIT && state != WIN) {
+    while (state != QUIT && state != WIN) 
+    {
 
         if (fill_level > 0){
             orig_ssp = Super(0);                        /* mask all intrpts before enQing */
@@ -250,37 +234,26 @@ void game_loop()
             Super(orig_ssp);
         }
 
+        if (request_to_render == TRUE){  
+            /*page_flip(&base32,&back_buffer_ptr);*/
+            
+            render_frame(back_buffer_ptr, &entity);
+            swap_buffers(&base32, &back_buffer_ptr);
 
-    if (request_to_render == TRUE){  
-        /*page_flip(&base32,&back_buffer_ptr);*/
-        
-        render_frame(back_buffer_ptr, &entity);
-        swap_buffers(&base32, &back_buffer_ptr);
-
-        old_ssp = Super(0); 
-        set_video_base(base32);
-        Super(old_ssp);
-        
-        request_to_render = FALSE; 
-    }  
+            old_ssp = Super(0); 
+            set_video_base(base32);
+            Super(old_ssp);
+            
+            request_to_render = FALSE; 
+        }  
     
-    state = update_game_state(state, input, &entity);
+        state = update_game_state(state, input, &entity);
     }
       
     old_ssp = Super(0);
     stop_sound();
     set_video_base(original);
-    Super(old_ssp);
-
-    /*
-    if (state == WIN) {
-        plot_screen(original, splash);
-        game_over_flag = TRUE;
-    }*/
-   
-   /* remove_custom_vectors(); /**/
-
-	
+    Super(old_ssp);	
 }
 /******************************************************************
 * Function: update_entities
