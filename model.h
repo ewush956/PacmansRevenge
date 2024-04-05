@@ -84,7 +84,6 @@ typedef struct {
 	bool changed_direction;
 	
 }Movement;
-
 extern Movement* move;
 
 typedef struct 
@@ -107,12 +106,29 @@ typedef struct
 
 }Ghost;
 
+/*
 typedef struct{
 	UINT16 seconds, minutes,
 	MS_digit_minutes, LS_digit_minutes,
 	MS_digit_seconds, LS_digit_seconds; 
 
 }Timer;
+*/
+
+typedef struct{
+	unsigned int left_digit_minutes, right_digit_minutes,
+	left_digit_seconds, right_digit_seconds; 
+
+}Timer;
+
+/*
+typedef struct {
+
+	const char* left_digit_ptr;
+	const char* right_digit_ptr;
+
+}Timer;
+ */
 
 
 extern Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH];

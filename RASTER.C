@@ -1,6 +1,11 @@
+#include <osbind.h>
+
 #include "raster.h"
 #include "TYPES.H"
 
+volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
+volatile UCHAR8* ptr_to_midbyte  = VIDEO_ADDR_MID;
+	
 /**
  * Plot a bitmap on the screen at the specified coordinates.
  *
@@ -48,7 +53,7 @@ void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height) {
             location += LONGS_PER_ROW; 
         }
     }
-}
+} 
 
 void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height) {
     int row;
@@ -65,6 +70,12 @@ void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned 
     }
 }
 
+/************
+* Same code as plot_bitmap_16 but 
+* it is using an XOR operation instead
+* for the mouse. 
+*
+***********/
 void plot_mouse(UINT16 *base, int x, int y, const UINT16 bitmap[]) {
 
     int row;
@@ -85,12 +96,10 @@ void plot_mouse(UINT16 *base, int x, int y, const UINT16 bitmap[]) {
 void restore_mouse_background(ULONG32* base32, ULONG32 background[], int x, int y)
 {   
     int i;
-    
     ULONG32* location = base32 + (y * 20) + (x >> 5);
     ULONG32* splash = background + (y * 20) + (x >> 5);
 
-    for (i = 0; i < SPRITE_WIDTH; i++)
-    {
+    for (i = 0; i < SPRITE_WIDTH; i++){
         *location++ = *splash++;       
         *location = *splash;
         location += LONGS_PER_ROW - 1;
@@ -196,6 +205,7 @@ void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* 
         str++;
     }
 }
+
 /**
  * Plots a 640 x 400 bitmap on the screen. 
  * Not complete
@@ -211,4 +221,25 @@ void plot_screen(ULONG32* base, const ULONG32 bitmap[]) {
         }
     }
     return;
+}
+
+/******
+* 
+*****/
+ULONG32* get_video_base()
+{
+    ULONG32 old_ssp;
+    ULONG32 combined_address;
+    UCHAR8 high_byte; 
+    UCHAR8 mid_byte ;
+
+	old_ssp = Super(0); 				
+    high_byte = *ptr_to_highbyte;
+    mid_byte = *ptr_to_midbyte;
+    Super(old_ssp); 		
+    
+    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)mid_byte  << 8);
+   
+    return (ULONG32*)combined_address;
+
 }

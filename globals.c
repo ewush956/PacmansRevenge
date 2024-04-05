@@ -29,6 +29,11 @@ int old_mouse_y;
 bool left_button_pressed = FALSE;
 bool right_button_pressed = FALSE;
 
+/*const char digits[10] = {'0','1','2','3','4','5','6','7','8','9'}; /* */
+
+const char* digits[10] = {"0","1","2","3","4","5","6","7","8","9"};
+/*char* tail_timer_ptr = &digits[9];*/
+
 
 
 /**************************************************************************
@@ -146,10 +151,18 @@ Ghost awkward_ghost = {
     AWKWARD_PATH,
     &awkward_ghost_movement
 };
+/*
 Timer timer = {
     0,0,
     20, 28, 44, 52
+};*/
+
+Timer timer = {
+
+    0,1,0,0
 };
+
+
  Entities entity = {
         &pacman,
         &crying_ghost,

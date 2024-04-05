@@ -55,7 +55,6 @@ void render_frame(ULONG32* base, Entities* entity) {
 
     UCHAR8* base8 = (UCHAR8*)base;
 
-    Ghost* awk;
     Pacman* pacman = entity->pacman;
     Movement* crying = entity->crying_ghost->move;
     Movement* moustache = entity->moustache_ghost->move;
@@ -82,13 +81,13 @@ void render_frame(ULONG32* base, Entities* entity) {
     int cyclops_last_x = cyclops->last_last_x >> 4;
     int cyclops_last_y = cyclops->last_last_y >> 4;
     
-    /*awk->current_frame ^= 1; */
-
     clear_entities(base, pacman->move, crying, moustache,
                    awkward, cyclops); 
 
     render_ghosts(base, entity);
     render_pacman(base, pacman);
+   
+    
     /*
     render_pellet(base8, crying_last_x, crying_last_y, crying->direction);
     render_pellet(base8, moustache_last_x, moustache_last_y, moustache->direction);
@@ -243,14 +242,23 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
 void render_gameover() {
     /* Renderes game over screen, we arent sure how to do that yet.*/
 }
-void render_timer(Timer* timer) {
-
-}
-void render_initial_timer(UCHAR8* base) {
+void render_timer(Timer* timer,UCHAR8* base) 
+{
     int start_x = 280;
     int y = 4;
 
-    plot_string(base, start_x, y, font, "Time: 00:00");
+    plot_letter(base, start_x, y,font, timer->left_digit_minutes);
+    plot_letter(base, start_x+8, y,font, timer->right_digit_minutes);
+    plot_letter(base, start_x+8, y,font, timer->left_digit_seconds);
+    plot_letter(base, start_x+8, y,font, timer->right_digit_seconds);
+    
+}
+
+void render_initial_timer(UCHAR8* base) {
+    int start_x = 280;
+    int y = 4;
+    plot_string(base, start_x, y, font, "Time: 01:00");
+    
 }
 /********************************************************************
 * Clears the previous positions of entities from the specified base buffer.**
@@ -272,6 +280,7 @@ void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
     
     clear_bitmap_32(base32, pacman->last_last_x, pacman->last_last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
+
     
 }
 /*

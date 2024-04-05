@@ -32,7 +32,7 @@
  * 4. When killing a ghost, the event triggered "kill ghost" sound plays for
  *    2 - 3 cycles, it's supposed to only play once. I like how it sounds though :)
  * 
- * 5. Ghosts don't clear properly when being eaten.
+ * 5. Ghosts don't clear properly when being eaten sometimes. 
  * 
  ************************* TO DO **********************************
  *
@@ -47,8 +47,8 @@
  * 
  *********************************************************************/
 
-volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
-volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
+/*volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
+volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID; */
 
          UCHAR8  background[BUFFER_SIZE_BYTES];
          UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
@@ -89,21 +89,23 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     init_map_cells(cell_map, tile_map);    
     clear_and_render_maps(base32, back_buffer_ptr);
-    render_map(background_ptr, tile_map);
+    render_map(back_buffer_ptr, tile_map);
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
     
 
     while (!song_finished) {
-        /*orig_ssp = Super(0);                      
+        /*
+        orig_ssp = Super(0);                      
         orig_ipl = set_ipl(7);
-        Super(orig_ssp);*/
+        Super(orig_ssp); */
 
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, 
                                      treble_song_length, bass_song_length, intro_duration_ptr
                                      );
-        /*orig_ssp = Super(0);
+        /*
+        orig_ssp = Super(0);
         set_ipl(orig_ipl);
         Super(orig_ssp); */
         /*
@@ -128,7 +130,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
             first_frames++;
         }*/
     } 
-    clear_and_render_entities(base32, back_buffer_ptr, entity);
+    /*clear_and_render_entities(base32, back_buffer_ptr, entity); */
     state = PLAY;
 }
 
@@ -144,12 +146,13 @@ int main()
     ULONG32* original         = get_video_base();
     ULONG32* base32           = get_video_base();
     UINT16* base16            = (UINT16*)base32;
+    /*UCHAR8* base8             = (UCHAR8*)base32; /**/
    
 
     UCHAR8 input;
     plot_screen(base32, splash);
     install_custom_vectors(); 
-    initialize_mouse(); 
+    initialize_mouse();  
     render_mouse(base16);
     
     while (state != QUIT  && input != ENTER && state != WIN)
@@ -215,8 +218,19 @@ void game_loop()
     ULONG32* base32          = (ULONG32*)get_video_base();
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
+    UCHAR8* base8             = (UCHAR8*)base32;
+
 
     initialize_game(base32, back_buffer_ptr, &entity);
+    
+    
+    /*render_initial_timer(base8);
+    render_initial_timer((UCHAR8*)back_buffer_ptr); */
+
+
+    render_timer(&timer,base8);
+    /*clear_8(base8,352,4,8);     
+    clear_8((UCHAR8*)back_buffer_ptr,352,4,8);  */   
 
     while (state != QUIT && state != WIN) 
     {
@@ -235,7 +249,6 @@ void game_loop()
         }
 
         if (request_to_render == TRUE){  
-            /*page_flip(&base32,&back_buffer_ptr);*/
             
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
@@ -243,9 +256,11 @@ void game_loop()
             old_ssp = Super(0); 
             set_video_base(base32);
             Super(old_ssp);
-            
+
             request_to_render = FALSE; 
+            
         }  
+
     
         state = update_game_state(state, input, &entity);
     }
@@ -255,6 +270,34 @@ void game_loop()
     set_video_base(original);
     Super(old_ssp);	
 }
+
+
+void update_timer(Timer* timer)
+{
+    
+    if (seconds > 0)
+    {   
+        if (timer->right_digit_minutes == 1 && timer->left_digit_seconds  == 0 &&  timer->right_digit_seconds == 0)
+        {
+            timer->right_digit_minutes = 0;
+            timer->left_digit_seconds = 5;
+            timer->right_digit_seconds = 9;
+        }
+        else if (timer->right_digit_seconds == 0)
+        {
+            timer->left_digit_seconds--;
+            timer-> right_digit_seconds = 9;
+        }
+        else{
+            timer->right_digit_seconds--;
+        }
+    }
+
+
+    
+}
+
+
 /******************************************************************
 * Function: update_entities
 * Purpose: Updates the position of the ghosts and pacman
@@ -293,6 +336,8 @@ void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr)
     set_video_base(base32);
     Super(old_ssp);
 
+    request_to_render = FALSE;
+
 
 }
 /*******************************************************************
@@ -317,21 +362,6 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
     }
 
     return new_state;
-    /*
-    GAME_STATE state;
-    if (input == '\033')
-    {
-        state = QUIT;
-        return state;
-    }
-    if (all->awkward_ghost->state == DEAD && 
-        all->crying_ghost->state == DEAD &&
-        all->moustache_ghost->state == DEAD &&
-        all->cyclops_ghost->state == DEAD) {
-        return WIN; 
-    }
-    return new_state;
-    */
 }
 
 /*******************************************************************
@@ -501,56 +531,4 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->direction = DOWN;
 }
 
-ULONG32* get_video_base()
-{
-	ULONG32 old_ssp;
-    ULONG32 combined_address;
-   
-
-    UCHAR8 high_byte; 
-    UCHAR8 low_byte ;
-
-	old_ssp = Super(0); 				
-    high_byte = *ptr_to_highbyte;
-    low_byte = *ptr_to_lowbyte;
-    Super(old_ssp); 		
-    
-   combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte  << 8);
-   
-    return (ULONG32*)combined_address;
-
-}
-/*****************************
-* A simple finite state machine 
-*  that handles keyboard input
-*
-*
-******************************/
-/*
-void process_keyboard_input(UCHAR8 input)
-{   
-    switch(state)
-    {   
-        case PLAY:
-            if (input == ESC_MAKE){
-                state = WAITING_FOR_ESC_BREAK;
-            } 
-            else{
-                set_input(entity.pacman,input);
-            }
-            break;
-        case WAITING_FOR_ESC_BREAK:
-            if (input == ESC_BREAK){
-                state = QUIT;
-            }
-            else{
-                state = PLAY;
-            }
-            break;
-
-        default:
-            break;
-
-    }
-}*/
 

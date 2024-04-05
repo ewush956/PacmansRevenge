@@ -46,8 +46,10 @@ void render_to_buffer(ULONG32* base32, Entities* entity, UINT16 ticks,char input
 void update_movement(Entities* entity);
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity);
 
-ULONG32 get_time();
+/*
 void set_video_base(ULONG32*);
+ULONG32* get_video_base();
+*/
 
 GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all);
 void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value);
@@ -58,7 +60,6 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool 
 ULONG32* byte_allign(ULONG32* array_address);
 void debug_pacman_movement(ULONG32* base32, Pacman* pacman);
 
-ULONG32* get_video_base();
 
 void set_first_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
 void set_second_movements(ULONG32* base32, UCHAR8* base8, Entities* entity);
@@ -71,10 +72,11 @@ bool execute_movements_and_render_frame(ULONG32* base32, UCHAR8* base8, UCHAR8* 
 void initialize_sound(long* old_ssp, SoundState* trebleState, SoundState* bassState);
 bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, SoundState* bassState, int treble_song_length, int bass_song_length, int* intro_duration);
 
-/*void process_keyboard_input(UCHAR8 input);*/
-void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr);
+
+void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr); /* implement this*/
 
 void game_loop();
+void update_timer(Timer* timer);
 
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
@@ -89,6 +91,7 @@ extern Ghost cyclops_ghost;
 extern Movement crying_ghost_movement;
 extern Ghost crying_ghost;
 
-extern ULONG32 mouse_background[];
+
+/*extern ULONG32 mouse_background[];*/
 
 #endif

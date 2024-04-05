@@ -40,6 +40,8 @@ extern bool left_button_pressed;
 extern bool right_button_pressed;
 
 
+extern const char* digits[10];
+
 extern volatile bool waka_playing;
 extern volatile bool single_waka_playing;
 extern volatile bool game_over_flag;
@@ -55,7 +57,9 @@ extern Movement cyclops_ghost_movement;
 extern Ghost cyclops_ghost;
 extern Movement crying_ghost_movement;
 extern Ghost crying_ghost;
+
 extern Timer timer;
+
 extern Entities entity;
 
 #endif
