@@ -23,20 +23,19 @@
 #define PELLET_Y_OFFSET 28
 
 void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height);
+void plot_mouse(UINT16 *base, int x, int y, const UINT16 bitmap[]);
 void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
 void clear_letter(UCHAR8* base, int x, int y);
 void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* str);
 void clear_bitmap_32(ULONG32* base, int x, int y, unsigned int height);
 void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int height);
-
 void plot_bitmap_32_quick(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
 void plot_bitmap_64(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
 void plot_letter(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int letter);
 void plot_screen(ULONG32* base, const ULONG32* bitmap);
 void clear_screen_q(ULONG32* base); 
 void clear_8(UCHAR8* base, int x, int y, unsigned int height);
-/*
-void clear_screen_c(ULONG32* base);
-*/
+void restore_mouse_background(ULONG32* base32, ULONG32 background[], int x, int y);
 void plot_screen(ULONG32* base, const ULONG32* bitmap);
+
 #endif

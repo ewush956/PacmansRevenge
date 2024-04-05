@@ -1,4 +1,5 @@
 
+#include <stdio.h>
 #include "bitmaps.h"
 #include "model.h"
 #include "TYPES.H"
@@ -6,7 +7,6 @@
 #include "psg.h"
 #include "renderer.h"
 #include "globals.h"
-#include <stdio.h>
 
 const UCHAR8 DIRECTION_ARRAY[4] = {UP, DOWN, LEFT, RIGHT};
 

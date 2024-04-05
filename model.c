@@ -343,8 +343,7 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
 {
     Movement* ghost_movement  = ghost->move;
     Movement* pacman_movement = pacman->move;
-    ObjectType ghost_type     = ghost->type;
-
+    UCHAR8 ghost_path = ghost->path_number;
     UCHAR8 ghost_x_indx = ghost_movement->x_cell_index;
     UCHAR8 ghost_y_indx = ghost_movement->y_cell_index;
 
@@ -375,7 +374,7 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
         ghost_movement->direction = get_optimal_direction(ghost_movement, pacman_movement);
         return;
     }
-    switch (ghost_type) 
+    switch (ghost_path) 
     {
         case CRYING_PATH:    ghost_movement->direction = cell_map[ghost_y_indx][ghost_x_indx].crying_path;    break;
         case AWKWARD_PATH:   ghost_movement->direction = cell_map[ghost_y_indx][ghost_x_indx].awkward_path;   break;
@@ -580,55 +579,3 @@ void update_current_frame(Entities* all, int clock) {
     }
 }
 
-/*
-*
-*   set position from 2 frames behind
-*
-*/
-void set_prev(Entities* entity)
-{
-    Movement* pacman_movement = entity->pacman->move;
-    Movement* awkward_move = entity->awkward_ghost->move;
-    Movement* moustache_move = entity->moustache_ghost->move;
-    Movement* crying_move = entity->crying_ghost->move;
-    Movement* cyclops_move = entity->cyclops_ghost->move;
-
-    pacman_movement->last_x = pacman_movement->x;
-    pacman_movement->last_y = pacman_movement->y;
-    
-    moustache_move->last_x = moustache_move->x;
-    moustache_move->last_y = moustache_move->y;
-
-    crying_move->last_x = crying_move->x;
-    crying_move->last_y = crying_move->y;
-    
-    awkward_move->last_x = awkward_move->x;
-    awkward_move->last_y = awkward_move->y;
-    
-    cyclops_move->last_x = cyclops_move->x;
-    cyclops_move->last_y = cyclops_move->y;
-}
-void set_prev_prev (Entities* entity) 
-{/*
-    Movement* pacman_movement = entity->pacman->move;
-    Movement* moustache_move = entity->moustache_ghost->move;
-    Movement* crying_move = entity->crying_ghost->move;
-    Movement* awkward_move = entity->awkward_ghost->move;
-    Movement* cyclops_move = entity->cyclops_ghost->move;
-
-    pacman_movement->last_last_x = pacman_movement->last_x;
-    pacman_movement->last_last_y = pacman_movement->last_y;
-
-    moustache_move->last_last_x = moustache_move->last_x;
-    moustache_move->last_last_y = moustache_move->last_y;
-
-    crying_move->last_last_x = crying_move->last_x;
-    crying_move->last_last_y = crying_move->last_y;
-
-    awkward_move->last_last_x = awkward_move->last_x;
-    awkward_move->last_last_y = awkward_move->last_y;
-
-    cyclops_move->last_last_x = cyclops_move->last_x;
-    cyclops_move->last_last_y = cyclops_move->last_y;
-    */
-}

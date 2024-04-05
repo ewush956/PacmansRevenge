@@ -8,6 +8,7 @@ typedef unsigned long ULONG32;
 typedef signed char bool; 
 
 typedef UCHAR8 SCANCODE;
+typedef unsigned char GAME_STATE;
 
 #define TRUE -1
 #define FALSE 0
@@ -34,5 +35,7 @@ typedef UCHAR8 SCANCODE;
 #define LONGS_PER_ROW 20
 #define WORDS_PER_ROW 40
 #define BYTES_PER_ROW 80
+
+#define SPLASH_SIZE 8000
 
 #endif

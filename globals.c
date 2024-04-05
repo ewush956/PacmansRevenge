@@ -19,8 +19,16 @@ UCHAR8 head = 0;
 int tail = -1;
 UCHAR8 fill_level = 0;
 
-int global_mouse_x = 200;
-int global_mouse_y = 200;
+int global_mouse_x = MIDDLE_OF_SCREEN_X;
+int global_mouse_y = MIDDLE_OF_SCREEN_Y;
+
+int old_mouse_x;
+int old_mouse_y;
+
+
+bool left_button_pressed = FALSE;
+bool right_button_pressed = FALSE;
+
 
 /**************************************************************************
 * Declaration: Pacman pacman
@@ -141,10 +149,11 @@ Timer timer = {
     0,0,
     20, 28, 44, 52
 };
- Entities entity = {
+Entities entity = {
         &pacman,
         &crying_ghost,
         &awkward_ghost,
         &moustache_ghost,
         &cyclops_ghost,
+        &timer
     };

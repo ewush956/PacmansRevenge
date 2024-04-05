@@ -64,7 +64,41 @@ void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned 
         dy++; 
     }
 }
-/**
+
+void plot_mouse(UINT16 *base, int x, int y, const UINT16 bitmap[]) {
+
+    int row;
+    int dy = y;
+    int height = 19;
+    UINT16* location = base + (y * WORDS_PER_ROW) + (x >> 4); 
+
+    for (row = 0; row < height; row++) {
+        if (x >= 0 && x <= (SCREEN_WIDTH - WALL_SIZE) && dy >= 0 && y <= (SCREEN_HEIGHT - WALL_SIZE)) {
+            *location ^= bitmap[row] >> (x % WALL_SIZE);
+            *(location + 1) ^= bitmap[row] << (16 - (x % WALL_SIZE)); 
+        }
+        location += WORDS_PER_ROW; 
+        dy++; 
+    }
+}
+
+void restore_mouse_background(ULONG32* base32, ULONG32 background[], int x, int y)
+{   
+    int i;
+    
+    ULONG32* location = base32 + (y * 20) + (x >> 5);
+    ULONG32* splash = background + (y * 20) + (x >> 5);
+
+    for (i = 0; i < SPRITE_WIDTH; i++)
+    {
+        *location++ = *splash++;       
+        *location = *splash;
+        location += LONGS_PER_ROW - 1;
+        splash += LONGS_PER_ROW - 1;
+    }
+}
+
+/******************
  * Plots a bitmap at the specified x, y position on the screen.
  *
  * @param base pointer to the base address of the frame buffer

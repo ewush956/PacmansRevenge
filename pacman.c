@@ -13,6 +13,10 @@
 #include "globals.h" 
 #include "isr.h"
 
+#include "splash.h"
+#include "win_scr.h"
+#include "lose_scr.h"
+
 #include <osbind.h>
 #include <stdio.h>
 #include <linea.h>
@@ -21,27 +25,27 @@
  * 
  * 1. Occasionally ghost movement causes half of a pellet sprite
  *    to render on either the back or the front buffer causing flickering
+ *    
+ *    This has been PARTIALLY fixed, the fix we came up with at re renders the pellet
+ *    but you can still see some flickering behind the ghost. 
  * 
- * 2. There is still a little bit of flickering when freeing the ghosts initially
- *    The double buffering appears to be solid in the main game loop, but it
- *    is not applied correctly in the initialize_game function.
+ * 2. Ghosts frames are not being updated properly, like an issue with ticks or seconds in ISR.C
  * 
  * 3. The cyclops ghost's eye is not properly centered in some of it's alternate frames
  *    causing the movement to look jittery. This is an issue with it's bitmap.
  * 
- * 4. When killing a ghost, the event triggered "kill ghost" sound plays for
- *    2 - 3 cycles, it's supposed to only play once. I like how it sounds though :)
+ * 4. When killing a ghost, the event triggered "kill ghost" sound plays while pacman
+ *    is in the vasinity of the tombstone, once pacman leaves the sound stops.
+ *    it's supposed to only play once. I like how it sounds though :)
  * 
- * 5. Ghosts don't clear properly when being eaten.
+ * 5. Ghosts don't clear properly when being eaten, and occasionally "jump" leaving a flickering 
+ *    trail, this is not an issue with double buffering, it's most an error in the game logic.
  * 
  ************************* TO DO **********************************
  *
  * 1. Games loose condition. Proximity checking has been added,
- *    we just need to implement the loosing event. 
+ *    we just need to implement the loosing event. (timer)
  *  
- *    We might be able to implement a finite state machine to check if 
- *    pacman is stuck, or we can give an option for the player to "give up"
- *    if they are softlocked.
  * 
  * 2. Add a timer to the game.
  * 
@@ -53,13 +57,15 @@ volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
          UCHAR8  background[BUFFER_SIZE_BYTES];
          UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
         
-        GAME_STATE state         = PLAY;
+         GAME_STATE state         = MENU; /**/
+        
 /*******************************************************************
  * Function: initialize_game
  * Purpose: Initializes the game, manually moves the ghosts out of the center
  *          and plays intro music
  ******************************************************************/
-void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* background_ptr, Entities* entity) 
+
+void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) 
 {
     SoundState  trebleState = {0, 0};
     SoundState  bassState   = {0, 0};
@@ -81,10 +87,12 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
     bool song_finished      = FALSE;
     bool stop_ghosts        = FALSE;
     bool enable             = TRUE;
+    int orig_ipl;
+    int orig_ssp;
 
     init_map_cells(cell_map, tile_map);    
     clear_and_render_maps(base32, back_buffer_ptr);
-    render_map(background_ptr, tile_map);
+    render_map(back_buffer_ptr, tile_map);
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
@@ -99,125 +107,143 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, ULONG32* backgro
                 stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
                 first_frames = 0;
             }
-            if (stop_ghosts == FALSE && time_elapsed > 0) {
+            if (stop_ghosts == FALSE && request_to_render == TRUE) {
                 manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
                 swap_buffers(&base32, &back_buffer_ptr);
-
-                request_to_render = FALSE; 
 
                 old_ssp = Super(0);
                 set_video_base(base32);  
                 Super(old_ssp);
+                request_to_render = FALSE; 
+                first_frames++;
             }
-            first_frames++;
         }
     }
-    clear_and_render_entities(base32, back_buffer_ptr, entity);
+    state = PLAY;
+}
+
+int main()
+{
+
+    int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
+    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+    long old_ssp;
+
+    int orig_ipl;
+    int orig_ssp;
+    ULONG32* original         = get_video_base();
+    ULONG32* base32           = get_video_base();
+    UINT16* base16            = (UINT16*)base32;
+   
+
+    UCHAR8 input;
+    plot_screen(base32, splash);
+    install_custom_vectors(); 
+    initialize_mouse(); 
+    render_mouse(base16);
+    
+    while (state != QUIT  && input != ENTER && state != WIN)
+    {
+        
+        if (fill_level > 0)
+        {
+            orig_ssp = Super(0);                     
+            orig_ipl = set_ipl(7);
+            Super(orig_ssp);
+
+            input = dequeue();
+            
+            orig_ssp = Super(0);
+            set_ipl(orig_ipl);
+            Super(orig_ssp); 
+
+            process_keyboard_input(input);
+        }
+        if (left_button_pressed == TRUE)
+        {
+            clear_screen_q(base32);
+            game_loop();
+
+        }
+        if (request_to_render == TRUE)
+        {  
+            update_mouse();
+            restore_mouse_background(base32,splash,old_mouse_x,old_mouse_y); 
+            render_mouse(base16);
+            request_to_render = FALSE;
+        } 
+     }
+
+  
+  
+    /* add the lose screen as well */
+    if (state == WIN)
+    {
+        plot_screen(original, lose_splash);
+        game_over_flag = TRUE;
+    }
+   
+    remove_custom_vectors();
+
+    return 0;
 }
 /*******************************************************************
- * Function: main
+ * Function: game_loop
  * Purpose: executes main game loop
  ******************************************************************/
-int main() 
+void game_loop() 
 {
-    Entities entity = {
-         &pacman,
-         &crying_ghost,
-         &awkward_ghost,
-         &moustache_ghost,
-         &cyclops_ghost,
-    };
     int  i;
 	UCHAR8 input;
     int  waka_repetitions    = 10; 
     int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
     int  background_offset   = 256 - ((long)(background) % 256);
     long old_ssp; 
+    int orig_ipl;
+    int orig_ssp;
 
-    /*UCHAR8*  base8           = (UCHAR8*)get_video_base();*/
     ULONG32* base32          = (ULONG32*)get_video_base();
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
-    ULONG32* background_ptr  = (ULONG32*)(&background[background_offset]); /*Not using at the moment*/
 
-    /*GAME_STATE state         = PLAY; (global to this file-check top*/
-    Vector     orig_vector28 = install_vector(TRAP_28, trap28_isr);
-    Vector     orig_vector70 = install_vector(TRAP_70, trap70_isr);   /* for IKBD*/
+    initialize_game(base32, back_buffer_ptr, &entity);
 
-/*  -Took out the splash screen for now (IKBD stuff)-
-    plot_screen(base32, splash);
-    while (!Cconis());
-*/
-    initialize_game(base32, back_buffer_ptr, background_ptr, &entity);
-
-	/*
-    if (Cconis()) { input = get_input(); }
-    set_input(entity.pacman, input);
-    */
-
-    ticks = 0;
-    while (state != QUIT && state != WIN) {
+    while (state != QUIT && state != WIN) 
+    {
 
         if (fill_level > 0){
-            input = keyboard_buffer[head];
-            head = (head + 1) % 256;
-            fill_level--;
+            orig_ssp = Super(0);                        /* mask all intrpts before enQing */
+            orig_ipl = set_ipl(7);
+            Super(orig_ssp);
+
+            input = dequeue();
+            process_keyboard_input(input);
+
+            orig_ssp = Super(0);
+            set_ipl(orig_ipl);
+            Super(orig_ssp);
         }
 
-        process_keyboard_input(input);
-
         if (request_to_render == TRUE){  
+            /*page_flip(&base32,&back_buffer_ptr);*/
+            
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
+
             old_ssp = Super(0); 
             set_video_base(base32);
             Super(old_ssp);
+            
             request_to_render = FALSE; 
         }  
+    
+        state = update_game_state(state, input, &entity);
+    }
       
-        state = update_game_state(state, input, &entity);
-    }
-        /* (OLD loop)
-        if (Cconis()) { input = (char)Cnecin(); }
-        set_input(entity.pacman, input);  
-        if (request_to_render == TRUE) 
-        {
-            render_frame(back_buffer_ptr, &entity);
-            swap_buffers(&base32, &back_buffer_ptr);
-
-            request_to_render = FALSE; 
-            
-            old_ssp = Super(0);
-            set_video_base(base32);
-            Super(old_ssp);  
-            
-        }
-        state = update_game_state(state, input, &entity);
-    }
-    */
-
     old_ssp = Super(0);
     stop_sound();
     set_video_base(original);
-    Super(old_ssp);
-
-    if (state == WIN) {
-        plot_screen(original, splash);
-        game_over_flag = TRUE;
-    }
-
-        /*while (input != '\033') {
-            input = (char)Cnecin();
-        }*/
-    /*
-    else if (state == QUIT) {
-        plot_screen(base32, lose);
-    }
-*/
-    install_vector(TRAP_28, orig_vector28);
-    install_vector(TRAP_70, orig_vector70);
-
-	return 0;
+    Super(old_ssp);	
 }
 /******************************************************************
 * Function: update_entities
@@ -246,6 +272,19 @@ void update_movement(Entities* entity) {
     eat_pellet(entity->pacman->move);
     check_proximity(entity);   
 } 
+void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr)
+{
+    long old_ssp;
+
+    render_frame(back_buffer_ptr, &entity);
+    swap_buffers(&base32, &back_buffer_ptr);
+
+    old_ssp = Super(0); 
+    set_video_base(base32);
+    Super(old_ssp);
+
+
+}
 /*******************************************************************
  * Function: update_game_state
  * Purpose: Updates the game state
@@ -284,26 +323,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
     return new_state;
     */
 }
-/*******************************************************************
- * Function: get_time
- * Purpose: Gets the current time
- * Parameters: none
- * Returns: time
- * Note: time is in 70HZ
- ******************************************************************/
-ULONG32 get_time()
-{
 
-	ULONG32 *timer = (ULONG32 *)0x462; 		
-	ULONG32 timeNow;
-	ULONG32 old_ssp;
-	old_ssp = Super(0); 				
-	timeNow = *timer;
-	Super(old_ssp); 			
-
-	return timeNow;
-
-}
 /*******************************************************************
  * Function: swap_buffers
  * Purpose: Swaps the adress of the front and back buffers
@@ -428,95 +448,6 @@ bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, So
     }
     return FALSE;
 }
-/*******************************************************************
- * Function: debug_pacman_movement
- * Purpose: Prints out Pacman's movement coordinates for debugging
- ******************************************************************/
-void debug_pacman_movement(ULONG32* base32, Pacman* pacman) 
-{
-    UCHAR8* base;
-    const char labels[6][5] = {"X: ", "Y: ", "LX: ", "LY: ", "LLX: ", "LLY: "};
-    UINT16 values[6];
-    UINT16 x_offset, y_offset;
-    UINT16 tens, ones, hundreds;
-    int i, j;
-
-    base = (UCHAR8*)base32;
-    
-    values[0] = pacman->move->x;
-    values[1] = pacman->move->y;
-    values[2] = pacman->move->last_x;
-    values[3] = pacman->move->last_y;
-    values[4] = pacman->move->last_last_x;
-    values[5] = pacman->move->last_last_y;
-
-    x_offset = 0;
-    y_offset = LETTER_HEIGHT * 2; 
-
-    for (i = 0; i < 6; ++i) {
-        for (j = 0; j < 10; ++j) { 
-            clear_letter(base, x_offset + j*LETTER_WIDTH, y_offset);
-        }
-
-        plot_string(base, x_offset, y_offset, font, labels[i]);
-        x_offset += 4*LETTER_WIDTH; 
-
-        if (values[i] >= 100) {
-            hundreds = values[i] / 100;
-            tens = (values[i] / 10) % 10;
-            ones = values[i] % 10;
-            debug_print(base, x_offset, y_offset, hundreds);
-            x_offset += 2*LETTER_WIDTH; 
-            debug_print(base, x_offset, y_offset, tens * 10 + ones);
-        } else {
-            tens = values[i] / 10;
-            ones = values[i] % 10;
-            debug_print(base, x_offset, y_offset, tens * 10 + ones);
-        }
-
-        x_offset += 4*LETTER_WIDTH; 
-
-        if (x_offset + 8*LETTER_WIDTH > SCREEN_WIDTH) {
-            x_offset = 0;
-            /*y_offset += LETTER_HEIGHT; */
-        }
-    }
-}
-/*******************************************************************
- * Function: debug_print
- * Purpose: Prints out an integer value using plot letter
- *****************************************************************/
-void debug_print(UCHAR8* base, UINT16 x, UINT16 y, UINT16 value){
-    UINT16 tens = value / 10;
-    UINT16 ones = value % 10;
-
-    unsigned int tens_char = tens + '0';
-    unsigned int ones_char = ones + '0';
-
-	clear_letter(base, x, y);
-	clear_letter(base, x+LETTER_WIDTH, y);
-    plot_letter(base, x , y, font, tens_char);
-    plot_letter(base, x + LETTER_WIDTH, y, font, ones_char);
-}
-/*******************************************************************
- * Function: debug_cells
- * Purpose: Prints out pacmans current cell indeces
- ******************************************************************/
-void debug_cells_pac(UCHAR8* base, Pacman* pacman) {
-    int j;
-
-    const char strx[] = "X: ";
-	const char stry[] = "Y: ";	
-
-    for (j = 0; j < 14; j++) {
-    	clear_letter(base, j*LETTER_WIDTH, 0);
-	}
-
-    plot_string(base, 0, 0, font, strx);
-    debug_print(base, 4*LETTER_WIDTH, 0, pacman->move->x_cell_index);
-    plot_string(base, 8*LETTER_WIDTH, 0, font, stry);
-    debug_print(base, 12*LETTER_WIDTH, 0, pacman->move->y_cell_index);
-}
 /******************************************************************
  * Function: set_first_movements
  * Purpose: Sets the first movements of the ghosts
@@ -585,10 +516,9 @@ ULONG32* get_video_base()
 *
 *
 ******************************/
+/*
 void process_keyboard_input(UCHAR8 input)
 {   
-    /* state must be global*/
-
     switch(state)
     {   
         case PLAY:
@@ -612,5 +542,5 @@ void process_keyboard_input(UCHAR8 input)
             break;
 
     }
-}
+}*/
 
