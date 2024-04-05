@@ -223,15 +223,6 @@ void game_loop()
 
     initialize_game(base32, back_buffer_ptr, &entity);
     
-    
-    /*render_initial_timer(base8);
-    render_initial_timer((UCHAR8*)back_buffer_ptr); */
-
-
-    render_timer(&timer,base8);
-    /*clear_8(base8,352,4,8);     
-    clear_8((UCHAR8*)back_buffer_ptr,352,4,8);  */   
-
     while (state != QUIT && state != WIN) 
     {
 
@@ -260,8 +251,6 @@ void game_loop()
             request_to_render = FALSE; 
             
         }  
-
-    
         state = update_game_state(state, input, &entity);
     }
       
@@ -292,12 +281,7 @@ void update_timer(Timer* timer)
             timer->right_digit_seconds--;
         }
     }
-
-
-    
 }
-
-
 /******************************************************************
 * Function: update_entities
 * Purpose: Updates the position of the ghosts and pacman
