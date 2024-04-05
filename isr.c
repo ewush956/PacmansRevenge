@@ -176,6 +176,8 @@ void update_mouse()
         mouse_button = 0;
     }
 
+    
+
     mouse_delta_x = 0;
     mouse_delta_y = 0;
 
@@ -185,11 +187,18 @@ bool is_mouse_in_bounds()
 {
     
 
-    if (global_mouse_x > 335 && global_mouse_x < 477)
+    if (global_mouse_x > 335 && global_mouse_x < 410)
     {   
-        if (global_mouse_y > 150 && global_mouse_y < 200)
+        if (global_mouse_y > 150 && global_mouse_y < 188)           /* 1 Player */
             return TRUE;
-    }
+    
+        else if ( global_mouse_y > 192 && global_mouse_y < 230)     /* Exit */
+        {   
+            state = QUIT;
+            return TRUE;
+        }
+    }   
+
 
     return FALSE;
 

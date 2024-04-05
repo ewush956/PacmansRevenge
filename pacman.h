@@ -80,6 +80,8 @@ void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr);
 
 void game_loop();
 
+void menu(const ULONG32* splash);
+
 extern UCHAR8 background[BUFFER_SIZE_BYTES];
 extern UCHAR8 screen_buffer[BUFFER_SIZE_BYTES];
 extern Movement pacman_movements;
