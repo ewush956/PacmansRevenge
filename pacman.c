@@ -179,7 +179,7 @@ int main()
     /* add the lose screen as well */
     if (state == WIN)
     {
-        plot_screen(original, lose_splash);
+        plot_screen(original, win_splash);
         game_over_flag = TRUE;
     }
    

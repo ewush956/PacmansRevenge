@@ -619,6 +619,18 @@ _wall_single_16:
 _pellet:
 	dc.b	0,24,36,90,90,36,24,0
 	even
+_mouse:
+	dc.l	49152,57344,61440,63488,31744
+	dc.l	32256,32512,16256,16320,16256
+	dc.l	7936,8064,7616,2272,96
+	dc.l	0
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0
+	dc.b	0,0,0,0
+	even
 _tile_map:
 	dc.w	1,1,1,1,1,1,1,1
 	dc.w	1,1,1,1,1,1,1,1
@@ -1199,6 +1211,7 @@ _frozen_ghost_sprites:
 	globl	_null_sprite_32
 	globl	_test64
 	globl	_pellet
+	globl	_mouse
 	globl	_direction_map
 	globl	_direction_map2
 	globl	_direction_map3
