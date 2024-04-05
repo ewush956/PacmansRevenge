@@ -36,4 +36,6 @@ typedef unsigned char GAME_STATE;
 #define WORDS_PER_ROW 40
 #define BYTES_PER_ROW 80
 
+#define SPLASH_SIZE 8000
+
 #endif

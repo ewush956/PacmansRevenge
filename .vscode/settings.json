@@ -5,6 +5,7 @@
         "TST_STRC.C": "cpp",
         "RASTER.C": "cpp",
         "events.h": "c",
-        "effects.h": "c"
+        "effects.h": "c",
+        "splash.h": "c"
     }
 }

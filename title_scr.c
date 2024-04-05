@@ -1,5 +1,3 @@
-#include "TYPES.H"
-#include "splash.h"
 const ULONG32 splash[8000] = {
 	0xFFFFFFFF,
 	0xFFFFFFFF,
