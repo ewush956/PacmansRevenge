@@ -343,8 +343,7 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
 {
     Movement* ghost_movement  = ghost->move;
     Movement* pacman_movement = pacman->move;
-    ObjectType ghost_type     = ghost->type;
-
+    UCHAR8 ghost_path = ghost->path_number;
     UCHAR8 ghost_x_indx = ghost_movement->x_cell_index;
     UCHAR8 ghost_y_indx = ghost_movement->y_cell_index;
 
@@ -375,7 +374,7 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
         ghost_movement->direction = get_optimal_direction(ghost_movement, pacman_movement);
         return;
     }
-    switch (ghost_type) 
+    switch (ghost_path) 
     {
         case CRYING_PATH:    ghost_movement->direction = cell_map[ghost_y_indx][ghost_x_indx].crying_path;    break;
         case AWKWARD_PATH:   ghost_movement->direction = cell_map[ghost_y_indx][ghost_x_indx].awkward_path;   break;

@@ -89,45 +89,43 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     init_map_cells(cell_map, tile_map);    
     clear_and_render_maps(base32, back_buffer_ptr);
-    render_map(background_ptr, tile_map);
+    render_map(back_buffer_ptr, tile_map);
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
     
-
     while (!song_finished) {
-        /*orig_ssp = Super(0);                      
-        orig_ipl = set_ipl(7);
-        Super(orig_ssp);*/
-
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, 
                                      treble_song_length, bass_song_length, intro_duration_ptr
                                      );
-        /*orig_ssp = Super(0);
-        set_ipl(orig_ipl);
-        Super(orig_ssp); */
-        /*
         if (*intro_duration_ptr > START_MUSIC_THRESHOLD) {
             
             if (first_frames > FIRST_STOP - 1) {
                 stop_ghosts = execute_movements_and_render_frame(base32, base8, back8, entity, indx_ptr, initial_moves);
                 first_frames = 0;
             }
-            
-            if (stop_ghosts == FALSE && time_elapsed > 0) {
+            if (stop_ghosts == FALSE && request_to_render == TRUE) {
                 manually_move_ghost(back_buffer_ptr, entity, 1, stop_ghosts);
                 swap_buffers(&base32, &back_buffer_ptr);
-
-                request_to_render = FALSE; 
 
                 old_ssp = Super(0);
                 set_video_base(base32);  
                 Super(old_ssp);
+                request_to_render = FALSE; 
+                first_frames++;
             }
-            
-            first_frames++;
-        }*/
-    } 
+            /*
+            if (request_to_render == TRUE){  
+            render_frame(back_buffer_ptr, &entity);
+            swap_buffers(&base32, &back_buffer_ptr);
+            old_ssp = Super(0); 
+            set_video_base(base32);
+            Super(old_ssp);
+            request_to_render = FALSE; 
+        }  
+            */
+        }
+    }
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     state = PLAY;
 }
