@@ -154,21 +154,19 @@ void update_mouse()
     global_mouse_x += (int)((char)mouse_delta_x); 
     global_mouse_y += (int)((char)mouse_delta_y);
 
-    
-
     if (global_mouse_x < 0){
         global_mouse_x = 0;
     }
-    else if (global_mouse_x >= 639) {
-        global_mouse_x = 639;
+    else if (global_mouse_x >= MAX_MOUSE_X_BOUND) {
+        global_mouse_x = MAX_MOUSE_X_BOUND;
     }
 
-    if (global_mouse_y < 0){
+    if (global_mouse_y < 0){ 
         global_mouse_y = 0;
     }
 
-    else if(global_mouse_y >= 370 ){
-        global_mouse_y = 370;
+    else if(global_mouse_y >= MAX_MOUSE_Y_BOUND ){
+        global_mouse_y = MAX_MOUSE_Y_BOUND;
     }
 
     if (mouse_button == LEFT_CLICK && is_mouse_in_bounds() ) {
@@ -176,24 +174,20 @@ void update_mouse()
         mouse_button = 0;
     }
 
-    
-
     mouse_delta_x = 0;
     mouse_delta_y = 0;
-
 }
 
 bool is_mouse_in_bounds()
 {
     
 
-    if (global_mouse_x > 335 && global_mouse_x < 410)
+    if (global_mouse_x > BOX_MIN_X && global_mouse_x < BOX_MAX_X)
     {   
-        if (global_mouse_y > 150 && global_mouse_y < 188)           /* 1 Player */
+        if (global_mouse_y > ONE_PLAYER_BOX_MIN_Y && global_mouse_y < ONE_PLAYER_BOX_MAX_Y)       
             return TRUE;
-    
-        else if ( global_mouse_y > 192 && global_mouse_y < 230)     /* Exit */
-        {   
+
+        else if ( global_mouse_y > EXIT_BOX_MIN_Y && global_mouse_y < EXIT_BOX_MAX_Y){   
             state = QUIT;
             return TRUE;
         }

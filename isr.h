@@ -12,6 +12,16 @@
 #define CLEAR_BIT_6 0xBF
 #define BUFFER_SIZE_255_HEX 0xFF /* 255?*/
 
+#define MAX_MOUSE_X_BOUND 639
+#define MAX_MOUSE_Y_BOUND 370
+
+#define BOX_MIN_X 335
+#define BOX_MAX_X 410
+#define ONE_PLAYER_BOX_MIN_Y 150
+#define ONE_PLAYER_BOX_MAX_Y 188
+#define EXIT_BOX_MAX_Y 230 
+#define EXIT_BOX_MIN_Y 193 
+
 
 
 typedef void (*Vector)();
