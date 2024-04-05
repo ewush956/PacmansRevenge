@@ -1,5 +1,5 @@
 #include "lose_scr.h"
-const ULONG32 loose_splash[8000] = {
+const ULONG32 lose_splash[8000] = {
 	0xFFFFFFFF,
 	0xFFFFFFFF,
 	0xFFFFFFFF,

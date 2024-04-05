@@ -158,11 +158,6 @@ L5:
 	tst.b	d6
 	beq	L4
 L6:
-	;line	133
-	move.l	d3,-(a7)
-	move.l	(a4),-(a7)
-	move.l	(a3),-(a7)
-	jsr	_clear_and_render_entities
 	;line	134
 	move.b	#1,_state
 	movem.l	-100(a6),d3/d4/d5/d6/d7/a3/a4/a5
@@ -300,7 +295,7 @@ L12:
 	cmp.b	#4,_state
 	bne	L17
 	;line	194
-	pea	_splash
+	pea	_lose_splash
 	move.l	-18(a6),-(a7)
 	jsr	_plot_screen
 	addq.l	#8,a7

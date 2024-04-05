@@ -25,27 +25,27 @@
  * 
  * 1. Occasionally ghost movement causes half of a pellet sprite
  *    to render on either the back or the front buffer causing flickering
+ *    
+ *    This has been PARTIALLY fixed, the fix we came up with at re renders the pellet
+ *    but you can still see some flickering behind the ghost. 
  * 
- * 2. There is still a little bit of flickering when freeing the ghosts initially
- *    The double buffering appears to be solid in the main game loop, but it
- *    is not applied correctly in the initialize_game function.
+ * 2. Ghosts frames are not being updated properly, like an issue with ticks or seconds in ISR.C
  * 
  * 3. The cyclops ghost's eye is not properly centered in some of it's alternate frames
  *    causing the movement to look jittery. This is an issue with it's bitmap.
  * 
- * 4. When killing a ghost, the event triggered "kill ghost" sound plays for
- *    2 - 3 cycles, it's supposed to only play once. I like how it sounds though :)
+ * 4. When killing a ghost, the event triggered "kill ghost" sound plays while pacman
+ *    is in the vasinity of the tombstone, once pacman leaves the sound stops.
+ *    it's supposed to only play once. I like how it sounds though :)
  * 
- * 5. Ghosts don't clear properly when being eaten.
+ * 5. Ghosts don't clear properly when being eaten, and occasionally "jump" leaving a flickering 
+ *    trail, this is not an issue with double buffering, it's most an error in the game logic.
  * 
  ************************* TO DO **********************************
  *
  * 1. Games loose condition. Proximity checking has been added,
- *    we just need to implement the loosing event. 
+ *    we just need to implement the loosing event. (timer)
  *  
- *    We might be able to implement a finite state machine to check if 
- *    pacman is stuck, or we can give an option for the player to "give up"
- *    if they are softlocked.
  * 
  * 2. Add a timer to the game.
  * 
@@ -57,8 +57,7 @@ volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
          UCHAR8  background[BUFFER_SIZE_BYTES];
          UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
         
-        /*GAME_STATE state         = PLAY; /**/
-        GAME_STATE state         = MENU; /**/
+         GAME_STATE state         = MENU; /**/
         
 /*******************************************************************
  * Function: initialize_game
@@ -118,19 +117,8 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
                 request_to_render = FALSE; 
                 first_frames++;
             }
-            /*
-            if (request_to_render == TRUE){  
-            render_frame(back_buffer_ptr, &entity);
-            swap_buffers(&base32, &back_buffer_ptr);
-            old_ssp = Super(0); 
-            set_video_base(base32);
-            Super(old_ssp);
-            request_to_render = FALSE; 
-        }  
-            */
         }
     }
-    clear_and_render_entities(base32, back_buffer_ptr, entity);
     state = PLAY;
 }
 
