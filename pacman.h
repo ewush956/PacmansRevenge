@@ -11,6 +11,10 @@
 #include "psg.h"
 #include "isr.h"
 
+#include "splash.h"
+#include "win_scr.h"
+#include "lose_scr.h"
+
 #include <osbind.h>
 #include <stdio.h>
 #include <linea.h> 

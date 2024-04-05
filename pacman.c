@@ -13,6 +13,10 @@
 #include "globals.h" 
 #include "isr.h"
 
+#include "splash.h"
+#include "win_scr.h"
+#include "lose_scr.h"
+
 #include <osbind.h>
 #include <stdio.h>
 #include <linea.h>
@@ -187,7 +191,7 @@ int main()
     /* add the lose screen as well */
     if (state == WIN)
     {
-        plot_screen(original, splash);
+        plot_screen(original, lose_splash);
         game_over_flag = TRUE;
     }
    

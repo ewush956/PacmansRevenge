@@ -1,6 +1,6 @@
 #include "TYPES.H"
 #include "splash.h"
-const ULONG32 splash[8000] = {
+const ULONG32 splash[SPLASH_SIZE] = {
 	0xFFFFFFFF,
 	0xFFFFFFFF,
 	0xFFFFFFFF,
