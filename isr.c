@@ -100,6 +100,7 @@ void do_vbl()
 
     if (ticks == 70){
         seconds++;
+        second_has_passed = TRUE;
         ticks = 0;
     }
 

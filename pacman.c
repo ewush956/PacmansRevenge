@@ -59,6 +59,72 @@ volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
         
          GAME_STATE state         = MENU; /**/
         
+
+int main()
+{
+
+    int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
+    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+    long old_ssp;
+
+    int orig_ipl;
+    int orig_ssp;
+    ULONG32* original         = get_video_base();
+    ULONG32* base32           = get_video_base();
+    UINT16* base16            = (UINT16*)base32;
+   
+
+    UCHAR8 input;
+    plot_screen(base32, splash);
+    install_custom_vectors(); 
+    initialize_mouse(); 
+    render_mouse(base16);
+    
+    while (state != QUIT  && input != ENTER && state != WIN)
+    {
+        
+        if (fill_level > 0)
+        {
+            orig_ssp = Super(0);                     
+            orig_ipl = set_ipl(7);
+            Super(orig_ssp);
+
+            input = dequeue();
+            
+            orig_ssp = Super(0);
+            set_ipl(orig_ipl);
+            Super(orig_ssp); 
+
+            process_keyboard_input(input);
+        }
+        if (left_button_pressed == TRUE)
+        {
+            clear_screen_q(base32);
+            game_loop();
+
+        }
+        if (request_to_render == TRUE)
+        {  
+            update_mouse();
+            restore_mouse_background(base32,splash,old_mouse_x,old_mouse_y); 
+            render_mouse(base16);
+            request_to_render = FALSE;
+        } 
+     }
+
+  
+  
+    /* add the lose screen as well */
+    if (state == WIN)
+    {
+        plot_screen(original, win_splash);
+        game_over_flag = TRUE;
+    }
+   
+    remove_custom_vectors();
+
+    return 0;
+}
 /*******************************************************************
  * Function: initialize_game
  * Purpose: Initializes the game, manually moves the ghosts out of the center
@@ -120,72 +186,6 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
         }
     }
     state = PLAY;
-}
-
-int main()
-{
-
-    int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
-    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
-    long old_ssp;
-
-    int orig_ipl;
-    int orig_ssp;
-    ULONG32* original         = get_video_base();
-    ULONG32* base32           = get_video_base();
-    UINT16* base16            = (UINT16*)base32;
-   
-
-    UCHAR8 input;
-    plot_screen(base32, splash);
-    install_custom_vectors(); 
-    initialize_mouse(); 
-    render_mouse(base16);
-    
-    while (state != QUIT  && input != ENTER && state != WIN)
-    {
-        
-        if (fill_level > 0)
-        {
-            orig_ssp = Super(0);                     
-            orig_ipl = set_ipl(7);
-            Super(orig_ssp);
-
-            input = dequeue();
-            
-            orig_ssp = Super(0);
-            set_ipl(orig_ipl);
-            Super(orig_ssp); 
-
-            process_keyboard_input(input);
-        }
-        if (left_button_pressed == TRUE)
-        {
-            clear_screen_q(base32);
-            game_loop();
-
-        }
-        if (request_to_render == TRUE)
-        {  
-            update_mouse();
-            restore_mouse_background(base32,splash,old_mouse_x,old_mouse_y); 
-            render_mouse(base16);
-            request_to_render = FALSE;
-        } 
-     }
-
-  
-  
-    /* add the lose screen as well */
-    if (state == WIN)
-    {
-        plot_screen(original, lose_splash);
-        game_over_flag = TRUE;
-    }
-   
-    remove_custom_vectors();
-
-    return 0;
 }
 /*******************************************************************
  * Function: game_loop

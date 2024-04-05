@@ -105,8 +105,8 @@ void render_frame(ULONG32* base, Entities* entity) {
     render_pellet(base8, pacman->move->x_cell_index, pacman->move->y_cell_index, pacman->move->direction);
     
 
-    
-    /*render_timer(base, entity->timer);*/
+    if (second_has_passed == TRUE) { render_timer((UCHAR8*)base, entity->timer); }
+        
 
 }
 /*************************************************************
@@ -243,8 +243,9 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
 void render_gameover() {
     /* Renderes game over screen, we arent sure how to do that yet.*/
 }
-void render_timer(Timer* timer) {
+void render_timer(UCHAR8* base8, Timer* timer) {
 
+    second_has_passed = FALSE;
 }
 void render_initial_timer(UCHAR8* base) {
     int start_x = 280;

@@ -13,6 +13,7 @@ volatile bool waka_playing = FALSE;
 volatile bool single_waka_playing = FALSE;
 volatile bool game_over_flag = FALSE;
 volatile bool kill_ghost_flag = FALSE;
+bool second_has_passed = FALSE;
 
 char keyboard_buffer[256];         
 UCHAR8 head = 0;
