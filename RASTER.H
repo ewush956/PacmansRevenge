@@ -2,6 +2,7 @@
 #define RASTER_H
 
 #include "types.h"
+#include "font.h"
 
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 400
@@ -37,5 +38,6 @@ void clear_screen_q(ULONG32* base);
 void clear_8(UCHAR8* base, int x, int y, unsigned int height);
 void restore_mouse_background(ULONG32* base32, ULONG32 background[], int x, int y);
 void plot_screen(ULONG32* base, const ULONG32* bitmap);
-
+void print_num(UCHAR8 *base, int x, int y, const UCHAR8 bitmap[], UINT16 num);
+void print_string(UCHAR8 *base, int x, int y, const char str[]);
 #endif

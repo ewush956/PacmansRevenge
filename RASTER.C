@@ -1,5 +1,7 @@
 #include "raster.h"
 #include "TYPES.H"
+#include "font.h"
+#include <stdio.h>
 
 /**
  * Plot a bitmap on the screen at the specified coordinates.
@@ -148,6 +150,7 @@ void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int heig
  * @param letter index of the letter in the bitmap array 
  */
 void plot_letter(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int letter) {
+    /*
     int row;
     int index = ((letter - ' ') << 3);
 
@@ -156,11 +159,21 @@ void plot_letter(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int
     if (x >= 0 && x < (SCREEN_WIDTH - LETTER_WIDTH) && y >= 0 && y < (SCREEN_HEIGHT - LETTER_HEIGHT)) {
         for (row = index; row < index + 8; row++) {
         
-            *location |= bitmap[row] >> (x % LETTER_WIDTH);     
-            *(location + 1) |= bitmap[row] << LETTER_WIDTH - (x % LETTER_WIDTH);
+            *location |= bitmap[row] >> (x & 7);     
+            *(location + 1) |= bitmap[row] << LETTER_WIDTH - (x & 8);
             location += BYTES_PER_ROW;       
         }
     }
+    */
+    
+    
+	int i = 0;
+	const UCHAR8 *char_hex = GLYPH_START(letter);
+	
+	for(i = 0; i < 8; i++, char_hex++) {
+		*(base + (y + i) * 80 + (x >> 3)) = *char_hex;
+	}
+    
 }
 void clear_letter(UCHAR8* base, int x, int y) {
     int row;
@@ -188,6 +201,7 @@ void clear_8(UCHAR8* base, int x, int y, unsigned int height) {
         }
     }
 }
+/*
 void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* str) {
     int current_x = x;
     while (*str != '\0') {
@@ -195,6 +209,31 @@ void plot_string(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], const char* 
         current_x += LETTER_WIDTH; 
         str++;
     }
+}
+*/
+
+void print_string(UCHAR8 *base, int x, int y, const char str[]) {
+	int i = 0;
+	
+	while(str[i] != '\0') {
+		plot_letter(base, x, y, font, str[i]);
+		x += 8;
+		i++;
+	}	
+}
+
+void print_num(UCHAR8 *base, int x, int y, const UCHAR8 bitmap[], UINT16 num) {
+	char ms, ls;
+	
+	ms = (num % 10) + '0';
+	num /= 10;
+	
+	ls = (num % 10) + '0';
+	num /= 10;
+	
+    plot_letter(base, x + LETTER_WIDTH, y, bitmap, ms);
+    plot_letter(base, x, y, bitmap, ls);
+	
 }
 /**
  * Plots a 640 x 400 bitmap on the screen. 

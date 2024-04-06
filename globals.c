@@ -11,9 +11,11 @@ volatile ULONG32 time_now = 0;
 volatile UINT16 ticks = 0;
 volatile bool waka_playing = FALSE;
 volatile bool single_waka_playing = FALSE;
+bool end_game_flag = FALSE;
 volatile bool game_over_flag = FALSE;
 volatile bool kill_ghost_flag = FALSE;
 bool second_has_passed = FALSE;
+bool game_start = FALSE;
 
 char keyboard_buffer[256];         
 UCHAR8 head = 0;
@@ -147,8 +149,7 @@ Ghost awkward_ghost = {
     &awkward_ghost_movement
 };
 Timer timer = {
-    0,0,
-    20, 28, 44, 52
+    60, '6', '0'
 };
 Entities entity = {
         &pacman,

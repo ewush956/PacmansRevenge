@@ -59,7 +59,7 @@ void do_vbl()
     
     if (/*seconds > START_DELAY &&*/ request_to_render == TRUE && state == PLAY)
     {
-        if (game_over_flag == TRUE) {
+        if (end_game_flag == TRUE) {
             stop_sound();
             return; 
         }

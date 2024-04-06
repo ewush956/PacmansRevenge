@@ -118,7 +118,12 @@ int main()
     if (state == WIN)
     {
         plot_screen(original, win_splash);
-        game_over_flag = TRUE;
+        end_game_flag = TRUE;
+    }
+    if (state == GAMEOVER)
+    {
+        plot_screen(original, lose_splash);
+        end_game_flag = TRUE;
     }
    
     remove_custom_vectors();
@@ -158,10 +163,12 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     init_map_cells(cell_map, tile_map);    
     clear_and_render_maps(base32, back_buffer_ptr);
-    render_map(back_buffer_ptr, tile_map);
+    /*render_map(back_buffer_ptr, tile_map);*/
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
+    render_initial_timer(base8);
+    render_initial_timer(back8);
     
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, 
@@ -201,16 +208,17 @@ void game_loop()
     long old_ssp; 
     int orig_ipl;
     int orig_ssp;
+    
 
     ULONG32* base32          = (ULONG32*)get_video_base();
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
 
     initialize_game(base32, back_buffer_ptr, &entity);
-
+    game_start = TRUE;
     while (state != QUIT && state != WIN) 
     {
-
+        update_timer();
         if (fill_level > 0){
             orig_ssp = Super(0);                        /* mask all intrpts before enQing */
             orig_ipl = set_ipl(7);
@@ -226,7 +234,7 @@ void game_loop()
 
         if (request_to_render == TRUE){  
             /*page_flip(&base32,&back_buffer_ptr);*/
-            
+
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
 
@@ -236,7 +244,6 @@ void game_loop()
             
             request_to_render = FALSE; 
         }  
-    
         state = update_game_state(state, input, &entity);
     }
       
@@ -304,6 +311,9 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
         all->moustache_ghost->state == DEAD &&
         all->cyclops_ghost->state == DEAD) {
         return WIN; 
+    }
+    if (game_over_flag == TRUE) {
+        return GAMEOVER;
     }
 
     return new_state;

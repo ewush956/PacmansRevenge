@@ -2,6 +2,7 @@
 #include "model.h"
 #include "bitmaps.h"
 #include "effects.h"
+#include "globals.h"
 #include <stdio.h>
 
 /*************************************************************
@@ -180,7 +181,52 @@ void check_proximity(Entities* all) {
     /* ^^^ we probably aren't going to do this, makes the game super annoying*/
     
 }
-
+void update_timer()
+{
+/*
+    if (seconds > 0)
+    {   
+        if (timer->right_digit_minutes == 1 && timer->left_digit_seconds  == 0 &&  timer->right_digit_seconds == 0)
+        {
+            timer->right_digit_minutes = 0;
+            timer->left_digit_seconds = 5;
+            timer->right_digit_seconds = 9;
+        }
+        else if (timer->right_digit_seconds == 0)
+        {
+            timer->left_digit_seconds--;
+            timer-> right_digit_seconds = 9;
+        }
+        else{
+            timer->right_digit_seconds--;
+        }
+    } 
+*/  
+    if (second_has_passed == TRUE) {
+        timer.seconds_value -= 1;
+        second_has_passed = FALSE;
+        /*
+        if (timer.seconds_value == 0) {
+            game_over_flag = TRUE;
+            return;
+        }
+        */
+       /*
+        if (timer.LS_digit_ascii == '0') { 
+            timer.LS_digit_ascii = '9'; 
+            timer.MS_digit_ascii--; 
+        } else {
+            timer.LS_digit_ascii--; 
+        }
+        second_has_passed = FALSE;   
+        */     
+        /*
+        if (timer.LS_digit_ascii == '9' && timer.MS_digit_ascii < '0') {
+            game_over_flag = TRUE;
+        }
+        */
+    }
+}
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state) {
     pacman->state = new_state;
 }

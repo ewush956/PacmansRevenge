@@ -106,12 +106,18 @@ typedef struct
 	Movement* move;
 
 }Ghost;
-
+/*
 typedef struct{
 	UINT16 seconds, minutes,
 	MS_digit_minutes, LS_digit_minutes,
 	MS_digit_seconds, LS_digit_seconds; 
 
+}Timer;
+*/
+typedef struct {
+	/*UCHAR8 seconds_value;*/
+	UCHAR8 seconds_value;
+	UCHAR8 MS_digit_ascii, LS_digit_ascii;
 }Timer;
 
 
@@ -166,5 +172,6 @@ void update_current_frame(Entities* all, int clock);
 void set_prev_prev(Entities* entity);
 void set_prev(Entities* entity);
 void set_deltas(Movement* move, UINT16 dx, UINT16 dy);
+void update_timer();
 
 #endif

@@ -18,7 +18,7 @@ font.o: font.c font.h
 bitmaps.o: bitmaps.c bitmaps.h
 	cc68x -g -c bitmaps.c
 
-model.o: model.c model.h bitmaps.h events.h
+model.o: model.c model.h bitmaps.h events.h globals.h
 	cc68x -g -c model.c
 
 renderer.o: renderer.c renderer.h

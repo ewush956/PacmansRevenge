@@ -83,7 +83,13 @@ void render_frame(ULONG32* base, Entities* entity) {
     int cyclops_last_y = cyclops->last_last_y >> 4;
     
     /*awk->current_frame ^= 1; */
-
+/*
+    if (second_has_passed == TRUE) { 
+        render_timer((UCHAR8*)base); 
+        second_has_passed = FALSE;
+    }
+    */
+    render_timer(base8);
     clear_entities(base, pacman->move, crying, moustache,
                    awkward, cyclops); 
 
@@ -105,7 +111,6 @@ void render_frame(ULONG32* base, Entities* entity) {
     render_pellet(base8, pacman->move->x_cell_index, pacman->move->y_cell_index, pacman->move->direction);
     
 
-    if (second_has_passed == TRUE) { render_timer((UCHAR8*)base, entity->timer); }
         
 
 }
@@ -243,15 +248,37 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
 void render_gameover() {
     /* Renderes game over screen, we arent sure how to do that yet.*/
 }
-void render_timer(UCHAR8* base8, Timer* timer) {
+void render_timer(UCHAR8* base8) {
 
-    second_has_passed = FALSE;
+
+    /*clear_letter(base8, TIMER_MS_X, 0);
+    clear_letter(base8, TIMER_LS_X, 0);*/
+    /*
+    clear_8(base8, TIMER_MS_X, 0, 16);
+    clear_8(base8, TIMER_LS_X, 0, 16);
+    
+    plot_letter(base8, TIMER_MS_X, TIMER_Y, font, timer->MS_digit_ascii);
+    plot_letter(base8, TIMER_LS_X, TIMER_Y, font, timer->LS_digit_ascii);
+    */
+    print_num(base8, TIMER_MS_X, 4, font, timer.seconds_value);
 }
 void render_initial_timer(UCHAR8* base) {
+
     int start_x = 280;
     int y = 4;
-
-    plot_string(base, start_x, y, font, "Time: 00:00");
+/*
+    plot_string(base, start_x, y, font, "Time: 60");
+    */
+   print_string(base, start_x, y, "Time: 60\0");
+/*    plot_letter(base, start_x, y, font, 'T');
+    plot_letter(base, start_x + LETTER_WIDTH, y, font, 'i');
+    plot_letter(base, start_x + (LETTER_WIDTH * 2), y, font, 'm');
+    plot_letter(base, start_x + (LETTER_WIDTH * 3), y, font, 'e');
+    plot_letter(base, start_x + (LETTER_WIDTH * 4), y, font, ':');
+    plot_letter(base, start_x + (LETTER_WIDTH * 5), y, font, ' ');
+    plot_letter(base, start_x + (LETTER_WIDTH * 6), y, font, '6');
+    plot_letter(base, start_x + (LETTER_WIDTH * 7), y, font, '0');
+    */
 }
 /********************************************************************
 * Clears the previous positions of entities from the specified base buffer.**
