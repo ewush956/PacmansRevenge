@@ -51,13 +51,9 @@
  * 
  *********************************************************************/
 
-volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
-volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
-
-         UCHAR8  background[BUFFER_SIZE_BYTES];
-         UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
-        
-         GAME_STATE state         = MENU; /**/
+UCHAR8  background[BUFFER_SIZE_BYTES];
+UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
+GAME_STATE state = MENU; /**/
         
 /*******************************************************************
  * Function: initialize_game
@@ -67,7 +63,7 @@ volatile UCHAR8* ptr_to_lowbyte  = VIDEO_ADDR_MID;
 int main () 
 {
 
-    menu(splash);
+    menu();
 
     return 0;
 }
@@ -79,9 +75,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     SoundState  bassState   = {0, 0};
     UCHAR8*     base8       = (UCHAR8*)base32;
     UCHAR8*     back8       = (UCHAR8*)back_buffer_ptr;
-
     ULONG32     song_now, song_then, time_elapsed; 
-
     long old_ssp; 
     int  treble_song_length = PACMAN_INTRO_TREBLE_LENGTH;
     int  bass_song_length   = PACMAN_INTRO_BASS_LENGTH;
@@ -91,7 +85,6 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     int  first_frames       = 0;
     int* intro_duration_ptr = &intro_duration;
     int* indx_ptr           = &moves_index;
-
     bool song_finished      = FALSE;
     bool stop_ghosts        = FALSE;
     bool enable             = TRUE;
@@ -130,15 +123,14 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     state = PLAY;
 }
 
-void menu(const ULONG32* splash)
+void menu()
 {
-    int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
-    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
-    long old_ssp;
     UCHAR8 input;
-
-    int orig_ipl;
+    long old_ssp;
     int orig_ssp;
+    int orig_ipl;
+    int  buffer_offset        = 256 - ((long)(screen_buffer) % 256); 
+    ULONG32* back_buffer_ptr  = (ULONG32*)(&screen_buffer[buffer_offset]);
     ULONG32* original         = get_video_base();
     ULONG32* base32           = get_video_base();
     UINT16* base16            = (UINT16*)base32;
@@ -148,7 +140,7 @@ void menu(const ULONG32* splash)
     initialize_mouse(); 
     render_mouse(base16);
     
-    while (state == MENU /*state != QUIT  && state != WIN*/)
+    while (state == MENU)
     {
         
         if (fill_level > 0)
@@ -170,9 +162,6 @@ void menu(const ULONG32* splash)
             clear_screen_q(base32);
             game_loop();
         }
-
-        
-
         if (request_to_render == TRUE)
         {  
             update_mouse();
@@ -210,12 +199,12 @@ void game_loop()
     long old_ssp; 
     int orig_ipl;
     int orig_ssp;
-
     ULONG32* base32          = (ULONG32*)get_video_base();
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
 
     initialize_game(base32, back_buffer_ptr, &entity);
+
     while (state != QUIT && state != WIN) 
     {
         if (fill_level > 0){
@@ -308,23 +297,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
         all->cyclops_ghost->state == DEAD) {
         return WIN; 
     }
-
     return new_state;
-    /*
-    GAME_STATE state;
-    if (input == '\033')
-    {
-        state = QUIT;
-        return state;
-    }
-    if (all->awkward_ghost->state == DEAD && 
-        all->crying_ghost->state == DEAD &&
-        all->moustache_ghost->state == DEAD &&
-        all->cyclops_ghost->state == DEAD) {
-        return WIN; 
-    }
-    return new_state;
-    */
 }
 
 /*******************************************************************
@@ -434,7 +407,7 @@ void initialize_sound(long* old_ssp, SoundState* trebleState, SoundState* bassSt
  *          returns TRUE if the song has finished.
  *****************************************************************/
 bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, SoundState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
-    /*ULONG32 time_now = get_time();*/
+
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
     int tempo = 5;
@@ -493,57 +466,3 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = DOWN;
 }
-
-ULONG32* get_video_base()
-{
-	ULONG32 old_ssp;
-    ULONG32 combined_address;
-   
-
-    UCHAR8 high_byte; 
-    UCHAR8 low_byte ;
-
-	old_ssp = Super(0); 				
-    high_byte = *ptr_to_highbyte;
-    low_byte = *ptr_to_lowbyte;
-    Super(old_ssp); 		
-    
-   combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)low_byte  << 8);
-   
-    return (ULONG32*)combined_address;
-
-}
-/*****************************
-* A simple finite state machine 
-*  that handles keyboard input
-*
-*
-******************************/
-/*
-void process_keyboard_input(UCHAR8 input)
-{   
-    switch(state)
-    {   
-        case PLAY:
-            if (input == ESC_MAKE){
-                state = WAITING_FOR_ESC_BREAK;
-            } 
-            else{
-                set_input(entity.pacman,input);
-            }
-            break;
-        case WAITING_FOR_ESC_BREAK:
-            if (input == ESC_BREAK){
-                state = QUIT;
-            }
-            else{
-                state = PLAY;
-            }
-            break;
-
-        default:
-            break;
-
-    }
-}*/
-

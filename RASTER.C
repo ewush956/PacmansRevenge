@@ -1,5 +1,10 @@
+#include <osbind.h>
 #include "raster.h"
 #include "TYPES.H"
+
+volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
+volatile UCHAR8* ptr_to_midbyte  = VIDEO_ADDR_MID;
+
 
 /**
  * Plot a bitmap on the screen at the specified coordinates.
@@ -211,4 +216,22 @@ void plot_screen(ULONG32* base, const ULONG32 bitmap[]) {
         }
     }
     return;
+}
+
+ULONG32* get_video_base()
+{
+	ULONG32 old_ssp;
+    ULONG32 combined_address;
+    UCHAR8 high_byte; 
+    UCHAR8 mid_byte ;
+
+	old_ssp = Super(0); 				
+    high_byte = *ptr_to_highbyte;
+    mid_byte = *ptr_to_midbyte;
+    Super(old_ssp); 		
+    
+    combined_address = ((ULONG32)high_byte << 16) | ((ULONG32)mid_byte  << 8);
+   
+    return (ULONG32*)combined_address;
+
 }

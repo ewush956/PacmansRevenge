@@ -180,23 +180,18 @@ void update_mouse()
 
 bool is_mouse_in_bounds()
 {
-    
-
     if (global_mouse_x > BOX_MIN_X && global_mouse_x < BOX_MAX_X)
     {   
         if (global_mouse_y > ONE_PLAYER_BOX_MIN_Y && global_mouse_y < ONE_PLAYER_BOX_MAX_Y)       
             return TRUE;
 
-        else if ( global_mouse_y > EXIT_BOX_MIN_Y && global_mouse_y < EXIT_BOX_MAX_Y){   
+        else if ( global_mouse_y > EXIT_BOX_MIN_Y && global_mouse_y < EXIT_BOX_MAX_Y)
+        {   
             state = QUIT;
             return TRUE;
         }
     }   
-
-
     return FALSE;
-
-
 }
 
 

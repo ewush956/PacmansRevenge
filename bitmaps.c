@@ -25,7 +25,6 @@ const UINT16 mouse_cursor[] = {
 };
 
 
-
 const ULONG32 moustache_ghost_up_1[] = {
 	0x001FF800,
 	0x007FFE00,

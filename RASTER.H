@@ -22,6 +22,11 @@
 #define PELLET_X_OFFSET 12
 #define PELLET_Y_OFFSET 28
 
+#define VIDEO_ADDR_HIGH  0xFF8201
+#define VIDEO_ADDR_MID  0xFF8203
+
+
+
 void plot_bitmap_16(UINT16* base, int x, int y, const UINT16 bitmap[], unsigned int height);
 void plot_mouse(UINT16 *base, int x, int y, const UINT16 bitmap[]);
 void plot_bitmap_32(ULONG32* base, int x, int y, const ULONG32 bitmap[], unsigned int height);
@@ -37,5 +42,8 @@ void clear_screen_q(ULONG32* base);
 void clear_8(UCHAR8* base, int x, int y, unsigned int height);
 void restore_mouse_background(ULONG32* base32, ULONG32 background[], int x, int y);
 void plot_screen(ULONG32* base, const ULONG32* bitmap);
+
+ULONG32* get_video_base();
+void set_video_base(ULONG32*);
 
 #endif

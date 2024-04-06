@@ -11,14 +11,16 @@ _trap28_isr:
             movem.l (sp)+,d0-2/a0-2
             rte
             
-
 _trap70_isr:    
             movem.l d0-2/a0-2,-(sp)
             jsr _do_IKBD_isr
             movem.l (sp)+,d0-2/a0-2
             rte
 
-                    
+
+;-----------
+; Credit to Marc for this sub routine below--got this from the course material
+;------------
 _set_ipl:   
             move.w sr,d0
             move.w d0,-(sp)         ;place orig. sr on stack

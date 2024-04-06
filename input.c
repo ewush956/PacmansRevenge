@@ -11,8 +11,6 @@
 ******************************/
 void process_keyboard_input(UCHAR8 input)
 {   
-    /* state must be global*/
-
     switch(state)
     {   
         case PLAY:
@@ -31,15 +29,10 @@ void process_keyboard_input(UCHAR8 input)
                 state = PLAY;
             }
             break;
-
+            
         case MENU:  
-            /*
-            if(input == ENTER || left_button_pressed == TRUE) {/*&& within_button_range) 
-                left_button_pressed = FALSE;
-                /*state = PLAY; 
-            }*/
-
             break;
+
         default:
             break;
 
