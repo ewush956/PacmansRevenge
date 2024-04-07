@@ -215,27 +215,30 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
     UINT16 clear_x = ghost->move->last_last_x;
     UINT16 clear_y = ghost->move->last_last_y;
 
+    UCHAR8 ghost_cell_x = ghost->move->x_cell_index;
+    UCHAR8 ghost_cell_y = ghost->move->y_cell_index;
+
     UCHAR8 ghost_direction = ghost->move->direction;
 
     int tombstone_y = ghost->move->y;
-    int tombstone_x = ghost->move->y;
+    int tombstone_x = ghost->move->x;
 
-    if (pacman.move->direction == UP && cell_map[pacman_cell_x][pacman_cell_y + 1].open_path == WALL) {
+    if (pacman.move->direction == UP && cell_map[pacman_cell_y + 1][pacman_cell_x].open_path == TRUE) {
         set_deltas(pacman.move, 0, 1);
         move_pacman(&pacman);
         set_deltas(pacman.move, 0, -1);
     }
-    else if (pacman.move->direction == DOWN && cell_map[pacman_cell_x][pacman_cell_y - 1].open_path == WALL) {
+    else if (pacman.move->direction == DOWN && cell_map[pacman_cell_y - 1][pacman_cell_x].open_path == TRUE) {
         set_deltas(pacman.move, 0, -1);
         move_pacman(&pacman);
         set_deltas(pacman.move, 0, 1);
     }
-    else if (pacman.move->direction == LEFT && cell_map[pacman_cell_x - 1][pacman_cell_y].open_path == WALL) {
+    else if (pacman.move->direction == LEFT && cell_map[pacman_cell_y][pacman_cell_x - 1].open_path == TRUE) {
         set_deltas(pacman.move, -1, 0);
         move_pacman(&pacman);
         set_deltas(pacman.move, 1, 0);
     }
-    else if (pacman.move->direction == RIGHT && cell_map[pacman_cell_x + 1][pacman_cell_y].open_path == WALL) {
+    else if (pacman.move->direction == RIGHT && cell_map[pacman_cell_y][pacman_cell_x + 1].open_path == TRUE) {
         set_deltas(pacman.move, 1, 0);
         move_pacman(&pacman);
         set_deltas(pacman.move, -1, 0);
@@ -243,14 +246,29 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
 
     switch (ghost_direction) {
         case UP: break;
-        case DOWN: clear_bitmap_32(base32, clear_x, clear_y + 1, SPRITE_HEIGHT); break;
         case LEFT: break;
-        case RIGHT: clear_bitmap_32(base32, clear_x + WALL_SIZE, clear_y, SPRITE_HEIGHT); break;
+        case DOWN: 
+            if (cell_map[pacman_cell_y - 2][ghost_cell_x].open_path == TRUE) {
+                ghost->move->x = (ghost->move->x_cell_index << 4);
+                ghost->move->last_x = ghost->move->x;
+                ghost->move->last_last_x = ghost->move->x;
+
+                ghost->move->y = ((ghost->move->y_cell_index + 2) << 4);
+                ghost->move->last_y = ghost->move->y;
+                ghost->move->last_last_y = ghost->move->y;
+            }
+        case RIGHT:
+            if (cell_map[pacman_cell_y][ghost_cell_x + 2].open_path == TRUE) {
+
+                ghost->move->x = ((ghost->move->x_cell_index + 1)<< 4);
+                ghost->move->last_x = ghost->move->x;
+                ghost->move->last_last_x = ghost->move->x;
+
+                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
+                ghost->move->last_y = ghost->move->y;
+                ghost->move->last_last_y = ghost->move->y;
+            }
     }
-    clear_bitmap_32(base32, ghost->move->x, ghost->move->y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, tombstone_x, tombstone_y, SPRITE_HEIGHT);
-    plot_bitmap_32(base32, tombstone_x, tombstone_y, tombstone, SPRITE_HEIGHT);
-    render_pellet((UCHAR8*)base32, ghost->move->x_cell_index, ghost->move->y_cell_index, ghost_direction);
     set_derender_ghost_flag(ghost, FALSE);
     
 }
