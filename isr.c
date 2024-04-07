@@ -69,10 +69,6 @@ void do_vbl()
         second_has_passed = TRUE;
         ticks = 0;
     }
-    /*
-    ticks++;
-    time_now++;
-    */
     request_to_render = TRUE; 
 }
 

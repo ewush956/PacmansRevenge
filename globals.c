@@ -16,6 +16,10 @@ bool game_over_flag = FALSE;
 bool kill_ghost_flag = FALSE;
 bool second_has_passed = FALSE;
 bool game_start = FALSE;
+bool derender_moustache_flag = FALSE;
+bool derender_awkward_flag = FALSE;
+bool derender_crying_flag = FALSE;
+bool derender_cyclops_flag = FALSE;
 
 char keyboard_buffer[256];         
 UCHAR8 head = 0;

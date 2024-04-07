@@ -483,6 +483,7 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     add_wall_to_map(cell_map, y_cell_index, x_cell_index);
     if (kill_ghost_flag == FALSE)
         play_kill_ghost_sound();
+        set_derender_ghost_flag(ghost, TRUE);
 }
 /*************************************************************
 * Function: add_wall_to_map
@@ -586,5 +587,14 @@ void update_timer()
             timer.LS_digit_ascii--; 
         }
         second_has_passed = FALSE;   
+    }
+}
+void set_derender_ghost_flag(Ghost* ghost, bool flag) {
+    
+    switch (ghost->type ) {
+        case GHOST_TYPE_AWKWARD: derender_awkward_flag = flag; break;
+        case GHOST_TYPE_CYCLOPS: derender_cyclops_flag = flag; break;
+        case GHOST_TYPE_MOUSTACHE: derender_moustache_flag = flag; break;
+        case GHOST_TYPE_CRYING: derender_crying_flag = flag; break; 
     }
 }

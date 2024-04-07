@@ -167,5 +167,6 @@ void set_prev_prev(Entities* entity);
 void set_prev(Entities* entity);
 void set_deltas(Movement* move, UINT16 dx, UINT16 dy);
 void update_timer();
+void set_derender_ghost_flag(Ghost* ghost, bool flag);
 
 #endif
