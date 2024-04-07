@@ -14,7 +14,7 @@
 * Details: Uses plot_bitmap_16 to render tiles based on tile_map.
 *          This function is called once at the beginning of the game.
 *************************************************************/
-void render_map(ULONG32* base, UINT16 tile_map[][MAP_TILE_LENGTH]) {
+void render_map(ULONG32* base/*,UINT16 tile_map[][MAP_TILE_LENGTH]*/) {
     UINT16* base16 = (UINT16*)base;
     UCHAR8* base8 = (UCHAR8*)base; 
     int i, j, x, y;
@@ -205,7 +205,7 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
 *          clear_bitmap_32 function. Then, it plots a tombstone bitmap at the ghost's current
 *          cell position to indicate where it was caught or removed from the game.
 *************************************************************/
-void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
+void de_render_ghost(ULONG32* base32, Ghost* ghost) {
     /*
     int tombstone_y = (ghost->move->y_cell_index  * PIXELS_PER_CELL) + Y_PIXEL_OFFSET;
     int tombstone_x = ghost->move->x_cell_index  * PIXELS_PER_CELL;
@@ -245,9 +245,7 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
     }
 }
 
-void render_gameover() {
-    
-}
+
 void render_timer(UCHAR8* base8) {
 
     plot_letter(base8, TIMER_MS_X, TIMER_Y, font, timer.MS_digit_ascii);

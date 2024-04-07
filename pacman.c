@@ -158,7 +158,10 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     int orig_ipl;
     int orig_ssp;
 
-    init_map_cells(cell_map, tile_map);    
+    /*init_map_cells(cell_map, tile_map);*/
+    
+    init_map_cells();
+    
     clear_and_render_maps(base32, back_buffer_ptr);
     /*render_map(back_buffer_ptr, tile_map);*/
     clear_and_render_entities(base32, back_buffer_ptr, entity);
@@ -365,8 +368,8 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool 
  ******************************************************************/
 void clear_and_render_maps(ULONG32* base32, ULONG32* back_buffer_ptr) {
     clear_screen_q(base32);
-    render_map(base32, tile_map);
-    render_map(back_buffer_ptr, tile_map);
+    render_map(base32/*,tile_map*/);
+    render_map(back_buffer_ptr/*,tile_map*/);
 }
 /*******************************************************************
  * Function: clear_and_render_entities
@@ -492,8 +495,6 @@ ULONG32* get_video_base()
 {
 	ULONG32 old_ssp;
     ULONG32 combined_address;
-   
-
     UCHAR8 high_byte; 
     UCHAR8 low_byte ;
 

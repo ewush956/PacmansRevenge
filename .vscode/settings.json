@@ -7,6 +7,7 @@
         "events.h": "c",
         "effects.h": "c",
         "splash.h": "c",
-        "bitmaps.h": "c"
+        "bitmaps.h": "c",
+        "model.h": "c"
     }
 }
