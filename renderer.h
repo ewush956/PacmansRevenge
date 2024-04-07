@@ -25,3 +25,8 @@ void render_pellets(ULONG32* base32, Entities* all);
 void render_pellet(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, UCHAR8 direction);
 
 void render_mouse(UINT16* base16);
+
+void render_pellet_helper_left(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y);
+void render_pellet_helper_right(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y);
+void render_pellet_helper_up(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y);
+void render_pellet_helper_down(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y);

@@ -220,6 +220,10 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
     int tombstone_y = ghost->move->y;
     int tombstone_x = ghost->move->y;
 
+    UCHAR8 ghost_cell_x = ghost->move->x_cell_index;
+    UCHAR8 ghost_cell_y = ghost->move->y_cell_index;
+
+
     if (pacman.move->direction == UP && cell_map[pacman_cell_x][pacman_cell_y + 1].open_path == WALL) {
         set_deltas(pacman.move, 0, 1);
         move_pacman(&pacman);
@@ -245,7 +249,13 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
         case UP: break;
         case DOWN: clear_bitmap_32(base32, clear_x, clear_y + 1, SPRITE_HEIGHT); break;
         case LEFT: break;
-        case RIGHT: clear_bitmap_32(base32, clear_x + WALL_SIZE, clear_y, SPRITE_HEIGHT); break;
+        case RIGHT:
+        if (cell_map[pacman_cell_y][ghost_cell_x + 2].open_path == TRUE) {
+                clear_bitmap_32(base32, tombstone_x, tombstone_y, SPRITE_HEIGHT);
+                /*clear_bitmap_32(base32, clear_x + SPRITE_WIDTH, clear_y, SPRITE_HEIGHT); 
+                clear_bitmap_32(base32, ghost->move->x, ghost->move->y, SPRITE_HEIGHT);*/
+            }
+
     }
     clear_bitmap_32(base32, ghost->move->x, ghost->move->y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, tombstone_x, tombstone_y, SPRITE_HEIGHT);
@@ -320,7 +330,6 @@ void render_initial_timer(UCHAR8* base) {
 void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
                     Movement* moustache, Movement* awkward, Movement* cyclops) {
 
-
     clear_bitmap_32(base32, awkward->last_last_x, awkward->last_last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, moustache->last_last_x, moustache->last_last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, cyclops->last_last_x, cyclops->last_last_y, SPRITE_HEIGHT);
@@ -330,84 +339,24 @@ void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
     clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
     
 }
-/*
-void render_pellet(UCHAR8* base8, Movement* move) {
-*/
 void render_pellet(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, UCHAR8 direction) {
 
-/*    int pellet_plot_x = (move->x_cell_index << 4) + 12;
-    int pellet_plot_y = (move->y_cell_index << 4) + 12 + Y_PIXEL_OFFSET;
-
-    int x_cell_index = move->x_cell_index;
-    int y_cell_index = move->y_cell_index;
-    */
     int pellet_plot_x = (x_cell_index << 4) + 12;
     int pellet_plot_y = (y_cell_index << 4) + 12 + Y_PIXEL_OFFSET;
     
     if (direction == LEFT) {
-        if (cell_map[y_cell_index][x_cell_index + 2].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x + 32, pellet_plot_y, pellet, 8);
-        }
-        if (cell_map[y_cell_index + 1][x_cell_index + 2].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x + 32, pellet_plot_y + 16, pellet, 8);
-        }
-        if (cell_map[y_cell_index - 1][x_cell_index + 2].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x + 32, pellet_plot_y - 16, pellet, 8);
-        }
-        if (cell_map[y_cell_index + 2][x_cell_index + 2].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x + 32, pellet_plot_y + 32, pellet, 8);
-        }
+        render_pellet_helper_left(base8,x_cell_index,y_cell_index,pellet_plot_x,pellet_plot_y);
     }
     else if (direction == RIGHT) {
-        if (cell_map[y_cell_index][x_cell_index - 1].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x - 16, pellet_plot_y, pellet, 8);
-        }
-        if (cell_map[y_cell_index + 1][x_cell_index - 1].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 16, pellet, 8);
-        }
-        if (cell_map[y_cell_index - 1][x_cell_index - 1].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet, 8);
-        }
-        if (cell_map[y_cell_index + 2][x_cell_index - 2].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x - 32, pellet_plot_y + 32, pellet, 8);
-        }
+        render_pellet_helper_right(base8,x_cell_index,y_cell_index,pellet_plot_x,pellet_plot_y);
     }
     else if (direction == DOWN) {
-        if (cell_map[y_cell_index - 1][x_cell_index].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x, pellet_plot_y - 16, pellet, 8);
-        }
-        if (cell_map[y_cell_index - 1][x_cell_index + 1].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x + 16, pellet_plot_y - 16, pellet, 8);
-        }
-        if (cell_map[y_cell_index - 1][x_cell_index - 1].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet, 8);
-        }
-        if (cell_map[y_cell_index - 1][x_cell_index + 2].has_pellet == TRUE) {
-            plot_8(base8, pellet_plot_x + 32, pellet_plot_y - 16, pellet, 8);
-        }
+    
+        render_pellet_helper_down(base8,x_cell_index,y_cell_index,pellet_plot_x,pellet_plot_y);
         
     }
     else if (direction == UP) {
-        if (cell_map[y_cell_index + 2][x_cell_index].has_pellet == TRUE) 
-            plot_8(base8, pellet_plot_x, pellet_plot_y + 32, pellet, 8);
-
-        if (cell_map[y_cell_index + 2][x_cell_index + 1].has_pellet == TRUE) 
-            plot_8(base8, pellet_plot_x + 16, pellet_plot_y + 32, pellet, 8);
-
-        if (cell_map[y_cell_index + 2][x_cell_index - 1].has_pellet == TRUE) 
-            plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 32, pellet, 8);
-
-        if (cell_map[y_cell_index + 3][x_cell_index - 1].has_pellet == TRUE)
-            plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 48, pellet, 8);
-
-        if (cell_map[y_cell_index + 3][x_cell_index + 1].has_pellet == TRUE)
-            plot_8(base8, pellet_plot_x + 16, pellet_plot_y + 48, pellet, 8);  
-
-        if (cell_map[y_cell_index + 2][x_cell_index - 2].has_pellet == TRUE) 
-            plot_8(base8, pellet_plot_x - 32, pellet_plot_y + 32, pellet, 8); 
-
-        if (cell_map[y_cell_index + 2][x_cell_index + 2].has_pellet == TRUE)
-            plot_8(base8, pellet_plot_x + 32, pellet_plot_y + 32, pellet, 8);
+         render_pellet_helper_up(base8,x_cell_index,y_cell_index,pellet_plot_x,pellet_plot_y);
     }
     
 }
@@ -427,5 +376,79 @@ void render_mouse(UINT16* base16)
     UCHAR8 height = 16;
     plot_mouse(base16,global_mouse_x,global_mouse_y,mouse_cursor);
     
+}
+
+
+void render_pellet_helper_left(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y)
+{
+    if (cell_map[y_cell_index][x_cell_index + 2].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x + 32, pellet_plot_y, pellet, 8);
+    }
+    if (cell_map[y_cell_index + 1][x_cell_index + 2].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x + 32, pellet_plot_y + 16, pellet, 8);
+    }
+    if (cell_map[y_cell_index - 1][x_cell_index + 2].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x + 32, pellet_plot_y - 16, pellet, 8);
+    }
+    if (cell_map[y_cell_index + 2][x_cell_index + 2].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x + 32, pellet_plot_y + 32, pellet, 8);
+    }
+
+}
+void render_pellet_helper_right(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y)
+{
+    if (cell_map[y_cell_index][x_cell_index - 1].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x - 16, pellet_plot_y, pellet, 8);
+    }
+    if (cell_map[y_cell_index + 1][x_cell_index - 1].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 16, pellet, 8);
+    }
+    if (cell_map[y_cell_index - 1][x_cell_index - 1].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet, 8);
+    }
+    if (cell_map[y_cell_index + 2][x_cell_index - 2].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x - 32, pellet_plot_y + 32, pellet, 8);
+    }
+}
+
+void render_pellet_helper_up(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y)
+{
+    if (cell_map[y_cell_index + 2][x_cell_index].has_pellet == TRUE) 
+        plot_8(base8, pellet_plot_x, pellet_plot_y + 32, pellet, 8);
+
+    if (cell_map[y_cell_index + 2][x_cell_index + 1].has_pellet == TRUE) 
+        plot_8(base8, pellet_plot_x + 16, pellet_plot_y + 32, pellet, 8);
+
+    if (cell_map[y_cell_index + 2][x_cell_index - 1].has_pellet == TRUE) 
+        plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 32, pellet, 8);
+
+    if (cell_map[y_cell_index + 3][x_cell_index - 1].has_pellet == TRUE)
+        plot_8(base8, pellet_plot_x - 16, pellet_plot_y + 48, pellet, 8);
+
+    if (cell_map[y_cell_index + 3][x_cell_index + 1].has_pellet == TRUE)
+        plot_8(base8, pellet_plot_x + 16, pellet_plot_y + 48, pellet, 8);  
+
+    if (cell_map[y_cell_index + 2][x_cell_index - 2].has_pellet == TRUE) 
+        plot_8(base8, pellet_plot_x - 32, pellet_plot_y + 32, pellet, 8); 
+
+    if (cell_map[y_cell_index + 2][x_cell_index + 2].has_pellet == TRUE)
+        plot_8(base8, pellet_plot_x + 32, pellet_plot_y + 32, pellet, 8);
+
+}
+
+void render_pellet_helper_down(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y)
+{
+    if (cell_map[y_cell_index - 1][x_cell_index].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x, pellet_plot_y - 16, pellet, 8);
+    }
+    if (cell_map[y_cell_index - 1][x_cell_index + 1].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x + 16, pellet_plot_y - 16, pellet, 8);
+    }
+    if (cell_map[y_cell_index - 1][x_cell_index - 1].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x - 16, pellet_plot_y - 16, pellet, 8);
+    }
+    if (cell_map[y_cell_index - 1][x_cell_index + 2].has_pellet == TRUE) {
+        plot_8(base8, pellet_plot_x + 32, pellet_plot_y - 16, pellet, 8);
+    }
 }
 
