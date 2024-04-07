@@ -49,6 +49,11 @@ extern bool game_over_flag;
 extern bool kill_ghost_flag;
 extern bool second_has_passed;
 
+extern bool derender_moustache_flag;
+extern bool derender_awkward_flag;
+extern bool derender_crying_flag;
+extern bool derender_cyclops_flag;
+
 extern Movement pacman_movements;
 extern Pacman pacman;
 extern Movement awkward_ghost_movement;

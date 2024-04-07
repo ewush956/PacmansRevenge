@@ -5,6 +5,8 @@
 #include "RASTER.H"
 #include "font.h"
 #include "globals.h"
+
+#include <stdio.h>
 /*************************************************************
 * Function: render_map
 * Purpose: Initialize game map rendering by plotting tiles.
@@ -81,6 +83,8 @@ void render_frame(ULONG32* base, Entities* entity) {
     int awkward_last_y = awkward->last_last_y >> 4;
     int cyclops_last_x = cyclops->last_last_x >> 4;
     int cyclops_last_y = cyclops->last_last_y >> 4;
+
+
     
     /*awk->current_frame ^= 1; */
 /*
@@ -164,36 +168,33 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     Ghost* crying_g = entity->crying_ghost;
     Ghost* cyclops_g = entity->cyclops_ghost;
     
-    if (entity->awkward_ghost->state == DEFAULT) {
+    if (derender_awkward_flag == TRUE) 
+        de_render_ghost(base32, awkward_g, cell_map);
+    else if (entity->awkward_ghost->state == DEFAULT) 
         plot_bitmap_32(base32, awkward->x, awkward->y, awkward_ghost_sprites[awkward->direction][awkward_g->current_frame], SPRITE_HEIGHT);
-    } else {
+    else 
         render_non_default_ghost(base32, awkward_g);
-    }
-
-    if (entity->moustache_ghost->state == DEFAULT) {
+    
+    if (derender_moustache_flag == TRUE) 
+        de_render_ghost(base32, moustache_g, cell_map);
+    else if (entity->moustache_ghost->state == DEFAULT) 
         plot_bitmap_32(base32, moustache->x, moustache->y, moustache_ghost_sprites[moustache->direction][moustache_g->current_frame], SPRITE_HEIGHT);
-    } else {
+    else 
         render_non_default_ghost(base32, moustache_g);
-    }
 
-/*
-    if (entity->crying_ghost->state == DEFAULT) {
+    if (derender_crying_flag == TRUE)
+        de_render_ghost(base32, crying_g, cell_map);
+    else if (entity->crying_ghost->state == DEFAULT) 
         plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->direction][crying_g->current_frame], SPRITE_HEIGHT);
-    } else {
+    else 
         render_non_default_ghost(base32, crying_g);
-    }
-*/
-    if (entity->crying_ghost->state == DEFAULT) {
-        plot_bitmap_32(base32, crying->x, crying->y, crying_ghost_sprites[crying->direction][crying_g->current_frame], SPRITE_HEIGHT);
-    } else {
-        render_non_default_ghost(base32, crying_g);
-    }
-
-    if (entity->cyclops_ghost->state == DEFAULT) {
+    
+    if (derender_cyclops_flag == TRUE)
+        de_render_ghost(base32, cyclops_g, cell_map);
+    else if (entity->cyclops_ghost->state == DEFAULT) 
         plot_bitmap_32(base32, cyclops->x, cyclops->y, cyclops_ghost_sprites[cyclops->direction][cyclops_g->current_frame], SPRITE_HEIGHT);
-    } else {
+    else 
         render_non_default_ghost(base32, cyclops_g);
-    }
 }
 /*************************************************************
 * Function: de_render_ghost
@@ -206,16 +207,51 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
 *          cell position to indicate where it was caught or removed from the game.
 *************************************************************/
 void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
-    /*
-    int tombstone_y = (ghost->move->y_cell_index  * PIXELS_PER_CELL) + Y_PIXEL_OFFSET;
-    int tombstone_x = ghost->move->x_cell_index  * PIXELS_PER_CELL;
-    */
-    int tombstone_y = ((ghost->move->y_cell_index + 1) << 4) + Y_PIXEL_OFFSET;
-    int tombstone_x = ghost->move->x_cell_index  << 4;
+        
+    UCHAR8 pacman_cell_x = pacman.move->x_cell_index;
+    UCHAR8 pacman_cell_y = pacman.move->y_cell_index;
+    UCHAR8 pacman_direction = pacman.move->direction;
 
+    UINT16 clear_x = ghost->move->last_last_x;
+    UINT16 clear_y = ghost->move->last_last_y;
+
+    UCHAR8 ghost_direction = ghost->move->direction;
+
+    int tombstone_y = ghost->move->y;
+    int tombstone_x = ghost->move->y;
+
+    if (pacman.move->direction == UP && cell_map[pacman_cell_x][pacman_cell_y + 1].open_path == WALL) {
+        set_deltas(pacman.move, 0, 1);
+        move_pacman(&pacman);
+        set_deltas(pacman.move, 0, -1);
+    }
+    else if (pacman.move->direction == DOWN && cell_map[pacman_cell_x][pacman_cell_y - 1].open_path == WALL) {
+        set_deltas(pacman.move, 0, -1);
+        move_pacman(&pacman);
+        set_deltas(pacman.move, 0, 1);
+    }
+    else if (pacman.move->direction == LEFT && cell_map[pacman_cell_x - 1][pacman_cell_y].open_path == WALL) {
+        set_deltas(pacman.move, -1, 0);
+        move_pacman(&pacman);
+        set_deltas(pacman.move, 1, 0);
+    }
+    else if (pacman.move->direction == RIGHT && cell_map[pacman_cell_x + 1][pacman_cell_y].open_path == WALL) {
+        set_deltas(pacman.move, 1, 0);
+        move_pacman(&pacman);
+        set_deltas(pacman.move, -1, 0);
+    }
+
+    switch (ghost_direction) {
+        case UP: break;
+        case DOWN: clear_bitmap_32(base32, clear_x, clear_y + 1, SPRITE_HEIGHT); break;
+        case LEFT: break;
+        case RIGHT: clear_bitmap_32(base32, clear_x + WALL_SIZE, clear_y, SPRITE_HEIGHT); break;
+    }
     clear_bitmap_32(base32, ghost->move->x, ghost->move->y, SPRITE_HEIGHT);
-    /*clear_bitmap_32(base32, (UINT16)ghost->move->x_cell_index, (UINT16)ghost->move->y_cell_index, SPRITE_HEIGHT);*/
+    clear_bitmap_32(base32, tombstone_x, tombstone_y, SPRITE_HEIGHT);
     plot_bitmap_32(base32, tombstone_x, tombstone_y, tombstone, SPRITE_HEIGHT);
+    render_pellet((UCHAR8*)base32, ghost->move->x_cell_index, ghost->move->y_cell_index, ghost_direction);
+    set_derender_ghost_flag(ghost, FALSE);
     
 }
 /*************************************************************
