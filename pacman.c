@@ -50,16 +50,9 @@
  * 2. Add a timer to the game.
  * 
  *********************************************************************/
-/*
-void advance_sound ();
 
-SoundState wakaState = {0, 0};
-SoundState wakaNoise = {0, 0};
-SoundState killState = {0, 0};
-*/
-         UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
-        
-         GAME_STATE state         = MENU; /**/
+UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];        
+GAME_STATE state = MENU; 
         
 
 int main()
@@ -123,7 +116,7 @@ int main()
         plot_screen(original, lose_splash);
         end_game_flag = TRUE;
     }
-   
+
     remove_custom_vectors();
 
     return 0;
@@ -352,44 +345,7 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool 
     }
 
 }  
-/*
-void advance_sound () {
 
-        if (end_game_flag == TRUE) {
-            stop_sound();
-            return; 
-        }
-        if (kill_ghost_flag == TRUE) {
-            if (play_sound(CHANNEL_C, ghost_kill_sound_cycle, GHOST_KILL_CYCLE_LENGTH, &killState) == TRUE)
-                kill_ghost_flag = FALSE;
-        }
-        if (single_waka_playing == TRUE) {
-            if (play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState) == TRUE) 
-                single_waka_playing = FALSE;
-        }
-
-        else if (waka_playing == TRUE) {
-            play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
-            if (play_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise) == TRUE) 
-                waka_playing = FALSE;
-        }
-        else {
-            if ( cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index - 1].has_pellet == TRUE ||
-                 cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index + 1].has_pellet == TRUE ||
-                 cell_map[entity.pacman->move->y_cell_index - 1][entity.pacman->move->x_cell_index].has_pellet == TRUE ||
-                 cell_map[entity.pacman->move->y_cell_index + 1][entity.pacman->move->x_cell_index].has_pellet == TRUE)
-            {
-                waka_playing = TRUE;
-                play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
-                play_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
-            }  
-            else {
-                single_waka_playing = TRUE;
-                play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
-            }
-        }  
-}
-*/
 /*******************************************************************
  * Function: clear_and_render_maps
  * Purpose: Clears and renders the map
@@ -518,36 +474,3 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = DOWN;
 }
-/*****************************
-* A simple finite state machine 
-*  that handles keyboard input
-*
-*
-******************************/
-/*
-void process_keyboard_input(UCHAR8 input)
-{   
-    switch(state)
-    {   
-        case PLAY:
-            if (input == ESC_MAKE){
-                state = WAITING_FOR_ESC_BREAK;
-            } 
-            else{
-                set_input(entity.pacman,input);
-            }
-            break;
-        case WAITING_FOR_ESC_BREAK:
-            if (input == ESC_BREAK){
-                state = QUIT;
-            }
-            else{
-                state = PLAY;
-            }
-            break;
-
-        default:
-            break;
-
-    }
-}*/
