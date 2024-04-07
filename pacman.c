@@ -50,24 +50,94 @@
  * 2. Add a timer to the game.
  * 
  *********************************************************************/
+/*
+void advance_sound ();
 
-UCHAR8  background[BUFFER_SIZE_BYTES];
-UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
-GAME_STATE state = MENU; /**/
+SoundState wakaState = {0, 0};
+SoundState wakaNoise = {0, 0};
+SoundState killState = {0, 0};
+*/
+         UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];
         
+         GAME_STATE state         = MENU; /**/
+        
+
+int main()
+{
+
+    int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
+    ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
+    long old_ssp;
+
+    int orig_ipl;
+    int orig_ssp;
+    ULONG32* original         = get_video_base();
+    ULONG32* base32           = get_video_base();
+    UINT16* base16            = (UINT16*)base32;
+   
+
+    UCHAR8 input;
+    plot_screen(base32, splash);
+    install_custom_vectors(); 
+    initialize_mouse(); 
+    render_mouse(base16);
+    state = MENU;
+/*    while (state != QUIT  && input != ENTER && state != WIN && state != GAMEOVER) */
+    while (state == MENU)
+    {
+        
+        if (fill_level > 0)
+        {
+            orig_ssp = Super(0);                     
+            orig_ipl = set_ipl(7);
+            Super(orig_ssp);
+
+            input = dequeue();
+            
+            orig_ssp = Super(0);
+            set_ipl(orig_ipl);
+            Super(orig_ssp); 
+
+            process_keyboard_input(input);
+        }
+        if (left_button_pressed == TRUE)
+        {
+            clear_screen_q(base32);
+            game_loop();
+
+        }
+        if (request_to_render == TRUE)
+        {  
+            update_mouse();
+            restore_mouse_background(base32,splash,old_mouse_x,old_mouse_y); 
+            render_mouse(base16);
+            request_to_render = FALSE;
+        } 
+     }
+
+  
+  
+    /* add the lose screen as well */
+    if (state == WIN)
+    {
+        plot_screen(original, win_splash);
+        end_game_flag = TRUE;
+    }
+    if (state == GAMEOVER)
+    {
+        plot_screen(original, lose_splash);
+        end_game_flag = TRUE;
+    }
+   
+    remove_custom_vectors();
+
+    return 0;
+}
 /*******************************************************************
  * Function: initialize_game
  * Purpose: Initializes the game, manually moves the ghosts out of the center
  *          and plays intro music
  ******************************************************************/
-int main () 
-{
-
-    menu();
-
-    return 0;
-}
-
 
 void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity) 
 {
@@ -75,7 +145,9 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     SoundState  bassState   = {0, 0};
     UCHAR8*     base8       = (UCHAR8*)base32;
     UCHAR8*     back8       = (UCHAR8*)back_buffer_ptr;
+
     ULONG32     song_now, song_then, time_elapsed; 
+
     long old_ssp; 
     int  treble_song_length = PACMAN_INTRO_TREBLE_LENGTH;
     int  bass_song_length   = PACMAN_INTRO_BASS_LENGTH;
@@ -85,6 +157,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     int  first_frames       = 0;
     int* intro_duration_ptr = &intro_duration;
     int* indx_ptr           = &moves_index;
+
     bool song_finished      = FALSE;
     bool stop_ghosts        = FALSE;
     bool enable             = TRUE;
@@ -93,11 +166,10 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     init_map_cells(cell_map, tile_map);    
     clear_and_render_maps(base32, back_buffer_ptr);
-    render_map(back_buffer_ptr, tile_map);
+    /*render_map(back_buffer_ptr, tile_map);*/
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
-
     render_initial_timer(base8);
     render_initial_timer(back8);
     
@@ -125,69 +197,6 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     }
     state = PLAY;
 }
-
-void menu()
-{
-    UCHAR8 input;
-    long old_ssp;
-    int orig_ssp;
-    int orig_ipl;
-    int  buffer_offset        = 256 - ((long)(screen_buffer) % 256); 
-    ULONG32* back_buffer_ptr  = (ULONG32*)(&screen_buffer[buffer_offset]);
-    ULONG32* original         = get_video_base();
-    ULONG32* base32           = get_video_base();
-    UINT16* base16            = (UINT16*)base32;
-
-    plot_screen(base32, splash);
-    install_custom_vectors(); 
-    initialize_mouse(); 
-    render_mouse(base16);
-    
-    while (state == MENU)
-    {
-        
-        if (fill_level > 0)
-        {
-            orig_ssp = Super(0);                     
-            orig_ipl = set_ipl(7);
-            Super(orig_ssp);
-
-            input = dequeue();
-            
-            orig_ssp = Super(0);
-            set_ipl(orig_ipl);
-            Super(orig_ssp); 
-
-            process_keyboard_input(input);
-        }
-        if (left_button_pressed == TRUE)    /*the in bounds logic is checked within the update_mouse*/
-        {     
-            clear_screen_q(base32);
-            game_loop();
-        }
-        if (request_to_render == TRUE)
-        {  
-            update_mouse();
-            restore_mouse_background(base32,splash,old_mouse_x,old_mouse_y); 
-            render_mouse(base16);
-            request_to_render = FALSE;
-        } 
-     
-    }
-  
-    if (state == WIN){
-        plot_screen(original, win_splash);
-        game_over_flag = TRUE;
-    }
-    
-    if (state == QUIT){
-        clear_screen_q(base32);
-    }
-
-    remove_custom_vectors();
-
-   
-}
 /*******************************************************************
  * Function: game_loop
  * Purpose: executes main game loop
@@ -198,17 +207,18 @@ void game_loop()
 	UCHAR8 input;
     int  waka_repetitions    = 10; 
     int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
-    int  background_offset   = 256 - ((long)(background) % 256);
     long old_ssp; 
     int orig_ipl;
     int orig_ssp;
+    
+
     ULONG32* base32          = (ULONG32*)get_video_base();
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
 
     initialize_game(base32, back_buffer_ptr, &entity);
-
-    while (state != QUIT && state != WIN) 
+    game_start = TRUE;
+    while (state != QUIT && state != WIN && state != GAMEOVER) 
     {
         if (fill_level > 0){
             orig_ssp = Super(0);                        /* mask all intrpts before enQing */
@@ -224,6 +234,7 @@ void game_loop()
         }
 
         if (request_to_render == TRUE){  
+
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
 
@@ -231,11 +242,11 @@ void game_loop()
             set_video_base(base32);
             Super(old_ssp);
             request_to_render = FALSE; 
-        }  
+        } 
         update_timer();
         state = update_game_state(state, input, &entity);
     }
-    
+      
     old_ssp = Super(0);
     stop_sound();
     set_video_base(original);
@@ -301,7 +312,25 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
         all->cyclops_ghost->state == DEAD) {
         return WIN; 
     }
+    if (game_over_flag == TRUE) {
+        return GAMEOVER;
+    }
     return new_state;
+    /*
+    GAME_STATE state;
+    if (input == '\033')
+    {
+        state = QUIT;
+        return state;
+    }
+    if (all->awkward_ghost->state == DEAD && 
+        all->crying_ghost->state == DEAD &&
+        all->moustache_ghost->state == DEAD &&
+        all->cyclops_ghost->state == DEAD) {
+        return WIN; 
+    }
+    return new_state;
+    */
 }
 
 /*******************************************************************
@@ -342,6 +371,44 @@ void manually_move_ghost(ULONG32* base, Entities* entity, int frame_index, bool 
     }
 
 }  
+/*
+void advance_sound () {
+
+        if (end_game_flag == TRUE) {
+            stop_sound();
+            return; 
+        }
+        if (kill_ghost_flag == TRUE) {
+            if (play_sound(CHANNEL_C, ghost_kill_sound_cycle, GHOST_KILL_CYCLE_LENGTH, &killState) == TRUE)
+                kill_ghost_flag = FALSE;
+        }
+        if (single_waka_playing == TRUE) {
+            if (play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState) == TRUE) 
+                single_waka_playing = FALSE;
+        }
+
+        else if (waka_playing == TRUE) {
+            play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
+            if (play_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise) == TRUE) 
+                waka_playing = FALSE;
+        }
+        else {
+            if ( cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index - 1].has_pellet == TRUE ||
+                 cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index + 1].has_pellet == TRUE ||
+                 cell_map[entity.pacman->move->y_cell_index - 1][entity.pacman->move->x_cell_index].has_pellet == TRUE ||
+                 cell_map[entity.pacman->move->y_cell_index + 1][entity.pacman->move->x_cell_index].has_pellet == TRUE)
+            {
+                waka_playing = TRUE;
+                play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
+                play_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
+            }  
+            else {
+                single_waka_playing = TRUE;
+                play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
+            }
+        }  
+}
+*/
 /*******************************************************************
  * Function: clear_and_render_maps
  * Purpose: Clears and renders the map
@@ -411,7 +478,7 @@ void initialize_sound(long* old_ssp, SoundState* trebleState, SoundState* bassSt
  *          returns TRUE if the song has finished.
  *****************************************************************/
 bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, SoundState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
-
+    /*ULONG32 time_now = get_time();*/
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
     int tempo = 5;
@@ -470,3 +537,36 @@ void set_third_movements(ULONG32* base32, UCHAR8* base8, Entities* entity){
     awkward_ghost.move->delta_y = 1;
     awkward_ghost.move->direction = DOWN;
 }
+/*****************************
+* A simple finite state machine 
+*  that handles keyboard input
+*
+*
+******************************/
+/*
+void process_keyboard_input(UCHAR8 input)
+{   
+    switch(state)
+    {   
+        case PLAY:
+            if (input == ESC_MAKE){
+                state = WAITING_FOR_ESC_BREAK;
+            } 
+            else{
+                set_input(entity.pacman,input);
+            }
+            break;
+        case WAITING_FOR_ESC_BREAK:
+            if (input == ESC_BREAK){
+                state = QUIT;
+            }
+            else{
+                state = PLAY;
+            }
+            break;
+
+        default:
+            break;
+
+    }
+}*/

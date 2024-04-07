@@ -261,7 +261,7 @@ void render_initial_timer(UCHAR8* base) {
 /*
     plot_string(base, start_x, y, font, "Time: 60");
     */
-   print_string(base, start_x, y, "Time: 99\0");
+    plot_string(base, start_x, y, font, "Time: 99\0");
 /*    plot_letter(base, start_x, y, font, 'T');
     plot_letter(base, start_x + LETTER_WIDTH, y, font, 'i');
     plot_letter(base, start_x + (LETTER_WIDTH * 2), y, font, 'm');

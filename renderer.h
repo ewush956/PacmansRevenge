@@ -3,6 +3,10 @@
 #include "bitmaps.h"
 #include "types.h"
 
+#define TIMER_MS_X 328
+#define TIMER_LS_X 336
+#define TIMER_Y 4
+
 void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
                     Movement* moustache, Movement* awkward, Movement* cyclops);
 void render_map(ULONG32* base, UINT16 tile_map[][MAP_TILE_LENGTH]);

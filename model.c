@@ -587,7 +587,6 @@ void update_timer()
             game_over_flag = TRUE;
             return;
         }
-        
        
         if (timer.LS_digit_ascii == '0') { 
             timer.LS_digit_ascii = '9'; 
