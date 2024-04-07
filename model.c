@@ -177,9 +177,6 @@ void check_proximity(Entities* all) {
         }
     }
     if (ghostCountWithinRange == 0) { change_pacman_state(all->pacman, DEFAULT); }
-    /*else if (ghostCountWithinRange >= 2) { end_game(); } */
-    /* ^^^ we probably aren't going to do this, makes the game super annoying*/
-    
 }
 
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state) {
@@ -472,6 +469,8 @@ bool check_shared_occupied(Movement* entity1, Movement* entity2) {
 *************************************************************/
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     int y_cell_index, x_cell_index;
+
+    if (ghost->state == DEAD) { return; }
     ghost->state = DEAD;
 
     ghost->move->x = (ghost->move->x_cell_index << 4);
@@ -510,12 +509,6 @@ void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell
 
     cell_map[y_cell_index-1][x_cell_index].open_path  = FALSE;
     cell_map[y_cell_index-1][x_cell_index].has_pellet = FALSE;
-
-    cell_map[y_cell_index-1][x_cell_index+1].open_path  = FALSE;
-    cell_map[y_cell_index-1][x_cell_index+1].has_pellet = FALSE;
-
-    cell_map[y_cell_index][x_cell_index-1].open_path  = FALSE;
-    cell_map[y_cell_index][x_cell_index-1].has_pellet = FALSE;
 
 }
 void align_axis(Movement* entity) {
