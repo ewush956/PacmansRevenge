@@ -163,7 +163,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     int orig_ipl;
     int orig_ssp;
 
-    init_map_cells(cell_map, tile_map);    
+    init_map_cells();    
     clear_and_render_maps(base32, back_buffer_ptr);
     /*render_map(back_buffer_ptr, tile_map);*/
     clear_and_render_entities(base32, back_buffer_ptr, entity);
