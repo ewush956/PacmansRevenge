@@ -68,7 +68,6 @@ int main()
     int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
     long old_ssp;
-
     int orig_ipl;
     int orig_ssp;
     ULONG32* original         = get_video_base();
@@ -81,8 +80,7 @@ int main()
     install_custom_vectors(); 
     initialize_mouse(); 
     render_mouse(base16);
-    /*state = MENU; */
-
+  
     while (state == MENU)
     {
         if (fill_level > 0)
@@ -114,9 +112,7 @@ int main()
         } 
      }
 
-  
     clear_screen_q(base32);
-
     if (state == WIN)
     {
         plot_screen(original, win_splash);
