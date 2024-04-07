@@ -384,7 +384,6 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
 UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
     UINT16 x = movement->x;
     UINT16 y = movement->y;
-
     UINT16 pac_x = pacman_movement->x;
     UINT16 pac_y = pacman_movement->y;
 

@@ -218,7 +218,7 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
     UCHAR8 ghost_direction = ghost->move->direction;
 
     int tombstone_y = ghost->move->y;
-    int tombstone_x = ghost->move->y;
+    int tombstone_x = ghost->move->x;
 
     UCHAR8 ghost_cell_x = ghost->move->x_cell_index;
     UCHAR8 ghost_cell_y = ghost->move->y_cell_index;
@@ -251,7 +251,7 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
         case LEFT: break;
         case RIGHT:
         if (cell_map[pacman_cell_y][ghost_cell_x + 2].open_path == TRUE) {
-                clear_bitmap_32(base32, tombstone_x, tombstone_y, SPRITE_HEIGHT);
+                clear_bitmap_32(base32, tombstone_x+16, tombstone_y, SPRITE_HEIGHT);
                 /*clear_bitmap_32(base32, clear_x + SPRITE_WIDTH, clear_y, SPRITE_HEIGHT); 
                 clear_bitmap_32(base32, ghost->move->x, ghost->move->y, SPRITE_HEIGHT);*/
             }
