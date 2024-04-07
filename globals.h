@@ -24,8 +24,8 @@
 extern GAME_STATE state;
 
 extern bool request_to_render;   
-extern volatile UINT16 ticks;           
-extern volatile ULONG32 time_now;
+extern UINT16 ticks;           
+extern ULONG32 time_now;                    /* volatile...no remove later sorry*/
 extern char keyboard_buffer[256];         
 extern UCHAR8 head;
 extern int tail;

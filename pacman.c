@@ -81,11 +81,10 @@ int main()
     install_custom_vectors(); 
     initialize_mouse(); 
     render_mouse(base16);
-    state = MENU;
-/*    while (state != QUIT  && input != ENTER && state != WIN && state != GAMEOVER) */
+    /*state = MENU; */
+
     while (state == MENU)
     {
-        
         if (fill_level > 0)
         {
             orig_ssp = Super(0);                     
@@ -116,8 +115,8 @@ int main()
      }
 
   
-  
-    /* add the lose screen as well */
+    clear_screen_q(base32);
+
     if (state == WIN)
     {
         plot_screen(original, win_splash);
@@ -316,21 +315,7 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
         return GAMEOVER;
     }
     return new_state;
-    /*
-    GAME_STATE state;
-    if (input == '\033')
-    {
-        state = QUIT;
-        return state;
-    }
-    if (all->awkward_ghost->state == DEAD && 
-        all->crying_ghost->state == DEAD &&
-        all->moustache_ghost->state == DEAD &&
-        all->cyclops_ghost->state == DEAD) {
-        return WIN; 
-    }
-    return new_state;
-    */
+
 }
 
 /*******************************************************************

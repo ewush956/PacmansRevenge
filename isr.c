@@ -56,6 +56,9 @@ Vector install_vector(int num, Vector vector)
 
 void do_vbl()
 {
+    ticks++;
+    time_now++;
+    
     if (request_to_render == TRUE && state == PLAY) { 
         update_movement(&entity);
         update_current_frame(&entity, ticks);
@@ -66,8 +69,10 @@ void do_vbl()
         second_has_passed = TRUE;
         ticks = 0;
     }
+    /*
     ticks++;
     time_now++;
+    */
     request_to_render = TRUE; 
 }
 
