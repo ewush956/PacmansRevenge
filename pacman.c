@@ -97,6 +97,9 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
+
+    render_initial_timer(base8);
+    render_initial_timer(back8);
     
     while (!song_finished) {
         song_finished = update_sound(&old_ssp, &song_then, &trebleState, &bassState, 
@@ -229,6 +232,7 @@ void game_loop()
             Super(old_ssp);
             request_to_render = FALSE; 
         }  
+        update_timer();
         state = update_game_state(state, input, &entity);
     }
     

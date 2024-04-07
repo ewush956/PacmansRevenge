@@ -10,6 +10,7 @@
 #include "input.h"
 
 int seconds = 0;
+void advance_sound ();
 SoundState wakaState = {0, 0};
 SoundState wakaNoise = {0, 0};
 SoundState killState = {0, 0};
@@ -55,60 +56,19 @@ Vector install_vector(int num, Vector vector)
 
 void do_vbl()
 {
-
-    
-    if (/*seconds > START_DELAY &&*/ request_to_render == TRUE && state == PLAY)
-    {
-        if (game_over_flag == TRUE) {
-            stop_sound();
-            return; 
-        }
-
+    if (request_to_render == TRUE && state == PLAY) { 
         update_movement(&entity);
         update_current_frame(&entity, ticks);
-
-        if (kill_ghost_flag == TRUE) {
-            if (play_sound(CHANNEL_C, ghost_kill_sound_cycle, GHOST_KILL_CYCLE_LENGTH, &killState) == TRUE)
-                kill_ghost_flag = FALSE;
-        }
-        if (single_waka_playing == TRUE) {
-            if (play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState) == TRUE) 
-                single_waka_playing = FALSE;
-        }
-
-        else if (waka_playing == TRUE) {
-            play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
-            if (play_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise) == TRUE) 
-                waka_playing = FALSE;
-        }
-        else {
-            if ( cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index - 1].has_pellet == TRUE ||
-                 cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index + 1].has_pellet == TRUE ||
-                 cell_map[entity.pacman->move->y_cell_index - 1][entity.pacman->move->x_cell_index].has_pellet == TRUE ||
-                 cell_map[entity.pacman->move->y_cell_index + 1][entity.pacman->move->x_cell_index].has_pellet == TRUE)
-            {
-                waka_playing = TRUE;
-                play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
-                play_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
-            }  
-            else {
-                single_waka_playing = TRUE;
-                play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
-            }
-        }        
-   }
-
+        advance_sound(); 
+    }
     if (ticks == 70){
         seconds++;
+        second_has_passed = TRUE;
         ticks = 0;
     }
-
     ticks++;
     time_now++;
-
     request_to_render = TRUE; 
-   
-
 }
 
 void do_IKBD_isr()
@@ -247,4 +207,40 @@ void initialize_mouse()
     int global_mouse_x = MIDDLE_OF_SCREEN_X;
     int global_mouse_y = MIDDLE_OF_SCREEN_Y;
    
+}
+void advance_sound () {
+
+        if (end_game_flag == TRUE) {
+            stop_sound();
+            return; 
+        }
+        if (kill_ghost_flag == TRUE) {
+            if (play_sound(CHANNEL_C, ghost_kill_sound_cycle, GHOST_KILL_CYCLE_LENGTH, &killState) == TRUE)
+                kill_ghost_flag = FALSE;
+        }
+        if (single_waka_playing == TRUE) {
+            if (play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState) == TRUE) 
+                single_waka_playing = FALSE;
+        }
+
+        else if (waka_playing == TRUE) {
+            play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState); 
+            if (play_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise) == TRUE) 
+                waka_playing = FALSE;
+        }
+        else {
+            if ( cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index - 1].has_pellet == TRUE ||
+                 cell_map[entity.pacman->move->y_cell_index][entity.pacman->move->x_cell_index + 1].has_pellet == TRUE ||
+                 cell_map[entity.pacman->move->y_cell_index - 1][entity.pacman->move->x_cell_index].has_pellet == TRUE ||
+                 cell_map[entity.pacman->move->y_cell_index + 1][entity.pacman->move->x_cell_index].has_pellet == TRUE)
+            {
+                waka_playing = TRUE;
+                play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
+                play_sound(CHANNEL_B, waka_noise_cycle, WAKA_CYCLE_LENGTH, &wakaNoise);
+            }  
+            else {
+                single_waka_playing = TRUE;
+                play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
+            }
+        }  
 }

@@ -2,6 +2,7 @@
 #include "model.h"
 #include "bitmaps.h"
 #include "effects.h"
+#include "globals.h"
 #include <stdio.h>
 
 /*************************************************************
@@ -577,4 +578,23 @@ void update_current_frame(Entities* all, int clock) {
 
     }
 }
-
+void update_timer()
+{
+    if (second_has_passed == TRUE) {
+        timer.seconds_value -= 1;
+        
+        if (timer.seconds_value == 0) {
+            game_over_flag = TRUE;
+            return;
+        }
+        
+       
+        if (timer.LS_digit_ascii == '0') { 
+            timer.LS_digit_ascii = '9'; 
+            timer.MS_digit_ascii--; 
+        } else {
+            timer.LS_digit_ascii--; 
+        }
+        second_has_passed = FALSE;   
+    }
+}

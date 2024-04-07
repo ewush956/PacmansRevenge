@@ -2,6 +2,7 @@
 #define RASTER_H
 
 #include "types.h"
+#include "font.h"
 
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 400

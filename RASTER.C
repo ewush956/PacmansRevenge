@@ -1,6 +1,7 @@
 #include <osbind.h>
 #include "raster.h"
 #include "TYPES.H"
+#include "font.h"
 
 volatile UCHAR8* ptr_to_highbyte = VIDEO_ADDR_HIGH;
 volatile UCHAR8* ptr_to_midbyte  = VIDEO_ADDR_MID;
@@ -153,19 +154,12 @@ void plot_8(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int heig
  * @param letter index of the letter in the bitmap array 
  */
 void plot_letter(UCHAR8* base, int x, int y, const UCHAR8 bitmap[], unsigned int letter) {
-    int row;
-    int index = ((letter - ' ') << 3);
-
-    UCHAR8* location = base + (y * BYTES_PER_ROW) + (x >> 3);
-
-    if (x >= 0 && x < (SCREEN_WIDTH - LETTER_WIDTH) && y >= 0 && y < (SCREEN_HEIGHT - LETTER_HEIGHT)) {
-        for (row = index; row < index + 8; row++) {
-        
-            *location |= bitmap[row] >> (x % LETTER_WIDTH);     
-            *(location + 1) |= bitmap[row] << LETTER_WIDTH - (x % LETTER_WIDTH);
-            location += BYTES_PER_ROW;       
-        }
-    }
+	int i = 0;
+	const UCHAR8 *char_hex = GLYPH_START(letter);
+	
+	for(i = 0; i < 8; i++, char_hex++) {
+		*(base + (y + i) * 80 + (x >> 3)) = *char_hex;
+	}
 }
 void clear_letter(UCHAR8* base, int x, int y) {
     int row;

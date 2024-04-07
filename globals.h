@@ -20,6 +20,7 @@
 #define WIN ((UCHAR8)4)
 #define WAITING_FOR_ESC_BREAK ((UCHAR8)5)
 #define MENU ((UCHAR8)6)
+
 extern GAME_STATE state;
 
 extern bool request_to_render;   
@@ -29,6 +30,7 @@ extern char keyboard_buffer[256];
 extern UCHAR8 head;
 extern int tail;
 extern UCHAR8 fill_level;
+extern bool game_start;
 
 extern int global_mouse_x;
 extern int global_mouse_y;
@@ -40,10 +42,12 @@ extern bool left_button_pressed;
 extern bool right_button_pressed;
 
 
-extern volatile bool waka_playing;
-extern volatile bool single_waka_playing;
-extern volatile bool game_over_flag;
-extern volatile bool kill_ghost_flag;
+extern bool waka_playing;
+extern bool single_waka_playing;
+extern bool end_game_flag;
+extern bool game_over_flag;
+extern bool kill_ghost_flag;
+extern bool second_has_passed;
 
 extern Movement pacman_movements;
 extern Pacman pacman;
