@@ -212,6 +212,9 @@ void plot_screen(ULONG32* base, const ULONG32 bitmap[]) {
     return;
 }
 
+/***************
+* Gets the video base start address 
+**************/
 ULONG32* get_video_base()
 {
 	ULONG32 old_ssp;

@@ -90,6 +90,7 @@ int main()
 
             process_keyboard_input(input);
         }
+
         if (left_button_pressed == TRUE)
         {
             clear_screen_q(base32);
@@ -103,6 +104,7 @@ int main()
             render_mouse(base16);
             request_to_render = FALSE;
         } 
+
      }
 
     clear_screen_q(base32);
@@ -415,7 +417,7 @@ void initialize_sound(long* old_ssp, SoundState* trebleState, SoundState* bassSt
  *          returns TRUE if the song has finished.
  *****************************************************************/
 bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, SoundState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
-    /*ULONG32 time_now = get_time();*/
+   
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
     int tempo = 5;

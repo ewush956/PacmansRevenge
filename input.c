@@ -30,9 +30,6 @@ void process_keyboard_input(UCHAR8 input)
             }
             break;
             
-        case MENU:  
-            break;
-
         default:
             break;
 

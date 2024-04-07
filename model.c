@@ -124,7 +124,7 @@ ObjectType check_wall_collision(Movement* entity) {
     }
     return OPEN_PATH;
 }
-/***************************************************
+/*****************************************************
  * Function: check_proximity
  * Module: model
  * Purpose: Checks if pacman and ghost are close, if they are it changes states
@@ -137,7 +137,7 @@ void check_proximity(Entities* all) {
     UINT16 pacman_x_index, pacman_y_index;
     UINT16 ghost_x_index, ghost_y_index;
     UINT16 x_distance, y_distance;
-
+    
     Ghost *ghosts[4];
     ghosts[0] = all->crying_ghost;
     ghosts[1] = all->awkward_ghost;
@@ -187,9 +187,7 @@ void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
     }
     ghost->state = new_state;
 }
-void end_game() {
 
-}
 
 /*************************************************************
 * Function: init_map_cells
@@ -253,13 +251,12 @@ void init_map_cells(){
     cell_map[12][20].has_pellet = FALSE;
     cell_map[12][21].has_pellet = FALSE;
 }
-/*********************
+/***************************************************
 *   A helper funtion for initializing the map within in 
 *   the loop from the calling function.
-*******************/
+****************************************************/
 void init_map_cells_helper(UCHAR8 direction_map[][40],int i, int j)
 {
-
     switch (direction_map[i][j]) {
             case '^': cell_map[i][j].crying_path = UP;         break;
             case 'v': cell_map[i][j].crying_path = DOWN;       break;
@@ -442,8 +439,10 @@ void set_occupied(bool set, int y_index, int x_index) {
     cell_map[y_index][x_index + 1].occupied     = set;
     cell_map[y_index + 1][x_index + 1].occupied = set;
 }
-/*Checks if two ghosts share an occupied region
-A ghost occupies 4 cells*/
+/****************************
+* Checks if two ghosts share an occupied region
+* A ghost occupies 4 cells
+*****************************/
 bool check_shared_occupied(Movement* entity1, Movement* entity2) {
     int i, j, k, l;
     int ghost1_y, ghost1_x, ghost2_y, ghost2_x;

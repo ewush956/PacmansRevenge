@@ -21,6 +21,7 @@ bool derender_awkward_flag = FALSE;
 bool derender_crying_flag = FALSE;
 bool derender_cyclops_flag = FALSE;
 
+
 char keyboard_buffer[256];         
 UCHAR8 head = 0;
 int tail = -1;

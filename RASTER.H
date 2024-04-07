@@ -47,4 +47,5 @@ void plot_screen(ULONG32* base, const ULONG32* bitmap);
 ULONG32* get_video_base();
 void set_video_base(ULONG32*);
 
+
 #endif
