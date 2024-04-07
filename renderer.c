@@ -74,49 +74,18 @@ void render_frame(ULONG32* base, Entities* entity) {
     int cyclops_x = cyclops->x_cell_index;
     int cyclops_y = cyclops->y_cell_index;
     
-
-    int crying_last_x = crying->last_last_x >> 4;
-    int crying_last_y = crying->last_last_y >> 4;
-    int moustache_last_x = moustache->last_last_x >> 4;
-    int moustache_last_y = moustache->last_last_y >> 4;
-    int awkward_last_x = awkward->last_last_x >> 4;
-    int awkward_last_y = awkward->last_last_y >> 4;
-    int cyclops_last_x = cyclops->last_last_x >> 4;
-    int cyclops_last_y = cyclops->last_last_y >> 4;
-
-
-    
-    /*awk->current_frame ^= 1; */
-/*
-    if (second_has_passed == TRUE) { 
-        render_timer((UCHAR8*)base); 
-        second_has_passed = FALSE;
-    }
-    */
     render_timer(base8);
     clear_entities(base, pacman->move, crying, moustache,
                    awkward, cyclops); 
 
     render_ghosts(base, entity);
     render_pacman(base, pacman);
-    /*
-    render_pellet(base8, crying_last_x, crying_last_y, crying->direction);
-    render_pellet(base8, moustache_last_x, moustache_last_y, moustache->direction);
-    render_pellet(base8, awkward_last_x, awkward_last_y, awkward->direction);
-    render_pellet(base8, cyclops_last_x, cyclops_last_y, cyclops->direction);
-    render_pellet(base8, pacman->move->x_cell_index - pacman->move->delta_x, pacman->move->y_cell_index - pacman->move->delta_y, pacman->move->direction);
-    
-*/
 
     render_pellet(base8, crying_x, crying_y, crying->direction);
     render_pellet(base8, moustache_x, moustache_y, moustache->direction);
     render_pellet(base8, awkward_x, awkward_y, awkward->direction);
     render_pellet(base8, cyclops_x, cyclops_y, cyclops->direction);
     render_pellet(base8, pacman->move->x_cell_index, pacman->move->y_cell_index, pacman->move->direction);
-    
-
-        
-
 }
 /*************************************************************
 * Function: render_pacman
@@ -134,8 +103,6 @@ void render_pacman(ULONG32* base32, Pacman* pacman) {
     UINT16 x = move->x;
     UINT16 y = move->y;
 
-    UINT16 last_x = move->last_x;
-    UINT16 last_y = move->last_y;
     UCHAR8 frame = pacman->current_frame;
     UCHAR8 direction = move->direction;
 
@@ -212,41 +179,12 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
     UCHAR8 pacman_cell_y = pacman.move->y_cell_index;
     UCHAR8 pacman_direction = pacman.move->direction;
 
-    UINT16 clear_x = ghost->move->last_last_x;
-    UINT16 clear_y = ghost->move->last_last_y;
-
     UCHAR8 ghost_cell_x = ghost->move->x_cell_index;
     UCHAR8 ghost_cell_y = ghost->move->y_cell_index;
 
     UCHAR8 ghost_direction = ghost->move->direction;
 
-    int tombstone_y = ghost->move->y;
-    int tombstone_x = ghost->move->x;
-
-    if (pacman.move->direction == UP && cell_map[pacman_cell_y + 1][pacman_cell_x].open_path == TRUE) {
-        set_deltas(pacman.move, 0, 1);
-        move_pacman(&pacman);
-        set_deltas(pacman.move, 0, -1);
-    }
-    else if (pacman.move->direction == DOWN && cell_map[pacman_cell_y - 1][pacman_cell_x].open_path == TRUE) {
-        set_deltas(pacman.move, 0, -1);
-        move_pacman(&pacman);
-        set_deltas(pacman.move, 0, 1);
-    }
-    else if (pacman.move->direction == LEFT && cell_map[pacman_cell_y][pacman_cell_x - 1].open_path == TRUE) {
-        set_deltas(pacman.move, -1, 0);
-        move_pacman(&pacman);
-        set_deltas(pacman.move, 1, 0);
-    }
-    else if (pacman.move->direction == RIGHT && cell_map[pacman_cell_y][pacman_cell_x + 1].open_path == TRUE) {
-        set_deltas(pacman.move, 1, 0);
-        move_pacman(&pacman);
-        set_deltas(pacman.move, -1, 0);
-    }
-
     switch (ghost_direction) {
-        case UP: break;
-        case LEFT: break;
         case DOWN: 
             if (cell_map[pacman_cell_y - 2][ghost_cell_x].open_path == TRUE) {
                 ghost->move->x = (ghost->move->x_cell_index << 4);
@@ -270,7 +208,6 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
             }
     }
     set_derender_ghost_flag(ghost, FALSE);
-    
 }
 /*************************************************************
 * Function: render_non_default_ghost
