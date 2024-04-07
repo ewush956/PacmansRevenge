@@ -4,7 +4,7 @@
 
 #include "TYPES.H"
 
-#define START_DELAY 7
+#define START_DELAY 6
 #define TRAP_28 28
 #define TRAP_70 70
 #define DISABLE 0xBF            
@@ -37,6 +37,6 @@ void update_mouse();
 void initialize_mouse();
 bool is_mouse_in_bounds();
 
-extern int seconds;
+/*extern int seconds;*/
 
 #endif

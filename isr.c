@@ -9,7 +9,8 @@
 #include "pacman.h"
 #include "input.h"
 
-int seconds = 0;
+/*int seconds = 0;*/
+
 SoundState wakaState = {0, 0};
 SoundState wakaNoise = {0, 0};
 SoundState killState = {0, 0};
@@ -37,6 +38,7 @@ typedef enum {
     MOUSE_DELTA_X,
     MOUSE_DELTA_Y
 }IKBDState;
+
 IKBDState ikbd_state = KEYBOARD_INPUT;              
 
 
@@ -55,9 +57,10 @@ Vector install_vector(int num, Vector vector)
 
 void do_vbl()
 {
-
+    ticks++;
+    time_now++;
     
-    if (/*seconds > START_DELAY &&*/ request_to_render == TRUE && state == PLAY)
+    if (seconds > START_DELAY && request_to_render == TRUE && state == PLAY)
     {
         if (end_game_flag == TRUE) {
             stop_sound();
@@ -66,7 +69,7 @@ void do_vbl()
 
         update_movement(&entity);
         update_current_frame(&entity, ticks);
-
+        
         if (kill_ghost_flag == TRUE) {
             if (play_sound(CHANNEL_C, ghost_kill_sound_cycle, GHOST_KILL_CYCLE_LENGTH, &killState) == TRUE)
                 kill_ghost_flag = FALSE;
@@ -95,21 +98,16 @@ void do_vbl()
                 single_waka_playing = TRUE;
                 play_sound(CHANNEL_A, waka_sound_cycle, WAKA_CYCLE_LENGTH, &wakaState);
             }
-        }        
+        }       
    }
 
     if (ticks == 70){
+        ticks = 0;
         seconds++;
         second_has_passed = TRUE;
-        ticks = 0;
     }
 
-    ticks++;
-    time_now++;
-
     request_to_render = TRUE; 
-   
-
 }
 
 void do_IKBD_isr()
@@ -156,7 +154,6 @@ void update_mouse()
     global_mouse_y += (int)((char)mouse_delta_y);
 
     
-
     if (global_mouse_x < 0){
         global_mouse_x = 0;
     }
@@ -193,11 +190,7 @@ bool is_mouse_in_bounds()
     }
 
     return FALSE;
-
-
 }
-
-
 void enqueue(SCANCODE code)
 {
     

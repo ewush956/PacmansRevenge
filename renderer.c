@@ -244,23 +244,15 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
         plot_bitmap_32(base32, move->x, move->y, tombstone, SPRITE_HEIGHT);
     }
 }
-/*BOTH FUNCTIONS BELOW ARE INCOMPLETE*/
+
 void render_gameover() {
-    /* Renderes game over screen, we arent sure how to do that yet.*/
+    
 }
 void render_timer(UCHAR8* base8) {
 
-
-    /*clear_letter(base8, TIMER_MS_X, 0);
-    clear_letter(base8, TIMER_LS_X, 0);*/
-    /*
-    clear_8(base8, TIMER_MS_X, 0, 16);
-    clear_8(base8, TIMER_LS_X, 0, 16);
+    plot_letter(base8, TIMER_MS_X, TIMER_Y, font, timer.MS_digit_ascii);
+    plot_letter(base8, TIMER_LS_X, TIMER_Y, font, timer.LS_digit_ascii);
     
-    plot_letter(base8, TIMER_MS_X, TIMER_Y, font, timer->MS_digit_ascii);
-    plot_letter(base8, TIMER_LS_X, TIMER_Y, font, timer->LS_digit_ascii);
-    */
-    print_num(base8, TIMER_MS_X, 4, font, timer.seconds_value);
 }
 void render_initial_timer(UCHAR8* base) {
 
@@ -300,6 +292,7 @@ void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
     
     clear_bitmap_32(base32, pacman->last_last_x, pacman->last_last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
+
     
 }
 /*

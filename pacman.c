@@ -19,7 +19,7 @@
 
 #include <osbind.h>
 #include <stdio.h>
-#include <linea.h>
+
 
 /************************* KNOWN BUGS ***************************
  * 
@@ -66,7 +66,6 @@ int main()
     int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
     long old_ssp;
-
     int orig_ipl;
     int orig_ssp;
     ULONG32* original         = get_video_base();
@@ -80,7 +79,7 @@ int main()
     initialize_mouse(); 
     render_mouse(base16);
     
-    while (state != QUIT  && input != ENTER && state != WIN)
+    while (state == MENU /*state != QUIT  && input != ENTER && state != WIN*/)
     {
         
         if (fill_level > 0)
@@ -104,28 +103,28 @@ int main()
 
         }
         if (request_to_render == TRUE)
-        {  
-            update_mouse();
+        {   
+          
+            update_mouse(); 
             restore_mouse_background(base32,splash,old_mouse_x,old_mouse_y); 
             render_mouse(base16);
             request_to_render = FALSE;
+ 
         } 
      }
 
-  
-  
-    /* add the lose screen as well */
-    if (state == WIN)
-    {
+
+    if (state == WIN){
         plot_screen(original, win_splash);
         end_game_flag = TRUE;
+        
     }
-    if (state == GAMEOVER)
-    {
+    if (state == GAMEOVER){
         plot_screen(original, lose_splash);
         end_game_flag = TRUE;
+        
     }
-   
+
     remove_custom_vectors();
 
     return 0;
@@ -142,9 +141,7 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
     SoundState  bassState   = {0, 0};
     UCHAR8*     base8       = (UCHAR8*)base32;
     UCHAR8*     back8       = (UCHAR8*)back_buffer_ptr;
-
     ULONG32     song_now, song_then, time_elapsed; 
-
     long old_ssp; 
     int  treble_song_length = PACMAN_INTRO_TREBLE_LENGTH;
     int  bass_song_length   = PACMAN_INTRO_BASS_LENGTH;
@@ -208,33 +205,31 @@ void game_loop()
     long old_ssp; 
     int orig_ipl;
     int orig_ssp;
-    
-
     ULONG32* base32          = (ULONG32*)get_video_base();
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
 
     initialize_game(base32, back_buffer_ptr, &entity);
     game_start = TRUE;
-    while (state != QUIT && state != WIN) 
+    
+    while (state == PLAY/*state != QUIT && state != WIN && state != GAMEOVER*/) 
     {
-        update_timer();
         if (fill_level > 0){
+
             orig_ssp = Super(0);                        /* mask all intrpts before enQing */
             orig_ipl = set_ipl(7);
             Super(orig_ssp);
 
             input = dequeue();
             process_keyboard_input(input);
-
+    
             orig_ssp = Super(0);
             set_ipl(orig_ipl);
             Super(orig_ssp);
+            
         }
-
         if (request_to_render == TRUE){  
-            /*page_flip(&base32,&back_buffer_ptr);*/
-
+          
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
 
@@ -243,7 +238,9 @@ void game_loop()
             Super(old_ssp);
             
             request_to_render = FALSE; 
-        }  
+        }
+        
+        update_timer();
         state = update_game_state(state, input, &entity);
     }
       
@@ -301,6 +298,10 @@ void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr)
 GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) {
 
     GAME_STATE state;
+    if (seconds >= ONE_MINUTE){
+        return GAMEOVER;
+    }
+
     if (input == ESC_BREAK)
     {
         state = QUIT;
@@ -312,26 +313,12 @@ GAME_STATE update_game_state(GAME_STATE new_state, UCHAR8 input, Entities* all) 
         all->cyclops_ghost->state == DEAD) {
         return WIN; 
     }
-    if (game_over_flag == TRUE) {
+
+    if (game_over_flag == TRUE || state == LOSE) {
         return GAMEOVER;
     }
 
     return new_state;
-    /*
-    GAME_STATE state;
-    if (input == '\033')
-    {
-        state = QUIT;
-        return state;
-    }
-    if (all->awkward_ghost->state == DEAD && 
-        all->crying_ghost->state == DEAD &&
-        all->moustache_ghost->state == DEAD &&
-        all->cyclops_ghost->state == DEAD) {
-        return WIN; 
-    }
-    return new_state;
-    */
 }
 
 /*******************************************************************
@@ -441,7 +428,7 @@ void initialize_sound(long* old_ssp, SoundState* trebleState, SoundState* bassSt
  *          returns TRUE if the song has finished.
  *****************************************************************/
 bool update_sound(long* old_ssp, ULONG32* time_then, SoundState* trebleState, SoundState* bassState, int treble_song_length, int bass_song_length, int* intro_duration) {
-    /*ULONG32 time_now = get_time();*/
+
     ULONG32 time_elapsed = time_now - *time_then;
     bool song_finished;
     int tempo = 5;
@@ -520,37 +507,16 @@ ULONG32* get_video_base()
     return (ULONG32*)combined_address;
 
 }
-/*****************************
-* A simple finite state machine 
-*  that handles keyboard input
-*
-*
-******************************/
-/*
-void process_keyboard_input(UCHAR8 input)
-{   
-    switch(state)
-    {   
-        case PLAY:
-            if (input == ESC_MAKE){
-                state = WAITING_FOR_ESC_BREAK;
-            } 
-            else{
-                set_input(entity.pacman,input);
-            }
-            break;
-        case WAITING_FOR_ESC_BREAK:
-            if (input == ESC_BREAK){
-                state = QUIT;
-            }
-            else{
-                state = PLAY;
-            }
-            break;
 
-        default:
-            break;
+void mask_interrupts_priority(int* orig_ssp, int* orig_ipl) {
+   
+    *orig_ssp = Super(0);
+    *orig_ipl = set_ipl(7);
+    Super(*orig_ssp);
+}
 
-    }
-}*/
-
+void unmask_interrupts_priority(int *orig_ssp, int *orig_ipl) {
+    *orig_ssp = Super(0);
+    set_ipl(*orig_ipl);
+    Super(*orig_ssp);
+}

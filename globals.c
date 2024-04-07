@@ -7,31 +7,32 @@
 
 bool request_to_render = FALSE;
 
-volatile ULONG32 time_now = 0;
-volatile UINT16 ticks = 0;
-volatile bool waka_playing = FALSE;
-volatile bool single_waka_playing = FALSE;
+int seconds = 0;
+ULONG32 time_now = 0;
+UINT16 ticks = 0;
+bool waka_playing = FALSE;
+bool single_waka_playing = FALSE;
 bool end_game_flag = FALSE;
-volatile bool game_over_flag = FALSE;
-volatile bool kill_ghost_flag = FALSE;
+bool game_over_flag = FALSE;
+bool kill_ghost_flag = FALSE;
 bool second_has_passed = FALSE;
 bool game_start = FALSE;
 
+/* ---- queue ---- */
 char keyboard_buffer[256];         
 UCHAR8 head = 0;
 int tail = -1;
 UCHAR8 fill_level = 0;
+/*--------------*/
 
+/* -- Mouse ---- */
 int global_mouse_x = MIDDLE_OF_SCREEN_X;
 int global_mouse_y = MIDDLE_OF_SCREEN_Y;
-
 int old_mouse_x;
 int old_mouse_y;
-
-
 bool left_button_pressed = FALSE;
 bool right_button_pressed = FALSE;
-
+/*-------------------*/
 
 /**************************************************************************
 * Declaration: Pacman pacman

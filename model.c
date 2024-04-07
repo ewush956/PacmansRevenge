@@ -594,6 +594,7 @@ void set_deltas(Movement* move, UINT16 dx, UINT16 dy) {
     move->delta_x = dx;
     move->delta_y = dy;
 }
+/*
 void update_current_frame(Entities* all, int clock) {
     Pacman* pacman = all->pacman;
 
@@ -621,7 +622,35 @@ void update_current_frame(Entities* all, int clock) {
             ghosts[i]->current_frame = (ghosts[i]->current_frame + 1) & 1;
 
         }
+    }
+}*/
+void update_current_frame(Entities* all, int clock) {
 
+    int i;
+    Pacman* pacman = all->pacman;
+    Ghost *ghosts[4];
+   
+    ghosts[0] = all->crying_ghost;
+    ghosts[1] = all->awkward_ghost;
+    ghosts[2] = all->cyclops_ghost;
+    ghosts[3] = all->moustache_ghost;
+
+    if (pacman->state == DEFAULT && ( (clock & 7) == 0 || (clock & 7) == 1)) {
+        pacman->current_frame = ((pacman->current_frame) + 1) & 7;
+    }
+    else if ( (clock & 7) == 0  || (clock & 7) == 1) {
+
+        pacman->current_frame += 1;
+        if (pacman->current_frame > 5) 
+            pacman->current_frame = 0;
+        }
+
+    for (i = 0; i < 4; i++) {
+
+        if (ghosts[i]->state == DEFAULT && ((clock & 7) == 0 || (clock & 7) == 1)) {
+            ghosts[i]->current_frame = (ghosts[i]->current_frame + 1) & 1;
+        }
     }
 }
+
 

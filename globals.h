@@ -20,6 +20,9 @@
 #define WIN ((UCHAR8)4)
 #define WAITING_FOR_ESC_BREAK ((UCHAR8)5)
 #define MENU ((UCHAR8)6)
+#define LOSE ((UCHAR8)7)
+
+extern int seconds;
 
 extern GAME_STATE state;
 
