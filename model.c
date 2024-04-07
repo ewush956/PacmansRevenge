@@ -550,7 +550,7 @@ void set_deltas(Movement* move, UINT16 dx, UINT16 dy) {
 }
 void update_current_frame(Entities* all, int clock) {
     Pacman* pacman = all->pacman;
-
+    
     Ghost *ghosts[4];
     int i;
     ghosts[0] = all->crying_ghost;
@@ -571,9 +571,8 @@ void update_current_frame(Entities* all, int clock) {
     
     for (i = 0; i < 4; i++) {
 
-        if (ghosts[i]->state == DEFAULT && (clock & 3) == 0) {
+        if (ghosts[i]->state == DEFAULT && ((clock & 3) == 0) || (clock & 3) == 1) {
             ghosts[i]->current_frame = (ghosts[i]->current_frame + 1) & 1;
-
         }
 
     }
