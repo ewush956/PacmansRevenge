@@ -198,7 +198,7 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
                 ghost->move->last_last_y = ghost->move->y;
             break;
         case RIGHT:
-            if (cell_map[ghost_cell_y][ghost_cell_x + 2].open_path == TRUE) {
+            /*if (cell_map[ghost_cell_y][ghost_cell_x + 2].open_path == TRUE) {*/
 
                 ghost->move->x = ((ghost->move->x_cell_index + 1)<< 4);
                 ghost->move->last_x = ghost->move->x;
@@ -207,7 +207,7 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
                 ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
                 ghost->move->last_y = ghost->move->y;
                 ghost->move->last_last_y = ghost->move->y;
-            }
+            /*}*/
             break;
     }
     set_derender_ghost_flag(ghost, FALSE);
@@ -317,14 +317,6 @@ void render_pellet(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, UCHA
 }
 void render_pellets(ULONG32* base32, Entities* all) {
     UCHAR8 *base8 = (UCHAR8*)base32;
-/*
-    render_pellet(base8, all->crying_ghost->move);
-    render_pellet(base8, all->moustache_ghost->move);
-    render_pellet(base8, all->awkward_ghost->move);
-    render_pellet(base8, all->cyclops_ghost->move);
-
-    render_pellet(base8, all->pacman->move);
-    */
 }
 void render_mouse(UINT16* base16)
 {

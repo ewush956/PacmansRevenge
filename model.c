@@ -80,7 +80,6 @@ void move_ghost (Ghost *ghost)
             align_axis(ghost_movement);
             return;
         }
-        
     } else {
         ghost_movement-> x += ghost_movement->delta_x;
         ghost_movement-> y += ghost_movement->delta_y;
@@ -532,20 +531,21 @@ void align_axis(Movement* entity) {
         }
 }
 void flip_direction(Movement* ghost) {
+    UCHAR8 direction = ghost->direction;
     if (ghost->delta_x == 0 && ghost->delta_y == 0) {
         return;
     }
-    if (ghost->direction == UP)
-        ghost->direction = DOWN;
+    if (direction == UP)
+        direction = DOWN;
 
-    else if (ghost->direction == DOWN)
-        ghost->direction = UP;
+    else if (direction == DOWN)
+        direction = UP;
 
-    else if (ghost->direction == LEFT)
-        ghost->direction = RIGHT;
+    else if (direction == LEFT)
+        direction = RIGHT;
 
     else 
-        ghost->direction = LEFT;
+        direction = LEFT;
 }
 void set_deltas(Movement* move, UINT16 dx, UINT16 dy) {
     move->delta_x = dx;
