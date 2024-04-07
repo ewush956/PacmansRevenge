@@ -176,9 +176,8 @@ L6:
 	rts
 _handle_pacman_collision:
 	link	a6,#-4
-	movem.l	d3/a3/a4/a5,-(a7)
+	movem.l	a3/a4/a5,-(a7)
 	move.l	10(a6),a4
-	move.l	#_cell_map,d3
 	lea	_kill_ghost,a5
 	;line	68
 	move.l	(a4),a0
@@ -212,28 +211,24 @@ L13:
 	bra	L14
 L15:
 	;line	74
-	move.l	d3,-(a7)
 	move.l	4(a4),-(a7)
 	jsr	(a5)
 	;line	74
 	bra	L14
 L16:
 	;line	75
-	move.l	d3,-(a7)
 	move.l	8(a4),-(a7)
 	jsr	(a5)
 	;line	75
 	bra	L14
 L17:
 	;line	76
-	move.l	d3,-(a7)
 	move.l	12(a4),-(a7)
 	jsr	(a5)
 	;line	76
 	bra	L14
 L18:
 	;line	77
-	move.l	d3,-(a7)
 	move.l	16(a4),-(a7)
 	jsr	(a5)
 L14:
@@ -245,16 +240,15 @@ L14:
 	sub.w	d0,(a3)
 L11:
 	;line	82
-	movem.l	-20(a6),d3/a3/a4/a5
+	movem.l	-16(a6),a3/a4/a5
 	unlk	a6
 	rts
 _handle_collisions:
 	link	a6,#-8
-	movem.l	d3/d4/d5/d6/a3/a4/a5,-(a7)
+	movem.l	d3/d4/d5/a3/a4/a5,-(a7)
 	move.l	8(a6),a3
-	move.l	#_cell_map,d5
 	lea	_kill_ghost,a4
-	moveq	#-1,d6
+	moveq	#-1,d5
 	lea	_check_shared_occupied,a5
 	;line	94
 	moveq	#6,d4
@@ -277,13 +271,12 @@ _handle_collisions:
 	jsr	(a5)
 	addq.l	#8,a7
 	ext.w	d0
-	cmp.w	d0,d6
+	cmp.w	d0,d5
 	bne	L19
 	;line	98
-	move.l	d5,-(a7)
 	move.l	8(a3),-(a7)
 	jsr	(a4)
-	addq.l	#8,a7
+	addq.l	#4,a7
 L19:
 	;line	100
 	move.l	12(a3),a0
@@ -292,13 +285,12 @@ L19:
 	jsr	(a5)
 	addq.l	#8,a7
 	ext.w	d0
-	cmp.w	d0,d6
+	cmp.w	d0,d5
 	bne	L20
 	;line	101
-	move.l	d5,-(a7)
 	move.l	12(a3),-(a7)
 	jsr	(a4)
-	addq.l	#8,a7
+	addq.l	#4,a7
 L20:
 	;line	103
 	move.l	16(a3),a0
@@ -307,13 +299,12 @@ L20:
 	jsr	(a5)
 	addq.l	#8,a7
 	ext.w	d0
-	cmp.w	d0,d6
+	cmp.w	d0,d5
 	bne	L21
 	;line	104
-	move.l	d5,-(a7)
 	move.l	16(a3),-(a7)
 	jsr	(a4)
-	addq.l	#8,a7
+	addq.l	#4,a7
 L21:
 	;line	106
 	move.l	4(a3),a0
@@ -322,14 +313,13 @@ L21:
 	jsr	(a5)
 	addq.l	#8,a7
 	ext.w	d0
-	cmp.w	d0,d6
+	cmp.w	d0,d5
 	bne	L22
 	;line	107
-	move.l	d5,-(a7)
 	move.l	4(a3),-(a7)
 	jsr	(a4)
 L22:
-	movem.l	-36(a6),d3/d4/d5/d6/a3/a4/a5
+	movem.l	-32(a6),d3/d4/d5/a3/a4/a5
 	unlk	a6
 	rts
 _set_input:

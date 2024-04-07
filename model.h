@@ -136,15 +136,17 @@ void move_pacman (Pacman *pacman);
 ObjectType check_pacman_collision(Entities* entity, UINT16 object_y_index, 
                                   UINT16 object_x_index, int y_delta, int x_delta);
 
-void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]);
+void init_map_cells();
+void init_map_cells_helper(UCHAR8 direction_map[][40],int i, int j);
+
 bool update_cell(Movement* entity, UCHAR8 state);
 void set_occupied(bool set, int y_index, int x_index); 
 bool check_shared_occupied(Movement* ghost1_move, Movement* ghost2_move);
 void update_cells(Entities* entity);
 void update_ghost_direction(Ghost* ghost, Pacman* pacman);
 bool check_valid_path(Movement* movement, UCHAR8 direction);
-void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]);
-void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index);
+void kill_ghost(Ghost* ghost);
+void add_wall_to_map(int y_cell_index, int x_cell_index);
 UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement);
 UCHAR8 get_alternate_direction(bool can_go_up, bool can_go_down, bool can_go_left, bool can_go_right, 
                                UINT16 ghost_x, UINT16 ghost_y, UINT16 pacman_x, UINT16 pacman_y);

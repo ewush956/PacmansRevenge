@@ -199,10 +199,7 @@ _initialize_game:
 	moveq	#0,d4
 	move.b	#-1,-63(a6)
 	;line	166
-	pea	_tile_map
-	pea	_cell_map
 	jsr	_init_map_cells
-	addq.l	#8,a7
 	;line	167
 	move.l	(a5),-(a7)
 	move.l	(a3),-(a7)

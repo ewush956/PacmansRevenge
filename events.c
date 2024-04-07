@@ -71,10 +71,10 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity) {
     case GHOST:
         switch (object_type)
         {
-        case GHOST_TYPE_CRYING:    kill_ghost(entity->crying_ghost, cell_map);    break;
-        case GHOST_TYPE_AWKWARD:   kill_ghost(entity->awkward_ghost, cell_map);   break;
-        case GHOST_TYPE_MOUSTACHE: kill_ghost(entity->moustache_ghost, cell_map); break; 
-        case GHOST_TYPE_CYCLOPS:   kill_ghost(entity->cyclops_ghost, cell_map);   break;
+        case GHOST_TYPE_CRYING:    kill_ghost(entity->crying_ghost);    break;
+        case GHOST_TYPE_AWKWARD:   kill_ghost(entity->awkward_ghost);   break;
+        case GHOST_TYPE_MOUSTACHE: kill_ghost(entity->moustache_ghost); break; 
+        case GHOST_TYPE_CYCLOPS:   kill_ghost(entity->cyclops_ghost);   break;
         }
         pacman->y -= pacman->delta_y;
         pacman->x -= pacman->delta_x;
@@ -95,16 +95,16 @@ void handle_collisions(Entities* entity) {
     handle_pacman_collision(collision_type, entity); 
 
     if (check_shared_occupied(pacman, entity->awkward_ghost->move) == TRUE)
-        kill_ghost(entity->awkward_ghost, cell_map);
+        kill_ghost(entity->awkward_ghost);
 
     if (check_shared_occupied(pacman, entity->moustache_ghost->move) == TRUE)
-        kill_ghost(entity->moustache_ghost, cell_map);
+        kill_ghost(entity->moustache_ghost);
 
     if (check_shared_occupied(pacman, entity->cyclops_ghost->move) == TRUE)
-        kill_ghost(entity->cyclops_ghost, cell_map);
+        kill_ghost(entity->cyclops_ghost);
 
     if (check_shared_occupied(pacman, entity->crying_ghost->move) == TRUE)
-        kill_ghost(entity->crying_ghost, cell_map);
+        kill_ghost(entity->crying_ghost);
 
 }
 void set_input(Pacman *pacman, char input)

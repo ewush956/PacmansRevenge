@@ -204,7 +204,7 @@ void end_game() {
 *          predefined offsets and its index. The open_path flag for each cell is set based on
 *          the corresponding tile_map value, indicating whether the path is open (TRUE) or blocked (FALSE).
 *************************************************************/
-void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE_LENGTH]){
+void init_map_cells(){
     int i, j;
     for (i=0; i < MAP_TILE_HEIGHT; i++){
         for(j=0; j < MAP_TILE_LENGTH; j ++){
@@ -241,30 +241,7 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
             } else {
                 cell_map[i][j].can_go_left = FALSE;
             }
-            switch (direction_map[i][j]) {
-                case '^': cell_map[i][j].crying_path = UP;         break;
-                case 'v': cell_map[i][j].crying_path = DOWN;       break;
-                case '<': cell_map[i][j].crying_path = LEFT;       break;
-                case '>': cell_map[i][j].crying_path = RIGHT;      break;
-            }
-            switch (direction_map2[i][j]) {
-                case '^': cell_map[i][j].cyclops_path = UP;     break;
-                case 'v': cell_map[i][j].cyclops_path = DOWN;   break;
-                case '<': cell_map[i][j].cyclops_path = LEFT;   break;
-                case '>': cell_map[i][j].cyclops_path = RIGHT;  break;
-            }
-            switch (direction_map3[i][j]) {
-                case '^': cell_map[i][j].awkward_path = UP;    break;
-                case 'v': cell_map[i][j].awkward_path = DOWN;  break;
-                case '<': cell_map[i][j].awkward_path = LEFT;  break;
-                case '>': cell_map[i][j].awkward_path = RIGHT; break;
-            }
-            switch (direction_map4[i][j]) {
-                case '^': cell_map[i][j].moustache_path = UP;    break;
-                case 'v': cell_map[i][j].moustache_path = DOWN;  break;
-                case '<': cell_map[i][j].moustache_path = LEFT;  break;
-                case '>': cell_map[i][j].moustache_path = RIGHT; break;
-            }
+             init_map_cells_helper(direction_map,i,j);
         }
     }
     cell_map[10][17].has_pellet = FALSE;
@@ -278,6 +255,38 @@ void init_map_cells(Cell cell_map[][MAP_TILE_LENGTH], UINT16 tile_map[][MAP_TILE
 
     cell_map[12][20].has_pellet = FALSE;
     cell_map[12][21].has_pellet = FALSE;
+}
+/*********************
+*   A helper funtion for initializing the map within in 
+*   the loop from the calling function.
+*******************/
+void init_map_cells_helper(UCHAR8 direction_map[][40],int i, int j)
+{
+
+    switch (direction_map[i][j]) {
+            case '^': cell_map[i][j].crying_path = UP;         break;
+            case 'v': cell_map[i][j].crying_path = DOWN;       break;
+            case '<': cell_map[i][j].crying_path = LEFT;       break;
+            case '>': cell_map[i][j].crying_path = RIGHT;      break;
+        }
+        switch (direction_map2[i][j]) {
+            case '^': cell_map[i][j].cyclops_path = UP;     break;
+            case 'v': cell_map[i][j].cyclops_path = DOWN;   break;
+            case '<': cell_map[i][j].cyclops_path = LEFT;   break;
+            case '>': cell_map[i][j].cyclops_path = RIGHT;  break;
+        }
+        switch (direction_map3[i][j]) {
+            case '^': cell_map[i][j].awkward_path = UP;    break;
+            case 'v': cell_map[i][j].awkward_path = DOWN;  break;
+            case '<': cell_map[i][j].awkward_path = LEFT;  break;
+            case '>': cell_map[i][j].awkward_path = RIGHT; break;
+        }
+        switch (direction_map4[i][j]) {
+            case '^': cell_map[i][j].moustache_path = UP;    break;
+            case 'v': cell_map[i][j].moustache_path = DOWN;  break;
+            case '<': cell_map[i][j].moustache_path = LEFT;  break;
+            case '>': cell_map[i][j].moustache_path = RIGHT; break;
+        }
 }
 /*************************************************************
 * Function: update_cells
@@ -470,7 +479,7 @@ bool check_shared_occupied(Movement* entity1, Movement* entity2) {
 *          and adds a wall (tombstone) to the map at the ghost's last position,
 *          effectively removing the ghost from play and altering the map.
 *************************************************************/
-void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
+void kill_ghost(Ghost* ghost) {
     int y_cell_index, x_cell_index;
     ghost->state = DEAD;
     /*
@@ -484,7 +493,7 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     y_cell_index = ghost->move->y_cell_index;
     x_cell_index = ghost->move->x_cell_index;
 
-    add_wall_to_map(cell_map, y_cell_index, x_cell_index);
+    add_wall_to_map(y_cell_index, x_cell_index);
     play_kill_ghost_sound();
 }
 /*************************************************************
@@ -497,7 +506,7 @@ void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
 *          in the game map to indicate it is not an open path, effectively
 *          making it a wall. This is used to dynamically alter the map's layout.
 *************************************************************/
-void add_wall_to_map(Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH], int y_cell_index, int x_cell_index) {
+void add_wall_to_map(int y_cell_index, int x_cell_index) {
     cell_map[y_cell_index][x_cell_index].open_path  = FALSE;
     cell_map[y_cell_index][x_cell_index].has_pellet = FALSE;
 
