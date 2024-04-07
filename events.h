@@ -19,10 +19,8 @@ extern const UCHAR8 DIRECTION_ARRAY[4];
 
 void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
-/* void handle_wall_collision(Movement* entity); */
 void handle_wall_collision(Movement* ghost, UCHAR8 state, UCHAR8 path_number);
 void handle_collisions(Entities* entity);
-ObjectType process_ghost_collision(Entities* all);
 void set_input(Pacman *pacman, char input);
 
 UCHAR8 get_valid_paths(Movement *ghost);
