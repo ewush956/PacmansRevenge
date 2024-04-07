@@ -473,19 +473,17 @@ bool check_shared_occupied(Movement* entity1, Movement* entity2) {
 void kill_ghost(Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
     int y_cell_index, x_cell_index;
     ghost->state = DEAD;
-    /*
-    ghost->move->x = ghost->move->x_cell_index * PIXELS_PER_CELL;
-    ghost->move->y = ghost->move->y_cell_index * PIXELS_PER_CELL + Y_PIXEL_OFFSET;
-    */
+
     ghost->move->x = (ghost->move->x_cell_index << 4);
     ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
     set_deltas(ghost->move, 0, 0);
 
     y_cell_index = ghost->move->y_cell_index;
     x_cell_index = ghost->move->x_cell_index;
-
+    
     add_wall_to_map(cell_map, y_cell_index, x_cell_index);
-    play_kill_ghost_sound();
+    if (kill_ghost_flag == FALSE)
+        play_kill_ghost_sound();
 }
 /*************************************************************
 * Function: add_wall_to_map
