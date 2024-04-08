@@ -157,7 +157,6 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 
     init_map_cells();    
     clear_and_render_maps(base32, back_buffer_ptr);
-    /*render_map(back_buffer_ptr, tile_map);*/
     clear_and_render_entities(base32, back_buffer_ptr, entity);
     set_first_movements(base32, base8, entity);
     initialize_sound(&old_ssp, &trebleState, &bassState);
@@ -186,7 +185,6 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
             }
         }
     }
-    state = PLAY;
 }
 /*******************************************************************
  * Function: game_loop
@@ -195,20 +193,25 @@ void initialize_game(ULONG32* base32, ULONG32* back_buffer_ptr, Entities* entity
 void game_loop() 
 {
     int  i;
+
 	UCHAR8 input;
+
     int  waka_repetitions    = 10; 
     int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
     long old_ssp; 
     int orig_ipl;
     int orig_ssp;
     
-
     ULONG32* base32          = (ULONG32*)get_video_base();
     ULONG32* original        = get_video_base();
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]); 
 
     initialize_game(base32, back_buffer_ptr, &entity);
     game_start = TRUE;
+    state = PLAY;
+    /*clear_and_render_entities(base32, back_buffer_ptr, &entity);*/
+    /*render_frame(back_buffer_ptr, &entity);*/
+    render_frame(base32, &entity);
     while (state != QUIT && state != WIN && state != GAMEOVER) 
     {
         if (fill_level > 0){
