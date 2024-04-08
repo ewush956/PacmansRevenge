@@ -6,6 +6,9 @@
 #include "TYPES.H"
 #include "font.h"
 #include "bitmaps.h"
+#include "globals.h"
+#include "effects.h"
+#include "events.h"
 
 #include <stdio.h>
 
@@ -47,6 +50,7 @@ void test_arbitrary_letter(UCHAR8* base);
 
 int main()
 {
+	
 	Entities entity = {
 		&pacman,
 		&crying_ghost,
@@ -54,6 +58,7 @@ int main()
 		&awkward_ghost,
 		&cyclops_ghost
 	};
+	
 	/*
 	Pacman* pac = entity.pacman;
 	Ghost* moustache = entity.moustache_ghost;
@@ -76,7 +81,6 @@ int main()
 	render_frame(base32, &entity);
 	next_test(base32);
 
-	refresh_screen(base32, &entity);
 	test_pacman_movement(base32, base8, &entity, 15);
 
 	entity.pacman->move->direction = RIGHT;
@@ -102,14 +106,8 @@ int main()
 	entity.crying_ghost->move->delta_y  = -1;
 	entity.crying_ghost->move->direction = UP;
 	test_ghost_movement(base32, base8, &entity, entity.crying_ghost, 32+16);
-
-	kill_ghost(entity.moustache_ghost, cell_map);
 	
 	de_render_ghost(base32, entity.moustache_ghost, cell_map);
-	next_test(base32);
-	de_render_ghost(base32, entity.cyclops_ghost, cell_map);
-	de_render_ghost(base32, entity.crying_ghost, cell_map);
-	de_render_ghost(base32, entity.awkward_ghost, cell_map);
 	next_test(base32);
 	
 
@@ -144,36 +142,29 @@ void next_test(ULONG32* base) {
 /*Displays all prites within allowable range at aribitrary (x,y)*/
 void test_pacman_movement(ULONG32* base, UCHAR8* base8, Entities* entity, int stop) {
 	int i;
-	UINT16 cell_x = entity->pacman->x_cell_index;
-	UINT16 cell_y = entity->pacman->y_cell_index;
+	UINT16 cell_x = entity->pacman->move->x_cell_index;
+	UINT16 cell_y = entity->pacman->move->y_cell_index;
 
 	for (i=0; i < stop; i++) {
-		clear_bitmap_32(base, entity->pacman->x, entity->pacman->y, SPRITE_HEIGHT); 
+		clear_bitmap_32(base, entity->pacman->move->x, entity->pacman->move->y, SPRITE_HEIGHT); 
 		move_pacman(entity->pacman);
 		update_cells(entity);
-		debug_print(base8, 0, 0, entity->pacman->x_cell_index);
+		debug_print(base8, 0, 0, entity->pacman->move->x_cell_index);
 		render_frame(base, entity);
 		
 		if (i % 4 == 0) {
 			entity->pacman->current_frame = ((entity->pacman->current_frame) + 1) % 6;
 		}
-		/*
-		if (entity->pacman->move->x_cell_index != cell_x) {
-			next_test(base);
-			cell_x = entity->pacman->x_cell_index;
-		}
-		*/
 		if (entity->pacman->move->y_cell_index  != cell_y && entity->pacman->move->delta_x == 0) {
 			next_test(base);
-			cell_y = entity->pacman->y_cell_index;
+			cell_y = entity->pacman->move->y_cell_index;
 		}
-		/*Something similar to this can be used for collision checking?*/
 	}
 }
 void test_ghost_movement(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* ghost, int stop) {
 	int i;
-	int cell_x = ghost->x_cell_index;
-	int cell_y = ghost->y_cell_index;
+	int cell_x = ghost->move->x_cell_index;
+	int cell_y = ghost->move->y_cell_index;
 
 	const char strx[] = "X: ";
 	const char stry[] = "Y: ";	
@@ -186,7 +177,7 @@ void test_ghost_movement(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* 
 
 	for (i=0; i < stop; i++) {
 		int j;
-		clear_bitmap_32(base, ghost->x, ghost->y, SPRITE_HEIGHT); 
+		clear_bitmap_32(base, ghost->move->x, ghost->move->y, SPRITE_HEIGHT); 
 		move_ghost(ghost);
 		update_cells(entity);
 		
@@ -195,9 +186,9 @@ void test_ghost_movement(ULONG32* base, UCHAR8* base8, Entities* entity, Ghost* 
 		}
 
 		plot_string(base8, 0, 0, font, strx);
-		debug_print(base8, 4*LETTER_WIDTH, 0, ghost->x_cell_index);
+		debug_print(base8, 4*LETTER_WIDTH, 0, ghost->move->x_cell_index);
 		plot_string(base8, 8*LETTER_WIDTH, 0, font, stry);
-		debug_print(base8, 12*LETTER_WIDTH, 0, ghost->y_cell_index);
+		debug_print(base8, 12*LETTER_WIDTH, 0, ghost->move->y_cell_index);
 		render_frame(base, entity);
 		if (i % 8 == 0) {
 			ghost->current_frame = ((ghost->current_frame) + 1) % 2;
