@@ -224,12 +224,18 @@ void game_loop()
         }
 
         if (request_to_render == TRUE){  
+            
+            update_movement(&entity);
+            update_current_frame(&entity, ticks);
+            
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
 
             old_ssp = Super(0); 
             set_video_base(base32);
             Super(old_ssp);
+
+
             request_to_render = FALSE; 
         } 
         update_timer();
