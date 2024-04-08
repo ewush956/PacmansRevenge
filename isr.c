@@ -60,8 +60,10 @@ void do_vbl()
     time_now++;
     
     if (request_to_render == TRUE && state == PLAY) { 
+        
         update_movement(&entity);
         update_current_frame(&entity, ticks);
+        
         advance_sound(); 
     }
     if (ticks == 70){

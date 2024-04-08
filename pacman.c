@@ -224,10 +224,6 @@ void game_loop()
         }
 
         if (request_to_render == TRUE){  
-
-            update_movement(&entity);
-            update_current_frame(&entity, ticks);
-
             render_frame(back_buffer_ptr, &entity);
             swap_buffers(&base32, &back_buffer_ptr);
 

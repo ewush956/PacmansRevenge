@@ -246,7 +246,8 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
     }
     */
     else {
-        /*clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);*/
+        /*clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);*/
+        clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);
         /*clear_bitmap_32(base32, move->last_last_x, move->last_last_y, SPRITE_HEIGHT);*/
         plot_bitmap_32(base32, move->x, move->y, tombstone, SPRITE_HEIGHT);
     }
