@@ -36,8 +36,6 @@ void process_keyboard_input(UCHAR8 input)
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
-    /*set_deltas(movement, 0, 0); */   
-    
 	switch(input)
 	{
 		case W_MAKE: 
@@ -60,6 +58,4 @@ void set_input(Pacman *pacman, char input)
             movement -> direction = RIGHT;
 			break;
 	}
-    
-
 }

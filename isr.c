@@ -26,10 +26,6 @@ Vector orig_vector70;
 UCHAR8 mouse_delta_x;
 UCHAR8 mouse_delta_y;
 UCHAR8 mouse_button = 0;
-/*
-int old_mouse_x;
-int old_mouse_y;
-*/
 
 typedef enum {
 
@@ -59,21 +55,14 @@ void do_vbl()
     ticks++;
     time_now++;
     
-    if (request_to_render == TRUE && state == PLAY) { 
-        /*
-        update_movement(&entity);
-        update_current_frame(&entity, ticks);
-        */
-        advance_sound(); 
-    }
-    if (ticks == 70){
+    if (request_to_render == TRUE && state == PLAY) { advance_sound(); }
+    if (ticks == 70) {
         seconds++;
         second_has_passed = TRUE;
         ticks = 0;
     }
     request_to_render = TRUE; 
 }
-
 void do_IKBD_isr()
 {   
     SCANCODE code = *IKBD_RDR;
