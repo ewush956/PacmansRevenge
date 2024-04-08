@@ -198,18 +198,23 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
                 ghost->move->last_last_y = ghost->move->y;
             break;
         case RIGHT:
-        /*
-            if (pacman_cell_y < ghost_cell_y) {
-                ghost->move->x = ((ghost->move->x_cell_index + 2)<< 4);
+        
+            if (pacman_cell_y > ghost_cell_y) {
+                /*printf("Pacman is above ghost\n");*/
+                
+                ghost->move->x = ((ghost->move->x_cell_index + 1)<< 4);
+                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
+                /*
                 ghost->move->last_x = ghost->move->x;
                 ghost->move->last_last_x = ghost->move->x;
 
-                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
                 ghost->move->last_y = ghost->move->y;
                 ghost->move->last_last_y = ghost->move->y;
+                */
+                
             }
-            */
-            if (cell_map[ghost_cell_y][ghost_cell_x + 2].open_path == TRUE) {
+            
+            else if (cell_map[ghost_cell_y][ghost_cell_x + 2].open_path == TRUE) {
 
                 ghost->move->x = ((ghost->move->x_cell_index + 1)<< 4);
                 ghost->move->last_x = ghost->move->x;
@@ -266,19 +271,8 @@ void render_initial_timer(UCHAR8* base) {
 
     int start_x = 280;
     int y = 4;
-/*
-    plot_string(base, start_x, y, font, "Time: 60");
-    */
+
     plot_string(base, start_x, y, font, "Time: 99\0");
-/*    plot_letter(base, start_x, y, font, 'T');
-    plot_letter(base, start_x + LETTER_WIDTH, y, font, 'i');
-    plot_letter(base, start_x + (LETTER_WIDTH * 2), y, font, 'm');
-    plot_letter(base, start_x + (LETTER_WIDTH * 3), y, font, 'e');
-    plot_letter(base, start_x + (LETTER_WIDTH * 4), y, font, ':');
-    plot_letter(base, start_x + (LETTER_WIDTH * 5), y, font, ' ');
-    plot_letter(base, start_x + (LETTER_WIDTH * 6), y, font, '6');
-    plot_letter(base, start_x + (LETTER_WIDTH * 7), y, font, '0');
-    */
 }
 /********************************************************************
 * Clears the previous positions of entities from the specified base buffer.**
@@ -298,12 +292,9 @@ void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
     clear_bitmap_32(base32, crying->last_last_x, crying->last_last_y, SPRITE_HEIGHT);
     
     clear_bitmap_32(base32, pacman->last_last_x, pacman->last_last_y, SPRITE_HEIGHT);
-    clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);
-    
+    clear_bitmap_32(base32, pacman->last_x, pacman->last_y, SPRITE_HEIGHT);    
 }
-/*
-void render_pellet(UCHAR8* base8, Movement* move) {
-*/
+
 void render_pellet(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, UCHAR8 direction) {
 
 
