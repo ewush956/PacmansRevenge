@@ -96,11 +96,11 @@ L4:
 	cmp.w	d0,d7
 	bne	L5
 	;line	96
-	clr.b	_request_to_render
-	;line	97
 	move.l	d3,-(a7)
 	jsr	_clear_screen_q
 	addq.l	#4,a7
+	;line	97
+	clr.b	_request_to_render
 	;line	98
 	jsr	_game_loop
 L5:

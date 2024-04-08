@@ -93,8 +93,8 @@ int main()
 
         if (left_button_pressed == TRUE)
         {
-            request_to_render = FALSE;
             clear_screen_q(base32);
+            request_to_render = FALSE;
             game_loop();
 
         }
