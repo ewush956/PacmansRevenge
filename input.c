@@ -2,6 +2,7 @@
 #include "TYPES.H"
 #include "events.h"
 #include "globals.h"
+#include "input.h"
 
 
 /*****************************
@@ -34,4 +35,37 @@ void process_keyboard_input(UCHAR8 input)
             break;
 
     }
+}
+void set_input(Pacman *pacman, char input)
+{
+    Movement* movement = pacman->move;
+    set_deltas(movement, 0, 0);    
+	switch(input)
+	{
+		case W_MAKE: 
+            set_deltas(movement, 0, -1); 
+            movement->direction = UP;     
+            break;	
+
+		case A_MAKE: 
+            set_deltas(movement, -1, 0);
+            movement -> direction = LEFT;
+			break;
+				
+		case S_MAKE: 
+            set_deltas(movement, 0, 1);
+            movement -> direction = DOWN;
+			break;
+
+		case D_MAKE: 
+            set_deltas(movement, 1, 0);
+            movement -> direction = RIGHT;
+			break;
+
+		default:
+            set_deltas(movement, 0, 0);	
+			break;
+	}
+    
+
 }

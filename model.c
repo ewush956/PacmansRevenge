@@ -3,7 +3,6 @@
 #include "bitmaps.h"
 #include "effects.h"
 #include "globals.h"
-#include <stdio.h>
 
 /*************************************************************
 * Declaration: Cell cell_map[MAP_TILE_HEIGHT][MAP_TILE_LENGTH]

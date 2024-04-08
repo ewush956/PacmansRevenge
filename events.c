@@ -85,39 +85,7 @@ void handle_collisions(Entities* entity) {
         kill_ghost(entity->crying_ghost);
 
 }
-void set_input(Pacman *pacman, char input)
-{
-    Movement* movement = pacman->move;
-    set_deltas(movement, 0, 0);    
-	switch(input)
-	{
-		case W_MAKE: 
-            set_deltas(movement, 0, -1); 
-            movement->direction = UP;     
-            break;	
 
-		case A_MAKE: 
-            set_deltas(movement, -1, 0);
-            movement -> direction = LEFT;
-			break;
-				
-		case S_MAKE: 
-            set_deltas(movement, 0, 1);
-            movement -> direction = DOWN;
-			break;
-
-		case D_MAKE: 
-            set_deltas(movement, 1, 0);
-            movement -> direction = RIGHT;
-			break;
-
-		default:
-            set_deltas(movement, 0, 0);	
-			break;
-	}
-    
-
-}
 /*******************************************
  * Function: get_valid_paths
  * Purpose: Returns the number of valid paths a ghost can take in a cell

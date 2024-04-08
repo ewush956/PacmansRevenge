@@ -137,8 +137,6 @@ void update_mouse()
         mouse_button = 0;
     }
  
-
- 
     mouse_delta_x = 0;
     mouse_delta_y = 0;
 }
