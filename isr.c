@@ -48,8 +48,10 @@ Vector install_vector(int num, Vector vector)
 
     return orig;
 }
-
-
+/*************************************************************
+ * Function: do_vbl
+ * Purpose:  Handles the VBL interrupt via trap #28
+ *************************************************************/
 void do_vbl()
 {
     ticks++;
