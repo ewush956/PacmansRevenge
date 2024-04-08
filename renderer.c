@@ -186,6 +186,7 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
 
     switch (ghost_direction) {
         case DOWN: 
+        /*
                 ghost->move->x = (ghost->move->x_cell_index << 4);
                 ghost->move->last_x = ghost->move->x;
                 ghost->move->last_last_x = ghost->move->x;
@@ -196,6 +197,9 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
             }
                 ghost->move->last_y = ghost->move->y;
                 ghost->move->last_last_y = ghost->move->y;
+                */
+            ghost->move->y = ((ghost->move->y_cell_index + 2) << 4);
+            ghost->move->x = (ghost->move->x_cell_index << 4);
             break;
         case RIGHT:
         
