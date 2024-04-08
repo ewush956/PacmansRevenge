@@ -124,18 +124,20 @@ void eat_pellet(Movement* pacman) {
 }
 
 
+/****
+*
+****/
 void reset_pacman()
 {
-    /*if (cell_map[19][21].occupied == FALSE)
-    {}*/
-        pacman.move->last_x = pacman.move->x;
-        pacman.move->last_y = pacman.move->y;
-       
-        pacman.move->last_last_x = pacman.move->last_x;
-        pacman.move->last_last_y = pacman.move->last_y;
 
-        pacman.move->x = PIXELS_PER_CELL * 19;
-        pacman.move->y = PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET;
+    pacman.move->last_x = pacman.move->x;
+    pacman.move->last_y = pacman.move->y;
+    
+    pacman.move->last_last_x = pacman.move->last_x;
+    pacman.move->last_last_y = pacman.move->last_y;
+
+    pacman.move->x = PIXELS_PER_CELL * 19;
+    pacman.move->y = PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET;
     
 
 }

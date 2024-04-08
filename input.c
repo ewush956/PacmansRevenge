@@ -3,7 +3,7 @@
 #include "events.h"
 #include "globals.h"
 #include "input.h"
-
+#include "isr.h"
 
 /*****************************
 * A simple finite state machine 
@@ -15,16 +15,17 @@ void process_keyboard_input(UCHAR8 input)
     switch(state)
     {   
         case PLAY:
-            if (input == ESC_MAKE){
+            if (input == ESC_MAKE)
                 state = WAITING_FOR_ESC_BREAK;
-            } 
             else{
-                set_input(entity.pacman,input);
-                if (input == ENTER)
+                set_input(entity.pacman,input);    
+                if (input == ENTER && (pacman.move->delta_x == 0 && pacman.move->delta_y == 0))
+                {    
                     reset_pacman();
+                    
+                }
             }
             break;
-            
         case WAITING_FOR_ESC_BREAK:
             if (input == ESC_BREAK){
                 state = QUIT;
@@ -38,7 +39,7 @@ void process_keyboard_input(UCHAR8 input)
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
-    set_deltas(movement, 0, 0);    
+    /*set_deltas(movement, 0, 0); */   
     
 	switch(input)
 	{
@@ -60,14 +61,6 @@ void set_input(Pacman *pacman, char input)
 		case D_MAKE: 
             set_deltas(movement, 1, 0);
             movement -> direction = RIGHT;
-			break;
-
-        case ENTER:
-            set_deltas(movement,0,0);
-            break;
-
-		default:
-            set_deltas(movement, 0, 0);	
 			break;
 	}
     
