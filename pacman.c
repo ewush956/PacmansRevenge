@@ -18,8 +18,7 @@
 #include "lose_scr.h"
 
 #include <osbind.h>
-#include <stdio.h>
-#include <linea.h>
+
 
 /************************* KNOWN BUGS ***************************
  * 

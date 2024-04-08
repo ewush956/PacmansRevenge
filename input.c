@@ -18,13 +18,11 @@ void process_keyboard_input(UCHAR8 input)
             if (input == ESC_MAKE){
                 state = WAITING_FOR_ESC_BREAK;
             } 
-            else if (input == ENTER)
-            {
-                reset_pacman();
-            }
-            else
+            else{
                 set_input(entity.pacman,input);
-            
+                if (input == ENTER)
+                    reset_pacman();
+            }
             break;
             
         case WAITING_FOR_ESC_BREAK:
