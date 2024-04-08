@@ -19,11 +19,8 @@ void process_keyboard_input(UCHAR8 input)
                 state = WAITING_FOR_ESC_BREAK;
             else{
                 set_input(entity.pacman,input);    
-                if (input == ENTER && (pacman.move->delta_x == 0 && pacman.move->delta_y == 0))
-                {    
+                if (input == ENTER && (pacman.move->delta_x == pacman.move->delta_y)) 
                     reset_pacman();
-                    
-                }
             }
             break;
         case WAITING_FOR_ESC_BREAK:
