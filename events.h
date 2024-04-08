@@ -18,7 +18,7 @@ void handle_pacman_collision(ObjectType object_type, Entities* entity);
 void handle_ghost_collision(Movement* ghost1, Movement* ghost2);
 void handle_wall_collision(Movement* ghost, UCHAR8 state, UCHAR8 path_number);
 void handle_collisions(Entities* entity);
-
+void reset_pacman();
 
 UCHAR8 get_valid_paths(Movement *ghost);
 void eat_pellet(Movement* pacman);

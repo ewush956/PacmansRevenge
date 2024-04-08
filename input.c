@@ -18,10 +18,15 @@ void process_keyboard_input(UCHAR8 input)
             if (input == ESC_MAKE){
                 state = WAITING_FOR_ESC_BREAK;
             } 
-            else{
-                set_input(entity.pacman,input);
+            else if (input == ENTER)
+            {
+                reset_pacman();
             }
+            else
+                set_input(entity.pacman,input);
+            
             break;
+            
         case WAITING_FOR_ESC_BREAK:
             if (input == ESC_BREAK){
                 state = QUIT;
@@ -30,16 +35,13 @@ void process_keyboard_input(UCHAR8 input)
                 state = PLAY;
             }
             break;
-            
-        default:
-            break;
-
     }
 }
 void set_input(Pacman *pacman, char input)
 {
     Movement* movement = pacman->move;
     set_deltas(movement, 0, 0);    
+    
 	switch(input)
 	{
 		case W_MAKE: 
@@ -61,6 +63,10 @@ void set_input(Pacman *pacman, char input)
             set_deltas(movement, 1, 0);
             movement -> direction = RIGHT;
 			break;
+
+        case ENTER:
+            set_deltas(movement,0,0);
+            break;
 
 		default:
             set_deltas(movement, 0, 0);	

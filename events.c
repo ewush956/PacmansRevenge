@@ -123,3 +123,14 @@ void handle_ghost_collision(Movement* ghost1, Movement* ghost2) {
 void eat_pellet(Movement* pacman) {
     cell_map[pacman->y_cell_index][pacman->x_cell_index].has_pellet = FALSE;
 }
+
+
+void reset_pacman()
+{
+    /*if (cell_map[19][21].occupied == FALSE)
+    {}*/
+        pacman.move->x = PIXELS_PER_CELL * 19;
+        pacman.move->y = PIXELS_PER_CELL * 21 + Y_PIXEL_OFFSET;
+    
+
+}
