@@ -1,4 +1,4 @@
-all: pacman tst_rend
+all: pacman tst_rend tst_rast
 
 pacman: pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o psg.o music.o effects.o isr.o isr_asm.o globals.o input.o win_scr.o lose_scr.o splash.o                             
 	cc68x -g pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o psg.o music.o effects.o isr.o isr_asm.o globals.o input.o win_scr.o lose_scr.o splash.o -o pacman
@@ -63,11 +63,11 @@ tst_rend: tst_rend.o renderer.o raster.o font.o bitmaps.o model.o events.o rast_
 tst_rend.o: tst_rend.c raster.h font.h bitmaps.h model.h renderer.h events.h globals.h effects.h
 	cc68x -g -c tst_rend.c
 
-# tst_rast: tst_rast.o raster.o font.o bitmaps.o rast_asm.o
-# 	cc68x -g tst_rast.o raster.o font.o bitmaps.o rast_asm.o -o tst_rast
+tst_rast: tst_rast.o raster.o font.o bitmaps.o rast_asm.o
+	cc68x -g tst_rast.o raster.o font.o bitmaps.o rast_asm.o -o tst_rast
 
-# tst_rast.o: tst_rast.c raster.h font.h bitmaps.h
-# 	cc68x -g -c tst_rast.c
+tst_rast.o: tst_rast.c raster.h font.h bitmaps.h
+	cc68x -g -c tst_rast.c
 
 
 # tst_snd: tst_snd.o psg.o music.o effects.o
