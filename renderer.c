@@ -190,7 +190,7 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
                 ghost->move->last_x = ghost->move->x;
                 ghost->move->last_last_x = ghost->move->x;
             if (cell_map[ghost_cell_y - 2][ghost_cell_x].open_path == TRUE) {
-                ghost->move->y = ((ghost->move->y_cell_index + 2) << 4);
+                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
             } else {
                 ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
             }
@@ -198,7 +198,18 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
                 ghost->move->last_last_y = ghost->move->y;
             break;
         case RIGHT:
-            /*if (cell_map[ghost_cell_y][ghost_cell_x + 2].open_path == TRUE) {*/
+        /*
+            if (pacman_cell_y < ghost_cell_y) {
+                ghost->move->x = ((ghost->move->x_cell_index + 2)<< 4);
+                ghost->move->last_x = ghost->move->x;
+                ghost->move->last_last_x = ghost->move->x;
+
+                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
+                ghost->move->last_y = ghost->move->y;
+                ghost->move->last_last_y = ghost->move->y;
+            }
+            */
+            if (cell_map[ghost_cell_y][ghost_cell_x + 2].open_path == TRUE) {
 
                 ghost->move->x = ((ghost->move->x_cell_index + 1)<< 4);
                 ghost->move->last_x = ghost->move->x;
@@ -207,7 +218,7 @@ void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LEN
                 ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
                 ghost->move->last_y = ghost->move->y;
                 ghost->move->last_last_y = ghost->move->y;
-            /*}*/
+            }
             break;
     }
     set_derender_ghost_flag(ghost, FALSE);
@@ -235,7 +246,7 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
     }
     */
     else {
-        clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);
+        /*clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);*/
         /*clear_bitmap_32(base32, move->last_last_x, move->last_last_y, SPRITE_HEIGHT);*/
         plot_bitmap_32(base32, move->x, move->y, tombstone, SPRITE_HEIGHT);
     }
@@ -279,7 +290,6 @@ void render_initial_timer(UCHAR8* base) {
 *******************************************************************/
 void clear_entities(ULONG32* base32, Movement* pacman, Movement* crying,
                     Movement* moustache, Movement* awkward, Movement* cyclops) {
-
 
     clear_bitmap_32(base32, awkward->last_last_x, awkward->last_last_y, SPRITE_HEIGHT);
     clear_bitmap_32(base32, moustache->last_last_x, moustache->last_last_y, SPRITE_HEIGHT);
