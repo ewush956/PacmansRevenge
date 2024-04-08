@@ -10,28 +10,6 @@
 
 const UCHAR8 DIRECTION_ARRAY[4] = {UP, DOWN, LEFT, RIGHT};
 
-/*******************************************************************
- * Function: process_ghost_collision
- * Purpose: To handle collisions between ghost and wall and eachother
- *******************************************************************/
-ObjectType process_ghost_collision(Entities* all) {  
-    
-    ObjectType collision = OPEN_PATH;
-    int i, n;
-
-    Ghost* ghost_array[4];
-
-    Movement *all_ghosts[4];
-    all_ghosts[0] = all->crying_ghost->move;
-    all_ghosts[1] = all->awkward_ghost->move;
-    all_ghosts[2] = all->cyclops_ghost->move;
-    all_ghosts[3] = all->moustache_ghost->move;
-
-    ghost_array[0] = all->crying_ghost;
-    ghost_array[1] = all->awkward_ghost;
-    ghost_array[2] = all->cyclops_ghost;
-    ghost_array[3] = all->moustache_ghost;
-}
 void handle_wall_collision(Movement* ghost, UCHAR8 state, UCHAR8 path_number) {
     
     int i, direction;
