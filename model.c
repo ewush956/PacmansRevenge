@@ -181,6 +181,7 @@ void check_proximity(Entities* all) {
 void change_pacman_state(Pacman* pacman, UCHAR8 new_state) {
     pacman->state = new_state;
 }
+
 void change_ghost_state(Ghost* ghost, UCHAR8 new_state) {
     if (ghost->state == DEAD) {
         return;
@@ -236,26 +237,17 @@ void init_map_cells(){
                 cell_map[i][j].can_go_left = FALSE;
             }
             
-            init_map_cells_helper(direction_map,i,j);
+            init_map_cells_helper_switch_case(direction_map,i,j);
         }
     }
-    cell_map[10][17].has_pellet = FALSE;
-    cell_map[10][18].has_pellet = FALSE;
 
-    cell_map[10][20].has_pellet = FALSE;
-    cell_map[10][21].has_pellet = FALSE;
-
-    cell_map[12][17].has_pellet = FALSE;
-    cell_map[12][18].has_pellet = FALSE;
-
-    cell_map[12][20].has_pellet = FALSE;
-    cell_map[12][21].has_pellet = FALSE;
+    init_map_cells_helper_set_pellets();
 }
 /***************************************************
 *   A helper funtion for initializing the map within in 
 *   the loop from the calling function.
 ****************************************************/
-void init_map_cells_helper(UCHAR8 direction_map[][40],int i, int j)
+void init_map_cells_helper_switch_case(UCHAR8 direction_map[][40],int i, int j)
 {
     switch (direction_map[i][j]) {
             case '^': cell_map[i][j].crying_path = UP;         break;
@@ -282,6 +274,27 @@ void init_map_cells_helper(UCHAR8 direction_map[][40],int i, int j)
             case '>': cell_map[i][j].moustache_path = RIGHT; break;
         }
 }
+
+/***********
+* Another helper is used to set the pellets 
+*   called by init_map_cells()
+*
+***************/
+void init_map_cells_helper_set_pellets()
+{
+    cell_map[10][17].has_pellet = FALSE;
+    cell_map[10][18].has_pellet = FALSE;
+
+    cell_map[10][20].has_pellet = FALSE;
+    cell_map[10][21].has_pellet = FALSE;
+
+    cell_map[12][17].has_pellet = FALSE;
+    cell_map[12][18].has_pellet = FALSE;
+
+    cell_map[12][20].has_pellet = FALSE;
+    cell_map[12][21].has_pellet = FALSE;
+}
+
 /*************************************************************
 * Function: update_cells
 * Purpose: Updates the cell indices for movement calculations.
@@ -316,7 +329,23 @@ void update_cells(Entities* all) {
     update_cell(pacman->move, DEFAULT);
 
 }
-/*Returns true if entity has entered a new cell*/
+/******************************
+ * Function: update_cell
+ * ---------------------
+ * Updates the cell position and occupancy status of an entity.
+ *
+ * This function updates the cell position and occupancy status of the specified
+ * entity based on its current position and state. If the entity's state is DEAD,
+ * it returns FALSE without updating the cell position and occupancy status.
+ *
+ * Parameters:
+ * entity: A pointer to the Movement structure representing the entity.
+ * state: The state of the entity, indicating whether it is alive or dead.
+ *
+ * Returns:
+ * TRUE if the entity's position requires updating the cell occupancy status,
+ * FALSE otherwise.
+ ******************/
 bool update_cell(Movement* entity, UCHAR8 state) {
 
     int x_index = entity->x_cell_index;
@@ -387,6 +416,24 @@ void update_ghost_direction(Ghost* ghost, Pacman* pacman)
     }
 }
 
+/***********************************
+ * Function: get_optimal_direction
+ * --------------------------------
+ * Determines the optimal direction for movement based on current position and surroundings.
+ *
+ * This function calculates the optimal direction for movement based on the current
+ * position of the ghost and the surrounding environment. It considers the current
+ * movement direction and the availability of paths in different directions to decide
+ * the best course of action.
+ *
+ * Parameters:
+ * movement: A pointer to the Movement structure representing the entity.
+ * pacman_movement: A pointer to the Movement structure representing the Pacman entity.
+ *
+ * Returns:
+ * The optimal direction for movement, determined based on the current position and 
+ * surroundings of the ghost.
+ **************************************/
 UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
     UINT16 x = movement->x;
     UINT16 y = movement->y;
@@ -400,12 +447,14 @@ UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left  == TRUE) { return LEFT;  }
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) { return RIGHT; }
             return DOWN;
+            /*return get_optimal_direction_helper_up();*/
 
         case DOWN:
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down  == TRUE) { return DOWN;  }
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) { return RIGHT; }
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left  == TRUE) { return LEFT;  }
             return UP;
+            /*return get_optimal_direction_helper_down();*/
 
         case LEFT:
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left  == TRUE) { return LEFT;  }
@@ -414,6 +463,7 @@ UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
             }
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down  == TRUE) { return DOWN;  }
             return RIGHT;
+            /*return get_optimal_direction_helper_left();*/
 
         case RIGHT:
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) { return RIGHT; }
@@ -422,8 +472,79 @@ UCHAR8 get_optimal_direction(Movement* movement, Movement* pacman_movement) {
             }
             if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up    == TRUE) { return UP;    }
             return LEFT;
+            /*return get_optimal_direction_helper_right();*/
     }
 }
+
+/*
+UCHAR8 get_optimal_direction_helper_up()
+{
+ 
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up    == TRUE) 
+        return UP;  
+
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left  == TRUE)
+        return LEFT;
+
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE)
+        return RIGHT;
+
+
+        return DOWN;
+}
+UCHAR8 get_optimal_direction_helper_down()
+{
+    
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down  == TRUE)
+         return DOWN;  
+
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) 
+        return RIGHT; 
+
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left  == TRUE) 
+        return LEFT;  
+
+    return UP;
+
+}
+UCHAR8 get_optimal_direction_helper_left()
+{
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_left == TRUE) 
+        return LEFT;  
+
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up == TRUE) 
+    {   
+        if (y > MIDDLE_OF_SCREEN_Y) 
+            return UP;
+    }
+
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down  == TRUE) 
+        return DOWN;
+    
+    
+    return RIGHT;
+    
+}
+UCHAR8 get_optimal_direction_helper_right()
+{
+
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right == TRUE) 
+        return RIGHT; 
+   
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_down  == TRUE)
+    {
+        if (y < MIDDLE_OF_SCREEN_Y) 
+            return DOWN;
+    }
+
+    if (cell_map[movement->y_cell_index][movement->x_cell_index].can_go_up    == TRUE) 
+        return UP; 
+    
+
+    return LEFT;
+
+}
+*/
 bool check_valid_path(Movement* movement, UCHAR8 direction) {
     switch (direction) {
         
@@ -433,12 +554,14 @@ bool check_valid_path(Movement* movement, UCHAR8 direction) {
         case RIGHT: return cell_map[movement->y_cell_index][movement->x_cell_index].can_go_right;
     }
 }
+
 void set_occupied(bool set, int y_index, int x_index) {
     cell_map[y_index][x_index].occupied         = set;
     cell_map[y_index + 1][x_index].occupied     = set;
     cell_map[y_index][x_index + 1].occupied     = set;
     cell_map[y_index + 1][x_index + 1].occupied = set;
 }
+
 /****************************
 * Checks if two ghosts share an occupied region
 * A ghost occupies 4 cells
@@ -520,6 +643,21 @@ void add_wall_to_map(int y_cell_index, int x_cell_index) {
     cell_map[y_cell_index-1][x_cell_index].has_pellet = FALSE;
 
 }
+/****************************
+ * Function: align_axis
+ * --------------------
+ * Aligns the position of an entity along the appropriate axis.
+ *
+ * This function aligns the position of the specified entity along the appropriate
+ * axis based on its current movement direction. If the direction is UP or DOWN,
+ * the entity's x-coordinate is aligned to the leftmost position of its current cell.
+ * If the direction is LEFT or RIGHT, the entity's y-coordinate is aligned to the
+ * bottom position of its current cell.
+ *
+ * Parameters:
+ * entity: A pointer to the Movement structure representing the entity.
+ * 
+ ******************/
 void align_axis(Movement* entity) {
 
         if (entity->direction == UP || entity->direction == DOWN) { 
@@ -529,6 +667,7 @@ void align_axis(Movement* entity) {
             entity->y = (entity->y_cell_index + 1) << 4;
         }
 }
+
 void flip_direction(Movement* ghost) {
     UCHAR8 direction = ghost->direction;
     if (ghost->delta_x == 0 && ghost->delta_y == 0) {
@@ -546,10 +685,32 @@ void flip_direction(Movement* ghost) {
     else 
         direction = LEFT;
 }
+
 void set_deltas(Movement* move, UINT16 dx, UINT16 dy) {
     move->delta_x = dx;
     move->delta_y = dy;
 }
+
+/********************************
+ * Function: update_current_frame
+ * ------------------------------
+ * Updates the current frame for entities based on the game clock.
+ *
+ * This function updates the current frame for the Pacman and ghost entities
+ * based on the game clock. For Pacman, if the state is DEFAULT, the current
+ * frame is incremented cyclically within the range [0, 7]. If the state is not
+ * DEFAULT, the current frame is incremented by one, and if it exceeds 5, it 
+ * wraps around to maintain the range [0, 5].
+ * 
+ * For ghosts, if the state is DEFAULT and the last two bits of the clock are 
+ * either 0 or 1, the current frame is incremented cyclically within the range 
+ * [0, 1].
+ *
+ * Parameters:
+ * all: A pointer to the Entities structure containing all game entities.
+ * clock: An integer representing the current game clock.
+ * 
+ *******************************************/
 void update_current_frame(Entities* all, int clock) {
     Pacman* pacman = all->pacman;
     
@@ -579,6 +740,19 @@ void update_current_frame(Entities* all, int clock) {
 
     }
 }
+
+/****************************
+ * Function: update_timer
+ * ----------------------
+ * Updates the game timer.
+ *
+ * This function is responsible for updating the game timer. It decrements
+ * the seconds value of the timer and adjusts the ASCII representation of
+ * the timer's least significant digit accordingly. If the seconds value
+ * reaches zero, the game over flag is set to TRUE, indicating that the
+ * game is over.
+ *
+ *****/
 void update_timer()
 {
     if (second_has_passed == TRUE) {
@@ -598,6 +772,21 @@ void update_timer()
         second_has_passed = FALSE;   
     }
 }
+/*****
+ * Function: set_derender_ghost_flag
+ * ---------------------------------
+ * Sets the derender flag for a specified type of ghost.
+ *
+ * This function sets the derender flag for the specified type of ghost
+ * to the provided value. The derender flag determines whether the ghost
+ * of the given type should be rendered or not.
+ *
+ * Parameters:
+ * ghost: A pointer to the Ghost structure representing the ghost.
+ * flag: The boolean value indicating whether to set the derender flag 
+ *       to true (if flag is true) or false (if flag is false).
+ *
+ *****/
 void set_derender_ghost_flag(Ghost* ghost, bool flag) {
     
     switch (ghost->type ) {

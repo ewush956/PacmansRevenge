@@ -6,7 +6,6 @@
 #include "font.h"
 #include "globals.h"
 
-#include <stdio.h>
 /*************************************************************
 * Function: render_map
 * Purpose: Initialize game map rendering by plotting tiles.
@@ -129,7 +128,6 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
     Movement* moustache = entity->moustache_ghost->move;
     Movement* crying = entity->crying_ghost->move;
     Movement* cyclops = entity->cyclops_ghost->move;
-
     Ghost* awkward_g = entity->awkward_ghost;
     Ghost* moustache_g = entity->moustache_ghost;
     Ghost* crying_g = entity->crying_ghost;
@@ -261,10 +259,7 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
         plot_bitmap_32(base32, move->x, move->y, tombstone, SPRITE_HEIGHT);
     }
 }
-/*BOTH FUNCTIONS BELOW ARE INCOMPLETE*/
-void render_gameover() {
-    /* Renderes game over screen, we arent sure how to do that yet.*/
-}
+
 void render_timer(UCHAR8* base8) {
 
     plot_letter(base8, TIMER_MS_X, TIMER_Y, font, timer.MS_digit_ascii);
@@ -321,15 +316,17 @@ void render_pellet(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, UCHA
     }
     
 }
-void render_pellets(ULONG32* base32, Entities* all) {
+
+void render_pellets(ULONG32* base32, Entities* all) 
+{
     UCHAR8 *base8 = (UCHAR8*)base32;
 }
+
 void render_mouse(UINT16* base16)
 {
-    UCHAR8 height = 16;
     plot_mouse(base16,global_mouse_x,global_mouse_y,mouse_cursor);
-    
 }
+
 void render_pellet_helper_left(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y)
 {
     int pellet_right_2  = pellet_plot_x + 32;
