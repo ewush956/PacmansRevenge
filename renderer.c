@@ -411,6 +411,9 @@ void render_pellet_helper_up(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_i
 
     if (cell_map[y_cell_down_2][x_cell_right_2].has_pellet == TRUE)
         plot_8(base8, pellet_right_2, pellet_down_2, pellet, 8);
+
+    if (cell_map[y_cell_down_3][x_cell_right_2].has_pellet == TRUE)
+        plot_8(base8, pellet_right_2, pellet_down_3, pellet, 8);
 }
 
 void render_pellet_helper_down(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, int pellet_plot_x, int pellet_plot_y)
