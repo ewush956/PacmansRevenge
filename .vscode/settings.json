@@ -9,6 +9,8 @@
         "splash.h": "c",
         "stdio.h": "c",
         "types.h": "c",
-        "TYPES.H": "cpp"
+        "TYPES.H": "cpp",
+        "music.h": "c",
+        "psg.h": "c"
     }
 }

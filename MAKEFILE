@@ -1,4 +1,4 @@
-all: pacman tst_rend tst_rast
+all: pacman tst_rend tst_rast tst_snd
 
 pacman: pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o psg.o music.o effects.o isr.o isr_asm.o globals.o input.o win_scr.o lose_scr.o splash.o                             
 	cc68x -g pacman.o renderer.o font.o bitmaps.o model.o events.o raster.o rast_asm.o psg.o music.o effects.o isr.o isr_asm.o globals.o input.o win_scr.o lose_scr.o splash.o -o pacman
@@ -70,11 +70,11 @@ tst_rast.o: tst_rast.c raster.h font.h bitmaps.h
 	cc68x -g -c tst_rast.c
 
 
-# tst_snd: tst_snd.o psg.o music.o effects.o
-# 	cc68x -g tst_snd.o psg.o music.o effects.o -o tst_snd
+tst_snd: tst_snd.o psg.o music.o effects.o globals.o
+	cc68x -g tst_snd.o psg.o music.o effects.o globals.o -o tst_snd
 
-# tst_snd.o: tst_snd.c psg.h TYPES.H music.h effects.h
-# 	cc68x -g -c tst_snd.c
+tst_snd.o: tst_snd.c psg.h TYPES.H music.h effects.h globals.h
+	cc68x -g -c tst_snd.c
 
 # all: tst_struct tst_rend tst_rast tst_pac
 
