@@ -19,44 +19,11 @@
 
 #include <osbind.h>
 
-
-/************************* KNOWN BUGS ***************************
- * 
- * 1. Occasionally ghost movement causes half of a pellet sprite
- *    to render on either the back or the front buffer causing flickering
- *    
- *    This has been PARTIALLY fixed, the fix we came up with at re renders the pellet
- *    but you can still see some flickering behind the ghost. 
- * 
- * 2. Ghosts frames are not being updated properly, like an issue with ticks or seconds in ISR.C
- * 
- * 3. The cyclops ghost's eye is not properly centered in some of it's alternate frames
- *    causing the movement to look jittery. This is an issue with it's bitmap.
- * 
- * 4. When killing a ghost, the event triggered "kill ghost" sound plays while pacman
- *    is in the vasinity of the tombstone, once pacman leaves the sound stops.
- *    it's supposed to only play once. I like how it sounds though :)
- * 
- * 5. Ghosts don't clear properly when being eaten, and occasionally "jump" leaving a flickering 
- *    trail, this is not an issue with double buffering, it's most an error in the game logic.
- * 
- ************************* TO DO **********************************
- *
- * 1. Games loose condition. Proximity checking has been added,
- *    we just need to implement the loosing event. (timer)
- *  
- * 
- * 2. Add a timer to the game.
- * 
- *********************************************************************/
-
 UCHAR8  screen_buffer[BUFFER_SIZE_BYTES];        
 GAME_STATE state = MENU; 
         
-
 int main()
 {
-
     int  buffer_offset       = 256 - ((long)(screen_buffer) % 256); 
     ULONG32* back_buffer_ptr = (ULONG32*)(&screen_buffer[buffer_offset]);
     long old_ssp;
@@ -80,9 +47,7 @@ int main()
             orig_ssp = Super(0);                     
             orig_ipl = set_ipl(7);
             Super(orig_ssp);
-
             input = dequeue();
-            
             orig_ssp = Super(0);
             set_ipl(orig_ipl);
             Super(orig_ssp); 
@@ -208,13 +173,11 @@ void game_loop()
     initialize_game(base32, back_buffer_ptr, &entity);
     game_start = TRUE;
     state = PLAY;
-    /*clear_and_render_entities(base32, back_buffer_ptr, &entity);*/
-    /*render_frame(back_buffer_ptr, &entity);*/
     render_frame(base32, &entity);
     while (state != QUIT && state != WIN && state != GAMEOVER) 
     {
         if (fill_level > 0){
-            orig_ssp = Super(0);                        /* mask all intrpts before enQing */
+            orig_ssp = Super(0);                  
             orig_ipl = set_ipl(7);
             Super(orig_ssp);
 
@@ -283,12 +246,9 @@ void page_flip(ULONG32* base32, ULONG32* back_buffer_ptr)
 
     render_frame(back_buffer_ptr, &entity);
     swap_buffers(&base32, &back_buffer_ptr);
-
     old_ssp = Super(0); 
     set_video_base(base32);
     Super(old_ssp);
-
-
 }
 /*******************************************************************
  * Function: update_game_state
