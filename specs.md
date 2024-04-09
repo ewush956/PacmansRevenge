@@ -3,7 +3,7 @@
 **Course:** COMP 2659 Winter 2024  
 **Instructor:** Marc Schroeder  
 **Author(s):** Amtoj Punia and Evan Wushke  
-**Last Modified:** January 25th, 2024  
+**Last Modified:** April 8th, 2024  
 
 ## 1. General Game Overview
 ![Pacman's Revenge Splash Screen](screenshots/Screenshot%202024-04-07%20140225.png "Splash Screen")
@@ -20,16 +20,34 @@ Your main objective is to corner and eat all of the ghosts without getting overp
 - Ghosts will plot a tombstone if pacman catches up to them, this tombstone will become a part of the map.
 - The user can press `ENTER` to respawn, this can only be done when pacman is not moving. This was added to avoid softlocking.
 - Final score has not been implemented, there is only a win or loose condition.
+### Win Condition
+![Pacman's Revenge Splash Screen](screenshots/winScreen.png "Win Screen")
+- The player wins if they manage to eat all 4 ghosts within the allotted time (99 seconds).
 
+### Lose Condition
+![Pacman's Revenge Splash Screen](screenshots/lose_screen.png "Lose Screen")
+- If the player cannot eat the ghosts within 99 seconds the player looses.
 ### Objects
-
-- **Map:** represented as a 2D integer array in this form:
-    ![Pacman's Revenge Splash Screen](screenshots/Screenshot%202024-04-07%20140225.png "Splash Screen")
-    - Path (0) (Free space for entities to move freely)
-    - Wall (2)(Physical barrier no entities can pass through
-    - Corner (1) (Destination for ghosts when running)
-    - Static collision detection changes Pacman's velocity to 0hz. (completely stops him in his tracks)
-
+- **Map:** represented as a 2D `Cell` array that represents the map.
+    ![Pacman's Revenge Splash Screen](screenshots/cell_map.jpg "Splash Screen")
+    - **Path** (light blue) cell for entities to move freely
+    - **Wall** (black) Physical barrier no entities can pass through
+    - **Invisible Wall** (white) Destination for ghosts when running
+    - **Occupied Region** (Red) Represents 4 cells which are currently occupied by an entity.
+    - **Hotspot** (Dark blue) As a cell attribute this is represented by `x` and `y`.
+### Structs
+- `Entity`: Structure that encapsulates the model.
+- `Pacman`: 
+```typedef struct 
+{
+	int current_frame;		        /* current sprite (state) index */
+	UCHAR8 state;					/*DEFAULT OR EVIL*/
+	ObjectType type;
+	Movement* move;
+}Pacman; 
+```
+- `Cell`: A structure made to represent a single region of the map, cells are relative to every 16 pixels.
+- `Movement`: Used as a generic atribute between `Ghost` and `Pacman` types. Movements consist of anything relating to an objects motion, i.e `x`, `y`, `delta_x`, `direction`, etc.
 - **Ghost (Default):** 4 Ghost Entities.
     - 4 Sprites per ghost in default state matching direction.
     - Position (integer pair)
