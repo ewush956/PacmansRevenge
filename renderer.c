@@ -162,75 +162,6 @@ void render_ghosts(ULONG32* base32, Entities* entity) {
         render_non_default_ghost(base32, cyclops_g);
 }
 /*************************************************************
-* Function: de_render_ghost
-* Purpose: Removes the ghost's sprite from its last position and marks its current position with a tombstone.
-* Parameters: ULONG32* base32 - Pointer to the frame buffer's base address,
-*             Ghost* ghost - Pointer to the ghost structure to be de-rendered,
-*             Cell cell_map[][MAP_TILE_LENGTH] - The game's cell map for reference.
-* Details: This function clears the ghost's sprite from its previous position using the
-*          clear_bitmap_32 function. Then, it plots a tombstone bitmap at the ghost's current
-*          cell position to indicate where it was caught or removed from the game.
-*************************************************************/
-void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
-        
-    UCHAR8 pacman_cell_x = pacman.move->x_cell_index;
-    UCHAR8 pacman_cell_y = pacman.move->y_cell_index;
-    UCHAR8 pacman_direction = pacman.move->direction;
-
-    UCHAR8 ghost_cell_x = ghost->move->x_cell_index;
-    UCHAR8 ghost_cell_y = ghost->move->y_cell_index;
-
-    UCHAR8 ghost_direction = ghost->move->direction;
-
-    switch (ghost_direction) {
-        case DOWN: 
-        /*
-                ghost->move->x = (ghost->move->x_cell_index << 4);
-                ghost->move->last_x = ghost->move->x;
-                ghost->move->last_last_x = ghost->move->x;
-            if (cell_map[ghost_cell_y - 2][ghost_cell_x].open_path == TRUE) {
-                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
-            } else {
-                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
-            }
-                ghost->move->last_y = ghost->move->y;
-                ghost->move->last_last_y = ghost->move->y;
-                */
-            ghost->move->y = ((ghost->move->y_cell_index + 2) << 4);
-            ghost->move->x = (ghost->move->x_cell_index << 4);
-            break;
-        case RIGHT:
-        
-            if (pacman_cell_y > ghost_cell_y) {
-                /*printf("Pacman is above ghost\n");*/
-                
-                ghost->move->x = ((ghost->move->x_cell_index + 1)<< 4);
-                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
-                /*
-                ghost->move->last_x = ghost->move->x;
-                ghost->move->last_last_x = ghost->move->x;
-
-                ghost->move->last_y = ghost->move->y;
-                ghost->move->last_last_y = ghost->move->y;
-                */
-                
-            }
-            
-            else if (cell_map[ghost_cell_y][ghost_cell_x + 2].open_path == TRUE) {
-
-                ghost->move->x = ((ghost->move->x_cell_index + 1)<< 4);
-                ghost->move->last_x = ghost->move->x;
-                ghost->move->last_last_x = ghost->move->x;
-
-                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
-                ghost->move->last_y = ghost->move->y;
-                ghost->move->last_last_y = ghost->move->y;
-            }
-            break;
-    }
-    set_derender_ghost_flag(ghost, FALSE);
-}
-/*************************************************************
 * Function: render_non_default_ghost
 * Purpose: Renders a ghost in a non-default state, such as RUNNING or FROZEN.
 * Parameters: ULONG32* base32 - Pointer to the frame buffer's base address,
@@ -247,15 +178,8 @@ void render_non_default_ghost(ULONG32* base32, Ghost* ghost) {
     if (ghost->state == RUNNING) {
         plot_bitmap_32(base32, move->x, move->y, running_ghost_sprites[move->direction][frame], SPRITE_HEIGHT);
     }
-    /*
-    else if (ghost->state == FROZEN) {
-        plot_bitmap_32(base32, move->x, move->y, frozen_ghost_sprites[move->direction][frame], SPRITE_HEIGHT);
-    }
-    */
     else {
-        /*clear_bitmap_32(base32, move->last_x, move->last_y, SPRITE_HEIGHT);*/
         clear_bitmap_32(base32, move->x, move->y, SPRITE_HEIGHT);
-        /*clear_bitmap_32(base32, move->last_last_x, move->last_last_y, SPRITE_HEIGHT);*/
         plot_bitmap_32(base32, move->x, move->y, tombstone, SPRITE_HEIGHT);
     }
 }
@@ -298,7 +222,6 @@ void render_pellet(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell_index, UCHA
 
 
     int pellet_plot_x = (x_cell_index << 4) + 12;
-    /*int pellet_plot_y = (y_cell_index << 4) + 12 + Y_PIXEL_OFFSET; */
     int pellet_plot_y = (y_cell_index << 4) + 28;
 
     
@@ -440,4 +363,48 @@ void render_pellet_helper_down(UCHAR8* base8, UINT16 x_cell_index, UINT16 y_cell
         plot_8(base8, pellet_right_2, pellet_up_1, pellet, 8);
     }
 }
+/*************************************************************
+* Function: de_render_ghost
+* Purpose: Removes the ghost's sprite from its last position and marks its current position with a tombstone.
+* Parameters: ULONG32* base32 - Pointer to the frame buffer's base address,
+*             Ghost* ghost - Pointer to the ghost structure to be de-rendered,
+*             Cell cell_map[][MAP_TILE_LENGTH] - The game's cell map for reference.
+* Details: This function clears the ghost's sprite from its previous position using the
+*          clear_bitmap_32 function. Then, it plots a tombstone bitmap at the ghost's current
+*          cell position to indicate where it was caught or removed from the game.
+*************************************************************/
+void de_render_ghost(ULONG32* base32, Ghost* ghost, Cell cell_map[][MAP_TILE_LENGTH]) {
+        
+    UCHAR8 pacman_cell_x = pacman.move->x_cell_index;
+    UCHAR8 pacman_cell_y = pacman.move->y_cell_index;
+    UCHAR8 pacman_direction = pacman.move->direction;
 
+    UCHAR8 ghost_cell_x = ghost->move->x_cell_index;
+    UCHAR8 ghost_cell_y = ghost->move->y_cell_index;
+
+    UCHAR8 ghost_direction = ghost->move->direction;
+
+    switch (ghost_direction) {
+        case DOWN: 
+            ghost->move->y = ((ghost->move->y_cell_index + 2) << 4);
+            ghost->move->x = (ghost->move->x_cell_index << 4);
+            break;
+        case RIGHT:
+            if (pacman_cell_y > ghost_cell_y) {                
+                ghost->move->x = ((ghost->move->x_cell_index + 1)<< 4);
+                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);                
+            } 
+            else if (cell_map[ghost_cell_y][ghost_cell_x + 2].open_path == TRUE) {
+
+                ghost->move->x = ((ghost->move->x_cell_index + 1)<< 4);
+                ghost->move->last_x = ghost->move->x;
+                ghost->move->last_last_x = ghost->move->x;
+
+                ghost->move->y = ((ghost->move->y_cell_index + 1) << 4);
+                ghost->move->last_y = ghost->move->y;
+                ghost->move->last_last_y = ghost->move->y;
+            }
+            break;
+    }
+    set_derender_ghost_flag(ghost, FALSE);
+}
